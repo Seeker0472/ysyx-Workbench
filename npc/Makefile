@@ -12,7 +12,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 all:clean verilating makeobj run sim
 	
-verilating:
+verilating: $(SRC_AUTO_BIND)
 	verilator -Wall -cc  vsrc/example.v --trace --exe csrc/main.cpp
 
 sim:
