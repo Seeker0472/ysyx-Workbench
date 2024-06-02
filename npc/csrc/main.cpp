@@ -1,5 +1,6 @@
 #include <nvboard.h>
 #include <Vexample.h>
+#include<iostream>
 
 static TOP_NAME dut;
 
@@ -32,5 +33,6 @@ int main()
   {
     dut.eval();
     single_cycle();
+    std::cout<<dut.clk;
   }
 }
