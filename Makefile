@@ -1,6 +1,6 @@
 STUID = ysyx_NAN
 STUNAME = 郭明轩
-NEMU_HOME = .
+NEMU_HOME = ./
 
 # DO NOT modify the following code!!!
 
@@ -21,7 +21,8 @@ endef
 
 # prototype: git_commit(msg)
 define git_commit
-	-@flock $(LOCK_DIR) $(MAKE) -C $(YSYX_HOME) .git_commit MSG='$(1)'
+	-pwd
+	-flock $(LOCK_DIR) $(MAKE) -C $(YSYX_HOME) .git_commit MSG='$(1)'
 	-@sync $(LOCK_DIR)
 endef
 
