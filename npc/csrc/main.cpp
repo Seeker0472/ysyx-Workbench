@@ -1,5 +1,5 @@
 #include <nvboard.h>
-#include <Vexample.h>
+#include <Vlight.h>
 
 static dut_NAME dut;
 
