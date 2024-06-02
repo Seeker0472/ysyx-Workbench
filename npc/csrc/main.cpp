@@ -1,7 +1,7 @@
 #include <nvboard.h>
 #include <Vlight.h>
 
-static dut_NAME dut;
+static TOP_NAME dut;
 
 void nvboard_bind_all_pins(dut_NAME *dut);
 
