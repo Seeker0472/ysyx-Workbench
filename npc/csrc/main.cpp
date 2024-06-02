@@ -33,6 +33,7 @@ int main(){
   {
     dut.eval();
     single_cycle();
-    std::cout<<dut.clk;
+    nvboard_update();
+
   }
 }
