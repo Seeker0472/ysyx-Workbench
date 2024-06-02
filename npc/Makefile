@@ -16,7 +16,7 @@ verilating: $(SRC_AUTO_BIND)
 	make nvboard-archive
 # verilator -Wall -cc  vsrc/example.v --trace --exe csrc/main.cpp $(SRC_AUTO_BIND) -I$(NVBOARD_HOME)/include/nvboard.h
 	verilator -MMD --build -cc -O3 --x-assign fast --x-initial fast --noassert \
-	--top-module example /home/seeker/Develop/ysyx-workbench/npc/vsrc/example.v /home/seeker/Develop/ysyx-workbench/npc/csrc/main.cpp /home/seeker/Develop/ysyx-workbench/npc/build/auto_bind.cpp /home/seeker/Develop/ysyx-workbench/nvboard/build/nvboard.a \
+	--top-module light /home/seeker/Develop/ysyx-workbench/npc/vsrc/example.v /home/seeker/Develop/ysyx-workbench/npc/csrc/main.cpp /home/seeker/Develop/ysyx-workbench/npc/build/auto_bind.cpp /home/seeker/Develop/ysyx-workbench/nvboard/build/nvboard.a \
 	-CFLAGS -MMD -CFLAGS -O3 -CFLAGS -I/usr/include/SDL2 -CFLAGS -D_REENTRANT -CFLAGS -I/home/seeker/Develop/ysyx-workbench/nvboard/usr/include -CFLAGS -DTOP_NAME="\"Vexample\"" -LDFLAGS -lSDL2 -LDFLAGS -lSDL2_image -LDFLAGS -lSDL2_ttf \
 	--Mdir ./build/obj_dir --exe -o /home/seeker/Develop/ysyx-workbench/npc/build/Vexample
 
