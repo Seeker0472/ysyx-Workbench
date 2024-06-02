@@ -1,4 +1,4 @@
-module light(
+module example(
   input clk,
   input rst,
   output reg [15:0] led
