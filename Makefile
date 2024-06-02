@@ -1,5 +1,6 @@
-STUID = ysyx_22040000
-STUNAME = 张三
+STUID = ysyx_NAN
+STUNAME = 郭明轩
+NEMU_HOME = /home/seeker/Develop/ysyx-workbench/npc
 
 # DO NOT modify the following code!!!
 
