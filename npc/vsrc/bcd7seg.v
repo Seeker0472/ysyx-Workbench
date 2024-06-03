@@ -27,7 +27,8 @@ integer i;
 reg [3:0] bcd_input;
 bcd7seg seg0(bcd_input, h);
 always @(enco) begin
-    bcd_input = 4'b1111;
+    // bcd_input = 4'b1111;
+    h=7'b1111111;
     for(i = 0; i < 8; i = i + 1) begin
         if(enco[i] == 1) begin
             bcd_input=i[3:0];
