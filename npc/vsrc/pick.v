@@ -76,7 +76,7 @@ module mux41b(a,s,y);
 endmodule
 
 
-module example(y,x0,x1,x2,x3,f);
+module pick(y,x0,x1,x2,x3,f);
   input [1:0] y;
   input [1:0] x0;
   input [1:0] x1;
