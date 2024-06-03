@@ -28,12 +28,15 @@ void reset(int n){
 }
 
 int main(int argc, char** argv){
+  nvboard_bind_all_pins(&dut);
   Verilated::commandArgs(argc, argv); 
   Verilated::traceEverOn(true); // 启用波形追踪
-  nvboard_bind_all_pins(&dut);
   tfp = new VerilatedVcdC;
   dut.trace(tfp, 99); // 跟踪99级信号
-  tfp->open("./build/waveform.vcd"); // 打开VCD文件
+  if(wave_enable)
+    tfp->open("./build/waveform.vcd"); // 打开VCD文件
+  else
+    tfp->open("/dev/null");//不开启追踪，放弃记录
   nvboard_init();
   reset(10); // 复位10个周期
   while (1)
