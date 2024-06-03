@@ -20,11 +20,11 @@ module bcd7seg(
   end
 endmodule
 
-module encoder(
-  input [7:0] enco,
-  output reg [6:0] h
-)
-int i;
+module encoder(enco,h);
+input [7:0] enco;
+output reg [6:0] h;
+integer i;
+
 always @(*)begin
   for(i=0;i<8;i++)
     if(enco[i]==1)
