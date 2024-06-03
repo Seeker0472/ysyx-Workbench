@@ -22,7 +22,7 @@ endmodule
 
 module encoder(
   input [7:0] enco,
-  output reg [6:0] h,
+  output reg [6:0] h
 )
 int i;
 always @(*)begin
