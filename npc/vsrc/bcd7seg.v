@@ -24,12 +24,13 @@ module encoder(enco,h);
 input [7:0] enco;
 output reg [6:0] h;
 integer i;
-
+reg [3:0] bcd_input
+bcd7seg seg0(bcd_input, h);
 always @(*) begin
     h = 7'b0000000;
     for(i = 0; i < 8; i = i + 1) begin
         if(enco[i] == 1) begin
-            bcd7seg seg0(i[3:0], h);
+            bcd_input=i[3:0];
         end
     end
 end
