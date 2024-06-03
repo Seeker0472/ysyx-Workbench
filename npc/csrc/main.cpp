@@ -37,7 +37,7 @@ int main(int argc, char** argv){
   {
     single_cycle();
     nvboard_update();
-    std::cout<<"1"<<dut.clk<<dut.led<<std::endl;
+    // std::cout<<"1"<<dut.clk<<dut.led<<std::endl;
   }
   tfp->close(); // 关闭VCD文件
   delete tfp;
