@@ -9,7 +9,7 @@ $(SRC_AUTO_BIND): $(NXDC_FILES)
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 
 # TOP
-TOP ?= example
+TOP ?=example
 TOP_NAME= V
 TOP_NAME+=${TOP}
 # rules for NVBoard
