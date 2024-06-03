@@ -1,11 +1,11 @@
 #include <nvboard.h>
-#include <Vexample.h>
+#include <Vpick.h>
 #include<iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-static Vexample dut;
+static TOP_NAME dut;
 static VerilatedVcdC* tfp; // 用于生成波形的指针
-void nvboard_bind_all_pins(Vexample *dut);
+void nvboard_bind_all_pins(TOP_NAME *dut);
 unsigned int sim_time=0;
 static int wave_enable=false;
 
