@@ -7,7 +7,7 @@ static Vexample dut;
 static VerilatedVcdC* tfp; // 用于生成波形的指针
 void nvboard_bind_all_pins(Vexample *dut);
 unsigned int sim_time=0;
-static int wave_enable=true;
+static int wave_enable=false;
 
 void single_cycle(){
   dut.clk = 0;
