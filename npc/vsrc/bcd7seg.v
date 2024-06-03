@@ -15,7 +15,7 @@ module bcd7seg(
       4'b0111 : h = 7'b0000000;
       4'b1000 : h = 7'b0000000;
       4'b1001 : h = 7'b0000000;
-      default : y= 7'b0000000;
+      default : h= 7'b0000000;
     endcase
   end
 endmodule
