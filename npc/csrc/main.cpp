@@ -1,16 +1,20 @@
 #include <nvboard.h>
 #include <Vexample.h>
 #include<iostream>
-
-static TOP_NAME dut;
-
-void nvboard_bind_all_pins(TOP_NAME *dut);
+#include <verilated.h>
+#include <verilated_vcd_c.h>
+static Vexample dut;
+static VerilatedVcdC* tfp; // 用于生成波形的指针
+void nvboard_bind_all_pins(Vexample *dut);
+unsigned int sim_time=0;
 
 void single_cycle(){
   dut.clk = 0;
   dut.eval();
+  tfp->dump(sim_time++); // Dump波形信息
   dut.clk = 1;
   dut.eval();
+  tfp->dump(sim_time++); // Dump波形信息
 }
 
 void reset(int n){
@@ -20,20 +24,22 @@ void reset(int n){
   dut.rst = 0;
 }
 
-int main(){
-  std::cout<<"start";
+int main(int argc, char** argv){
+  Verilated::commandArgs(argc, argv); 
+  Verilated::traceEverOn(true); // 启用波形追踪
   nvboard_bind_all_pins(&dut);
-  std::cout<<"start";
-
+  tfp = new VerilatedVcdC;
+  dut.trace(tfp, 99); // 跟踪99级信号
+  tfp->open("waveform.vcd"); // 打开VCD文件
   nvboard_init();
   reset(10); // 复位10个周期
-  std::cout<<"start";
-
   while (1)
   {
-    dut.eval();
     single_cycle();
     nvboard_update();
-
+    std::cout<<"1"<<dut.clk<<dut.led<<std::endl;
   }
+  tfp->close(); // 关闭VCD文件
+  delete tfp;
+  return 0;
 }
