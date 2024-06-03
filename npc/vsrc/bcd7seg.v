@@ -5,8 +5,8 @@ module bcd7seg(
 // detailed implementation ...
   always @(*) begin
     case(b)
-      4'b0000 : h = 7'b0000000;
-      4'b0001 : h = 7'b0000010;
+      4'b0000 : h = 7'b1001111;
+      4'b0001 : h = 7'b0010010;
       4'b0010 : h = 7'b0001000;
       4'b0011 : h = 7'b0100000;
       4'b0100 : h = 7'b0000000;
