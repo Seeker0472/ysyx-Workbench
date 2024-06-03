@@ -29,7 +29,7 @@ void reset(int n){
 
 int main(int argc, char** argv){
   Verilated::commandArgs(argc, argv); 
-  Verilated::traceEverOn(false); // 启用波形追踪
+  Verilated::traceEverOn(true); // 启用波形追踪
   nvboard_bind_all_pins(&dut);
   tfp = new VerilatedVcdC;
   dut.trace(tfp, 99); // 跟踪99级信号
