@@ -39,8 +39,7 @@ int main(int argc, char** argv){
     tfp->open("/dev/null");//不开启追踪，放弃记录
   nvboard_init();
   reset(10); // 复位10个周期
-  while (1)
-  {
+  while (1){
     single_cycle();
     nvboard_update();
     // std::cout<<"1"<<dut.clk<<dut.led<<std::endl;
