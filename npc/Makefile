@@ -10,8 +10,8 @@ VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 
 # TOP
 TOP ?=example
-TOP_NAME= V
-TOP_NAME+=${TOP}
+# TOP_NAME= V
+TOP_NAME=V${TOP}
 # rules for NVBoard
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
