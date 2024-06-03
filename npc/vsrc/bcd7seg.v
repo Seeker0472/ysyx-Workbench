@@ -29,7 +29,7 @@ always @(*) begin
     h = 7'b0000000;
     for(i = 0; i < 8; i = i + 1) begin
         if(enco[i] == 1) begin
-            bcd7seg(i[3:0], h);
+            bcd7seg seg0(i[3:0], h);
         end
     end
 end
