@@ -6,6 +6,6 @@ reg [7:0] num = 8'b00000001;
 bcd7seg seg0(num[3:0], h);
 bcd7seg seg1(num[7:4], k);
 always @(posedge clk)begin
-    num<={num[6:0],num[0]^num[2]^num[3]^num[4]};
+    num<={num[0]^num[2]^num[3]^num[4],num[7:1]};
 end
 endmodule
