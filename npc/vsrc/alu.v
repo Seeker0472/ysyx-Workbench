@@ -18,7 +18,7 @@ MuxKeyWithDefault #(8,3,4) i0(out,op,4'b0000,{
     3'b101,eo,
     3'b110,qudaxiao,
     3'b111,eq,
-})
+});
 endmodule
 
 module add(A,B,OUT);
