@@ -1,17 +1,3 @@
-// module example(
-//   input clk,
-//   input rst,
-//   output reg [15:0] led
-// );
-//   reg [31:0] count;
-//   always @(posedge clk) begin
-//     if (rst) begin led <= 1; count <= 0; end
-//     else begin
-//       if (count == 0) led <= {led[14:0], led[15]};
-//       count <= (count >= 5 ? 32'b0 : count + 1);
-//     end
-//   end
-// endmodule
 
 module MuxKeyInternal #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1, HAS_DEFAULT = 0) (
   output reg [DATA_LEN-1:0] out,
@@ -90,7 +76,7 @@ module mux41b(a,s,y);
 endmodule
 
 
-module example(y,x0,x1,x2,x3,f);
+module pick(y,x0,x1,x2,x3,f);
   input [1:0] y;
   input [1:0] x0;
   input [1:0] x1;

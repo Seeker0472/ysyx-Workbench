@@ -1,19 +1,19 @@
 #include <nvboard.h>
-#include <Vexample.h>
+#include <Valu.h>
 #include<iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-static Vexample dut;
+static TOP_NAME dut;
 static VerilatedVcdC* tfp; // 用于生成波形的指针
-void nvboard_bind_all_pins(Vexample *dut);
+void nvboard_bind_all_pins(TOP_NAME *dut);
 unsigned int sim_time=0;
 static int wave_enable=false;
 
 void single_cycle(){
   // dut.clk = 0;
   dut.eval();
-  // if(wave_enable)
-  //   tfp->dump(sim_time++); // Dump波形信息
+  if(wave_enable)
+    tfp->dump(sim_time++); // Dump波形信息
   // dut.clk = 1;
   // dut.eval();
   // if(wave_enable)
