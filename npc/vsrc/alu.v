@@ -55,7 +55,7 @@ mux43b mux(
     .lor(A|B),
     .eo(A^B),
     .qudaxiao(4'b0000),
-    .eq(4'b0000),
+    .eq(A==B),
     .op(op),
     .out(bcd_input)
 );
