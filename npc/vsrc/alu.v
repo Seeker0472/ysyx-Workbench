@@ -28,9 +28,9 @@ input OP;
 output reg [3:0] OUT;
 always @(*)begin
     reg [3:0] temp={4{OP}}^B+{3'b000,OP};
-    OUT=A+temp;
+    
 end
-
+assign OUT=A+temp;
 endmodule
 // module sub(A,B,OUT);
 // input [3:0] A;
