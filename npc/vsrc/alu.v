@@ -48,7 +48,7 @@ reg [3:0] sub_out;
 reg [3:0] bcd_input;
 
 add add0(A,B,0,add_out);
-sub sub0(A,B,1,sub_out);
+add sub0(A,B,1,sub_out);
 mux43b mux(
     .add(add_out),
     .sub(sub_out),
