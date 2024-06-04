@@ -67,7 +67,7 @@ mux43b mux(
     .out(bcd_input)
 );
 bcd7seg seg0({1'b0,bcd_input[2:0]}, OUT);
-bcd7seg seg1({1'b0,bcd_input[2:0]}, OUT1);
+bcd7seg seg1(bcd_input, OUT1);
 
 // always@(*) begin
 
