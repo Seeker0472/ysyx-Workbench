@@ -25,7 +25,7 @@ module add(A,B,OUT);
 input [3:0] A;
 input [3:0] B;
 output [3:0] OUT;
-assign OUT=A+B
+assign OUT=A+B;
 endmodule
 
 module alu(A,B,op,OUT);
