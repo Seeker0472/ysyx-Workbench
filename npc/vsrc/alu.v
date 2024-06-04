@@ -41,11 +41,12 @@ endmodule
 // endmodule
 
 
-module alu(A,B,op,OUT);
+module alu(A,B,op,OUT,OUT1);
 input [3:0] A;
 input [3:0] B;
 input [2:0] op;
 output [6:0] OUT;
+output [6:0] OUT1;
 
 reg [3:0] add_out;
 reg [3:0] sub_out;
@@ -66,6 +67,7 @@ mux43b mux(
     .out(bcd_input)
 );
 bcd7seg seg0({1'b0,bcd_input[2:0]}, OUT);
+bcd7seg seg0({1'b0,bcd_input[2:0]}, OUT1);
 
 // always@(*) begin
 
