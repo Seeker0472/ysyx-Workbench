@@ -1,4 +1,4 @@
-module mux43b(add,sub,rev,land,lor,eo,daxiao,eq,op,out);
+module mux43b(add,sub,rev,land,lor,eo,qudaxiao,eq,op,out);
 input [3:0] add;
 input [3:0] sub;
 input [3:0] rev;
