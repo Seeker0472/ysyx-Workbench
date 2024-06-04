@@ -31,8 +31,9 @@ module sub(A,B,OUT);
 input [3:0] A;
 input [3:0] B;
 output [3:0] OUT;
-OUT=A-B;
+assign OUT=A-B;
 endmodule
+
 
 module alu(A,B,op,OUT);
 input [3:0] A;
@@ -49,10 +50,10 @@ sub sub0(A,B,sub_out);
 mux43b mux(
     .add(add_out),
     .sub(sub_out),
-    .rev(4'b0000),
-    .land(4'b0000),
-    .lor(4'b0000),
-    .eo(4'b0000),
+    .rev(~A),
+    .land(A&B),
+    .lor(A|B),
+    .eo(A^B),
     .qudaxiao(4'b0000),
     .eq(4'b0000),
     .op(op),
