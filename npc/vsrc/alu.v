@@ -37,9 +37,11 @@ output [6:0] OUT;
 reg [3:0] add_out;
 reg [3:0] bcd_input;
 
-add add0(A,B,bcd_input);
+add add0(A,B,add_out);
 
 bcd7seg seg0(bcd_input, OUT);
+
+mux43b mux(add_out,4'b0000,4'b0000,4'b0000,4'b0000,4'b0000,4'b0000,4'b0000,op,bcd_input);
 
 // always@(*) begin
 
