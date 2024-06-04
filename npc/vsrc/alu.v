@@ -35,9 +35,10 @@ input [2:0] op;
 output [6:0] OUT;
 
 reg [3:0] add_out;
-add add0(A,B,add_out);
-
 reg [3:0] bcd_input;
+
+add add0(A,B,bcd_input);
+
 bcd7seg seg0(bcd_input, OUT);
 
 // always@(*) begin
