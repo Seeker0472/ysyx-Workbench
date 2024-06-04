@@ -38,10 +38,19 @@ reg [3:0] add_out;
 reg [3:0] bcd_input;
 
 add add0(A,B,add_out);
-
+mux43b mux(
+    .add(add_out),
+    .sub(4'b0000),
+    .rev(4'b0000),
+    .land(4'b0000),
+    .lor(4'b0000),
+    .eo(4'b0000),
+    .qudaxiao(4'b0000),
+    .eq(4'b0000),
+    .op(op),
+    .out(bcd_input)
+);
 bcd7seg seg0(bcd_input, OUT);
-
-mux43b mux(add_out,4'b0000,4'b0000,4'b0000,4'b0000,4'b0000,4'b0000,4'b0000,op,bcd_input);
 
 // always@(*) begin
 
