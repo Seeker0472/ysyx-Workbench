@@ -21,18 +21,20 @@ MuxKeyWithDefault #(8,3,4) i0(out,op,4'b0000,{
 });
 endmodule
 
-module add(A,B,OUT);
+module add(A,B,OP,OUT);
 input [3:0] A;
 input [3:0] B;
+input OP;
 output [3:0] OUT;
-assign OUT=A+B;
+reg [3:0] temp={4{OP}}^B+OP;
+assign OUT=A+temp;
 endmodule
-module sub(A,B,OUT);
-input [3:0] A;
-input [3:0] B;
-output [3:0] OUT;
-assign OUT=A-B;
-endmodule
+// module sub(A,B,OUT);
+// input [3:0] A;
+// input [3:0] B;
+// output [3:0] OUT;
+// assign OUT=A-B;
+// endmodule
 
 
 module alu(A,B,op,OUT);
@@ -45,8 +47,8 @@ reg [3:0] add_out;
 reg [3:0] sub_out;
 reg [3:0] bcd_input;
 
-add add0(A,B,add_out);
-sub sub0(A,B,sub_out);
+add add0(A,B,0,add_out);
+sub sub0(A,B,1,sub_out);
 mux43b mux(
     .add(add_out),
     .sub(sub_out),
