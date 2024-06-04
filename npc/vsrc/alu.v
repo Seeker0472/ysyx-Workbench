@@ -76,7 +76,7 @@ mux43b mux(
     .land(A&B),
     .lor(A|B),
     .eo(A^B),
-    .qudaxiao(|sub_out),
+    .qudaxiao({3'b000,|sub_out}),
     .eq({3'b000,A==B}),
     .op(op),
     .out(bcd_input)
