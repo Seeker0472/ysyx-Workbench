@@ -27,6 +27,12 @@ input [3:0] B;
 output [3:0] OUT;
 assign OUT=A+B;
 endmodule
+module sub(A,B,OUT);
+input [3:0] A;
+input [3:0] B;
+output [3:0] OUT;
+OUT=A-B;
+endmodule
 
 module alu(A,B,op,OUT);
 input [3:0] A;
@@ -35,12 +41,14 @@ input [2:0] op;
 output [6:0] OUT;
 
 reg [3:0] add_out;
+reg [3:0] sub_out;
 reg [3:0] bcd_input;
 
 add add0(A,B,add_out);
+sub sub0(A,B,sub_out);
 mux43b mux(
     .add(add_out),
-    .sub(4'b0000),
+    .sub(sub_out),
     .rev(4'b0000),
     .land(4'b0000),
     .lor(4'b0000),
