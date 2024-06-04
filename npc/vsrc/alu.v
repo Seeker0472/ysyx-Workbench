@@ -28,10 +28,9 @@ input OP;
 output reg [3:0] OUT;
 reg [3:0] temp;
 always @(*)begin
-    temp={4{OP}}^B+{3'b000,OP};
-    
+    temp={4{OP}}^B;
 end
-assign OUT=A+temp;
+assign OUT=A+temp+{3'b000,OP};
 endmodule
 // module sub(A,B,OUT);
 // input [3:0] A;
@@ -40,7 +39,23 @@ endmodule
 // assign OUT=A-B;
 // endmodule
 
-
+module comp_display(val,outnum,outsin);
+input [3:0] val;
+output reg [6:0] outnum;
+output reg [6:0] outsin;
+reg [3:0] num;
+bcd7seg seg(num, outnum);
+    always @(*) begin
+        if (val[3] == 1'b1) begin
+            outsin = 7'b1111110;
+            num= ~val+4'b001;
+        end else begin
+            outsin = 7'b1111111;
+            num=val;
+        end
+    end
+endmodule
+        
 module alu(A,B,op,OUT,OUT1);
 input [3:0] A;
 input [3:0] B;
@@ -66,8 +81,9 @@ mux43b mux(
     .op(op),
     .out(bcd_input)
 );
-bcd7seg seg0({1'b0,bcd_input[2:0]}, OUT);
-bcd7seg seg1(bcd_input, OUT1);
+comp_display cmp(bcd_input,OUT,OUT1);
+// bcd7seg seg0({1'b0,bcd_input[2:0]}, OUT);
+// bcd7seg seg1(bcd_input, OUT1);
 
 // always@(*) begin
 
