@@ -17,7 +17,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 .DEFAULT_GOAL :=  all
 
-all: verilating  run
+all: sim verilating  run
 	
 verilating: $(SRC_AUTO_BIND)
 	make nvboard-archive
