@@ -1,5 +1,5 @@
 #include <nvboard.h>
-#include <Vencoder.h>
+#include <Valu.h>
 #include<iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
