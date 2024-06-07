@@ -20,7 +20,7 @@ ps2_keyboard keyb(
     .ps2_clk(ps2clk),
     .ps2_data(ps2dat),
     .data(data),
-    .redy(ready),
+    .ready(ready),
     .nextdata_n(nextdata_n),
     .overflow(overflow),
 );
