@@ -16,7 +16,7 @@ reg [7:0] cnt=8'b00000000;
 reg ready,nextdata_n,overflow;
 ps2_keyboard keyb(
     .clk(clk),
-    .clrn(rest),
+    .clrn(reset),
     .ps2_clk(ps2clk),
     .ps2_data(ps2dat),
     .data(data),
