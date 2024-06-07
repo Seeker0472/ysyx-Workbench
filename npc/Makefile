@@ -10,7 +10,8 @@ $(SRC_AUTO_BIND): $(NXDC_FILES)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 # 所有的.v文件
-VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+# VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+VSRCS = /home/seeker/Develop/ysyx-workbench/npc/vsrc/ps2_keyboard.v
 
 
 # TOP_NAME= V
