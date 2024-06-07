@@ -22,7 +22,7 @@ ps2_keyboard keyb(
     .data(data),
     .ready(ready),
     .nextdata_n(nextdata_n),
-    .overflow(overflow),
+    .overflow(overflow)
 );
 always @(negedge clk)begin
     if(nextdata_n==1'b1)begin//nextdata_n保持一个周期
