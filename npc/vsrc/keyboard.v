@@ -1,6 +1,6 @@
-module keyboard(clk,rest,ps2clk,ps2dat,keycode0,keycode1,ascii0,ascii1,cnt0,cnt1);
+module keyboard(clk,reset1,ps2clk,ps2dat,keycode0,keycode1,ascii0,ascii1,cnt0,cnt1);
 input reg ps2clk,ps2dat;
-input reg clk;
+input reg clk,reset1;
 output reg [6:0] keycode0;
 output reg [6:0] keycode1;
 output reg [6:0] ascii0;
