@@ -1,13 +1,13 @@
 module keyboard(clk,rest,ps2clk,ps2dat,keycode0,keycode1,ascii0,ascii1,cnt0,cnt1);
 input reg ps2clk,ps2dat;
-input reg clk,rest;
+input reg clk;
 output reg [6:0] keycode0;
 output reg [6:0] keycode1;
 output reg [6:0] ascii0;
 output reg [6:0] ascii1;
 output reg [6:0] cnt0;
 output reg [6:0] cnt1;
-
+reg reset=1'b1;
 reg key_up=1'b0;
 reg display_enable=1'b0;
 reg [7:0] data;
