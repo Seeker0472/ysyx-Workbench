@@ -1,9 +1,11 @@
 module bcd7seg(
   input  [3:0] b,
+  input enable,
   output reg [6:0] h
 );
 // detailed implementation ...
   always @(*) begin
+    if(enable==1'b1)begin
     case(b)
       4'b0000 : h = 7'b0000001;
       4'b0001 : h = 7'b1001111;
@@ -23,6 +25,9 @@ module bcd7seg(
       4'b1111 : h = 7'b0111000;
       default : h = 7'b1111111;
     endcase
+    end else begin
+      h=7'b1111111;
+    end
   end
 endmodule
 
@@ -31,7 +36,7 @@ input [7:0] enco;
 output reg [6:0] h;
 integer i;
 reg [3:0] bcd_input;
-bcd7seg seg0(bcd_input, h);
+bcd7seg seg0(bcd_input,1'b1, h);
 always @(enco) begin
     bcd_input = 4'b1111;
     // h=7'b1111111;

@@ -1,5 +1,5 @@
 #include <nvboard.h>
-#include <Vkeyboard_sim.h>
+#include <Vkeyboard.h>
 #include<iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
@@ -7,7 +7,7 @@ static TOP_NAME dut;
 static VerilatedVcdC* tfp; // 用于生成波形的指针
 void nvboard_bind_all_pins(TOP_NAME *dut);
 unsigned int sim_time=0;
-static int wave_enable=true;
+static int wave_enable=false;
 
 void single_cycle(){
   dut.clk = 0;
