@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 module FSM_bin
 (
   input   clk, in, reset,

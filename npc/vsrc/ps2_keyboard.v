@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 module ps2_keyboard(clk,clrn,ps2_clk,ps2_data,data,
                     ready,nextdata_n,overflow);
     input clk,clrn,ps2_clk,ps2_data;
@@ -55,7 +54,6 @@ module ps2_keyboard(clk,clrn,ps2_clk,ps2_data,data,
 
 endmodule
 
-`timescale 1ns / 1ps
 module ps2_keyboard_model(
     output reg ps2_clk,
     output reg ps2_data
@@ -86,7 +84,6 @@ endtask
 
 endmodule
 
-`timescale 1ns / 1ps
 module keyboard_sim;
 
 /* parameter */
