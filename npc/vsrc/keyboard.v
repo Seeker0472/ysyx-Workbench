@@ -57,6 +57,7 @@ output reg [6:0] ascii1;
 reg [7:0] val;
 always @(*) begin
         case (data)
+            //A-Z
             8'h1C	: val=	8'h41	;
             8'h32	: val=	8'h42	;
             8'h21	: val=	8'h43	;
@@ -83,6 +84,17 @@ always @(*) begin
             8'h22	: val=	8'h58	;
             8'h35	: val=	8'h59	;
             8'h1A	: val=	8'h5A	;
+            //0-9
+            8'h45   : val=  8'h30   ;
+            8'h16   : val=  8'h31   ;
+            8'h1E   : val=  8'h32   ;
+            8'h26   : val=  8'h33   ;
+            8'h25   : val=  8'h34   ;
+            8'h2E   : val=  8'h35   ;
+            8'h36   : val=  8'h36   ;
+            8'h3D   : val=  8'h37   ;
+            8'h3E   : val=  8'h38   ;
+            8'h46   : val=  8'h39   ;
             default : val=  8'hFF   ;
         endcase
     end
