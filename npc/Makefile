@@ -1,3 +1,6 @@
+# TOP
+TOP ?=example
+
 BUILD_DIR = ./build
 TOP ?= core
 PRJ = playground
