@@ -42,7 +42,7 @@ always @(negedge clk)begin
         nextdata_n=1'b1;
     end
 end
-display(data_current,display_enable,keycode0,keycode1,ascii0,ascii1);
+display dis(data_current,display_enable,keycode0,keycode1,ascii0,ascii1);
 bcd7seg bc5(cnt[3:0],1'b1,cnt0);
 bcd7seg bc6(cnt[7:4],1'b1,cnt1);
 endmodule
