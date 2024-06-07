@@ -1,6 +1,5 @@
 
 `timescale 1ns / 1ps
-
 module FSM_bin
 (
   input   clk, in, reset,
@@ -43,8 +42,8 @@ MuxKeyWithDefault#(9, 4, 4) stateMux(.out(state_din), .key(state_dout), .default
 }));
 
 endmodule
-`timescale 1ns / 1ps
 
+`timescale 1ns / 1ps
 module ps2_keyboard(clk,clrn,ps2_clk,ps2_data,data,
                     ready,nextdata_n,overflow);
     input clk,clrn,ps2_clk,ps2_data;
