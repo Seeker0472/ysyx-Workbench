@@ -25,7 +25,7 @@ ps2_keyboard keyb(
     .overflow(overflow),
 );
 always @(negedge clk)begin
-    if(nextdata_n=1'b1)begin//nextdata_n保持一个周期
+    if(nextdata_n==1'b1)begin//nextdata_n保持一个周期
         nextdata_n=1'b0;
     end else if(ready==1'b1)begin//准备接收数据
         if(key_up=1'b1)begin//如果上一个数据是按键抬起
