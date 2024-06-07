@@ -29,7 +29,7 @@ output reg [3:0] OUT;
 reg [3:0] temp;
 always @(*)begin
     temp={4{OP}}^B;
-    temp+=+{3'b000,OP};
+    temp<=temp+{3'b000,OP};
 end
 assign OUT=A+temp;
 endmodule
