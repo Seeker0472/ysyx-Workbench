@@ -1,5 +1,9 @@
+# TOP
+TOP ?=example
+
 BUILD_DIR = ./build
-NXDC_FILES = ./constr/example.nxdc
+NXDC_FILES = ./constr/$(TOP).nxdc
+
 $(shell mkdir -p $(BUILD_DIR))
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 $(SRC_AUTO_BIND): $(NXDC_FILES)
@@ -7,9 +11,9 @@ $(SRC_AUTO_BIND): $(NXDC_FILES)
 
 # 所有的.v文件
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+# VSRCS = /home/seeker/Develop/ysyx-workbench/npc/vsrc/ps2_keyboard.v
 
-# TOP
-TOP ?=example
+
 # TOP_NAME= V
 TOP_NAME=V${TOP}
 # rules for NVBoard

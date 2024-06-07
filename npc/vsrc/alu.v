@@ -45,7 +45,7 @@ input [3:0] val;
 output reg [6:0] outnum;
 output reg [6:0] outsin;
 reg [3:0] num;
-bcd7seg seg(num, outnum);
+bcd7seg seg(num,1'b1, outnum);
     always @(*) begin
         if (val[3] == 1'b1) begin
             outsin = 7'b1111110;
