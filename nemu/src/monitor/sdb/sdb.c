@@ -58,11 +58,29 @@ static int cmd_step(char *args){
   int time=1;
   if(args)
     sscanf(args,"%d",&time);
-  printf("cmd_step :%d",time);
-  return 0;
+  cpu_exec(time);
+  // printf("cmd_step :%d",time);
+  return -1;
 }
 static int cmd_print_status(char *args){
-  printf("cmd_print_status :%s",args);
+  char op;
+  if(!args){
+    printf("Please enter a operation(w/r)!");
+    return -1;
+  }
+  sscanf(args,"%c",&op);
+  switch(op){
+    case 'r':
+      isa_reg_display();
+    break;
+    case 'w':
+      printf("Watch Point not imped");
+    break;
+    default:
+    printf("Please enter a operation(w/r)!");
+    return -1;
+  }
+  // printf("cmd_print_status :%s",args);
   return 0;
 }
 static int cmd_scan_mem(char *args){
