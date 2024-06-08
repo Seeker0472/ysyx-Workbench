@@ -51,7 +51,7 @@ static int cmd_c(char *args) {
 
 static int cmd_q(char *args) {
   nemu_state.state=NEMU_QUIT;
-  return -1;
+  return 0;
 }
 //my_func start!
 static int cmd_step(char *args){
@@ -60,13 +60,13 @@ static int cmd_step(char *args){
     sscanf(args,"%d",&time);
   cpu_exec(time);
   // printf("cmd_step :%d",time);
-  return -1;
+  return 0;
 }
 static int cmd_print_status(char *args){
   char op;
   if(!args){
     printf("Please enter a operation(w/r)!");
-    return -1;
+    return 0;
   }
   sscanf(args,"%c",&op);
   switch(op){
@@ -78,7 +78,7 @@ static int cmd_print_status(char *args){
     break;
     default:
     printf("Please enter a operation(w/r)!");
-    return -1;
+    return 0;
   }
   // printf("cmd_print_status :%s",args);
   return 0;
