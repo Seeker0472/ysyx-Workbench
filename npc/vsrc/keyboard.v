@@ -30,7 +30,7 @@ always @(negedge clk)begin
     end else if(ready==1'b1)begin//准备接收数据
         if(key_up==1'b1)begin//如果上一个数据是按键抬起
             key_up=1'b0;
-            cnt+=8'b00000001;
+            cnt <= cnt + 8'b00000001;
             display_enable=1'b0;
         end else if(data==8'b11110000)begin//如果是按键抬起
             key_up=1'b1;
