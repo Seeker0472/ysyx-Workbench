@@ -56,8 +56,9 @@ static int cmd_q(char *args) {
 //my_func start!
 static int cmd_step(char *args){
   int time=1;
-  sscanf(args,"%d",&time);
-  printf("cmd_step :%s-%d",args,time);
+  if(args)
+    sscanf(args,"%d",&time);
+  printf("cmd_step :%d",time);
   return 0;
 }
 static int cmd_print_status(char *args){
