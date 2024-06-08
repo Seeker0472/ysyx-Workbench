@@ -32,6 +32,10 @@ static word_t pmem_read(paddr_t addr, int len) {
   return ret;
 }
 
+word_t call_pmem_read(paddr_t addr, int len){
+  return pmem_read(addr,len);
+}
+
 static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);
 }
