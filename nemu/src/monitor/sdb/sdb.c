@@ -53,6 +53,32 @@ static int cmd_q(char *args) {
   nemu_state.state=NEMU_QUIT;
   return -1;
 }
+//my_func start!
+static int cmd_step(char *args){
+  printf("cmd_step :%s",args);
+  return 0;
+}
+static int cmd_print_status(char *args){
+  printf("cmd_print_status :%s",args);
+  return 0;
+}
+static int cmd_scan_mem(char *args){
+  printf("cmd_scan_mem :%s",args);
+  return 0;
+}
+static int cmd_eval(char *args){
+  printf("cmd_eval :%s",args);
+  return 0;
+}
+static int cmd_watch(char *args){
+  printf("cmd_watch :%s",args);
+  return 0;
+}
+static int cmd_del_watch(char *args){
+  printf("cmd_watch :%s",args);
+  return 0;
+}
+//my_func end!
 
 static int cmd_help(char *args);
 
@@ -63,9 +89,13 @@ static struct {
 } cmd_table [] = {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
-  // { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Single-step execution", cmd_step },
+  { "info", "Print the status of the program.(reg,watchpoint..etc)", cmd_print_status },
+  { "x", "Scan mem", cmd_scan_mem },
+  { "p", "Eval expression", cmd_eval },
+  { "w", "Set WatchPoint", cmd_watch },
+  { "d", "Delete WatchPoint", cmd_del_watch },
   /* TODO: Add more commands */
 
 };
