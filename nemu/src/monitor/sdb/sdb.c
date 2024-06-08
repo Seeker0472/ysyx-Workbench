@@ -19,9 +19,11 @@
 #include <readline/history.h>
 #include <utils.h>
 #include "sdb.h"
+#include <memory/host.h>
+
+word_t warp_pmem_read(paddr_t addr, int len) ;
 
 static int is_batch_mode = false;
-word_t call_pmem_read(paddr_t addr, int len);
 
 void init_regex();
 void init_wp_pool();
@@ -89,7 +91,8 @@ static int cmd_scan_mem(char *args){
   paddr_t addr;
   sscanf(args,"%d %u",&n,&addr);
   for(;n>0;n--){
-    printf("%lu",call_pmem_read(addr,4));
+    printf("readMem %lu" ,warp_pmem_read(addr,4));
+    addr+=4;
   }
   // printf("cmd_scan_mem :%s",args);
   return 0;
