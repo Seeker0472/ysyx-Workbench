@@ -55,7 +55,9 @@ static int cmd_q(char *args) {
 }
 //my_func start!
 static int cmd_step(char *args){
-  printf("cmd_step :%s",args);
+  int time=1;
+  sscanf(args,"%d",&time);
+  printf("cmd_step :%s-%d",args,time);
   return 0;
 }
 static int cmd_print_status(char *args){
@@ -75,7 +77,7 @@ static int cmd_watch(char *args){
   return 0;
 }
 static int cmd_del_watch(char *args){
-  printf("cmd_watch :%s",args);
+  printf("cmd_del_watch :%s",args);
   return 0;
 }
 //my_func end!
