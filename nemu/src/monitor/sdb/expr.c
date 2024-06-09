@@ -226,7 +226,21 @@ int get_main_op(int p,int q){
 }
 
 bool check_parentheses(int p,int q){
-  if(tokens[p].type=='('&&tokens[q].type==')')
-    return true;
-  return false;
+  if(tokens[p].type=='('){
+  // char stack1[32]={};
+  int top=0;
+  while(p<q){
+    if(tokens[p].type=='('){
+      // stack1[top++]='(';
+      top++;
+    }
+    if(tokens[p].type==')'){
+      top--;
+    }
+    if(top==0)
+      return false;
+  }
+  // return true;
+}
+return true;
 }
