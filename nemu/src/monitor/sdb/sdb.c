@@ -100,19 +100,25 @@ static int cmd_scan_mem(char *args){
   // printf("cmd_scan_mem :%s",args);
   return 0;
 }
+static int test_pr()
+{
+  FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
+  int result;
+  char *exp = malloc(700 * sizeof(char));
+  while (fscanf(fp, "%d %s\n", &result, exp) != -1)
+  {
+    // printf("%s\n",exp);
+    bool ok = true;
+    int res = expr(exp, &ok);
+    if (ok && result != res)
+      printf("fail! %d/%d %s\n", res, result, exp);
+    // else
+    //   printf("OK");
+  }
+  return 0;
+}
 static int cmd_eval(char *args){
-//   {  FILE* fp=fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input","r");
-// int result;
-// char* exp=malloc(700*sizeof(char));
-// while(fscanf(fp,"%d %s\n",&result,exp)!=-1){
-//   // printf("%s\n",exp);
-//   bool ok=true;
-//   int res=expr(exp,&ok);
-//   if(ok&&result!=res)
-//     printf("fail! %d/%d %s\n",res,result,exp);
-//   // else
-//   //   printf("OK");
-// }}
+
   bool success;
   word_t result=expr(args,&success);
 
@@ -150,6 +156,7 @@ static struct {
   { "p", "Eval expression", cmd_eval },
   { "w", "Set WatchPoint", cmd_watch },
   { "d", "Delete WatchPoint", cmd_del_watch },
+  { "t", "t", test_pr },
   /* TODO: Add more commands */
 
 };
