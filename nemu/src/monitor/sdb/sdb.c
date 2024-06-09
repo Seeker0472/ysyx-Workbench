@@ -105,7 +105,7 @@ static int cmd_eval(char *args){
 int result;
 char* exp=malloc(700*sizeof(char));
 while(fscanf(fp,"%d %s",&result,exp)){
-  printf("%s\n",exp);
+  // printf("%s\n",exp);
   bool ok=true;
   int res=expr(exp,&ok);
   if(ok&&result!=res)
