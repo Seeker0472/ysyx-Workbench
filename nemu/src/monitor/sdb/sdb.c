@@ -101,8 +101,18 @@ static int cmd_scan_mem(char *args){
   return 0;
 }
 static int cmd_eval(char *args){
+  {  FILE* fp=fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input","r");
+int result;
+char* exp=malloc(700*sizeof(char));
+while(fscanf(fp,"%d %s",&result,exp)){
+  bool ok=true;
+  int res=expr(exp,&ok);
+  if(ok&&result!=res)
+    printf("fail!");
+}}
   bool success;
   word_t result=expr(args,&success);
+
   if (success){
     printf("cmd_eval :%s, result=%lu\n",args,result);
   }else{

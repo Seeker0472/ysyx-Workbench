@@ -24,15 +24,7 @@ word_t expr(char *e, bool *success) ;
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
 #ifdef TEST_CALC
-FILE* fp=fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input","r");
-int result;
-char* exp=malloc(700*sizeof(char));
-while(fscanf(fp,"%d %s",&result,exp)){
-  bool ok=true;
-  int res=expr(exp,&ok);
-  if(ok&&result!=res)
-    printf("fail!");
-}
+
 
 #endif
 #ifdef CONFIG_TARGET_AM
