@@ -176,11 +176,12 @@ unsigned long eval(int p,int q) {
   }
   else {
     //先计算主运算符
-    char op = tokens[get_main_op(p,q)].type;
+    int op=get_main_op(p,q);
+    char op_type = tokens[op].type;
     unsigned long val1 = eval(p, op - 1);
     unsigned long val2 = eval(op + 1, q);
 
-    switch (op) {
+    switch (op_type) {
       case '+': return val1 + val2;
       case '-': return val1-val2;
       case '*': return val1*val2;
