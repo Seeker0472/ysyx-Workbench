@@ -14,7 +14,7 @@
 ***************************************************************************************/
 
 #include <common.h>
-// #define TEST_CALC
+#define TEST_CALC
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
@@ -32,7 +32,6 @@ while(fscanf(fp,"%d %s",&result,exp)){
   int res=expr(exp,&ok);
   if(ok&&result!=res)
     printf("fail!");
-
 }
 
 #endif
