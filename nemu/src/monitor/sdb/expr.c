@@ -213,7 +213,7 @@ int get_main_op(int p,int q){
         stack[top++]='(';
       break;
       case ')':
-        if(stack[top-1]==')')
+        if(stack[top-1]=='(')
           pos--;
         else
           assert(0);//括号不匹配！
