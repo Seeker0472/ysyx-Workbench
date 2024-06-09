@@ -89,7 +89,7 @@ static int cmd_print_status(char *args){
 static int cmd_scan_mem(char *args){
   int n;
   paddr_t addr;
-  sscanf(args,"%d %u",&n,&addr);
+  sscanf(args,"%d %x",&n,&addr);
   for(;n>0;n--){
     //这个似乎有问题，看懂了以后自己实现！！！
     // printf("readMem %lu %lu %lu %lu" ,warp_pmem_read(addr,1),warp_pmem_read(addr+1,1),warp_pmem_read(addr+2,1),warp_pmem_read(addr+3,1));
