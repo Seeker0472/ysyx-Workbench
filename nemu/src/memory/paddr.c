@@ -32,8 +32,8 @@ static word_t pmem_read(paddr_t addr, int len) {
   return ret;
 }
 
-word_t warp_pmem_read(paddr_t addr, int len) {
-  return pmem_read(addr,len);
+word_t warp_pmem_read(paddr_t addr) {
+  return *(uint32_t *)(pmem+addr-CONFIG_MBASE);
 }
 
 
