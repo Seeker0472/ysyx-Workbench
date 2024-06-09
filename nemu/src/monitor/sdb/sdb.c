@@ -20,7 +20,7 @@
 #include <utils.h>
 #include "sdb.h"
 #include <memory/host.h>
-
+word_t expr(char *e, bool *success);
 word_t warp_pmem_read(paddr_t addr) ;
 
 static int is_batch_mode = false;
@@ -91,7 +91,8 @@ static int cmd_scan_mem(char *args){
   paddr_t addr;
   sscanf(args,"%d %x",&n,&addr);
   for(;n>0;n--){
-    //这个似乎有问题，看懂了以后自己实现！！！
+    //这个似乎有问题！！
+    // 进制问题（^-^）
     // printf("readMem %lu %lu %lu %lu" ,warp_pmem_read(addr,1),warp_pmem_read(addr+1,1),warp_pmem_read(addr+2,1),warp_pmem_read(addr+3,1));
     printf("<0x%010x>    0x%08lx\n",addr,warp_pmem_read(addr));
     addr+=4;
@@ -100,7 +101,14 @@ static int cmd_scan_mem(char *args){
   return 0;
 }
 static int cmd_eval(char *args){
-  printf("cmd_eval :%s",args);
+  bool success;
+  word_t result=expr(args,&success);
+  if (success){
+    printf("cmd_eval :%s, result=%lu",args,result);
+  }else{
+    printf("Error");
+
+  }
   return 0;
 }
 static int cmd_watch(char *args){

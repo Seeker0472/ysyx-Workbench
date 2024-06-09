@@ -20,9 +20,17 @@
  */
 #include <regex.h>
 
+#include<string.h>
+
+// #include<stdio.h>
+//func declared by myself
+unsigned long eval(int p,int q);
+int get_main_op(int p,int q);
+bool check_parentheses(int p,int q);
+
 enum {
   TK_NOTYPE = 256, TK_EQ,
-
+  TK_NUM
   /* TODO: Add more token types */
 
 };
@@ -39,6 +47,12 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"-",'-'},
+  {"\\*",'*'},
+  {"/",'/'},
+  {"\\(",'('},
+  {"\\)",')'},
+  {"[0-9]+",TK_NUM},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -66,7 +80,8 @@ typedef struct token {
   int type;
   char str[32];
 } Token;
-
+//__attribute__((used)) 是一个 GCC 编译器的扩展属性，表示这个变量即使在代码中没有显式使用，也不应被编译器优化掉。
+//tokens数组，存放处理好的Tokens
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
@@ -95,7 +110,17 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          case TK_NUM:
+            if(substr_len>=32)//溢出！
+              assert(0);
+            tokens[nr_token].type=rules[i].token_type;
+            strncpy(tokens[nr_token++].str,substr_start,substr_len);
+            printf("%s\n",tokens[nr_token-1].str);
+          break;
+          case TK_NOTYPE:
+            break;
+          default: 
+            tokens[nr_token++].type=rules[i].token_type;
         }
 
         break;
@@ -113,13 +138,94 @@ static bool make_token(char *e) {
 
 
 word_t expr(char *e, bool *success) {
+  //TODO：要不要先检查括号是否匹配？
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  word_t result=eval(0,nr_token-1);
 
-  return 0;
+  return result;
+}
+
+unsigned long eval(int p,int q) {
+  if (p > q) {
+    /* Bad expression */
+    assert(0);
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+    if(tokens[p].type!=TK_NUM)
+      assert(0);
+    unsigned long val;
+    // char* str;
+    //TODO:溢出怎么办？
+    sscanf(tokens[p].str,"%lu",&val);
+    return val;
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    //先计算主运算符
+    char op = tokens[get_main_op(p,q)].type;
+    unsigned long val1 = eval(p, op - 1);
+    unsigned long val2 = eval(op + 1, q);
+
+    switch (op) {
+      case '+': return val1 + val2;
+      case '-': return val1-val2;
+      case '*': return val1*val2;
+      case '/': return val1/val2;
+      default: assert(0);
+    }
+  }
+}
+
+int get_main_op(int p,int q){
+  //逐个扫描(+ -)>(* /)
+  //遇到括号要处理
+  int pos=-1;
+  char stack[32];
+  int top=0;
+  while(p>=q){
+    switch(tokens[p].type){
+      case '+':
+      case '-':
+        if(top==0)
+          pos=p;
+      break;
+      case '*':
+      case '/':
+        if(top==0&&pos==-1)
+          pos=p;
+      break;
+      case '(':
+        stack[pos++]='(';
+      break;
+      case ')':
+        if(stack[pos-1]==')')
+          pos--;
+        else
+          assert(0);//括号不匹配！
+      break;
+      default:
+    }
+  p++;
+  }
+  return pos;
+}
+
+bool check_parentheses(int p,int q){
+  if(tokens[p].type=='('&&tokens[q].type==')')
+    return true;
+  return false;
 }
