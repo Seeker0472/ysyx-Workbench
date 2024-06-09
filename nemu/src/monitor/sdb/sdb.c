@@ -108,7 +108,7 @@ while(fscanf(fp,"%d %s",&result,exp)){
   bool ok=true;
   int res=expr(exp,&ok);
   if(ok&&result!=res)
-    printf("fail!  %s\n",exp);
+    printf("fail! %d/%d %s\n",res,result,exp);
   else
     printf("OK");
 }}
