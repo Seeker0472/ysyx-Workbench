@@ -241,7 +241,7 @@ bool check_parentheses(int p,int q){
       return false;
     p++;
   }
-  // return true;
+  return true;
 }
-return true;
+return false;
 }
