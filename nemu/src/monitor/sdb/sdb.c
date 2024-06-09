@@ -101,18 +101,18 @@ static int cmd_scan_mem(char *args){
   return 0;
 }
 static int cmd_eval(char *args){
-  {  FILE* fp=fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input","r");
-int result;
-char* exp=malloc(700*sizeof(char));
-while(fscanf(fp,"%d %s",&result,exp)){
-  printf("%s\n",exp);
-  bool ok=true;
-  int res=expr(exp,&ok);
-  if(ok&&result!=res)
-    printf("fail! %d/%d %s\n",res,result,exp);
-  // else
-  //   printf("OK");
-}}
+//   {  FILE* fp=fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input","r");
+// int result;
+// char* exp=malloc(700*sizeof(char));
+// while(fscanf(fp,"%d %s",&result,exp)){
+//   printf("%s\n",exp);
+//   bool ok=true;
+//   int res=expr(exp,&ok);
+//   if(ok&&result!=res)
+//     printf("fail! %d/%d %s\n",res,result,exp);
+//   // else
+//   //   printf("OK");
+// }}
   bool success;
   word_t result=expr(args,&success);
 
