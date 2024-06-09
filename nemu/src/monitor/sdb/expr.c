@@ -197,7 +197,7 @@ int get_main_op(int p,int q){
   int pos=-1;
   char stack[32];
   int top=0;
-  while(p>=q){
+  while(p<=q){
     switch(tokens[p].type){
       case '+':
       case '-':
