@@ -210,10 +210,10 @@ int get_main_op(int p,int q){
           pos=p;
       break;
       case '(':
-        stack[pos++]='(';
+        stack[top++]='(';
       break;
       case ')':
-        if(stack[pos-1]==')')
+        if(stack[top-1]==')')
           pos--;
         else
           assert(0);//括号不匹配！
