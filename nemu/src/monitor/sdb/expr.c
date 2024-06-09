@@ -24,7 +24,7 @@
 
 // #include<stdio.h>
 //func declared by myself
-unsigned long eval(int p,int q);
+long long eval(int p,int q);
 int get_main_op(int p,int q);
 bool check_parentheses(int p,int q);
 
@@ -150,7 +150,7 @@ word_t expr(char *e, bool *success) {
   return result;
 }
 
-unsigned long eval(int p,int q) {
+long long eval(int p,int q) {
   if (p > q) {
     /* Bad expression */
     assert(0);
@@ -178,8 +178,8 @@ unsigned long eval(int p,int q) {
     //先计算主运算符
     int op=get_main_op(p,q);
     char op_type = tokens[op].type;
-    unsigned long val1 = eval(p, op - 1);
-    unsigned long val2 = eval(op + 1, q);
+    long long val1 = eval(p, op - 1);
+    long long val2 = eval(op + 1, q);
 
     switch (op_type) {
       case '+': return val1 + val2;
