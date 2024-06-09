@@ -109,6 +109,8 @@ while(fscanf(fp,"%d %s",&result,exp)){
   int res=expr(exp,&ok);
   if(ok&&result!=res)
     printf("fail!");
+  else
+    printf("OK");
 }}
   bool success;
   word_t result=expr(args,&success);
