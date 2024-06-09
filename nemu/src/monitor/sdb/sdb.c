@@ -104,7 +104,7 @@ static int cmd_eval(char *args){
   {  FILE* fp=fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input","r");
 int result;
 char* exp=malloc(700*sizeof(char));
-while(fscanf(fp,"%d %s\n",&result,exp)){
+while(fscanf(fp,"%d %s\n",&result,exp)!=-1){
   // printf("%s\n",exp);
   bool ok=true;
   int res=expr(exp,&ok);
