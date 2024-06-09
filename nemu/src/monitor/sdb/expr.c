@@ -206,7 +206,7 @@ int get_main_op(int p,int q){
       break;
       case '*':
       case '/':
-        if(top==0&&pos==-1)
+        if(top==0&&pos==-1&&!(tokens[pos].type=='*'||tokens[pos].type=='/'))
           pos=p;
       break;
       case '(':
