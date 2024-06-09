@@ -14,7 +14,7 @@
 ***************************************************************************************/
 
 #include <common.h>
-#define TEST_CALC
+// #define TEST_CALC
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
