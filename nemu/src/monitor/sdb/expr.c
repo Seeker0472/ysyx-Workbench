@@ -239,6 +239,7 @@ bool check_parentheses(int p,int q){
     }
     if(top==0)
       return false;
+    p++;
   }
   // return true;
 }
