@@ -23,7 +23,7 @@ int is_exit_status_bad();
 word_t expr(char *e, bool *success) ;
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
-// #ifdef TEST_CALC
+#ifdef TEST_CALC
 FILE* fp=fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input","r");
 int result;
 char exp[700];
@@ -34,7 +34,7 @@ while(fscanf(fp,"%d %s",&result,exp)){
     printf("fail!");
 }
 
-// #endif
+#endif
 #ifdef CONFIG_TARGET_AM
   am_init_monitor();
 #else
