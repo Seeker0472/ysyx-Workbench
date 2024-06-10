@@ -27,10 +27,11 @@
 long eval(int p,int q);
 int get_main_op(int p,int q);
 bool check_parentheses(int p,int q);
+word_t warp_pmem_read(paddr_t addr);
 
 enum {
   TK_NOTYPE = 256, TK_EQ,
-  TK_NUM
+  TK_NUM,TK_HEX,TK_REG,TK_NOTEQ,TK_AND,TK_DEREFENCE
   /* TODO: Add more token types */
 
 };
@@ -43,16 +44,20 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+  {"[0-9]+",TK_NUM},
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
+  {"0x[0-9]+", TK_HEX}, // hex-TODO:怎么处理？
+  {"$\\w+",TK_REG},     // reg-TODO:怎么处理？
+  {"\\(",'('},
+  {"\\)",')'},
+  {"\\+", '+'},         // +
   {"-",'-'},
   {"\\*",'*'},
   {"/",'/'},
-  {"\\(",'('},
-  {"\\)",')'},
-  {"[0-9]+",TK_NUM},
+  {"==", TK_EQ},        // ==
+  {"!=", TK_NOTEQ},     // !=
+  {"&&", TK_AND},       // &&
+  //指针解引用放在乘法一起处理
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -85,22 +90,26 @@ typedef struct token {
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
-static bool make_token(char *e) {
+static bool make_token(char *e)
+{
   int position = 0;
   int i;
   regmatch_t pmatch;
 
   nr_token = 0;
 
-  while (e[position] != '\0') {
+  while (e[position] != '\0')
+  {
     /* Try all rules one by one. */
-    for (i = 0; i < NR_REGEX; i ++) {
-      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
+    for (i = 0; i < NR_REGEX; i++)
+    {
+      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0)
+      {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-        //     i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -109,27 +118,39 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
-        switch (rules[i].token_type) {
-          case TK_NUM:
-            if(substr_len>=32)//溢出！
-              assert(0);
-            tokens[nr_token].type=rules[i].token_type;
-            strncpy(tokens[nr_token].str,substr_start,substr_len);
-            (tokens[nr_token].str)[substr_len]='\0';
-            nr_token++;
-            // printf("%s\n",tokens[nr_token-1].str);
+        switch (rules[i].token_type)
+        {
+        case TK_NUM:
+          if (substr_len >= 32) // 溢出！
+            assert(0);
+          tokens[nr_token].type = rules[i].token_type;
+          strncpy(tokens[nr_token].str, substr_start, substr_len);
+          (tokens[nr_token].str)[substr_len] = '\0';
+          nr_token++;
+          // printf("%s\n",tokens[nr_token-1].str);
           break;
-          case TK_NOTYPE:
-            break;
-          default: 
-            tokens[nr_token++].type=rules[i].token_type;
+        case TK_NOTYPE:
+          break;
+        case '*': // 单独处理乘法和解引用
+          if (tokens[nr_token - 1].type == TK_NUM || tokens[nr_token - 1].type == ')')
+          { // 当成乘法
+            tokens[nr_token++].type = '*';
+          }
+          else
+          {
+            tokens[nr_token++].type = TK_DEREFENCE;
+          }
+          break;
+        default:
+          tokens[nr_token++].type = rules[i].token_type;
         }
 
         break;
       }
     }
 
-    if (i == NR_REGEX) {
+    if (i == NR_REGEX)
+    {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
@@ -163,6 +184,13 @@ long eval(int p,int q) {
      * For now this token should be a number.
      * Return the value of the number.
      */
+    if(tokens[p].type==TK_REG){
+      bool success=false;
+      word_t result=isa_reg_str2val(tokens[p].str,&success);
+      if(success){
+        return result;
+      }
+    }
     if(tokens[p].type!=TK_NUM)
       assert(0);
     long val;
@@ -180,8 +208,10 @@ long eval(int p,int q) {
   else {
     //先计算主运算符
     int op=get_main_op(p,q);
-    char op_type = tokens[op].type;
-    long val1 = eval(p, op - 1);
+    int op_type = tokens[op].type;
+    long val1 =0;
+    if(op_type!=TK_DEREFENCE)
+      val1= eval(p, op - 1);
     long val2 = eval(op + 1, q);
 
     switch (op_type) {
@@ -189,6 +219,11 @@ long eval(int p,int q) {
       case '-': return val1-val2;
       case '*': return val1*val2;
       case '/': return val1/val2;
+      case TK_EQ :return val1==val2;
+      case TK_NOTEQ :return val1!=val2;
+      case TK_AND: return val1&&val2;
+      case TK_DEREFENCE: return warp_pmem_read(val2);//TODO!-读出一个整数
+      // case 
       default: assert(0);
     }
   }
@@ -200,18 +235,42 @@ int get_main_op(int p,int q){
   int pos=-1;
   char stack[32];
   int top=0;
+  int priority=-1;//运算符优先级,参考 https://en.cppreference.com/w/c/language/operator_precedence
   while(p<=q){
     switch(tokens[p].type){
+      case TK_DEREFENCE:
+        if(top==0&&priority<2){
+          pos=p;
+          priority=2;
+        }
+      break;
       case '+':
       case '-':
-        if(top==0)
+      if(top==0&&priority<4){
           pos=p;
+          priority=4;
+      }
       break;
       case '*':
       case '/':
-        if(top==0&&(pos==-1||!(tokens[pos].type=='+'||tokens[pos].type=='-')))
-        // if(top==0&&pos==-1&&!pos!=-1&&(tokens[pos].type=='*'||tokens[pos].type=='/'))
+        // if(top==0&&(pos==-1||!(tokens[pos].type=='+'||tokens[pos].type=='-'))){
+        if(top==0&&priority<3){
           pos=p;
+          priority=3;
+        }
+      break;
+      case TK_EQ:
+      case TK_NOTEQ:
+        if(top==0&&priority<7){
+          pos=p;
+          priority=7;
+        }
+      break;
+      case TK_AND:
+        if(top==0&&priority<11){
+          pos=p;
+          priority=11;
+        }
       break;
       case '(':
         stack[top++]='(';
