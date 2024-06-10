@@ -69,3 +69,19 @@ void print_watch_points(){
     printf("%-3d\t%-10lu\t%-10s\n",cur->NO,cur->last_result,cur->expr);
   }
 }
+bool check_watch_point(){
+  bool changed=false;
+  for(WP* cur=head;cur!=NULL;cur=cur->next){
+    bool succ=false;
+    word_t result=expr(cur->expr,&succ);
+    if(!succ){
+      changed=true;
+      printf("failed to execute expression: %s",cur->expr);
+    }
+    if(succ&&result!=cur->last_result){
+      cur->last_result=result;
+      changed=true;
+    }
+  }
+  return changed;
+}
