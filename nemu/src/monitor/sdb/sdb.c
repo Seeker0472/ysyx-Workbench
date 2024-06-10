@@ -120,10 +120,10 @@ static int test_pr()
 static int cmd_eval(char *args){
 
   bool success;
-  word_t result=expr(args,&success);
+  long long result=expr(args,&success);
 
   if (success){
-    printf("cmd_eval :%s, result=%lu\n",args,result);
+    printf("cmd_eval :%s, result=%llu\n",args,result);
   }else{
     printf("Error");
 

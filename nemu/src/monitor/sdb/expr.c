@@ -24,7 +24,7 @@
 
 // #include<stdio.h>
 //func declared by myself
-long long eval(int p,int q);
+long eval(int p,int q);
 int get_main_op(int p,int q);
 bool check_parentheses(int p,int q);
 
@@ -136,6 +136,7 @@ static bool make_token(char *e) {
   return true;
 }
 
+//返回值word_t!
 
 word_t expr(char *e, bool *success) {
   //TODO：要不要先检查括号是否匹配？
@@ -150,7 +151,7 @@ word_t expr(char *e, bool *success) {
   return result;
 }
 
-long long eval(int p,int q) {
+long eval(int p,int q) {
   if (p > q) {
     /* Bad expression */
     assert(0);
@@ -162,7 +163,7 @@ long long eval(int p,int q) {
      */
     if(tokens[p].type!=TK_NUM)
       assert(0);
-    unsigned long val;
+    long val;
     // char* str;
     //TODO:溢出怎么办？
     sscanf(tokens[p].str,"%lu",&val);
@@ -178,8 +179,8 @@ long long eval(int p,int q) {
     //先计算主运算符
     int op=get_main_op(p,q);
     char op_type = tokens[op].type;
-    long long val1 = eval(p, op - 1);
-    long long val2 = eval(op + 1, q);
+    long val1 = eval(p, op - 1);
+    long val2 = eval(op + 1, q);
 
     switch (op_type) {
       case '+': return val1 + val2;
