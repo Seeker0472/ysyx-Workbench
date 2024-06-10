@@ -30,4 +30,5 @@ typedef struct watchpoint {
 WP* new_wp();
 void free_wp(WP *wp);
 void print_watch_points();
+bool check_watch_point();
 #endif
