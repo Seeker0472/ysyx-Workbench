@@ -34,7 +34,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
   // printf("%lu",cpu.pc);
   if(s[0]=='$')
     s+=1;
-  if(strcmp(s,"pc")){
+  if(strcmp(s,"pc")==0){
     *success=true;
     return cpu.pc;
   }
