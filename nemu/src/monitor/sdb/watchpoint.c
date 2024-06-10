@@ -64,6 +64,6 @@ void free_wp(WP *wp){
 void print_watch_points(){
   printf("No\tLast_val\tExpression\n");
   for(WP* cur=head;cur!=NULL;cur=cur->next){
-    printf("%d\t%lu\t%s",cur->NO,cur->last_result,cur->expr);
+    printf("%d\t%lu\t%s\n",cur->NO,cur->last_result,cur->expr);
   }
 }
