@@ -254,7 +254,7 @@ int get_main_op(int p,int q){
       case '*':
       case '/':
         // if(top==0&&(pos==-1||!(tokens[pos].type=='+'||tokens[pos].type=='-'))){
-        if(top==0&&priority<3){
+        if(top==0&&priority<=3){
           pos=p;
           priority=3;
         }
