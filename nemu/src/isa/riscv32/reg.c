@@ -31,6 +31,8 @@ void isa_reg_display() {
 //获取寄存器的值，s应该传入$xx
 word_t isa_reg_str2val(const char *s, bool *success) {
   *success=false;
+  printf("%lu",cpu.pc);
+
   if(s[0]=='$')
     s+=1;
   for(int i=0;i<32;i++){
@@ -39,6 +41,5 @@ word_t isa_reg_str2val(const char *s, bool *success) {
       return cpu.gpr[i];
     }
   }
-  printf("%lu",cpu.pc);
   return 0;
 }
