@@ -109,7 +109,7 @@ static int test_pr()
   {
     // printf("%s\n",exp);
     bool ok = true;
-    int res = expr(exp, &ok);
+    int res = (int)expr(exp, &ok);
     if (ok && result != res)
       printf("fail! %d/%d %s\n", res, result, exp);
     // else
