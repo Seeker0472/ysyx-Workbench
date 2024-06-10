@@ -44,9 +44,9 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
+  {"0x[0-9]+", TK_HEX}, // hex-TODO:怎么处理？
   {"[0-9]+",TK_NUM},
   {" +", TK_NOTYPE},    // spaces
-  {"0x[0-9]+", TK_HEX}, // hex-TODO:怎么处理？
   {"$\\w+",TK_REG},     // reg-TODO:怎么处理？
   {"\\(",'('},
   {"\\)",')'},
