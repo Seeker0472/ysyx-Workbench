@@ -23,6 +23,7 @@
 word_t expr(char *e, bool *success);
 word_t warp_pmem_read(paddr_t addr) ;
 
+
 static int is_batch_mode = false;
 
 void init_regex();
@@ -136,7 +137,11 @@ static int cmd_eval(char *args){
 }
 static int cmd_watch(char *args){
   printf("cmd_watch :%s",args);
-  // word_t result=expr(args);
+  bool succ=false;
+  word_t result=expr(args,&succ);
+  WP* wp=new_wp();
+  strncpy(wp->expr,args,500);//复制表达式
+  wp->last_result=succ?result:0;
   return 0;
 }
 static int cmd_del_watch(char *args){

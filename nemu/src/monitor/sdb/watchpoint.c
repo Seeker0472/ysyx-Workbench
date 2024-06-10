@@ -19,16 +19,7 @@
 
 
 
-typedef struct watchpoint {
-  int NO;
-  struct watchpoint *next;
 
-  /* TODO: Add more members if necessary */
-
-} WP;
-//my_func
-WP* new_wp();
-void free_wp(WP *wp);
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
@@ -53,8 +44,9 @@ WP* new_wp(){
   WP* op=free_;
   free_=(*free_).next;
   op->next=NULL;
-  // op->next=head;
-  // head=op;
+  //放进队列
+  op->next=head;
+  head=op;
   return op;
 }
 void free_wp(WP *wp){
