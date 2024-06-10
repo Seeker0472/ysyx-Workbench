@@ -123,7 +123,7 @@ static int cmd_eval(char *args){
   long long result=expr(args,&success);
 
   if (success){
-    printf("cmd_eval :%s, result=%llu\n",args,result);
+    printf("cmd_eval :%s, result=%d\n",args,(int)result);
   }else{
     printf("Error");
 
