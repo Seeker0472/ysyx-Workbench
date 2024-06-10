@@ -123,7 +123,7 @@ static int test_pr()
 static int cmd_eval(char *args){
 
   bool success;
-  long long result=expr(args,&success);
+  word_t result=expr(args,&success);
 
   if (success){
     // printf("cmd_eval :%s, result=%d\n",args,(int)result);
@@ -136,6 +136,7 @@ static int cmd_eval(char *args){
 }
 static int cmd_watch(char *args){
   printf("cmd_watch :%s",args);
+  // word_t result=expr(args);
   return 0;
 }
 static int cmd_del_watch(char *args){

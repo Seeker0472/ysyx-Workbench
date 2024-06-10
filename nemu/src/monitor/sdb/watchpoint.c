@@ -17,6 +17,8 @@
 
 #define NR_WP 32
 
+
+
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
@@ -24,9 +26,13 @@ typedef struct watchpoint {
   /* TODO: Add more members if necessary */
 
 } WP;
+//my_func
+WP* new_wp();
+void free_wp(WP *wp);
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
+//head用于组织使用中的监视点结构, free_用于组织空闲的监视点结构
 
 void init_wp_pool() {
   int i;
@@ -41,3 +47,24 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
+WP* new_wp(){
+  if(free_==NULL)
+    assert(0);//没有空闲了
+  WP* op=free_;
+  free_=(*free_).next;
+  op->next=NULL;
+  // op->next=head;
+  // head=op;
+  return op;
+}
+void free_wp(WP *wp){
+  for(WP *cur=head;cur!=NULL;cur=cur->next){
+    if(cur->next==wp){
+      cur->next=wp->next;
+      wp->next=free_;
+      free_=wp;
+      return;
+    }
+  }
+  assert(0);//没找到
+}
