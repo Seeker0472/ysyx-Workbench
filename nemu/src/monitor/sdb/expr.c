@@ -197,6 +197,8 @@ long eval(int p,int q) {
       word_t result=isa_reg_str2val(tokens[p].str,&success);
       if(success){
         return result;
+      }else{
+        assert(0);
       }
     }
     if(tokens[p].type==TK_HEX){
