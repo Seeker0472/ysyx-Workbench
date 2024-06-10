@@ -194,6 +194,7 @@ long eval(int p,int q) {
     if(tokens[p].type==TK_HEX){
       long val;
       sscanf(tokens[p].str,"%lx",&val);
+      return val;
     }
     if(tokens[p].type!=TK_NUM)
       assert(0);
