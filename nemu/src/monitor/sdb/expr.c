@@ -131,6 +131,14 @@ static bool make_token(char *e)
           break;
         case TK_NOTYPE:
           break;
+        case TK_HEX:
+        if (substr_len >= 32) // 溢出！
+            assert(0);
+          tokens[nr_token].type = rules[i].token_type;
+          strncpy(tokens[nr_token].str, substr_start, substr_len);
+          (tokens[nr_token].str)[substr_len] = '\0';
+          nr_token++;
+            break;
         case '*': // 单独处理乘法和解引用
           if (tokens[nr_token - 1].type == TK_NUM || tokens[nr_token - 1].type == ')')
           { // 当成乘法
@@ -193,7 +201,7 @@ long eval(int p,int q) {
     }
     if(tokens[p].type==TK_HEX){
       long val;
-      sscanf(tokens[p].str,"0x%lx",&val);
+      sscanf(tokens[p].str,"%lx",&val);
       return val;
     }
     if(tokens[p].type!=TK_NUM)
