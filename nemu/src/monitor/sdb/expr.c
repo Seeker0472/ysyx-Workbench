@@ -152,6 +152,7 @@ static bool make_token(char *e)
         case TK_REG:
           tokens[nr_token].type = TK_REG;
           strncpy(tokens[nr_token++].str,substr_start,substr_len);
+          break;
         default:
           tokens[nr_token++].type = rules[i].token_type;
         }
