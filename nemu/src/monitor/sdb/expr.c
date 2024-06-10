@@ -246,7 +246,7 @@ int get_main_op(int p,int q){
       break;
       case '+':
       case '-':
-      if(top==0&&priority<4){
+      if(top==0&&priority<=4){
           pos=p;
           priority=4;
       }
