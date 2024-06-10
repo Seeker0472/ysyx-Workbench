@@ -105,6 +105,7 @@ static int test_pr()
   FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
   int result;
   char *exp = malloc(700 * sizeof(char));
+  int time=0;
   while (fscanf(fp, "%d %s\n", &result, exp) != -1)
   {
     // printf("%s\n",exp);
@@ -113,7 +114,7 @@ static int test_pr()
     if (ok && result != res)
       printf("fail! %d/%d %s\n", res, result, exp);
     else
-      printf("OK");
+      printf("OK:%d\n",time++);
   }
   return 0;
 }
