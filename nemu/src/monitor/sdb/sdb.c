@@ -78,7 +78,7 @@ static int cmd_print_status(char *args){
       isa_reg_display();
     break;
     case 'w':
-      printf("Watch Point not imped");
+      print_watch_points();
     break;
     default:
     printf("Please enter a operation(w/r)!");
@@ -145,6 +145,7 @@ static int cmd_watch(char *args){
   return 0;
 }
 static int cmd_del_watch(char *args){
+  //args=N
   printf("cmd_del_watch :%s",args);
   return 0;
 }
