@@ -127,7 +127,7 @@ static int cmd_eval(char *args){
 
   if (success){
     // printf("cmd_eval :%s, result=%d\n",args,(int)result);
-    printf("%lu\n",(long)result);
+    printf("dec: %lu   hex: 0x%lx\n",(long)result,(long)result);
   }else{
     printf("Error");
 
