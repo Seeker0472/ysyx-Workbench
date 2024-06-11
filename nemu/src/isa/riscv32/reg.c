@@ -25,10 +25,10 @@ const char *regs[] = {
 
 void isa_reg_display() {
   printf("%-4s \t%-10s\t%-5s\t","Name","Dec","Hex");  
-  printf("%-4s \t%-10s\t%-5s\t","Name","Dec","Hex");
+  printf("%-4s \t%-10s\t%-5s\t\n","Name","Dec","Hex");
   bool dis=false;
   for(int i=0;i<32;i++){
-    printf("%-4s \t%-10ld\t%-5lx",regs[i],cpu.gpr[i],cpu.gpr[i]);
+    printf("%-4s \t%-10ld\t%-5lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);
     if(dis){
       printf("\n");
     }
