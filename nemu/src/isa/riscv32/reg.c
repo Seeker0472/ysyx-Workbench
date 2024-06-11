@@ -28,7 +28,7 @@ void isa_reg_display() {
   printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
   bool dis=false;
   for(int i=0;i<32;i++){
-    printf("%-4s \t%-10ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);
+    printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);
     if(dis){
       printf("\n");
     }
