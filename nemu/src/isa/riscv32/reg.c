@@ -24,17 +24,17 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
-  printf("%-4s \t%-10s\t%-5s\t","Name","Dec","Hex");  
-  printf("%-4s \t%-10s\t%-5s\t\n","Name","Dec","Hex");
+  printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
+  printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
   bool dis=false;
   for(int i=0;i<32;i++){
-    printf("%-4s \t%-10ld\t%-5lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);
+    printf("%-4s \t%-10ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);
     if(dis){
       printf("\n");
     }
     dis=!dis;
   }
-  printf("%-4s \t%-10ld\t%-5lx\t","pc",cpu.pc,cpu.pc);
+  printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);
 }
 //获取寄存器的值，s应该传入$xx
 word_t isa_reg_str2val(const char *s, bool *success) {
