@@ -12,7 +12,7 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
-
+//sdb.c-主要处理与用户的交互
 #include <isa.h>
 #include <cpu/cpu.h>
 #include <readline/readline.h>
@@ -146,7 +146,7 @@ static int cmd_watch(char *args){
 }
 static int cmd_del_watch(char *args){
   //args=N
-  printf("cmd_del_watch :%s",args);
+  printf("cmd_del_watch :%s",args); 
   return 0;
 }
 //my_func end!
