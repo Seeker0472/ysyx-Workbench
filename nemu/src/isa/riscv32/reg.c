@@ -34,6 +34,7 @@ void isa_reg_display() {
     }
     dis=!dis;
   }
+  printf("%-4s \t%-10ld\t%-5lx\t","pc",cpu.pc,cpu.pc);
 }
 //获取寄存器的值，s应该传入$xx
 word_t isa_reg_str2val(const char *s, bool *success) {
