@@ -25,6 +25,7 @@ const char *regs[] = {
 
 void isa_reg_display() {
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
+  printf(" | ");
   printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
   bool dis=false;
   for(int i=0;i<32;i++){
