@@ -86,3 +86,13 @@ bool check_watch_point(){
   }
   return changed;
 }
+//按照节点号删除监测点，false表示节点不纯在
+bool del_watch_point(int N){
+  for(WP* cur=head;cur!=NULL;cur=cur->next){
+    if(cur->NO==N){
+      free_wp(cur);
+      return true;
+    }
+  }
+  return false;
+}

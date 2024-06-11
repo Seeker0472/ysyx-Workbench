@@ -128,7 +128,7 @@ static int cmd_eval(char *args){
 
   if (success){
     // printf("cmd_eval :%s, result=%d\n",args,(int)result);
-    printf("dec: %lu   hex: 0x%lx\n",(long)result,(long)result);
+    printf("Dec: %lu \t Hex: 0x%lx\n",(long)result,(long)result);
   }else{
     printf("Error");
 
@@ -136,17 +136,28 @@ static int cmd_eval(char *args){
   return 0;
 }
 static int cmd_watch(char *args){
-  printf("cmd_watch :%s",args);
   bool succ=false;
   word_t result=expr(args,&succ);
+  if(!succ){
+    printf("Error Occured When Exec Expression!");
+    return 0;
+  }
   WP* wp=new_wp();
   strncpy(wp->expr,args,500);//复制表达式
   wp->last_result=succ?result:0;
+  printf("Added watch_point :%s\n",args);
   return 0;
 }
 static int cmd_del_watch(char *args){
   //args=N
-  printf("cmd_del_watch :%s",args); 
+  // printf("cmd_del_watch :%s",args); 
+  int N=-1;
+  sscanf(args,"%d",&N);
+  if(del_watch_point(N)){
+    printf("Success!\n");
+  }else{
+    printf("Error!\n");
+  }
   return 0;
 }
 //my_func end!
