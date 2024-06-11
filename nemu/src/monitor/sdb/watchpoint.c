@@ -50,7 +50,9 @@ WP* new_wp(){
   return op;
 }
 void free_wp(WP *wp){
-  for(WP *cur=head;cur!=NULL;cur=cur->next){
+  WP* Head=malloc(sizeof(WP));
+  Head->next=head;
+  for(WP *cur=Head;cur!=NULL;cur=cur->next){
     if(cur->next==wp){
       cur->next=wp->next;
       wp->next=free_;
