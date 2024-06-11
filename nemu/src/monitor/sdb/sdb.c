@@ -69,10 +69,13 @@ static int cmd_step(char *args){
 static int cmd_print_status(char *args){
   char op;
   if(!args){
-    printf("Please enter a operation(w/r)!");
+    printf("Please enter a operation(w/r)!\n");
     return 0;
   }
-  sscanf(args,"%c",&op);
+  if(sscanf(args,"%c",&op)!=1){
+    printf("Format Error: Expected:: info SUBCMD\n");
+    return 0;
+  };
   switch(op){
     case 'r':
       isa_reg_display();
@@ -81,16 +84,23 @@ static int cmd_print_status(char *args){
       print_watch_points();
     break;
     default:
-    printf("Please enter a operation(w/r)!");
+    printf("Please enter a operation(w/r)!\n");
     return 0;
   }
   // printf("cmd_print_status :%s",args);
   return 0;
 }
 static int cmd_scan_mem(char *args){
+  if(!args){
+    printf("Format Error: Expected:: x N EXPR\n");
+    return 0;
+  }
   int n;
   paddr_t addr;
-  sscanf(args,"%d %x",&n,&addr);
+  if(sscanf(args,"%d %x",&n,&addr)!=2){
+    printf("Format Error: Expected:: x N EXPR\n");
+    return 0;
+  }
   for(;n>0;n--){
     //这个似乎有问题！！
     // 进制问题（^-^）
@@ -122,7 +132,10 @@ static int test_pr()
   return 0;
 }
 static int cmd_eval(char *args){
-
+  if(!args){
+    printf("Error: Empty Expression!\n");
+    return 0;
+  }
   bool success;
   word_t result=expr(args,&success);
 
@@ -130,16 +143,20 @@ static int cmd_eval(char *args){
     // printf("cmd_eval :%s, result=%d\n",args,(int)result);
     printf("Dec: %lu \t Hex: 0x%lx\n",(long)result,(long)result);
   }else{
-    printf("Error");
+    printf("Error\n");
 
   }
   return 0;
 }
 static int cmd_watch(char *args){
+  if(!args){
+    printf("Error: Empty Expression!\n");
+    return 0;
+  }
   bool succ=false;
   word_t result=expr(args,&succ);
   if(!succ){
-    printf("Error Occured When Exec Expression!");
+    printf("Error Occured When Exec Expression!\n");
     return 0;
   }
   WP* wp=new_wp();
@@ -149,10 +166,17 @@ static int cmd_watch(char *args){
   return 0;
 }
 static int cmd_del_watch(char *args){
+  if(!args){
+    printf("Error: Empty Expression!\n");
+    return 0;
+  }
   //args=N
   // printf("cmd_del_watch :%s",args); 
   int N=-1;
-  sscanf(args,"%d",&N);
+  if(sscanf(args,"%d",&N)!=1){
+    printf("Format Error: Expected:: d N\n");
+    return 0;
+  };
   if(del_watch_point(N)){
     printf("Success!\n");
   }else{
