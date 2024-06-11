@@ -31,6 +31,8 @@ void isa_reg_display() {
     printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);
     if(dis){
       printf("\n");
+    }else{
+      printf(" | ");
     }
     dis=!dis;
   }
