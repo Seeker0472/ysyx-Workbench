@@ -31,8 +31,8 @@ OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
 $(PRE_PROSS_DIR)/%.c: %.c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
-	@$(CC) -g $(CFLAGS) -c -o $@ $<
-	
+	$(CC) -E $(CFLAGS) -c -o $@ $<
+
 # Compilation patterns
 $(OBJ_DIR)/%.o: %.c
 	@echo + CC $<
