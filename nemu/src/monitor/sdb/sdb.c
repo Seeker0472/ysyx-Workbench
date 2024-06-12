@@ -97,7 +97,19 @@ static int cmd_scan_mem(char *args){
   }
   int n;
   paddr_t addr;
-  if(sscanf(args,"%d %x",&n,&addr)!=2){
+  //要分成time exp
+  if(sscanf(args,"%d ",&n)!=1){
+    printf("Format Error: Expected:: x N EXPR\n");
+    return 0;
+  }
+  char *expression=args;
+  while(*expression!='\0'&&*expression!=' '){
+    expression++;
+  }
+  //改成表达式计算！
+  bool success=false;
+  addr=expr(expression,&success);
+  if(!success){
     printf("Format Error: Expected:: x N EXPR\n");
     return 0;
   }
