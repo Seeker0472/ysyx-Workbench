@@ -23,6 +23,7 @@ CXX := g++
 endif
 LD := $(CXX)
 INCLUDES = $(addprefix -I, $(INC_PATH))
+# -save-temps 保存所有中间文件
 CFLAGS  := -O2 -MMD -Wall -Werror -save-temps $(INCLUDES) $(CFLAGS)
 LDFLAGS := -O2 $(LDFLAGS)
 
