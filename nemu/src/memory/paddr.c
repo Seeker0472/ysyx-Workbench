@@ -31,6 +31,12 @@ static word_t pmem_read(paddr_t addr, int len) {
   word_t ret = host_read(guest_to_host(addr), len);
   return ret;
 }
+//my-func
+word_t warp_pmem_read(paddr_t addr) {
+  uint8_t *trans=pmem+(addr-CONFIG_MBASE);
+  return *(uint32_t *)trans;
+}
+
 
 static void pmem_write(paddr_t addr, int len, word_t data) {
   host_write(guest_to_host(addr), len, data);

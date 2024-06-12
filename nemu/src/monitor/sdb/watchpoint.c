@@ -17,16 +17,13 @@
 
 #define NR_WP 32
 
-typedef struct watchpoint {
-  int NO;
-  struct watchpoint *next;
+//WatchPoint.c-管理监视点的数据池
 
-  /* TODO: Add more members if necessary */
 
-} WP;
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
+//head用于组织使用中的监视点结构, free_用于组织空闲的监视点结构
 
 void init_wp_pool() {
   int i;
@@ -41,3 +38,65 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
+WP* new_wp(){
+  if(free_==NULL)
+    assert(0);//没有空闲了
+  WP* op=free_;
+  free_=(*free_).next;
+  op->next=NULL;
+  //放进队列
+  op->next=head;
+  head=op;
+  return op;
+}
+void free_wp(WP *wp){
+  WP* Head=malloc(sizeof(WP));
+  Head->next=head;
+  for(WP *cur=Head;cur!=NULL;cur=cur->next){
+    if(cur->next==wp){
+      cur->next=wp->next;
+      wp->next=free_;
+      free_=wp;
+      return;
+    }
+  }
+  assert(0);//没找到
+}
+
+void print_watch_points(){
+  // printf("No\tLast_val\tExpression\n");
+  printf("%-3s\t%-10s  \t%-10s\n","No","Last_val","Expression");
+
+  for(WP* cur=head;cur!=NULL;cur=cur->next){
+    printf("%-3d\t0x%-10lx\t%-10s\n",cur->NO,cur->last_result,cur->expr);
+  }
+}
+bool check_watch_point(){
+  bool changed=false;
+  for(WP* cur=head;cur!=NULL;cur=cur->next){
+    bool succ=false;
+    word_t result=expr(cur->expr,&succ);
+    if(!succ){
+      changed=true;
+      printf("Failed to execute expression: %s\n",cur->expr);
+    }
+    if(succ&&result!=cur->last_result){
+      printf("Hit WatchPoint:%d %s \n",cur->NO,cur->expr);
+      printf("Old value = 0x%lx (%lu)\n",cur->last_result,cur->last_result);
+      printf("New value = 0x%lx (%lu)\n",result,result);
+      cur->last_result=result;
+      changed=true;
+    }
+  }
+  return changed;
+}
+//按照节点号删除监测点，false表示节点不纯在
+bool del_watch_point(int N){
+  for(WP* cur=head;cur!=NULL;cur=cur->next){
+    if(cur->NO==N){
+      free_wp(cur);
+      return true;
+    }
+  }
+  return false;
+}

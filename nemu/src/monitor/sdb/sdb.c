@@ -12,12 +12,17 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
-
+//sdb.c-主要处理与用户的交互
 #include <isa.h>
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <utils.h>
 #include "sdb.h"
+#include <memory/host.h>
+word_t expr(char *e, bool *success);
+word_t warp_pmem_read(paddr_t addr) ;
+
 
 static int is_batch_mode = false;
 
@@ -49,8 +54,148 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  nemu_state.state=NEMU_QUIT;
   return -1;
 }
+//my_func start!
+static int cmd_step(char *args){
+  int time=1;
+  if(args)
+    sscanf(args,"%d",&time);
+  cpu_exec(time);
+  // printf("cmd_step :%d",time);
+  return 0;
+}
+static int cmd_print_status(char *args){
+  char op;
+  if(!args){
+    printf("Please enter a operation(w/r)!\n");
+    return 0;
+  }
+  if(sscanf(args,"%c",&op)!=1){
+    printf("Format Error: Expected:: info SUBCMD\n");
+    return 0;
+  };
+  switch(op){
+    case 'r':
+      isa_reg_display();
+    break;
+    case 'w':
+      print_watch_points();
+    break;
+    default:
+    printf("Please enter a operation(w/r)!\n");
+    return 0;
+  }
+  // printf("cmd_print_status :%s",args);
+  return 0;
+}
+static int cmd_scan_mem(char *args){
+  if(!args){
+    printf("Format Error: Expected:: x N EXPR\n");
+    return 0;
+  }
+  int n;
+  paddr_t addr;
+  //要分成time exp
+  if(sscanf(args,"%d",&n)!=1){
+    printf("Format Error: Expected:: x N EXPR\n");
+    return 0;
+  }
+  char *expression=args;
+  while(*expression!='\0'&&*expression!=' '){
+    expression++;
+  }
+  bool success=false;
+  addr=expr(expression,&success);
+  if(!success){
+    printf("Format Error: Expected:: x N EXPR\n");
+    return 0;
+  }
+  for(;n>0;n--){
+    //这个似乎有问题！！
+    // 进制问题（^-^）
+    // printf("readMem %lu %lu %lu %lu" ,warp_pmem_read(addr,1),warp_pmem_read(addr+1,1),warp_pmem_read(addr+2,1),warp_pmem_read(addr+3,1));
+    printf("<0x%010x>    0x%08lx\n",addr,warp_pmem_read(addr));
+    addr+=4;
+  }
+  // printf("cmd_scan_mem :%s",args);
+  return 0;
+}
+static int test_pr()
+{
+  FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
+  int result;
+  char *exp = malloc(700 * sizeof(char));
+  int time=0;
+  while (fscanf(fp, "%d %s\n", &result, exp) != -1)
+  {
+    // printf("%s\n",exp);
+    bool ok = true;
+    int res = (int)expr(exp, &ok);
+    if (ok && result != res){
+      printf("fail! %d/%d %s\n", res, result, exp);
+      assert(0);
+      }
+    else
+      printf("OK:%d\n",time++);
+  }
+  return 0;
+}
+static int cmd_eval(char *args){
+  if(!args){
+    printf("Error: Empty Expression!\n");
+    return 0;
+  }
+  bool success;
+  word_t result=expr(args,&success);
+
+  if (success){
+    // printf("cmd_eval :%s, result=%d\n",args,(int)result);
+    printf("Dec: %lu \t Hex: 0x%lx\n",(long)result,(long)result);
+  }else{
+    printf("Error\n");
+
+  }
+  return 0;
+}
+static int cmd_watch(char *args){
+  if(!args){
+    printf("Error: Empty Expression!\n");
+    return 0;
+  }
+  bool succ=false;
+  word_t result=expr(args,&succ);
+  if(!succ){
+    printf("Error Occured When Exec Expression!\n");
+    return 0;
+  }
+  WP* wp=new_wp();
+  strncpy(wp->expr,args,500);//复制表达式
+  wp->last_result=succ?result:0;
+  printf("Added watch_point :%s\n",args);
+  return 0;
+}
+static int cmd_del_watch(char *args){
+  if(!args){
+    printf("Error: Empty Expression!\n");
+    return 0;
+  }
+  //args=N
+  // printf("cmd_del_watch :%s",args); 
+  int N=-1;
+  if(sscanf(args,"%d",&N)!=1){
+    printf("Format Error: Expected:: d N\n");
+    return 0;
+  };
+  if(del_watch_point(N)){
+    printf("Success!\n");
+  }else{
+    printf("Error!\n");
+  }
+  return 0;
+}
+//my_func end!
 
 static int cmd_help(char *args);
 
@@ -62,7 +207,13 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Single-step execution", cmd_step },
+  { "info", "Print the status of the program.(reg,watchpoint..etc)", cmd_print_status },
+  { "x", "Scan mem", cmd_scan_mem },
+  { "p", "Eval expression", cmd_eval },
+  { "w", "Set WatchPoint", cmd_watch },
+  { "d", "Delete WatchPoint", cmd_del_watch },
+  { "t", "t", test_pr },
   /* TODO: Add more commands */
 
 };

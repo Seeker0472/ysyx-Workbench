@@ -19,7 +19,7 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
-
+#include<stdbool.h>
 // this should be enough
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
@@ -30,9 +30,79 @@ static char *code_format =
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
+static int end=0;
+static int step=0;
+static int choose(int limit){
+  return rand()%limit;
+}
+static void gen_num(){
+  char* put=buf+end;
+  // char buf[50];
+  int rand_num=rand()%100;
+  sprintf(put,"%d",rand_num);
+  while(buf[end]!='\0')
+  end++;
 
-static void gen_rand_expr() {
-  buf[0] = '\0';
+}
+static void gen(char val){
+  buf[end++]=val;
+  buf[end]='\0';
+}
+static void gen_rand_op()
+{
+  switch (choose(4))
+  {
+  case 0:
+    gen('+');
+    break;
+  case 1:
+    gen('-');
+    break;
+  case 2:
+    gen('*');
+    break;
+  default:
+    gen('/');
+    break;
+  }
+}
+static bool ok(){
+  if(end==0)
+    return true;
+  if(end>0&&(buf[end-1]=='+'||buf[end-1]=='-'||buf[end-1]=='*'||buf[end-1]=='/'||buf[end-1]=='('))
+    return true;
+  else
+    return false;
+}
+static void gen_rand_expr()
+{
+  if(end>=50000)
+    return;
+  // buf[0] = '\0';
+  int choo=choose(3);
+  if(++step>10)
+    choo=0;
+  switch (choo)
+  // switch (1)
+  {
+  case 0:
+    if(!ok())
+      gen_rand_op();
+    gen_num();
+    break;
+  case 1:
+    if(!ok())
+      gen_rand_op();
+    gen('(');
+    gen_rand_expr();
+    gen(')');
+    break;
+  default:
+    gen_rand_expr();
+    gen_rand_op();
+    gen_rand_expr();
+    break;
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -44,6 +114,8 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+    end=0;
+    step=0;
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
@@ -53,8 +125,11 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
-    if (ret != 0) continue;
+    int ret = system("gcc -Werror /tmp/.code.c -o /tmp/.expr");
+    if (ret != 0) {
+      // printf("continue!");
+      continue;
+    }
 
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
