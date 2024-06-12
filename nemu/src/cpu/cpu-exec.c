@@ -44,7 +44,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
 //watchpoint功能
 #ifdef CONFIG_WATCHPOINT
-if(check_watch_point()){
+if(check_watch_point()&&nemu_state.state==NEMU_RUNNING){
   nemu_state.state=NEMU_STOP;
 }
 #endif
