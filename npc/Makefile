@@ -21,7 +21,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 .DEFAULT_GOAL :=  all
 
-all: sim verilating  run
+all: replace verilating  run
 	
 verilating: $(SRC_AUTO_BIND)
 	make nvboard-archive
@@ -41,6 +41,9 @@ run:
 	./build/${TOP_NAME}
 clean:
 	rm -rf build/
+
+replace:
+	sed -i 's/^#include <V.*.h>$$/#include <V${TOP}.h>/g' /home/seeker/Develop/ysyx-workbench/npc/csrc/main.cpp
 
 include ../Makefile
 

@@ -29,7 +29,8 @@ output reg [3:0] OUT;
 reg [3:0] temp;
 always @(*)begin
     temp={4{OP}}^B;
-    temp<=temp+{3'b000,OP};
+    // temp<=temp+{3'b000,OP};
+    temp=temp+{3'b000,OP};
 end
 assign OUT=A+temp;
 endmodule
@@ -77,7 +78,7 @@ mux43b mux(
     .land(A&B),
     .lor(A|B),
     .eo(A^B),
-    .qudaxiao({3'b000,|sub_out}),
+    .qudaxiao({3'b000,sub_out[3]}),
     .eq({3'b000,A==B}),
     .op(op),
     .out(bcd_input)
