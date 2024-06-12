@@ -98,7 +98,7 @@ static int cmd_scan_mem(char *args){
   int n;
   paddr_t addr;
   //要分成time exp
-  if(sscanf(args,"%d ",&n)!=1){
+  if(sscanf(args,"%d",&n)!=1){
     printf("Format Error: Expected:: x N EXPR\n");
     return 0;
   }
