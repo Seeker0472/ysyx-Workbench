@@ -65,10 +65,10 @@ void free_wp(WP *wp){
 
 void print_watch_points(){
   // printf("No\tLast_val\tExpression\n");
-  printf("%-3s\t%-10s\t%-10s\n","No","Last_val","Expression");
+  printf("%-3s\t%-10s  \t%-10s\n","No","Last_val","Expression");
 
   for(WP* cur=head;cur!=NULL;cur=cur->next){
-    printf("%-3d\t%-10lu\t%-10s\n",cur->NO,cur->last_result,cur->expr);
+    printf("%-3d\t0x%-10lx\t%-10s\n",cur->NO,cur->last_result,cur->expr);
   }
 }
 bool check_watch_point(){
