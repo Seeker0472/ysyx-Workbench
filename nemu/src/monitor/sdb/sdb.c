@@ -106,7 +106,6 @@ static int cmd_scan_mem(char *args){
   while(*expression!='\0'&&*expression!=' '){
     expression++;
   }
-  //改成表达式计算！
   bool success=false;
   addr=expr(expression,&success);
   if(!success){
