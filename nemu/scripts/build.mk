@@ -12,6 +12,7 @@ BUILD_DIR = $(WORK_DIR)/build
 
 INC_PATH := $(WORK_DIR)/include $(INC_PATH)
 OBJ_DIR  = $(BUILD_DIR)/obj-$(NAME)$(SO)
+# PRE_PROSS_DIR  = $(BUILD_DIR)/pre-$(NAME)$(SO)
 BINARY   = $(BUILD_DIR)/$(NAME)$(SO)
 
 # Compilation flags
@@ -22,16 +23,22 @@ CXX := g++
 endif
 LD := $(CXX)
 INCLUDES = $(addprefix -I, $(INC_PATH))
-CFLAGS  := -O2 -MMD -Wall -Werror $(INCLUDES) $(CFLAGS)
+# -save-temps 保存所有中间文件
+CFLAGS  := -O2 -MMD -Wall -Werror -save-temps $(INCLUDES) $(CFLAGS)
 LDFLAGS := -O2 $(LDFLAGS)
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
+
+# $(PRE_PROSS_DIR)/%.c: %.c
+# 	@echo + CC $<
+# 	@mkdir -p $(dir $@)
+# 	@$(CC) -E $(CFLAGS) -c -o $@ $<
 
 # Compilation patterns
 $(OBJ_DIR)/%.o: %.c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
-	$(CC) -g $(CFLAGS) -c -o $@ $<
+	@$(CC) -g $(CFLAGS) -c -o $@ $<
 	$(call call_fixdep, $(@:.o=.d), $@)
 
 $(OBJ_DIR)/%.o: %.cc
