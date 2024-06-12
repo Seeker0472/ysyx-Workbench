@@ -78,10 +78,12 @@ bool check_watch_point(){
     word_t result=expr(cur->expr,&succ);
     if(!succ){
       changed=true;
-      printf("failed to execute expression: %s\n",cur->expr);
+      printf("Failed to execute expression: %s\n",cur->expr);
     }
     if(succ&&result!=cur->last_result){
       printf("Hit WatchPoint:%d %s = 0x%lx (%lu)\n",cur->NO,cur->expr,result,result);
+      printf("Old value = 0x%lx (%lu)\n",cur->last_result,cur->last_result);
+      printf("New value = 0x%lx (%lu)\n",result,result);
       cur->last_result=result;
       changed=true;
     }
