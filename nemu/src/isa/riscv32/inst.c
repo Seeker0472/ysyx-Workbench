@@ -35,7 +35,7 @@ enum {
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
-#define immJ() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 20) | (SEXT(BITS(i, 19, 12), 8) << 12) | (SEXT(BITS(i, 11, 11), 1) << 11) | (SEXT(BITS(i, 30, 21), 10) << 1 ); } while(0)
+#define immJ() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 20) | (BITS(i, 19, 12) << 12) | (BITS(i, 11, 11) << 11) | (BITS(i, 30, 21) << 1 ); } while(0)
 #define immB() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 12) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8 ) << 1); } while(0)
 //^^^用于从指令中抽取出立即数W
 
@@ -85,7 +85,7 @@ static int decode_exec(Decode *s) {
 
   INSTPAT("0100000 ????? ????? 000 ????? 01100 11", sub    , R, R(rd)=src1-src2);
   INSTPAT("??????? ????? ????? 011 ????? 00100 11", sltiu  , I, R(rd)=src1<imm);
-  INSTPAT("??????? ????? ????? 000 ????? 11000 11", beq    , B, if(src1==src2) s->dnpc=s->pc+imm);
+  INSTPAT("??????? ????? ????? 000 ????? 11000 11", beq    , B, if(src1==src2) s->dnpc=s->pc+imm;printf("imm=%lx   %d\n",imm,(int)imm););
   INSTPAT("??????? ????? ????? 001 ????? 11000 11", bne    , B, if(src1!=src2) s->dnpc=s->pc+imm;printf("imm=%lx   %d\n",imm,(int)imm););
 
 
