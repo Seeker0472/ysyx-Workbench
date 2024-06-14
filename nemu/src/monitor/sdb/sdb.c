@@ -152,7 +152,7 @@ static int cmd_eval(char *args){
 
   if (success){
     // printf("cmd_eval :%s, result=%d\n",args,(int)result);
-    printf("Dec: %lu \t Hex: 0x%lx\n",result,(long)result);
+    printf("Dec: %ld \t Hex: 0x%lx\n",(long)result,(long)result);
   }else{
     printf("Error\n");
 
