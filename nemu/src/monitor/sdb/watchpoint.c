@@ -57,6 +57,7 @@ void free_wp(WP *wp){
       cur->next=wp->next;
       wp->next=free_;
       free_=wp;
+      head=Head->next;
       return;
     }
   }
