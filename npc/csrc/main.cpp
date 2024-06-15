@@ -10,11 +10,11 @@ unsigned int sim_time=0;
 static int wave_enable=false;
 
 void single_cycle(){
-  // dut.clk = 0;
+  dut.clk = 0;
   dut.eval();
   if(wave_enable)
     tfp->dump(sim_time++); // Dump波形信息
-  // dut.clk = 1;
+  dut.clk = 1;
   dut.eval();
   if(wave_enable)
     tfp->dump(sim_time++); // Dump波形信息
