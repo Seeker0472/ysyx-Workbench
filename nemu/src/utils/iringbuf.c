@@ -34,6 +34,7 @@ void print_isnt(paddr_t pc, word_t inst){
     p[0] = '\0'; // the upstream llvm does not support loongarch32r
     #endif
     //TODO:print logbuf!!!!!!!
+    memset(p, ' ',10);
     printf("%s\n",logbuf);
     // printf("%x   %lx\n",pc,inst);
 }
