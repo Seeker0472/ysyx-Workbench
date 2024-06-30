@@ -22,5 +22,13 @@ void write_iringbuf(paddr_t pc, word_t inst){
 }
 
 void print_iringbuf(){
-    printf("TODO:iring buff");
+    if(full){
+        for(int i=(pbuf+1)%BUF_SIZE;i!=pbuf;i=(i+1)%BUF_SIZE){
+            printf("%u   %lu",ibuf[i].pc,ibuf[i].inst);
+        }
+    }else{
+        for(int i=0;i!=pbuf;i++){
+            printf("%u   %lu",ibuf[i].pc,ibuf[i].inst);
+        }
+    }
 }
