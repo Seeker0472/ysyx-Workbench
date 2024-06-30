@@ -20,6 +20,7 @@
 
 //myfunc
 bool check_watch_point();
+void print_iringbuf();
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -102,8 +103,10 @@ static void statistic() {
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
+//使用Assert宏的时候输出信息
 void assert_fail_msg() {
   isa_reg_display();
+  print_iringbuf();
   statistic();
 }
 
