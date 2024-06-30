@@ -9,7 +9,7 @@ typedef struct
 #define BUF_SIZE 20
 
 inst_Node ibuf[BUF_SIZE];
-
+char logbuf[128];
 int pbuf=0;
 bool full=false;
 
@@ -22,7 +22,20 @@ void write_iringbuf(paddr_t pc, word_t inst){
 }
 
 void print_isnt(paddr_t pc, word_t inst){
-    printf("%x   %lx\n",pc,inst);
+    char *p=logbuf;
+    p += snprintf(p, sizeof(logbuf), FMT_WORD ":", (vaddr_t)pc);//打印地址
+    int ilen=4;//TODO:HOW?
+    //打印接下的东西
+    #ifndef CONFIG_ISA_loongarch32r
+    void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+    disassemble(p, logbuf + sizeof(logbuf) - p,
+        pc, (uint8_t *)&inst, ilen);//反
+    #else
+    p[0] = '\0'; // the upstream llvm does not support loongarch32r
+    #endif
+    //TODO:print logbuf!!!!!!!
+    printf("%s\n",logbuf);
+    // printf("%x   %lx\n",pc,inst);
 }
 
 void print_iringbuf(){
