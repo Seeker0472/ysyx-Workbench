@@ -23,9 +23,10 @@ void write_iringbuf(paddr_t pc, word_t inst){
 void print_isnt(paddr_t pc, word_t inst){
     char logbuf[128];
     char *p=logbuf;
+    p=memset(p,' ',3);
     p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
 
-    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "  0x%08lx\t", inst);
+    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "  0x%08lx\t", inst);//打印十六进制指令
 
 
     int ilen=4;//TODO:HOW?
@@ -37,14 +38,7 @@ void print_isnt(paddr_t pc, word_t inst){
     #else
     p[0] = '\0'; // the upstream llvm does not support loongarch32r
     #endif
-    //TODO:print logbuf!!!!!!!
-    // while(*p!='\0')
-    //     p++;
-    // // memset(p, ' ',p-logbuf+60);
-    // // p=logbuf+60;
-    p=logbuf+60;
     puts(logbuf);
-    // printf("%x   %lx\n",pc,inst);
 }
 
 void print_iringbuf(){
