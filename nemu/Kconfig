@@ -155,6 +155,9 @@ config WATCHPOINT
   bool "Enable WatchPoint"
   default y
 
+config MTRACE
+  bool "Enable MemoryTrace"
+  default n
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
