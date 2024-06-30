@@ -23,8 +23,8 @@ void write_iringbuf(paddr_t pc, word_t inst){
 
 void print_isnt(paddr_t pc, word_t inst){
     char *p=logbuf;
-    p += snprintf(p, sizeof(logbuf), FMT_WORD ":", (vaddr_t)pc);//打印地址
-    int ilen=8;//TODO:HOW?
+    p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
+    int ilen=4;//TODO:HOW?
     //打印接下的东西
     #ifndef CONFIG_ISA_loongarch32r
     void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
