@@ -24,7 +24,10 @@
     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
 
-#define Info(fmt, ...) \
+#define Info_N(fmt, ...) \
+    printf(ANSI_BG_MAGENTA fmt , ##__VA_ARGS__)
+
+#define Info_R(fmt, ...) \
     printf(ANSI_BG_MAGENTA fmt , ##__VA_ARGS__)
 
 #define Assert(cond, format, ...) \
