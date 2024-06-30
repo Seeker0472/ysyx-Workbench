@@ -37,7 +37,7 @@ void print_isnt(paddr_t pc, word_t inst){
     while(*p!='\0')
         p++;
     memset(p, ' ',30);
-    printf("%s\n",logbuf);
+    fprintf(stdout,"%s\n",logbuf);
     puts(logbuf);
     // printf("%x   %lx\n",pc,inst);
 }
