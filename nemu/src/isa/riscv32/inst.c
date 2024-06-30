@@ -18,6 +18,9 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 
+//my_func
+void write_iringbuf(paddr_t pc, word_t inst);
+
 #define R(i) gpr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
@@ -147,5 +150,7 @@ int isa_exec_once(Decode *s) {
   //取指 物理机大端小端问题？
   //TODO:内存非对齐访问！
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
+  //使用指令环形缓冲区记录
+  IFDEF(CONFIG_ITRACE, write_iringbuf(s->pc, s->isa.inst.val));
   return decode_exec(s);
 }
