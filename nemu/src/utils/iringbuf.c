@@ -9,7 +9,6 @@ typedef struct
 #define BUF_SIZE 20
 
 inst_Node ibuf[BUF_SIZE];
-char logbuf[128];
 int pbuf=0;
 bool full=false;
 
@@ -22,6 +21,7 @@ void write_iringbuf(paddr_t pc, word_t inst){
 }
 
 void print_isnt(paddr_t pc, word_t inst){
+    char logbuf[128];
     char *p=logbuf;
     p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
     int ilen=4;//TODO:HOW?
@@ -36,10 +36,9 @@ void print_isnt(paddr_t pc, word_t inst){
     //TODO:print logbuf!!!!!!!
     while(*p!='\0')
         p++;
-    memset(p, ' ',p-logbuf+60);
+    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "\t %8lx", inst);
+    // memset(p, ' ',p-logbuf+60);
     p=logbuf+60;
-    // snprintf(p, sizeof(logbuf),": ");
-    fprintf(stdout,"%s\n",logbuf);
     puts(logbuf);
     // printf("%x   %lx\n",pc,inst);
 }
