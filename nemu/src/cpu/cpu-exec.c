@@ -49,7 +49,8 @@ if(check_watch_point()&&nemu_state.state==NEMU_RUNNING){
 }
 #endif
 }
-
+//执行一条指令，其中包含使用snprintf打印Log！
+//TODO:如何限制log输出时机？
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
