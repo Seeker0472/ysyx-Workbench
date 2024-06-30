@@ -25,10 +25,10 @@
         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
 
 #define Info_N(fmt, ...) \
-    printf(ANSI_BG_WHITE fmt , ##__VA_ARGS__)
+    printf(ANSI_FG_WHITE fmt , ##__VA_ARGS__)
 
 #define Info_R(fmt, ...) \
-    printf(ANSI_BG_MAGENTA fmt , ##__VA_ARGS__)
+    printf(ANSI_FG_MAGENTA fmt , ##__VA_ARGS__)
 
 #define Assert(cond, format, ...) \
   do { \
