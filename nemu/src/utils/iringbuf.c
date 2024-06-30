@@ -23,17 +23,18 @@ void write_iringbuf(paddr_t pc, word_t inst){
 void print_isnt(paddr_t pc, word_t inst){
     char logbuf[128];
     char *p=logbuf;
-    p=memset(p,' ',3);
-    p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
+    memset(p,' ',3);
+    p+=3;
+    p += snprintf(p, sizeof(logbuf)-3, FMT_WORD ": ", (vaddr_t)pc);//打印地址
 
-    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "  0x%08lx\t", inst);//打印十六进制指令
+    p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08lx\t", inst);//打印十六进制指令
 
 
     int ilen=4;//TODO:HOW?
     //打印接下的东西
     #ifndef CONFIG_ISA_loongarch32r
     void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-    disassemble(p, logbuf + sizeof(logbuf) - p,
+    disassemble(p, logbuf + sizeof(logbuf) - p-3,
         pc, (uint8_t *)&inst, ilen);//反
     #else
     p[0] = '\0'; // the upstream llvm does not support loongarch32r
