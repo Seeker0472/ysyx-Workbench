@@ -25,7 +25,7 @@ void print_isnt(paddr_t pc, word_t inst){
     char *p=logbuf;
     p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
 
-    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "\t%08lx\t", inst);
+    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "  0x%08lx\t", inst);
 
 
     int ilen=4;//TODO:HOW?
