@@ -25,7 +25,7 @@
         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
 
 #define Info(fmt, ...) \
-    printf(ANSI_FG_CYAN fmt , ##__VA_ARGS__)
+    printf(ANSI_BG_MAGENTA fmt , ##__VA_ARGS__)
 
 #define Assert(cond, format, ...) \
   do { \
