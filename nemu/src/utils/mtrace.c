@@ -1,7 +1,7 @@
 #include <common.h>
 
 void record_pread(paddr_t addr, int len){
-    printf("ReadAddr at: 0x%x len:%d\n",addr,len);
+    Info("ReadAddr at: 0x%x len:%d\n",addr,len);
 }
 
 void record_pwrite(paddr_t addr, int len, word_t data){
