@@ -36,8 +36,9 @@ void print_isnt(paddr_t pc, word_t inst){
     //TODO:print logbuf!!!!!!!
     while(*p!='\0')
         p++;
-    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "\t %8lx", inst);
-    // memset(p, ' ',p-logbuf+60);
+    memset(p, ' ',p-logbuf+60);
+    p=logbuf+60;
+    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "\t %08lx", inst);
     p=logbuf+60;
     puts(logbuf);
     // printf("%x   %lx\n",pc,inst);
