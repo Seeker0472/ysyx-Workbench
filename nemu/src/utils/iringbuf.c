@@ -24,6 +24,10 @@ void print_isnt(paddr_t pc, word_t inst){
     char logbuf[128];
     char *p=logbuf;
     p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
+
+    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "\t %08lx", inst);
+
+
     int ilen=4;//TODO:HOW?
     //打印接下的东西
     #ifndef CONFIG_ISA_loongarch32r
@@ -34,11 +38,10 @@ void print_isnt(paddr_t pc, word_t inst){
     p[0] = '\0'; // the upstream llvm does not support loongarch32r
     #endif
     //TODO:print logbuf!!!!!!!
-    while(*p!='\0')
-        p++;
-    memset(p, ' ',p-logbuf+60);
-    p=logbuf+60;
-    p += snprintf(p, sizeof(logbuf) - (p-logbuf),  "\t %08lx", inst);
+    // while(*p!='\0')
+    //     p++;
+    // // memset(p, ' ',p-logbuf+60);
+    // // p=logbuf+60;
     p=logbuf+60;
     puts(logbuf);
     // printf("%x   %lx\n",pc,inst);
