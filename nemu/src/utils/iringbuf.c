@@ -20,15 +20,20 @@ void write_iringbuf(paddr_t pc, word_t inst){
     pbuf=(pbuf+1)%BUF_SIZE;
 }
 
-void print_isnt(paddr_t pc, word_t inst){
+void print_isnt(paddr_t pc, word_t inst,bool wrong){
     char logbuf[128];
     char *p=logbuf;
-    memset(p,' ',3);
-    p+=3;
+    // memset(p,' ',3);
+    if(wrong){
+        p+=snprintf(p, 4, "-->");
+    }else{
+        p+=snprintf(p, 4, "   ");
+        
+    }
+    // p+=3;
     p += snprintf(p, sizeof(logbuf)-3, FMT_WORD ": ", (vaddr_t)pc);//打印地址
 
     p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08lx\t", inst);//打印十六进制指令
-
 
     int ilen=4;//TODO:HOW?
     //打印接下的东西
@@ -46,11 +51,11 @@ void print_iringbuf(){
     Log("Recentl Instr");
     if(full){
         for(int i=(pbuf+1)%BUF_SIZE;i!=pbuf;i=(i+1)%BUF_SIZE){
-            print_isnt(ibuf[i].pc,ibuf[i].inst);
+            print_isnt(ibuf[i].pc,ibuf[i].inst,false);
         }
     }else{
         for(int i=0;i!=pbuf;i++){
-            print_isnt(ibuf[i].pc,ibuf[i].inst);
+            print_isnt(ibuf[i].pc,ibuf[i].inst,false);
         }
     }
 }
