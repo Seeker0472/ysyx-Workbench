@@ -37,6 +37,7 @@ void print_isnt(paddr_t pc, word_t inst){
     while(*p!='\0')
         p++;
     memset(p, ' ',p-logbuf+40);
+    p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
     fprintf(stdout,"%s\n",logbuf);
     puts(logbuf);
     // printf("%x   %lx\n",pc,inst);
