@@ -23,7 +23,7 @@
 #define Log(format, ...) \
     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
-
+//自定义颜色
 #define Info_N(fmt, ...) \
     printf(ANSI_FG_WHITE fmt , ##__VA_ARGS__)
 
