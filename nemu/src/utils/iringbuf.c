@@ -20,7 +20,7 @@ void write_iringbuf(paddr_t pc, word_t inst){
     pbuf=(pbuf+1)%BUF_SIZE;
 }
 
-void print_isnt(paddr_t pc, word_t inst,bool wrong){
+void print_inst(paddr_t pc, word_t inst,bool wrong){
     char logbuf[128];
     char *p=logbuf;
     // memset(p,' ',3);
@@ -51,11 +51,11 @@ void print_iringbuf(){
     Log("Recentl Instr");
     if(full){
         for(int i=(pbuf+1)%BUF_SIZE;i!=pbuf;i=(i+1)%BUF_SIZE){
-            print_isnt(ibuf[i].pc,ibuf[i].inst,i==pbuf-1);
+            print_inst(ibuf[i].pc,ibuf[i].inst,i==pbuf-1);
         }
     }else{
         for(int i=0;i!=pbuf;i++){
-            print_isnt(ibuf[i].pc,ibuf[i].inst,i==pbuf-1);
+            print_inst(ibuf[i].pc,ibuf[i].inst,i==pbuf-1);
         }
     }
 }
