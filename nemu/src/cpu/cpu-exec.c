@@ -105,7 +105,7 @@ static void statistic() {
 
 //使用Assert宏的时候输出信息
 void assert_fail_msg() {
-  // isa_reg_display();
+  isa_reg_display();
   //打印iringbuf！
   IFDEF(CONFIG_ITRACE,print_iringbuf());
   statistic();
