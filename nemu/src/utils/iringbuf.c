@@ -22,7 +22,6 @@ void write_iringbuf(paddr_t pc, word_t inst){
 }
 
 void print_isnt(paddr_t pc, word_t inst){
-    Log("Recentl Instr");
     char *p=logbuf;
     p += snprintf(p, sizeof(logbuf), FMT_WORD ": ", (vaddr_t)pc);//打印地址
     int ilen=4;//TODO:HOW?
@@ -44,6 +43,7 @@ void print_isnt(paddr_t pc, word_t inst){
 }
 
 void print_iringbuf(){
+    Log("Recentl Instr");
     if(full){
         for(int i=(pbuf+1)%BUF_SIZE;i!=pbuf;i=(i+1)%BUF_SIZE){
             print_isnt(ibuf[i].pc,ibuf[i].inst);
