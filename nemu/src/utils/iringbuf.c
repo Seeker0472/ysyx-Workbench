@@ -35,7 +35,8 @@ void print_isnt(paddr_t pc, word_t inst){
     #endif
     //TODO:print logbuf!!!!!!!
     memset(p, ' ',10);
-    printf("%s\n",logbuf);
+    // printf("%s\n",logbuf);
+    puts(logbuf);
     // printf("%x   %lx\n",pc,inst);
 }
 
