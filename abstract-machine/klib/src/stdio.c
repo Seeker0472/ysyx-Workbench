@@ -46,7 +46,7 @@ int sprintf(char *out, const char *fmt, ...) {
     case '%':
       if(*(++p)=='d'){
         out_offset=print_num(out,out_offset,va_arg(args,int));
-      }else if(*(++p)=='s'){
+      }else if(*(p)=='s'){
         out_offset=print_str(out,out_offset,va_arg(args,char *));
       }
       break;
@@ -58,6 +58,7 @@ int sprintf(char *out, const char *fmt, ...) {
     }
     p++;
   }
+  out[out_offset]='\0';
   return out_offset;
 }
 
