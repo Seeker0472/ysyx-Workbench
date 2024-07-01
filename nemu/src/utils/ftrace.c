@@ -48,9 +48,9 @@ void read_symbol_table(const char *filename) {
     fseek(file,header.e_shoff,SEEK_SET);
     // 读取节头表
     Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
-    // if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!=header.e_shentsize * header.e_shnum)
-	// 	assert(0);
-	Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
+    if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!= header.e_shnum)
+		assert(0);
+	// Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
 	
     Elf64_Shdr *symtab = NULL;
     Elf64_Shdr *strtab = NULL;
