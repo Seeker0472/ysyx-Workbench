@@ -136,10 +136,10 @@ void init_ftrace(char *filepath){
     read_symbol_table(filepath);
 }
 
-void ftrace_func_call(paddr_t address){
-    printf("trace call\n");
+void ftrace_func_call(paddr_t pc_now,paddr_t target){
+    printf("trace call %s\n",find_symbol(target));
 }
 
 void ftrace_func_ret(paddr_t address){
-    printf("trace ret\n");
+    printf("trace ret %s\n",find_symbol(address));
 }
