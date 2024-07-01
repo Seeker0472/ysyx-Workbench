@@ -38,7 +38,6 @@ void read_symbol_table(const char *filename) {
     Elf64_Ehdr header;
     if(fread(&header, 1, sizeof(header), file)!=sizeof(header))
 		assert(0);
-	// Log("%lu-----%lu",fread(&header, 1, sizeof(header), file),sizeof(header));
 
     // printf("e_phoff: %ld \n", header.e_phoff);
     // printf("e_shoff: %ld\n", header.e_shoff);//section header table's file offset in bytes.
@@ -49,8 +48,10 @@ void read_symbol_table(const char *filename) {
     fseek(file,header.e_shoff,SEEK_SET);
     // 读取节头表
     Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
-    if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!=header.e_shentsize * header.e_shnum)
-		assert(0);
+    // if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!=header.e_shentsize * header.e_shnum)
+	// 	assert(0);
+	Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shentsize * header.e_shnum);
+	
     Elf64_Shdr *symtab = NULL;
     Elf64_Shdr *strtab = NULL;
     //遍历，寻找SHT_STRTAB，SHT_SYMTAB
