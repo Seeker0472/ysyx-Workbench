@@ -1,5 +1,5 @@
 #include <common.h>
-
+# ifdef CONFIG_ITRACE
 typedef struct
 {
     paddr_t pc;
@@ -60,3 +60,4 @@ void print_iringbuf(){
     }
 }
 
+#endif
