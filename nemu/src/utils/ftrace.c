@@ -111,6 +111,10 @@ void read_symbol_table(const char *filename) {
 
 //初始化函数名表，(用链表维护)
 void init_ftrace(char *filepath){
+	if(filepath==NULL){
+		Log("Empty File Path,Won't read Symbol Table!");
+		return;
+	}
 	Log("Reading Symbol Table from %s",filepath);
 	//初始化头结点
 	nodes=malloc(sizeof(trace_node));
