@@ -37,7 +37,7 @@ char *find_symbol(paddr_t addr){
         // if(now->start_addr<=addr&&now->start_addr+now->length>addr){
         //     return now->name;
         // }
-        if(now->start_addr==addr||now->start_addr+now->length==addr+4){
+        if(now->start_addr==addr||now->start_addr+now->length==addr-4){
             return now->name;
         }
     }
