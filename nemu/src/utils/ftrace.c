@@ -141,7 +141,7 @@ void init_ftrace(char *filepath){
 void ftrace_func_call(paddr_t pc_now,paddr_t target){
     for(int i=0;i<layer;i++)
         printf("  ");
-    printf("trace call %s\n",find_symbol(target));
+    printf("call [%s@0x%x]\n",find_symbol(target),target);
     layer++;
 }
 
