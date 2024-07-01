@@ -148,6 +148,6 @@ void ftrace_func_call(paddr_t pc_now,paddr_t target){
 void ftrace_func_ret(paddr_t address){
     for(int i=0;i<layer;i++)
         printf("  ");
-    printf("trace ret %s\n",find_symbol(address));
+    printf("ret [%s]\n",find_symbol(address));
     layer--;
 }
