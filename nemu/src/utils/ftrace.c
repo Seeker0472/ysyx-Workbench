@@ -135,3 +135,11 @@ void init_ftrace(char *filepath){
 
     read_symbol_table(filepath);
 }
+
+void ftrace_func_call(paddr_t address){
+    Log("trace call");
+}
+
+void ftrace_func_ret(paddr_t address){
+    Log("trace ret");
+}
