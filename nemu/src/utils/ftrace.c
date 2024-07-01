@@ -12,7 +12,7 @@ typedef struct node{
 trace_node* nodes;
 
 void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加一项
-	Log("added: %s",name);
+	Log("Symbol Table Added: name=%s len=%lu addr=%x",name,len,start_addr);
 	trace_node* tail=nodes;
 	while(tail->next!=NULL)
 		tail=tail->next;
