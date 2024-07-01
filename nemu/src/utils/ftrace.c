@@ -36,8 +36,9 @@ void read_symbol_table(const char *filename) {
     }
 
     Elf64_Ehdr header;
-    if(fread(&header, 1, sizeof(header), file)!=sizeof(header))
-		assert(0);
+    // if(fread(&header, 1, sizeof(header), file)!=sizeof(header))
+	// 	assert(0);
+	printf("%lu-----",fread(&header, 1, sizeof(header), file));
 
     // printf("e_phoff: %ld \n", header.e_phoff);
     // printf("e_shoff: %ld\n", header.e_shoff);//section header table's file offset in bytes.
