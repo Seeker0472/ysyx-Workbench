@@ -82,13 +82,13 @@ void read_symbol_table(const char *filename) {
     //读取Symbol
     Elf64_Sym *symbols = malloc(symtab->sh_size);
     fseek(file, symtab->sh_offset, SEEK_SET);
-    if(fread(symbols, 1, symtab->sh_size, file))
+    if(fread(symbols, 1, symtab->sh_size, file)!=symtab->sh_size)
 		assert(0);
 
     // 读取符号表
     char *strtab_data = malloc(strtab->sh_size);
     fseek(file, strtab->sh_offset, SEEK_SET);
-    if(fread(strtab_data, 1, strtab->sh_size, file))
+    if(fread(strtab_data, 1, strtab->sh_size, file)!=strtab->sh_size)
 		assert(0);
 
     //符号表的数量
