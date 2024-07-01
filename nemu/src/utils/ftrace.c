@@ -12,6 +12,7 @@ typedef struct node{
 trace_node* nodes;
 
 void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加一项
+	Log("added: %s",name);
 	trace_node* tail=nodes;
 	while(tail->next!=NULL)
 		tail=tail->next;
@@ -37,7 +38,7 @@ void read_symbol_table(const char *filename) {
 
     Elf64_Ehdr header;
     if(fread(&header, 1, sizeof(header), file)!=sizeof(header))
-		assert(0);
+		assert(0);//读取的数量不对
 
     // printf("e_phoff: %ld \n", header.e_phoff);
     // printf("e_shoff: %ld\n", header.e_shoff);//section header table's file offset in bytes.
@@ -49,7 +50,7 @@ void read_symbol_table(const char *filename) {
     // 读取节头表
     Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
     if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!= header.e_shnum)
-		assert(0);
+		assert(0);//读取的数量不对
 	// Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
 	
     Elf64_Shdr *symtab = NULL;
@@ -83,13 +84,13 @@ void read_symbol_table(const char *filename) {
     Elf64_Sym *symbols = malloc(symtab->sh_size);
     fseek(file, symtab->sh_offset, SEEK_SET);
     if(fread(symbols, 1, symtab->sh_size, file)!=symtab->sh_size)
-		assert(0);
+		assert(0);//读取的数量不对
 
     // 读取符号表
     char *strtab_data = malloc(strtab->sh_size);
     fseek(file, strtab->sh_offset, SEEK_SET);
     if(fread(strtab_data, 1, strtab->sh_size, file)!=strtab->sh_size)
-		assert(0);
+		assert(0);//读取的数量不对
 
     //符号表的数量
     int num_symbols = symtab->sh_size / sizeof(Elf64_Sym);
