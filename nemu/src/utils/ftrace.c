@@ -29,6 +29,16 @@ void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加�
 	tail->next=NULL;
 }
 
+char *find_symbol(paddr_t addr){
+    trace_node* now=nodes->next;
+    for(;now!=NULL;now=now->next){
+        if(now->start_addr<=addr&&now->start_addr+now->length>addr){
+            return now->name;
+        }
+    }
+    return "???";
+}
+
 void read_symbol_table(const char *filename) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
