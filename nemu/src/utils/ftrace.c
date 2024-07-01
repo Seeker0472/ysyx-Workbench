@@ -11,6 +11,8 @@ typedef struct node{
 
 trace_node* nodes;
 
+int layer=0;
+
 void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加一项
 	Log("Symbol Table Added: name=%s len=%lu addr=%x",name,len,start_addr);
 	trace_node* tail=nodes;
@@ -137,9 +139,15 @@ void init_ftrace(char *filepath){
 }
 
 void ftrace_func_call(paddr_t pc_now,paddr_t target){
+    for(int i=0;i<layer;i++)
+        printf("  ");
     printf("trace call %s\n",find_symbol(target));
+    layer++;
 }
 
 void ftrace_func_ret(paddr_t address){
+    for(int i=0;i<layer;i++)
+        printf("  ");
     printf("trace ret %s\n",find_symbol(address));
+    layer--;
 }
