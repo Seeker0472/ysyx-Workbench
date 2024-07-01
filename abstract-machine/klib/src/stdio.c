@@ -6,11 +6,11 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 int printf(const char *fmt, ...) {
-  panic("Not implemented");
+  panic("Not implemented4");
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
+  panic("Not implemented3");
 }
 //TOW Helper Func Defined By Myself
 //递归打印val
@@ -64,11 +64,11 @@ int sprintf(char *out, const char *fmt, ...) {
 
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
-  panic("Not implemented");
+  panic("Not implemented1");
 }
 
 int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
-  panic("Not implemented");
+  panic("Not implemented2");
 }
 
 #endif
