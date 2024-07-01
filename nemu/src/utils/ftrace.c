@@ -137,9 +137,9 @@ void init_ftrace(char *filepath){
 }
 
 void ftrace_func_call(paddr_t address){
-    Log("trace call");
+    printf("trace call\n");
 }
 
 void ftrace_func_ret(paddr_t address){
-    Log("trace ret");
+    printf("trace ret\n");
 }
