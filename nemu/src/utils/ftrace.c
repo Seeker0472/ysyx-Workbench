@@ -145,7 +145,7 @@ void ftrace_func_call(paddr_t pc_now,paddr_t target){
     layer++;
 }
 
-void ftrace_func_ret(paddr_t address){
+void ftrace_func_ret(paddr_t pc_now,paddr_t address){
     for(int i=0;i<layer;i++)
         printf("  ");
     printf("ret [%s]\n",find_symbol(address));

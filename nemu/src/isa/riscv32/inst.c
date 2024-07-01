@@ -21,7 +21,7 @@
 //my_func
 void write_iringbuf(paddr_t pc, word_t inst);
 void ftrace_func_call(paddr_t pc_now,paddr_t target);
-void ftrace_func_ret(paddr_t address);
+void ftrace_func_ret(paddr_t pc_now,paddr_t address);
 
 #define R(i) gpr(i)
 #define Mr vaddr_read
@@ -84,7 +84,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? ??? 00001 11011 11", jal1   , J, R(rd)=s->snpc;s->dnpc=s->pc+imm;IFDEF(CONFIG_FTRACE,ftrace_func_call(s->pc,s->dnpc)));//jump and link x1 --- Func Call!!
   INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(rd)=s->snpc;s->dnpc=s->pc+imm);
   INSTPAT("??????? ????? ????? 000 00001 11001 11", jalr1  , I, R(rd)=s->snpc;s->dnpc=src1+imm;IFDEF(CONFIG_FTRACE,ftrace_func_call(s->pc,s->dnpc)));//jump and link reg x1 --- Func Call!!
-  INSTPAT("0000000 00000 00001 000 00000 11001 11", ret    , I, R(rd)=s->snpc;s->dnpc=src1+imm;IFDEF(CONFIG_FTRACE,ftrace_func_ret(s->dnpc)));//presudo --- Ret!!
+  INSTPAT("0000000 00000 00001 000 00000 11001 11", ret    , I, R(rd)=s->snpc;s->dnpc=src1+imm;IFDEF(CONFIG_FTRACE,ftrace_func_ret(s->pc,s->dnpc)));//presudo --- Ret!!
   INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, R(rd)=s->snpc;s->dnpc=src1+imm);
   // INSTPAT("??????? ????? ????? 000 ????? 11001 11", jr     , I, R(rd)=s->snpc;s->dnpc=src1+imm);
   INSTPAT("??????? ????? ????? 011 ????? 01000 11", sd     , S, Mw(src1 + imm, 8, src2));
