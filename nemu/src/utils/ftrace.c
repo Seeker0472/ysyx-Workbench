@@ -150,6 +150,6 @@ void ftrace_func_ret(paddr_t pc_now,paddr_t address){
     printf("0x%x: ",pc_now);
     for(int i=0;i<layer;i++)
         printf("  ");
-    printf("ret [%s]\n",find_symbol(address));
+    printf("ret [%s(0x%x)]\n",find_symbol(address),address);
     layer--;
 }
