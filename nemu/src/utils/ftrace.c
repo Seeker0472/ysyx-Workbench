@@ -50,7 +50,7 @@ void read_symbol_table(const char *filename) {
     Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
     // if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!=header.e_shentsize * header.e_shnum)
 	// 	assert(0);
-	Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shentsize * header.e_shnum);
+	Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
 	
     Elf64_Shdr *symtab = NULL;
     Elf64_Shdr *strtab = NULL;
