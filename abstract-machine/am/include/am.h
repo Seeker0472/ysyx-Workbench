@@ -1,6 +1,6 @@
 #ifndef AM_H__
 #define AM_H__
-
+//am的所有API!!!
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
