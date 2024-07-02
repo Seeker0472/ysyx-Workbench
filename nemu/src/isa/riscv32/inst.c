@@ -27,7 +27,8 @@ void ftrace_func_ret(paddr_t pc_now,paddr_t address);
 #define Mr vaddr_read
 #define Mw vaddr_write
 #define Ext32(x) ((x)&0x80000000)?((x)|0xFFFFFFFF00000000):((x)&0x00000000FFFFFFFF)
-#define Ext16(x) ((x)&0x8000)?((x)|0xFFFFFFFFFFFF0000):((x)&0x0000FFFFFFFFFFFF)
+#define Ext16(x) ((x)&0x8000)?((x)|0xFFFFFFFFFFFF0000):((x)&0x000000000000FFFF)
+#define Ext4(x) ((x)&0x8)?((x)|0xFFFFFFFFFFFFFFF0):((x)&0x000000000000000F)
 
 enum {
   TYPE_I, TYPE_U, TYPE_S,
@@ -126,7 +127,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000001 ????? ????? 000 ????? 01110 11", mulw   , R, R(rd)=Ext32(src1*src2););
   INSTPAT("0000001 ????? ????? 100 ????? 01110 11", divw   , R, R(rd)=Ext32(src1/src2););
 
-  INSTPAT("0000001 ????? ????? 110 ????? 01110 11", remw   , R, printf("%lx\n",src1%src2);printf("%lx\n",src1);R(rd)=((src1)%(src2))|0xfffffffffffffff0);
+  INSTPAT("0000001 ????? ????? 110 ????? 01110 11", remw   , R, printf("%lx\n",src1%src2);printf("%lx\n",src1);R(rd)=Ext4((src1)%(src2)));
 
   INSTPAT("??????? ????? ????? 100 ????? 11000 11", blt    , B, if((int32_t)src1<(int32_t)src2) s->dnpc=s->pc+imm);
   INSTPAT("0000000 ????? ????? 010 ????? 01100 11", slt    , R, R(rd)=(int32_t)src1<(int32_t)src2);
