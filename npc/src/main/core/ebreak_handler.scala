@@ -7,5 +7,5 @@ class ebreak_handler extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
     val halt = Input(Bool())
   })
-  addResource("/ebreak.v")
+  addResource("/main/resources/ebreak.v")
 }
