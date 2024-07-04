@@ -32,8 +32,8 @@ void print_inst(paddr_t pc, word_t inst,bool wrong){
     }
     // p+=3;
     p += snprintf(p, sizeof(logbuf)-3, FMT_WORD ": ", (vaddr_t)pc);//打印地址
-
-    p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08lx\t", inst);//打印十六进制指令
+    MUXDEF(RV64,p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08lx\t", inst);,p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08x\t", inst);)
+    // p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08lx\t", inst);//打印十六进制指令
 
     int ilen=4;//TODO:HOW?
     //打印接下的东西
