@@ -3,6 +3,7 @@ package core
 import chisel3._
 import chisel3.util._
 import os.stat
+
 // import os.write
 // import chisel3.Output
 
@@ -33,6 +34,7 @@ class core extends Module {
   val decoder = Module(new Decoder())
   val alu     = Module(new ALU())
   val reg     = Module(new REG())
+  val br_han= Module(new ebreak_handler())
 
 
       decoder.io.instr := io.instr
@@ -40,6 +42,7 @@ class core extends Module {
       rs1              := decoder.io.rs1
       addi             := decoder.io.addi
       rd               := decoder.io.rd
+      break := decoder.io.ebreak
       
 
       reg.io.read_i := rs1
