@@ -9,7 +9,7 @@ test:
 verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
-	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)
+	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR) -o $(BUILD_DIR)
 
 help:
 	mill -i $(PRJ).runMain Elaborate --help
@@ -28,7 +28,7 @@ clean:
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
-	verilator -cc --top core  ./build/core.sv --trace --exe ./csrc/main.cpp -o obj_dir
+	verilator -cc --top core  ./build/core.sv --trace --exe ./csrc/main.cpp 
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore
 
