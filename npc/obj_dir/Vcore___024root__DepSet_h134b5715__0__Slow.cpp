@@ -46,7 +46,7 @@ VL_ATTR_COLD void Vcore___024root___eval_settle(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__stl(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 343, "", "Settle region did not converge.");
+            VL_FATAL_MT("build/core.sv", 345, "", "Settle region did not converge.");
         }
         __VstlIterCount = ((IData)(1U) + __VstlIterCount);
         __VstlContinue = 0U;
@@ -86,21 +86,18 @@ VL_ATTR_COLD void Vcore___024root___eval_stl(Vcore___024root* vlSelf) {
     }
 }
 
-extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_hf9010b7d_0;
+extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_h81aa0551_0;
 
 VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf) {
     (void)vlSelf;  // Prevent unused variable warning
     Vcore__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___stl_sequent__TOP__0\n"); );
-    // Init
-    CData/*2:0*/ __Vtableidx1;
-    __Vtableidx1 = 0;
     // Body
     vlSelf->io_pc = vlSelf->core__DOT__pc;
     vlSelf->io_value = vlSelf->core__DOT__res;
-    __Vtableidx1 = vlSelf->core__DOT__state;
-    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_hf9010b7d_0
-        [__Vtableidx1];
+    vlSelf->__Vtableidx1 = vlSelf->core__DOT__state;
+    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_h81aa0551_0
+        [vlSelf->__Vtableidx1];
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = ((0x10U 
                                                  & (IData)(vlSelf->core__DOT__rs1))
                                                  ? 
@@ -283,6 +280,7 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->reset = VL_RAND_RESET_I(1);
     vlSelf->io_pc = VL_RAND_RESET_I(32);
     vlSelf->io_value = VL_RAND_RESET_I(32);
+    vlSelf->test = VL_RAND_RESET_I(32);
     vlSelf->io_addr = VL_RAND_RESET_I(32);
     vlSelf->io_instr = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__pc = VL_RAND_RESET_I(32);
@@ -327,6 +325,7 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->core__DOT__reg_0__DOT__regs_30 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_31 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = VL_RAND_RESET_I(32);
+    vlSelf->__Vtableidx1 = 0;
     vlSelf->__Vtrigprevexpr___TOP__clock__0 = VL_RAND_RESET_I(1);
     for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;

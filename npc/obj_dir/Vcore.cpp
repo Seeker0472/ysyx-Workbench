@@ -14,8 +14,10 @@ Vcore::Vcore(VerilatedContext* _vcontextp__, const char* _vcname__)
     , reset{vlSymsp->TOP.reset}
     , io_pc{vlSymsp->TOP.io_pc}
     , io_value{vlSymsp->TOP.io_value}
+    , test{vlSymsp->TOP.test}
     , io_addr{vlSymsp->TOP.io_addr}
     , io_instr{vlSymsp->TOP.io_instr}
+    , __PVT____024unit{vlSymsp->TOP.__PVT____024unit}
     , rootp{&(vlSymsp->TOP)}
 {
     // Register model with the context

@@ -6,12 +6,15 @@
 #define VERILATED_VCORE___024ROOT_H_  // guard
 
 #include "verilated.h"
+class Vcore___024unit;
 
 
 class Vcore__Syms;
 
 class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModule {
   public:
+    // CELLS
+    Vcore___024unit* __PVT____024unit;
 
     // DESIGN SPECIFIC STATE
     VL_IN8(clock,0,0);
@@ -21,11 +24,13 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
     CData/*4:0*/ core__DOT__rd;
     CData/*0:0*/ core__DOT__addi;
     CData/*2:0*/ core__DOT__casez_tmp;
+    CData/*2:0*/ __Vtableidx1;
     CData/*0:0*/ __VstlFirstIteration;
     CData/*0:0*/ __Vtrigprevexpr___TOP__clock__0;
     CData/*0:0*/ __VactContinue;
     VL_OUT(io_pc,31,0);
     VL_OUT(io_value,31,0);
+    VL_OUT(test,31,0);
     VL_IN(io_addr,31,0);
     VL_IN(io_instr,31,0);
     IData/*31:0*/ core__DOT__pc;

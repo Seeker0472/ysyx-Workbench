@@ -5,6 +5,9 @@
 #include <verilated_vcd_c.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
 
+#include "svdpi.h"
+#include "Vcore__Dpi.h"
+
 Vcore *dut;
 unsigned int sim_time = 0;
 static int wave_enable = true;
@@ -111,6 +114,8 @@ int instructions[100] = {
     0x00448493,
     0x00448493,
 };
+
+int add(int a, int b) { return a+b; }
 
 int mem_read(int pc){
   return instructions[(pc-0x80000000)/4];

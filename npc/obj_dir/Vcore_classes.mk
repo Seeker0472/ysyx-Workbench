@@ -26,6 +26,7 @@ VM_CLASSES_FAST += \
 	Vcore \
 	Vcore___024root__DepSet_h0a3cae5e__0 \
 	Vcore___024root__DepSet_h134b5715__0 \
+	Vcore___024unit__DepSet_h006fb865__0 \
 
 # Generated module classes, non-fast-path, compile with low/medium optimization
 VM_CLASSES_SLOW += \
@@ -33,9 +34,12 @@ VM_CLASSES_SLOW += \
 	Vcore___024root__Slow \
 	Vcore___024root__DepSet_h0a3cae5e__0__Slow \
 	Vcore___024root__DepSet_h134b5715__0__Slow \
+	Vcore___024unit__Slow \
+	Vcore___024unit__DepSet_h1cfa692a__0__Slow \
 
 # Generated support classes, fast-path, compile with highest optimization
 VM_SUPPORT_FAST += \
+	Vcore__Dpi \
 	Vcore__Trace__0 \
 
 # Generated support classes, non-fast-path, compile with low/medium optimization
@@ -47,6 +51,7 @@ VM_SUPPORT_SLOW += \
 # Global classes, need linked once per executable, fast-path, compile with highest optimization
 VM_GLOBAL_FAST += \
 	verilated \
+	verilated_dpi \
 	verilated_vcd_c \
 	verilated_threads \
 

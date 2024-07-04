@@ -9,10 +9,13 @@
 #define VERILATED_VCORE_H_  // guard
 
 #include "verilated.h"
+#include "svdpi.h"
 
 class Vcore__Syms;
 class Vcore___024root;
 class VerilatedVcdC;
+class Vcore___024unit;
+
 
 // This class is the main interface to the Verilated model
 class alignas(VL_CACHE_LINE_BYTES) Vcore VL_NOT_FINAL : public VerilatedModel {
@@ -33,12 +36,14 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore VL_NOT_FINAL : public VerilatedModel {
     VL_IN8(&reset,0,0);
     VL_OUT(&io_pc,31,0);
     VL_OUT(&io_value,31,0);
+    VL_OUT(&test,31,0);
     VL_IN(&io_addr,31,0);
     VL_IN(&io_instr,31,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
     // Otherwise the application code can consider these internals.
+    Vcore___024unit* const __PVT____024unit;
 
     // Root instance pointer to allow access to model internals,
     // including inlined /* verilator public_flat_* */ items.

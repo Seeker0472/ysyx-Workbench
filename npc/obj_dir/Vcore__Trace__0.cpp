@@ -75,14 +75,15 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
     bufp->chgBit(oldp+44,(vlSelf->reset));
     bufp->chgIData(oldp+45,(vlSelf->io_pc),32);
     bufp->chgIData(oldp+46,(vlSelf->io_value),32);
-    bufp->chgIData(oldp+47,(vlSelf->io_addr),32);
-    bufp->chgIData(oldp+48,(vlSelf->io_instr),32);
-    bufp->chgIData(oldp+49,(VL_SHIFTR_III(32,32,32, vlSelf->io_instr, 0x14U)),32);
-    bufp->chgCData(oldp+50,((0x1fU & (vlSelf->io_instr 
-                                      >> 0xfU))),5);
+    bufp->chgIData(oldp+47,(vlSelf->test),32);
+    bufp->chgIData(oldp+48,(vlSelf->io_addr),32);
+    bufp->chgIData(oldp+49,(vlSelf->io_instr),32);
+    bufp->chgIData(oldp+50,(VL_SHIFTR_III(32,32,32, vlSelf->io_instr, 0x14U)),32);
     bufp->chgCData(oldp+51,((0x1fU & (vlSelf->io_instr 
+                                      >> 0xfU))),5);
+    bufp->chgCData(oldp+52,((0x1fU & (vlSelf->io_instr 
                                       >> 7U))),5);
-    bufp->chgBit(oldp+52,((0x13U == ((0x380U & (vlSelf->io_instr 
+    bufp->chgBit(oldp+53,((0x13U == ((0x380U & (vlSelf->io_instr 
                                                 >> 5U)) 
                                      | (0x7fU & vlSelf->io_instr)))));
 }
