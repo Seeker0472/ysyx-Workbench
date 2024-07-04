@@ -5,7 +5,7 @@ import chisel3._
 class REG extends Module{
     val io=IO(new Bundle{
         val read_i = Input(UInt(5.W))
-        val read = Input(UInt(32.W))
+        val read = Output(UInt(32.W))
         val write_en = Input(Bool())
         val write_i = Input(UInt(5.W))
         val write = Input(UInt(32.W))
