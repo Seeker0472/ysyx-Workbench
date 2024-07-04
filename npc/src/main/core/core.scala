@@ -34,7 +34,7 @@ class core extends Module {
   val decoder = Module(new Decoder())
   val alu     = Module(new ALU())
   val reg     = Module(new REG())
-  val br_han= Module(new ebreak_handler)
+  val br_han  = Module(new ebreak_handler)
 
 
       decoder.io.instr := io.instr
