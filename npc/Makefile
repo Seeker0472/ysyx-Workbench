@@ -2,6 +2,7 @@ BUILD_DIR = ./build
 TOP ?= core
 PRJ = playground
 TOP_NAME=V${TOP}
+SED_CMD = sed -i 's/^.*\\.v$$//'
 
 test:
 	mill -i $(PRJ).test
@@ -28,7 +29,7 @@ clean:
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
-	sed -i "s/^.*\\.v$//" ./build/core.sv
+	$(SED_CMD) ./build/core.sv
 	verilator -cc --top core  ./build/core.sv --trace --exe ./csrc/main.cpp 
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore
