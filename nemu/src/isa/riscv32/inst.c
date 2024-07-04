@@ -61,6 +61,11 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_B: src1R(); src2R(); immB(); break;
   }
 }
+
+int32_t mulh(int32_t src1, int32_t src2) {
+    // int64_t result = 
+    return (int32_t)(((int64_t)src1 * (int64_t)src2)>> 32);
+}
 // decode_operand译码工作， 这个函数将会根据传入的指令类型type来进行操作数的译码, 译码结果将记录到函数参数rd, src1, src2和imm中
 static int decode_exec(Decode *s) {
   int rd = 0;
@@ -143,7 +148,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 110 ????? 11000 11", bltu    , B, if((uint32_t)src1<(uint32_t)src2) s->dnpc=s->pc+imm);
 
 
-  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh    , R,printf("%x---%x\n",src1,src2); R(rd)=((int32_t)(((int64_t)src1 * (int64_t)src2)>>32))      );
+  INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh    , R,printf("%x---%x\n",src1,src2); R(rd)=mulh(src1, src2););
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));//Invalid--非法指令！！
