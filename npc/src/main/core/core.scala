@@ -32,40 +32,40 @@ class core extends Module {
   val alu     = Module(new ALU())
   val reg     = Module(new REG())
 
-  switch(state) {
-    is(sFetch){
-      state            := sDecode
-    }
-    is(sDecode) { // decode_stage!!!
+//   switch(state) {
+//     is(sFetch){
+//       state            := sDecode
+//     }
+//     is(sDecode) { // decode_stage!!!
       decoder.io.instr := io.instr
       immI             := decoder.io.immI
       rs1              := decoder.io.rs1
       addi             := decoder.io.addi
       rd               := decoder.io.rd
       state            := sRead
-    }
-    is(sRead) {
-      // fetch_reg
+    // }
+    // is(sRead) {
+    //   // fetch_reg
       reg.io.read_i := rs1
       src1          := reg.io.read
       state         := sExecute
-    }
-    is(sExecute) {
-      //run!!
+    // }
+    // is(sExecute) {
+    //   //run!!
       alu.io.src1 := src1
       alu.io.imm  := immI
       alu.io.addi := addi
       res         := alu.io.dst
       state       := sWriteBack
-    }
-    is(sWriteBack) {
-      //update
+    // }
+    // is(sWriteBack) {
+    //   //update
       reg.io.write_i  := rd
       reg.io.write    := res
       reg.io.write_en := true.B
       pc              := pc + 4.U
       state           := sFetch
-    }
-  }
+//     }
+//   }
 
 }
