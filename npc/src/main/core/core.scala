@@ -12,7 +12,7 @@ class core extends Module {
     val addr  = Input(UInt(32.W))
     val instr = Input(UInt(32.W))
   })
-  val pc = RegInit(0x80000000.U(32.W))
+  val pc = RegInit("h80000000".U(32.W))
   io.pc := pc
 
   //stages
