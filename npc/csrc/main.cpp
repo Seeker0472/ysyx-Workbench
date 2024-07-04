@@ -160,7 +160,7 @@ int main(int argc, char **argv)
   {
     single_cycle();
     // sleep(1);
-    printf("%x\n", dut->io_pc);
+    // printf("%x\n", dut->io_pc);
     dut->io_instr=mem_read(dut->io_pc);
   //   if(dut->io_pc==0x80000060){
   // tfp->close(); // 关闭VCD文件
