@@ -58,6 +58,7 @@ class core extends Module {
       alu.io.addi := addi
       res         := alu.io.dst
       state       := sWriteBack
+      io.value:= res
     // }
     // is(sWriteBack) {
     //   //update
