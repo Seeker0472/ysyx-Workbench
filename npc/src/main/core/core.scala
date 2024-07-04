@@ -25,7 +25,6 @@ class core extends Module {
   val rs1      = Reg(UInt(5.W))
   val rd       = Reg(UInt(5.W))
   val addi     = Reg(Bool())
-  val break     = Wire(Bool())
   val write_en = false.B
 
   val src1 = Reg(UInt(32.W))
@@ -34,7 +33,7 @@ class core extends Module {
   val decoder = Module(new Decoder())
   val alu     = Module(new ALU())
   val reg     = Module(new REG())
-  val br_han  = Module(new ebreak_handler)
+  val br_han  = Module(new ebreak_handler())
 
 
       decoder.io.instr := io.instr
@@ -42,7 +41,7 @@ class core extends Module {
       rs1              := decoder.io.rs1
       addi             := decoder.io.addi
       rd               := decoder.io.rd
-      break := decoder.io.ebreak
+      br_han.io.halt := decoder.io.ebreak
       
 
       reg.io.read_i := rs1
@@ -58,9 +57,6 @@ class core extends Module {
       reg.io.write    := res
       reg.io.write_en := true.B
 
-    when(break){
-
-    }
     switch(state) {
     is(sFetch){
       state            := sDecode
