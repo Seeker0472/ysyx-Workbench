@@ -86,21 +86,13 @@ VL_ATTR_COLD void Vcore___024root___eval_stl(Vcore___024root* vlSelf) {
     }
 }
 
-extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_h334b000d_0;
-
 VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf) {
     (void)vlSelf;  // Prevent unused variable warning
     Vcore__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___stl_sequent__TOP__0\n"); );
-    // Init
-    CData/*2:0*/ __Vtableidx1;
-    __Vtableidx1 = 0;
     // Body
     vlSelf->io_pc = vlSelf->core__DOT__pc;
     vlSelf->io_value = vlSelf->core__DOT__res;
-    __Vtableidx1 = vlSelf->core__DOT__state;
-    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_h334b000d_0
-        [__Vtableidx1];
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = ((0x10U 
                                                  & (IData)(vlSelf->core__DOT__rs1))
                                                  ? 
@@ -286,14 +278,12 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->io_addr = VL_RAND_RESET_I(32);
     vlSelf->io_instr = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__pc = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->core__DOT__immI = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__rs1 = VL_RAND_RESET_I(5);
     vlSelf->core__DOT__rd = VL_RAND_RESET_I(5);
     vlSelf->core__DOT__addi = VL_RAND_RESET_I(1);
     vlSelf->core__DOT__src1 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__res = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__casez_tmp = VL_RAND_RESET_I(3);
     vlSelf->core__DOT__reg_0__DOT__regs_0 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_1 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_2 = VL_RAND_RESET_I(32);

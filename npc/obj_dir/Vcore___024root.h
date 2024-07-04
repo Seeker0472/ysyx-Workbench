@@ -16,11 +16,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
     // DESIGN SPECIFIC STATE
     VL_IN8(clock,0,0);
     VL_IN8(reset,0,0);
-    CData/*2:0*/ core__DOT__state;
     CData/*4:0*/ core__DOT__rs1;
     CData/*4:0*/ core__DOT__rd;
     CData/*0:0*/ core__DOT__addi;
-    CData/*2:0*/ core__DOT__casez_tmp;
     CData/*0:0*/ __VstlFirstIteration;
     CData/*0:0*/ __Vtrigprevexpr___TOP__clock__0;
     CData/*0:0*/ __VactContinue;
