@@ -16,7 +16,7 @@ class core extends Module {
   io.pc := pc
 
   //stages
-  val sFetch :: sDecode :: sExecute :: sWriteBack :: Nil = Enum(4)
+  val sFetch :: sDecode :: sRead :: sExecute :: sWriteBack :: Nil = Enum(5)
   val state                                              = RegInit(sFetch)
 
   val immI     = Reg(UInt(32.W))
@@ -33,15 +33,18 @@ class core extends Module {
   val reg     = Module(new REG())
 
   switch(state) {
-    is(sFetch) { // decode_stage!!!
+    is(sFetch){
+      state            := sDecode
+    }
+    is(sDecode) { // decode_stage!!!
       decoder.io.instr := io.instr
       immI             := decoder.io.immI
       rs1              := decoder.io.rs1
       addi             := decoder.io.addi
       rd               := decoder.io.rd
-      state            := sDecode
+      state            := sRead
     }
-    is(sDecode) {
+    is(sRead) {
       // fetch_reg
       reg.io.read_i := rs1
       src1          := reg.io.read
