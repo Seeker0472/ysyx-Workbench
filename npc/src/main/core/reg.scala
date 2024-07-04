@@ -11,7 +11,7 @@ class REG extends Module{
         val write = Input(UInt(32.W))
     })
 
-    val regs = RegInit(VecInit(0.U))
+    val regs = RegInit(VecInit(Seq.fill(32)(0.U(32.W))))
     io.read:=regs(io.read_i)
 
     when(io.write_en){
