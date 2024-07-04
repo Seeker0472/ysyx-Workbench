@@ -9,6 +9,7 @@ import os.stat
 class core extends Module {
   val io = IO(new Bundle {
     val pc    = Output(UInt(32.W))
+    val value = Output(UInt(32.W))
     val addr  = Input(UInt(32.W))
     val instr = Input(UInt(32.W))
   })
