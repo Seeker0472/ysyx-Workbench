@@ -47,8 +47,8 @@ void read_symbol_table(const char *filename) {
         Log("Failed to open : %s",filename);
         exit(EXIT_FAILURE);
     }
-
-    Elf64_Ehdr header;
+    MUXDEF(RV64,Elf64_Ehdr header,Elf32_Ehdr header);
+    // Elf64_Ehdr header;
     if(fread(&header, 1, sizeof(header), file)!=sizeof(header))
 		assert(0);//读取的数量不对
 
