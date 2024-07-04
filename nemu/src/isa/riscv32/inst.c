@@ -150,7 +150,7 @@ static int decode_exec(Decode *s) {
 
 
   INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh    , R,printf("%x---%x\n",src1,src2); R(rd)=mulh(src1, src2););//TODO:Why?
-  INSTPAT("0000001 ????? ????? 100 ????? 01110 11", divu   , R, R(rd)=Ext32((src1)/(src2)););
+  INSTPAT("0000001 ????? ????? 101 ????? 01100 11", divu   , R, R(rd)=Ext32((src1)/(src2)););
 
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
