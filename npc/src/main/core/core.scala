@@ -71,7 +71,7 @@ class core extends Module {
     }
     is(sWriteBack) {
       //update
-      state           := sFetch
+      state           := sRead
       pc              := pc + 4.U
     }
   }

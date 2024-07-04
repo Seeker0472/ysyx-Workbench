@@ -24,13 +24,21 @@ void Vcore___024root___eval_nba(Vcore___024root* vlSelf) {
     }
 }
 
+extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_h334b000d_0;
+
 VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf) {
     (void)vlSelf;  // Prevent unused variable warning
     Vcore__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___nba_sequent__TOP__0\n"); );
+    // Init
+    CData/*2:0*/ __Vtableidx1;
+    __Vtableidx1 = 0;
+    IData/*31:0*/ __Vdly__core__DOT__pc;
+    __Vdly__core__DOT__pc = 0;
     // Body
+    __Vdly__core__DOT__pc = vlSelf->core__DOT__pc;
     if (vlSelf->reset) {
-        vlSelf->core__DOT__pc = 0x80000000U;
+        __Vdly__core__DOT__pc = 0x80000000U;
         vlSelf->core__DOT__reg_0__DOT__regs_27 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_26 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_25 = 0U;
@@ -63,8 +71,15 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
         vlSelf->core__DOT__reg_0__DOT__regs_29 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_30 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_31 = 0U;
+        vlSelf->core__DOT__state = 0U;
     } else {
-        vlSelf->core__DOT__pc = ((IData)(4U) + vlSelf->core__DOT__pc);
+        if ((1U & (~ (((((0U == (IData)(vlSelf->core__DOT__state)) 
+                         | (1U == (IData)(vlSelf->core__DOT__state))) 
+                        | (2U == (IData)(vlSelf->core__DOT__state))) 
+                       | (3U == (IData)(vlSelf->core__DOT__state))) 
+                      | (4U != (IData)(vlSelf->core__DOT__state)))))) {
+            __Vdly__core__DOT__pc = ((IData)(4U) + vlSelf->core__DOT__pc);
+        }
         if ((0x1bU == (IData)(vlSelf->core__DOT__rd))) {
             vlSelf->core__DOT__reg_0__DOT__regs_27 
                 = vlSelf->core__DOT__res;
@@ -183,9 +198,11 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
             vlSelf->core__DOT__reg_0__DOT__regs_31 
                 = vlSelf->core__DOT__res;
         }
+        vlSelf->core__DOT__state = vlSelf->core__DOT__casez_tmp;
     }
     vlSelf->core__DOT__rs1 = (0x1fU & (vlSelf->io_instr 
                                        >> 0xfU));
+    vlSelf->core__DOT__pc = __Vdly__core__DOT__pc;
     vlSelf->io_pc = vlSelf->core__DOT__pc;
     vlSelf->core__DOT__rd = (0x1fU & (vlSelf->io_instr 
                                       >> 7U));
@@ -193,6 +210,9 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
                                ? (vlSelf->core__DOT__immI 
                                   + vlSelf->core__DOT__src1)
                                : 0U);
+    __Vtableidx1 = vlSelf->core__DOT__state;
+    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_h334b000d_0
+        [__Vtableidx1];
     vlSelf->io_value = vlSelf->core__DOT__res;
     vlSelf->core__DOT__addi = (0x13U == ((0x380U & 
                                           (vlSelf->io_instr 
