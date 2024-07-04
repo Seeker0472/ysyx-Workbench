@@ -28,7 +28,7 @@ clean:
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
-	verilator -cc --top core  ./build/core.sv --trace --exe ./csrc/main.cpp
+	verilator -cc --top core  ./build/core.sv --trace --exe ./csrc/main.cpp -o obj_dir
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore
 
