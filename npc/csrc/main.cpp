@@ -11,7 +11,9 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 Vcore *dut;
 unsigned int sim_time = 0;
 static int wave_enable = true;
-
+void call_ebreak(){
+  exit(0);
+}
 int instructions[100] = {
     0x00448493,
     0x00448493,

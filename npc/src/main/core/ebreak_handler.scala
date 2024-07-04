@@ -8,12 +8,13 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
     val halt = Input(Bool())
   })
   setInline("ebreak_handler.v",
-    """module ebreak_handler(
+    """import "DPI-C" function int call_ebreak();
+      |module ebreak_handler(
       |  input halt
       |);
       |always @(*) begin
       |   if (halt) begin
-      |      $display("EBREAK called");
+      |      call_ebreak();
       |  end
       | end
       |endmodule
