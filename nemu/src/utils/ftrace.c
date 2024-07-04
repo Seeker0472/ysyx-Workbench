@@ -98,7 +98,9 @@ void read_symbol_table(const char *filename) {
         }
     }
     //读取Symbol
-    Elf64_Sym *symbols = malloc(symtab->sh_size);
+    // Elf64_Sym *symbols = malloc(symtab->sh_size);
+    MUXDEF(RV64,Elf64_Sym *symbols = malloc(symtab->sh_size);,Elf32_Sym *symbols = malloc(symtab->sh_size););
+
     fseek(file, symtab->sh_offset, SEEK_SET);
     if(fread(symbols, 1, symtab->sh_size, file)!=symtab->sh_size)
 		assert(0);//读取的数量不对
