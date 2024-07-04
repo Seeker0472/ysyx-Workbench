@@ -52,28 +52,28 @@ class core extends Module {
       reg.io.write_i  := rd
       reg.io.write    := res
       reg.io.write_en := true.B
-
-
-    switch(state) {
-    is(sFetch){
-      state            := sDecode
-    }
-    is(sDecode) { // decode_stage!!!
-      state            := sRead
-    }
-    is(sRead) {
-      // fetch_reg
-      state         := sExecute
-    }
-    is(sExecute) {
-      //run!!
-      state       := sWriteBack
-    }
-    is(sWriteBack) {
-      //update
-      state           := sFetch
       pc              := pc + 4.U
-    }
-  }
+
+
+//     switch(state) {
+//     is(sFetch){
+//       state            := sDecode
+//     }
+//     is(sDecode) { // decode_stage!!!
+//       state            := sRead
+//     }
+//     is(sRead) {
+//       // fetch_reg
+//       state         := sExecute
+//     }
+//     is(sExecute) {
+//       //run!!
+//       state       := sWriteBack
+//     }
+//     is(sWriteBack) {
+//       //update
+//       state           := sFetch
+//     }
+//   }
 
 }

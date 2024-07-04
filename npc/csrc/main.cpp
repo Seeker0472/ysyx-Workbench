@@ -155,7 +155,7 @@ int main(int argc, char **argv)
     // sleep(1);
     printf("%x\n", dut->io_pc);
     dut->io_instr=mem_read(dut->io_pc);
-    if(dut->io_pc==0x8000013c){
+    if(dut->io_pc==0x80000060){
   tfp->close(); // 关闭VCD文件
 
       return 0;}
