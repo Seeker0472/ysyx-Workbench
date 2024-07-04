@@ -60,13 +60,18 @@ void read_symbol_table(const char *filename) {
 
     fseek(file,header.e_shoff,SEEK_SET);
     // 读取节头表
-    Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
+    // Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
+    MUXDEF(RV64,Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);,Elf32_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum););
     if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!= header.e_shnum)
 		assert(0);//读取的数量不对
 	// Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
 	
-    Elf64_Shdr *symtab = NULL;
-    Elf64_Shdr *strtab = NULL;
+    // Elf64_Shdr *symtab = NULL;
+    MUXDEF(RV64,Elf64_Shdr *symtab = NULL;,Elf32_Shdr *symtab = NULL;);
+
+    // Elf64_Shdr *strtab = NULL;
+    MUXDEF(RV64,Elf64_Shdr *strtab = NULL;,Elf32_Shdr *strtab = NULL;);
+
     //遍历，寻找SHT_STRTAB，SHT_SYMTAB
     for(int i=0;i<header.e_shnum;i++){
         if(shdrs[i].sh_type == SHT_STRTAB && i != header.e_shstrndx){//排除sectionHeader的符号表
