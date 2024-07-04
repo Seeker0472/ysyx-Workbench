@@ -1,6 +1,7 @@
 BUILD_DIR = ./build
-
+TOP ?= core
 PRJ = playground
+TOP_NAME=V${TOP}
 
 test:
 	mill -i $(PRJ).test
@@ -26,6 +27,7 @@ clean:
 
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@echo "Write this Makefile by yourself."
+	# @echo "Write this Makefile by yourself."
+	verilator -Wall -cc  build/core --trace --exe csrc/main.cpp 
 
 -include ../Makefile
