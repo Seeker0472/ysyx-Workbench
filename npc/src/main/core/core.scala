@@ -24,6 +24,7 @@ class core extends Module {
   val rs1      = Reg(UInt(5.W))
   val rd       = Reg(UInt(5.W))
   val addi     = Reg(Bool())
+  val break     = Wire(Bool())
   val write_en = false.B
 
   val src1 = Reg(UInt(32.W))
@@ -39,6 +40,7 @@ class core extends Module {
       rs1              := decoder.io.rs1
       addi             := decoder.io.addi
       rd               := decoder.io.rd
+      
 
       reg.io.read_i := rs1
       src1          := reg.io.read
@@ -53,7 +55,9 @@ class core extends Module {
       reg.io.write    := res
       reg.io.write_en := true.B
 
+    when(break){
 
+    }
     switch(state) {
     is(sFetch){
       state            := sDecode
