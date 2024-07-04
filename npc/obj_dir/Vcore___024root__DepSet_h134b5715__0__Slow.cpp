@@ -86,7 +86,7 @@ VL_ATTR_COLD void Vcore___024root___eval_stl(Vcore___024root* vlSelf) {
     }
 }
 
-extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_h334b000d_0;
+extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_hf9010b7d_0;
 
 VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf) {
     (void)vlSelf;  // Prevent unused variable warning
@@ -99,7 +99,7 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
     vlSelf->io_pc = vlSelf->core__DOT__pc;
     vlSelf->io_value = vlSelf->core__DOT__res;
     __Vtableidx1 = vlSelf->core__DOT__state;
-    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_h334b000d_0
+    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_hf9010b7d_0
         [__Vtableidx1];
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = ((0x10U 
                                                  & (IData)(vlSelf->core__DOT__rs1))

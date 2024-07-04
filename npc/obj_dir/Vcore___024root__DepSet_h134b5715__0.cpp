@@ -24,7 +24,7 @@ void Vcore___024root___eval_nba(Vcore___024root* vlSelf) {
     }
 }
 
-extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_h334b000d_0;
+extern const VlUnpacked<CData/*2:0*/, 8> Vcore__ConstPool__TABLE_hf9010b7d_0;
 
 VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf) {
     (void)vlSelf;  // Prevent unused variable warning
@@ -211,7 +211,7 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
                                   + vlSelf->core__DOT__src1)
                                : 0U);
     __Vtableidx1 = vlSelf->core__DOT__state;
-    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_h334b000d_0
+    vlSelf->core__DOT__casez_tmp = Vcore__ConstPool__TABLE_hf9010b7d_0
         [__Vtableidx1];
     vlSelf->io_value = vlSelf->core__DOT__res;
     vlSelf->core__DOT__addi = (0x13U == ((0x380U & 
