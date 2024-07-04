@@ -2,7 +2,7 @@ BUILD_DIR = ./build
 TOP ?= core
 PRJ = playground
 TOP_NAME=V${TOP}
-SED_CMD = sed -i "s/^.*\.v$//"
+SED_CMD = sed -i "s/^.*\.v$$//"
 
 test:
 	mill -i $(PRJ).test
