@@ -12,6 +12,7 @@ Vcore *dut;
 unsigned int sim_time = 0;
 static int wave_enable = true;
 void call_ebreak(){
+  printf("Ebreak Called!!");
   exit(0);
 }
 int instructions[100] = {
