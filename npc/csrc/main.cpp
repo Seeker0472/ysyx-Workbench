@@ -100,7 +100,7 @@ void reset(int n)
   dut->reset = 0;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
   parse_args(argc,argv);
   dut = new Vcore; // Initialize the DUT instance
