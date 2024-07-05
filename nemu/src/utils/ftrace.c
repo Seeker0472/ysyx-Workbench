@@ -75,23 +75,23 @@ void read_symbol_table(const char *filename) {
     //遍历，寻找SHT_STRTAB，SHT_SYMTAB
     for(int i=0;i<header.e_shnum;i++){
         if(shdrs[i].sh_type == SHT_STRTAB && i != header.e_shstrndx){//排除sectionHeader的符号表
-            // printf("SHT_STRTAB\n");
+            printf("SHT_STRTAB\n");
             strtab = &shdrs[i];
         }
 
-        //sectionHeader的符号表
-        // if(shdrs[i].sh_type == SHT_STRTAB && i == header.e_shstrndx){
-        //     printf("Section!");
-        //         // Read string table
-        //     Elf64_Shdr *now=&shdrs[i];
-        //     char* strtab_data = malloc(now->sh_size);
-        //     fseek(file, now->sh_offset, SEEK_SET);
-        //     fread(strtab_data, 1, now->sh_size, file);
-        //     int num = now->sh_size ;
-        //     for (int i = 0; i < num; i++) {
-        //         printf("%c",strtab_data[i]);
-        //     }
-        // }
+        // //sectionHeader的符号表
+        if(shdrs[i].sh_type == SHT_STRTAB && i == header.e_shstrndx){
+            printf("Section!");
+                // Read string table
+            Elf32_Shdr *now=&shdrs[i];
+            char* strtab_data = malloc(now->sh_size);
+            fseek(file, now->sh_offset, SEEK_SET);
+            if(fread(strtab_data, 1, now->sh_size, file));
+            int num = now->sh_size ;
+            for (int i = 0; i < num; i++) {
+                printf("%c",strtab_data[i]);
+            }
+        }
         if(shdrs[i].sh_type==SHT_SYMTAB){
             // printf("SHT_SYMTAB\n");
             symtab = &shdrs[i];
