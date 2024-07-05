@@ -52,25 +52,25 @@ void read_symbol_table(const char *filename) {
     if(fread(&header, 1, sizeof(header), file)!=sizeof(header))
 		assert(0);//读取的数量不对
 
-    // printf("e_phoff: %ld \n", header.e_phoff);
-    // printf("e_shoff: %ld\n", header.e_shoff);//section header table's file offset in bytes.
+    printf("e_phoff: %d \n", header.e_phoff);
+    printf("e_shoff: %d\n", header.e_shoff);//section header table's file offset in bytes.
 
-    // printf("e_shnum: %d\n", header.e_shnum);//number of entries in the section header table.
-    // printf("e_shstrndx: %d\n", header.e_shstrndx);//section header table index of the entry associated with the section name string table.
+    printf("e_shnum: %d\n", header.e_shnum);//number of entries in the section header table.
+    printf("e_shstrndx: %d\n", header.e_shstrndx);//section header table index of the entry associated with the section name string table.
 
     fseek(file,header.e_shoff,SEEK_SET);
     // 读取节头表
     // Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
-    MUXDEF(CONFIG_RV64,Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);,Elf32_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum););
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);, Elf32_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum););
     if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!= header.e_shnum)
 		assert(0);//读取的数量不对
 	// Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
 	
     // Elf64_Shdr *symtab = NULL;
-    MUXDEF(CONFIG_RV64,Elf64_Shdr *symtab = NULL;,Elf32_Shdr *symtab = NULL;);
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *symtab = NULL;, Elf32_Shdr *symtab = NULL;);
 
     // Elf64_Shdr *strtab = NULL;
-    MUXDEF(CONFIG_RV64,Elf64_Shdr *strtab = NULL;,Elf32_Shdr *strtab = NULL;);
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *strtab = NULL;, Elf32_Shdr *strtab = NULL;);
 
     //遍历，寻找SHT_STRTAB，SHT_SYMTAB
     for(int i=0;i<header.e_shnum;i++){
