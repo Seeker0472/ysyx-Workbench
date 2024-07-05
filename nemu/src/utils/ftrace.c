@@ -93,7 +93,7 @@ void read_symbol_table(const char *filename) {
             }
         }
         if(shdrs[i].sh_type==SHT_SYMTAB){
-            // printf("SHT_SYMTAB\n");
+            printf("SHT_SYMTAB\n");
             symtab = &shdrs[i];
         }
     }
