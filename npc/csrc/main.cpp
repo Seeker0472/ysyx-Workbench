@@ -142,7 +142,7 @@ void init_img()
   if (img_file != NULL)
   {
     FILE *fp = fopen(img_file, "rb");
-    Assert(fp, "Can not open '%s'", img_file);
+    // Assert(fp, "Can not open '%s'", img_file);
     fseek(fp, 0, SEEK_END);
     long size = ftell(fp);
     // Log("The image is %s, size = %ld", img_file, size);
