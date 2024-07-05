@@ -3,7 +3,8 @@
 #include <iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-#include <bits/getopt_ext.h>
+// #include <bits/getopt_ext.h>
+#include <getopt.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
 
 #include "svdpi.h"
