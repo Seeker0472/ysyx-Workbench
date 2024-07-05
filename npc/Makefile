@@ -4,6 +4,8 @@ PRJ = playground
 TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
 
+ARGS ?=
+
 test:
 	mill -i $(PRJ).test
 
@@ -33,7 +35,7 @@ sim:
 	
 	verilator -cc --top core  ./build/core.sv --trace --exe ./csrc/main.cpp 
 	make -j -C obj_dir -f Vcore.mk Vcore
-	./obj_dir/Vcore
+	./obj_dir/Vcore $(ARGS) $(IMG)
 
 all: verilog sim
 -include ../Makefile
