@@ -19,24 +19,27 @@ void call_ebreak(){
   exit(0);
 }
 static char *img_file = NULL;
-static int parse_args(int argc, char **argv) {
+static char *elf_file = NULL;
+
+static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
     // {"batch"    , no_argument      , NULL, 'b'},
     // {"log"      , required_argument, NULL, 'l'},
     // {"diff"     , required_argument, NULL, 'd'},
     // {"port"     , required_argument, NULL, 'p'},
     // {"help"     , no_argument      , NULL, 'h'},
-    // {"elf-file" , required_argument, NULL, 'e'},
-    {0          , 0                , NULL,  0 },
+    {"elf-file" , required_argument, NULL, 'e'},
+    {0          , 0                , 0,  0 },
   };
   int o;
-  while ( (o = getopt_long(argc, argv, "", table, NULL)) != -1) {
+  while ( (o = getopt_long(argc, argv, "-e:", table, NULL)) != -1) {
     switch (o) {
       // case 'b': sdb_set_batch_mode(); break;
       // case 'p': sscanf(optarg, "%d", &difftest_port); break;
       // case 'l': log_file = optarg; break;
       // case 'd': diff_so_file = optarg; break;
-      // case 'e': elf_file = optarg; break;
+      
+      case 'e': elf_file = optarg; break;
       case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
