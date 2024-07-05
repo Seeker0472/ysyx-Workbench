@@ -47,7 +47,7 @@ void read_symbol_table(const char *filename) {
         Log("Failed to open : %s",filename);
         exit(EXIT_FAILURE);
     }
-    MUXDEF(RV64,Elf64_Ehdr header,Elf32_Ehdr header);
+    MUXDEF(CONFIG_RV64,Elf64_Ehdr header,Elf32_Ehdr header);
     // Elf64_Ehdr header;
     if(fread(&header, 1, sizeof(header), file)!=sizeof(header))
 		assert(0);//读取的数量不对
@@ -61,16 +61,16 @@ void read_symbol_table(const char *filename) {
     fseek(file,header.e_shoff,SEEK_SET);
     // 读取节头表
     // Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
-    MUXDEF(RV64,Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);,Elf32_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum););
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);,Elf32_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum););
     if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!= header.e_shnum)
 		assert(0);//读取的数量不对
 	// Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
 	
     // Elf64_Shdr *symtab = NULL;
-    MUXDEF(RV64,Elf64_Shdr *symtab = NULL;,Elf32_Shdr *symtab = NULL;);
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *symtab = NULL;,Elf32_Shdr *symtab = NULL;);
 
     // Elf64_Shdr *strtab = NULL;
-    MUXDEF(RV64,Elf64_Shdr *strtab = NULL;,Elf32_Shdr *strtab = NULL;);
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *strtab = NULL;,Elf32_Shdr *strtab = NULL;);
 
     //遍历，寻找SHT_STRTAB，SHT_SYMTAB
     for(int i=0;i<header.e_shnum;i++){
@@ -99,7 +99,7 @@ void read_symbol_table(const char *filename) {
     }
     //读取Symbol
     // Elf64_Sym *symbols = malloc(symtab->sh_size);
-    MUXDEF(RV64,Elf64_Sym *symbols = malloc(symtab->sh_size);,Elf32_Sym *symbols = malloc(symtab->sh_size););
+    MUXDEF(CONFIG_RV64,Elf64_Sym *symbols = malloc(symtab->sh_size);,Elf32_Sym *symbols = malloc(symtab->sh_size););
 
     fseek(file, symtab->sh_offset, SEEK_SET);
     if(fread(symbols, 1, symtab->sh_size, file)!=symtab->sh_size)
