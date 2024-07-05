@@ -69,7 +69,7 @@ void print_watch_points(){
   printf("%-3s\t%-10s  \t%-10s\n","No","Last_val","Expression");
 
   for(WP* cur=head;cur!=NULL;cur=cur->next){
-    MUXDEF(RV64,printf("%-3d\t0x%-10lx\t%-10s\n",cur->NO,cur->last_result,cur->expr);,printf("%-3d\t0x%-10x\t%-10s\n",cur->NO,cur->last_result,cur->expr);)
+    MUXDEF(CONFIG_RV64,printf("%-3d\t0x%-10lx\t%-10s\n",cur->NO,cur->last_result,cur->expr);,printf("%-3d\t0x%-10x\t%-10s\n",cur->NO,cur->last_result,cur->expr);)
 
   }
 }
@@ -85,9 +85,9 @@ bool check_watch_point(){
     if(succ&&result!=cur->last_result){
       printf("Hit WatchPoint:%d %s \n",cur->NO,cur->expr);
       
-      MUXDEF(RV64, printf("Old value = 0x%lx (%lu)\n",cur->last_result,cur->last_result);, printf("Old value = 0x%x (%u)\n",cur->last_result,cur->last_result););
+      MUXDEF(CONFIG_RV64, printf("Old value = 0x%lx (%lu)\n",cur->last_result,cur->last_result);, printf("Old value = 0x%x (%u)\n",cur->last_result,cur->last_result););
 
-      MUXDEF(RV64, printf("New value = 0x%lx (%lu)\n",result,result);, printf("New value = 0x%x (%u)\n",result,result););
+      MUXDEF(CONFIG_RV64, printf("New value = 0x%lx (%lu)\n",result,result);, printf("New value = 0x%x (%u)\n",result,result););
      
       cur->last_result=result;
       changed=true;
