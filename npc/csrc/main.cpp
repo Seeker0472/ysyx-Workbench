@@ -80,7 +80,7 @@ int default_insts[100] = {
 };
 
 int mem_read(int pc){
-  return instructions[(pc-0x80000000)/4];
+  return default_insts[(pc-0x80000000)/4];
 }
 
 void single_cycle()
