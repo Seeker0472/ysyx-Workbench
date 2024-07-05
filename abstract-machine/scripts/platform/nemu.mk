@@ -20,12 +20,14 @@ CFLAGS += -I$(AM_HOME)/am/src/platform/nemu/include
 
 image: $(IMAGE).elf
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
-	@$(info OBJCOPY = $(OBJCOPY))
 	@echo + OBJCOPY "->" $(IMAGE_REL).bin  
-	# $(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
+	$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
     
 
 run: image
+	@$(info NEMU_HOME = $(NEMU_HOME))
+	@$(info NEMUFLAGS = $(NEMUFLAGS))
+	@$(info IMAGE = $(IMAGE))
 	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
 
 gdb: image
