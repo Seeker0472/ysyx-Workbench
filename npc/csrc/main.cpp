@@ -22,7 +22,7 @@ void call_ebreak()
 }
 static char *img_file = NULL;
 static char *elf_file = NULL;
-static uint8_t mem[100000]  = {
+static uint16_t mem[100000]  = {
     0x00448493,
     0x00448493,
     0x00448493,
