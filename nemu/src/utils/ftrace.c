@@ -112,7 +112,7 @@ void read_symbol_table(const char *filename) {
 		assert(0);//读取的数量不对
 
     //符号表的数量
-    int num_symbols = symtab->sh_size / sizeof(Elf64_Sym);
+    int num_symbols = symtab->sh_size / MUXDEF(CONFIG_RV64,sizeof(Elf64_Sym),sizeof(Elf32_Sym));
 
     printf("\nSymbols:\n");
     for (int i = 0; i < num_symbols; i++) {
