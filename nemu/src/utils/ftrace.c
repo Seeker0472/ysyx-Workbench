@@ -116,12 +116,13 @@ void read_symbol_table(const char *filename) {
 
     printf("\nSymbols:\n");
     for (int i = 0; i < num_symbols; i++) {
+        if(symbols[i].st_size!=0){
         printf("Symbol %d: %s -----%d\n", i, &strtab_data[symbols[i].st_name],symbols[i].st_name);//section的st_name是0！！！RTFM！！！
         printf("  Value: %x\n", symbols[i].st_value);
         printf("  Size: %d\n", symbols[i].st_size);
         printf("  Info: %d\n", symbols[i].st_info);
         printf("  Other: %d\n", symbols[i].st_other);
-        printf("  Section Index: %d\n", symbols[i].st_shndx);
+        printf("  Section Index: %d\n", symbols[i].st_shndx);}
         }
 	for (int i = 0; i < num_symbols; i++) {
 		if(symbols[i].st_size!=0){
