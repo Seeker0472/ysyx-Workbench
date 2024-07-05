@@ -88,30 +88,6 @@ static int parse_args(int argc, char *argv[])
   return 0;
 }
 
-// int default_insts[100] = {
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00100073,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-//     0x00448493,
-// };
-
 int mem_read(int pc)
 {
   return mem[(pc - 0x80000000) / 4];
@@ -146,7 +122,7 @@ void init_img()
     fseek(fp, 0, SEEK_END);
     long size = ftell(fp);
     // Log("The image is %s, size = %ld", img_file, size);
-    printf("The image is %s, size = %ld", img_file, size);
+    printf("The image is %s, size = %ld\n", img_file, size);
     fseek(fp, 0, SEEK_SET);
     int ret = fread(mem, size, 1, fp);
     // assert(ret == 1);
@@ -155,7 +131,7 @@ void init_img()
   }
   else
   {
-    printf("No Img file Loaded,Using Default IMG");
+    printf("No Img file Loaded,Using Default IMG\n");
   }
 }
 
