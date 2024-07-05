@@ -17,6 +17,40 @@ void call_ebreak(){
   printf("Ebreak Called!!");
   exit(0);
 }
+static char *img_file = NULL;
+static int parse_args(int argc, char *argv[]) {
+  const struct option table[] = {
+    // {"batch"    , no_argument      , NULL, 'b'},
+    // {"log"      , required_argument, NULL, 'l'},
+    // {"diff"     , required_argument, NULL, 'd'},
+    // {"port"     , required_argument, NULL, 'p'},
+    // {"help"     , no_argument      , NULL, 'h'},
+    // {"elf-file" , required_argument, NULL, 'e'},
+    {0          , 0                , NULL,  0 },
+  };
+  int o;
+  while ( (o = getopt_long(argc, argv, ":", table, NULL)) != -1) {
+    switch (o) {
+      // case 'b': sdb_set_batch_mode(); break;
+      // case 'p': sscanf(optarg, "%d", &difftest_port); break;
+      // case 'l': log_file = optarg; break;
+      // case 'd': diff_so_file = optarg; break;
+      // case 'e': elf_file = optarg; break;
+      case 1: img_file = optarg; return 0;
+      default:
+        printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
+        // printf("\t-b,--batch              run with batch mode\n");
+        // printf("\t-l,--log=FILE           output log to FILE\n");
+        // printf("\t-d,--diff=REF_SO        run DiffTest with reference REF_SO\n");
+        // printf("\t-p,--port=PORT          run DiffTest with port PORT\n");
+        // printf("\t-e,--elf-file=FILE      input Elf File\n");
+        printf("\n");
+        exit(0);
+    }
+  }
+  return 0;
+}
+
 int default_insts[100] = {
     0x00448493,
     0x00448493,
@@ -67,9 +101,9 @@ void reset(int n)
 
 int main(int argc, char **argv)
 {
-
+  parse_args(argc,argv);
   dut = new Vcore; // Initialize the DUT instance
-  Verilated::commandArgs(argc, argv);
+  // Verilated::commandArgs(argc, argv);
   Verilated::traceEverOn(true); // 启用波形追踪
   tfp = new VerilatedVcdC;
   dut->trace(tfp, 99); // 跟踪99级信号
