@@ -19,7 +19,7 @@ void call_ebreak(){
   exit(0);
 }
 static char *img_file = NULL;
-static int parse_args(int argc, char *argv[]) {
+static int parse_args(int argc, char **argv) {
   const struct option table[] = {
     // {"batch"    , no_argument      , NULL, 'b'},
     // {"log"      , required_argument, NULL, 'l'},
@@ -100,7 +100,7 @@ void reset(int n)
   dut->reset = 0;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
   parse_args(argc,argv);
   dut = new Vcore; // Initialize the DUT instance
