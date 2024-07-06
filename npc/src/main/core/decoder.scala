@@ -60,9 +60,9 @@ class Decoder extends Module {
     ("nop", BitPat("b0000000"), BitPat("b000"), BitPat("b0000000")),
     ("nop", BitPat("b0000000"), BitPat("b000"), BitPat("b0000000")),
   )
-  val bind_sig = Seq(
-    (Seq())
-  )
+  // val bind_sig = Seq(
+  //   (Seq())
+  // )
 
   // 生成Patterns和Fields
   val possiblePatterns: Seq[InstructionPattern]                  = PatternFieldGenerator.generatePatterns(patternData)
@@ -73,7 +73,7 @@ class Decoder extends Module {
 
   val decodeResult = decodeTable.decode(io.instr)
 
-  
+
   //TODO:::::
   
   io.out.ebreak := decodeResult(Field("ebreak"))
