@@ -96,7 +96,7 @@ class Decoder extends Module {
     InsP(name_in = "lui",Inst_Type=Inst_Type_Enum.U_Type, opcode   = BitPat("b0110111")),
     InsP(name_in = "auipc",Inst_Type=Inst_Type_Enum.U_Type,  opcode = BitPat("b0010111")),
     //blocks
-    InsP(name_in = "ecall/break",Inst_Type=Inst_Type_Enum.I_Type, opcode = BitPat("b0010111"))
+    InsP(name_in = "ecall/break",Inst_Type=Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"))
     // InsP(name_in = "ebreak", opcode = BitPat("0010111"))
   )
 
