@@ -32,9 +32,8 @@ object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP): BitPat = {
-    val immType = Inst_Type_Enum.safe(op.instType) 
-    // BitPat(immType.litValue.U((immType.getWidth).W))
-    BitPat(immType.litValue.U((immType.getWidth).W))
+    val immType = op.instType
+    BitPat(immType)
   }
 }
 //src2是否选择Imm
