@@ -31,10 +31,16 @@ case class InsP(
 object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
+object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
+  def name: String = "InstType"
+  override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP): BitPat = {
     val immType = op.instType
-    BitPat(immType)
+    val immTypeUInt = immType.asUInt // 假设存在 asUInt 方法
+    BitPat(immTypeUInt)
   }
+}
+
 }
 //src2是否选择Imm
 object Use_IMM_2 extends BoolDecodeField[InsP] {
