@@ -44,7 +44,7 @@ class core extends Module {
 
   // alu.io.src1 := src1  
   // alu.io.addi := addi
-  res      := alu.io
+  // res      := alu.io
   io.value := res
 
   reg.io.write_i  := rd
