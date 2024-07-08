@@ -113,6 +113,8 @@ class Decoder extends Module {
 
   io.Reg1.no := io.instr(19, 15)
   io.Reg2.no := io.instr(24, 20)
+  io.Reg1.en := true.B
+  io.Reg2.en := true.B
   val Rval1 = io.Reg1.data
   val Rval2 = io.Reg2.data
   val rd    = io.instr(11, 7)
