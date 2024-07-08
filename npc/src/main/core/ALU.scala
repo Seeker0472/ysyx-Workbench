@@ -8,7 +8,7 @@ import Constants_Val._
 
 class ALU extends Module{
     val io=IO(new Bundle{
-      val in = new ALU_I
+      val in = Input(new ALU_I)
       // val out
     })
 // // 默认情况下，dst 输出为 0
