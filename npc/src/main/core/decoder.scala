@@ -14,6 +14,17 @@ object Inst extends ChiselEnum {
 }
 object Inst_Type_Enum extends ChiselEnum {
   val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type = Value
+  def toBitPat(value: Inst_Type_Enum.Type): BitPat = {
+    value match {
+      case R_Type => BitPat("b000")
+      case I_Type => BitPat("b001")
+      case S_Type => BitPat("b010")
+      case B_Type => BitPat("b011")
+      case U_Type => BitPat("b100")
+      case J_Type => BitPat("b101")
+    }
+  }
+
 }
 
 case class InsP(
@@ -33,8 +44,7 @@ object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP): BitPat = {
     val immType = op.instType
-    val immTypeUInt = immType.asUInt // 假设存在 asUInt 方法
-    BitPat(immTypeUInt)
+    Inst_Type_Enum.toBitPat(immType)
   }
 }
 //src2是否选择Imm
