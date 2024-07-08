@@ -40,6 +40,7 @@ class core extends Module {
   reg.io.write_No  := decoder.io.out.rd
 
   exu.io.in.imm := decoder.io.out.imm
+  exu.io.in.pc := ifu.io.pc
 
   //pass_cont_sig to EXU
   exu.io.in.alu_use_Imm_2 := decoder.io.out.alu_use_Imm_2
