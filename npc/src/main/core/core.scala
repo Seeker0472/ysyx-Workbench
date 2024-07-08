@@ -21,7 +21,7 @@ class core extends Module {
 
   val decoder = Module(new Decoder())
   val reg     = Module(new REG())
-  val br_han  = Module(new ebreak_handler())
+  // val br_han  = Module(new ebreak_handler())
   val ifu     = Module(new IFU())
   val exu     = Module(new EXU())
 
@@ -48,6 +48,8 @@ class core extends Module {
   exu.io.in.pc_jump       := decoder.io.out.pc_jump
   //Write_ENABLE!!
   reg.io.write_en := decoder.io.out.reg_write_enable
+
+  io.value:=exu.io.out.reg_out
 
   //exu
   ifu.io.next_pc        := exu.io.out.n_pc
