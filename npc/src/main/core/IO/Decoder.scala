@@ -9,7 +9,7 @@ class DecoderO extends Bundle{
     // val op     = UInt(5.W)
     val rd     = UInt(5.W)
     // val ebreak = Bool()
-    val operation = UInt(CVAL.DEC_RES_LRN.W)
+    // val operation = UInt(CVAL.DEC_RES_LRN.W)
     // val addi   = Bool()
     // val ebreak = Bool()
 }
