@@ -30,8 +30,10 @@ case class InsP(
 
 object InstType extends DecodeField[InsP,Inst_Type_Enum.Type]{
   def name:String = "InstType"
-  def genTable(op:InsP):Inst_Type_Enum.Type={
-    op.Inst_Type
+  override def chiselType = Inst_Type_Enum()
+  def genTable(op:InsP): BitPat={
+    val immType = op.Inst_Type
+    BitPat(immType.litValue.U((immType.getWidth).W))
     // op.opcode.toString() match {
     //  case "BitPat(0110011)" => Inst_Type_Enum.R_Type
     // //  case "0110011" => Inst_Type_Enum.R_Type
