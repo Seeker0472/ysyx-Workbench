@@ -70,7 +70,7 @@ object R_Write_Enable extends BoolDecodeField[InsP] {
   def name: String = "Reg_W_En"
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP)= {
-    if(op.Inst_Type!=Inst_Type_Enum.S_Type||op.Inst_Type!=Inst_Type_Enum.B_Type)
+    if(op.Inst_Type==Inst_Type_Enum.S_Type||op.Inst_Type==Inst_Type_Enum.B_Type)
       n else y
   }
 }

@@ -52,12 +52,10 @@ class core extends Module {
 //ebreak
   br_han.io.halt:=decoder.io.out.ebreak
 
-
   io.value:=exu.io.out.reg_out
 
   //exu
   ifu.io.next_pc        := exu.io.out.n_pc
   reg.io.reg_write_data := exu.io.out.reg_out
-
 
 }

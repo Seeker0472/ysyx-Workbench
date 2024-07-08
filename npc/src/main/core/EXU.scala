@@ -24,6 +24,7 @@ class EXU extends Module {
   val next_pc = Mux(io.in.pc_jump,result,pc_plus4)
   io.out.reg_out := Mux(io.in.pc_jump,pc_plus4,alu.io.result)
   io.out.n_pc := next_pc
-//   val 
+//1.检查WE信号！！！
+//pc没传进来！！
 
 }
