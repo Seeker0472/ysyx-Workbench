@@ -227,7 +227,7 @@ class Decoder extends Module {
   val rs2 = io.instr(24, 20)
   val rd  = io.instr(11, 7)
 
-  val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable)).decode(io.instr)
+  val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable)).decode(io.instr)
   val Type    = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(
