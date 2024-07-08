@@ -24,7 +24,7 @@ class ALU extends Module {
   val or      = io.in.src1 | io.in.src2
   val and     = io.in.src1 & io.in.src2
   val sll     = io.in.src1 & io.in.src2
-  val slli    = io.in.src1 & (io.in.src2 & "B1111".U)
+  // val slli    = io.in.src1 & (io.in.src2 & "B1111".U)
   val res = MuxLookup(io.in.alu_op_type, 0.U)(
     Seq(
       ALU_Op.add -> add_val,
