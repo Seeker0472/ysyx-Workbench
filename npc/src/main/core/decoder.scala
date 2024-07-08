@@ -14,17 +14,6 @@ object Inst extends ChiselEnum {
 }
 object Inst_Type_Enum extends ChiselEnum {
   val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type = Value
-  def toBitPat(value: Inst_Type_Enum.Type): BitPat = {
-    value match {
-      case R_Type => BitPat("b000")
-      case I_Type => BitPat("b001")
-      case S_Type => BitPat("b010")
-      case B_Type => BitPat("b011")
-      case U_Type => BitPat("b100")
-      case J_Type => BitPat("b101")
-    }
-  }
-
 }
 
 case class InsP(
@@ -34,19 +23,18 @@ case class InsP(
   val func3:     BitPat = BitPat.dontCare(3),
   val opcode:    BitPat)
     extends DecodePattern {
-  def instType :Inst_Type_Enum.Type =Inst_Type
   def bitPat: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
   def name:   String = name_in
 }
 
-object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
-  def name: String = "InstType"
-  override def chiselType = Inst_Type_Enum()
-  def genTable(op: InsP): BitPat = {
-    val immType = op.instType
-    Inst_Type_Enum.toBitPat(immType)
-  }
-}
+// object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
+//   def name: String = "InstType"
+//   override def chiselType = Inst_Type_Enum()
+//   def genTable(op: InsP): BitPat = {
+//     val immType = op.Inst_Type
+//     BitPat(immType.litValue.U((immType.getWidth).W))
+//   }
+// }
 //src2是否选择Imm
 object Use_IMM_2 extends BoolDecodeField[InsP] {
   def name: String = "Use_IMM"
@@ -239,8 +227,9 @@ class Decoder extends Module {
   val rs2 = io.instr(24, 20)
   val rd  = io.instr(11, 7)
 
-  val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable)).decode(io.instr)
-  val Type    = decodedResults(InstType)
+  // val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable)).decode(io.instr)
+  val decodedResults = new DecodeTable(Patterns, Seq(Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable)).decode(io.instr)
+  val Type    = Inst_Type_Enum.I_Type
   val imm = MuxLookup(Type, 0.U)(
     Seq(
       // Inst_Type_Enum.R_Type -> Rval2, // R-Type
