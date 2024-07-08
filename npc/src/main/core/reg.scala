@@ -1,21 +1,24 @@
 package core
 
 import chisel3._
+import Constants_Val._
 
 class REG extends Module{
     val io=IO(new Bundle{
-        val read_i = Input(UInt(5.W))
-        val read = Output(UInt(32.W))
+        val read_No_1 = Input(UInt(CVAL.REG_ADDR_LEN.W))
+        val read_1 = Output(UInt(CVAL.DLEN.W))
+        val read_No_2 = Input(UInt(CVAL.REG_ADDR_LEN.W))
+        val read_2 = Output(UInt(CVAL.DLEN.W))
         val write_en = Input(Bool())
-        val write_i = Input(UInt(5.W))
-        val write = Input(UInt(32.W))
+        val write_No = Input(UInt(CVAL.REG_ADDR_LEN.W))
+        val reg_write_data = Input(UInt(CVAL.DLEN.W))
     })
 
     val regs = RegInit(VecInit(Seq.fill(32)(0.U(32.W))))
-    io.read:=regs(io.read_i)
+    io.read_1:=regs(io.read_No_1)
+    io.read_2:=regs(io.read_No_2)
 
     when(io.write_en){
-        regs(io.write_i):= io.write
+        regs(io.write_No):= io.reg_write_data
     }
-
 }

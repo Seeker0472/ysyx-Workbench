@@ -7,6 +7,9 @@ import Constants_Val.CVAL
 
 // import os.write
 // import chisel3.Output
+//*******************************************************#
+// TODO:重构这个模块，最好只包含实例化+连线
+//*******************************************************#
 
 class core extends Module {
   val io = IO(new Bundle {
@@ -15,64 +18,40 @@ class core extends Module {
     val addr  = Input(UInt(CVAL.DLEN.W))
     val instr = Input(UInt(CVAL.ILEN.W))
   })
-  val pc = RegInit("h80000000".U(CVAL.DLEN.W))
-  io.pc := pc
-
-  // val src1 = Wire(UInt(CVAL.DLEN.W))
-  // val src2 = Wire(UInt(CVAL.DLEN.W))
-  val rd  = Wire(UInt(5.W))
-  // val addi     = Reg(Bool())
-  val write_en = false.B
-
-  // val src1 = Wire(UInt(32.W))
-  val res  = Wire(UInt(32.W))
 
   val decoder = Module(new Decoder())
-  val alu     = Module(new ALU())
   val reg     = Module(new REG())
   val br_han  = Module(new ebreak_handler())
+  val ifu     = Module(new IFU())
+  val exu     = Module(new EXU())
 
-  decoder.io.instr := io.instr
-  alu.io.in.src1       := decoder.io.out.src1
-  alu.io.in.src2       := decoder.io.out.src2
-  // rs1              := decoder.io.out.rs1
-  rd               := decoder.io.out.rd
-  // br_han.io.halt   := decoder.io.ebreak
+  //fetch_inst
+  io.pc          := ifu.io.pc
+  ifu.io.instr_i := io.instr
 
-  // reg.io.read_i := rs1
-  // src1          := reg.io.read
+  //decode
+  decoder.io.instr := ifu.io.instr
 
-  // alu.io.src1 := src1  
-  // alu.io.addi := addi
-  // res      := alu.io
-  io.value := res
+  //r/w_reg
+  reg.io.read_No_1 := decoder.io.out.rs1
+  exu.io.in.src1   := reg.io.read_1
+  reg.io.read_No_2 := decoder.io.out.rs1
+  exu.io.in.src2   := reg.io.read_2
+  reg.io.write_No  := decoder.io.out.rd
 
-  reg.io.write_i  := rd
-  reg.io.write    := res
-  reg.io.write_en := true.B
-  pc    := pc + 4.U
+  exu.io.in.imm := decoder.io.out.imm
 
-  // //stages
-  // val sFetch :: sDecode :: sRead :: sExecute :: sWriteBack :: Nil = Enum(5)
-  // val state                                                       = RegInit(sFetch)
-  // switch(state) {
-  //   is(sFetch) {
-  //     state := sDecode
-  //   }
-  //   is(sDecode) { // decode_stage!!!
-  //     state := sRead
-  //   }
-  //   is(sRead) {
-  //     // fetch_reg
-  //     state := sExecute
-  //   }
-  //   is(sExecute) {
-  //     //run!!
-  //     state := sWriteBack
-  //   }
-  //   is(sWriteBack) {
-  //     //update
-  //     state := sExecute
-  //   }
-  // }
+  //pass_cont_sig to EXU
+  exu.io.in.alu_use_Imm_2 := decoder.io.out.alu_use_Imm_2
+  exu.io.in.alu_use_pc    := decoder.io.out.alu_use_pc
+  exu.io.in.alu_op_type   := decoder.io.out.alu_op_type
+  exu.io.in.pc_jump       := decoder.io.out.pc_jump
+  //Write_ENABLE!!
+  reg.io.write_en := decoder.io.out.reg_write_enable
+
+  //exu
+  ifu.io.next_pc        := exu.io.out.n_pc
+  reg.io.reg_write_data := exu.io.out.reg_out
+
+
 }

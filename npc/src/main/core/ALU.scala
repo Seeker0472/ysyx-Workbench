@@ -6,11 +6,11 @@ import chisel3.util.BitPat
 import chisel3.util.MuxLookup
 import Constants_Val._
 
-class ALU extends Module{
-    val io=IO(new Bundle{
-      val in = Input(new ALU_I)
-      // val out
-    })
+class ALU extends Module {
+  val io = IO(new Bundle {
+    val in = Input(new ALU_I)
+    val result = Output(UInt(Constants_Val.CVAL.DLEN.W))
+  })
 // // 默认情况下，dst 输出为 0
 //   io.dst := 0.U
 
@@ -18,20 +18,23 @@ class ALU extends Module{
 //   when(io.addi) {
 //     io.dst := io.src1 + io.imm
 //   }
-    // val add_val = io.in.src1 + io.in.src2
-    // val sub_val = io.in.src1 - io.in.src2
-    // val xor = io.in.src1 ^ io.in.src2
-    // val or = io.in.src1 | io.in.src2
-    // val and = io.in.src1 & io.in.src2
-    // val sll = io.in.src1 & io.in.src2
-    // val slli = io.in.src1 & (io.in.src2 & "B1111".U)
-    // val result=MuxLookup(io.in.operation,UInt(CVAL.DLEN.W))(Seq{
-    //   Inst.add.asUInt ->  add_val
-    //   Inst.sub.asUInt ->  sub_val
-    //   Inst.xor.asUInt ->  xor
-    //   Inst.or.asUInt ->  or
-    //   Inst.and.asUInt ->  and
-    //   Inst.sll.asUInt ->  sll
-    //   Inst.slli.asUInt ->  slli
-    // })
+  val add_val = io.in.src1 + io.in.src2
+  val sub_val = io.in.src1 - io.in.src2
+  val xor     = io.in.src1 ^ io.in.src2
+  val or      = io.in.src1 | io.in.src2
+  val and     = io.in.src1 & io.in.src2
+  val sll     = io.in.src1 & io.in.src2
+  val slli    = io.in.src1 & (io.in.src2 & "B1111".U)
+  val res = MuxLookup(io.in.alu_op_type, 0.U)(
+    Seq(
+      ALU_Op.add -> add_val,
+      ALU_Op.sub -> sub_val,
+      ALU_Op.xor -> xor,
+      ALU_Op.or -> or,
+      ALU_Op.and -> and,
+      ALU_Op.sll -> sll
+      // ALU_Op.slli.asUInt ->  slli
+    )
+  )
+  io.result := res
 }
