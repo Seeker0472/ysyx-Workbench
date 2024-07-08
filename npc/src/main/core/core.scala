@@ -18,8 +18,8 @@ class core extends Module {
   val pc = RegInit("h80000000".U(CVAL.DLEN.W))
   io.pc := pc
 
-  val src1 = Wire(UInt(CVAL.DLEN.W))
-  val src2 = Wire(UInt(CVAL.DLEN.W))
+  // val src1 = Wire(UInt(CVAL.DLEN.W))
+  // val src2 = Wire(UInt(CVAL.DLEN.W))
   val rd  = Wire(UInt(5.W))
   // val addi     = Reg(Bool())
   val write_en = false.B
@@ -40,7 +40,7 @@ class core extends Module {
   // br_han.io.halt   := decoder.io.ebreak
 
   // reg.io.read_i := rs1
-  src1          := reg.io.read
+  // src1          := reg.io.read
 
   // alu.io.src1 := src1  
   // alu.io.addi := addi
