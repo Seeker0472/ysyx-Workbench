@@ -27,9 +27,9 @@ case class InsP(
   def name:   String = name_in
 }
 
-object InstType extends DecodeField[InsP, BitPat] {
+object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   def name: String = "InstType"
-  // override def chiselType = Inst_Type_Enum()
+  override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP): BitPat = {
     val immType = op.Inst_Type
     BitPat(immType.litValue.U((immType.getWidth).W))
@@ -228,7 +228,7 @@ class Decoder extends Module {
   val rd  = io.instr(11, 7)
 
   val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable)).decode(io.instr)
-  val Type    = Inst_Type_Enum.safe(decodedResults(InstType))
+  val Type    = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(
       // Inst_Type_Enum.R_Type -> Rval2, // R-Type
