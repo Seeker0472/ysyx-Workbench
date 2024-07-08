@@ -10,10 +10,10 @@ import Constants_Val.CVAL
 
 class core extends Module {
   val io = IO(new Bundle {
-    val pc    = Output(UInt(CVAL.XLEN.W))
-    val value = Output(UInt(CVAL.XLEN.W))
-    val addr  = Input(UInt(CVAL.XLEN.W))
-    val instr = Input(UInt(CVAL.XLEN.W))
+    val pc    = Output(UInt(CVAL.DLEN.W))
+    val value = Output(UInt(CVAL.DLEN.W))
+    val addr  = Input(UInt(CVAL.DLEN.W))
+    val instr = Input(UInt(CVAL.ILEN.W))
   })
   val pc = RegInit("h80000000".U(32.W))
   io.pc := pc
@@ -40,7 +40,7 @@ class core extends Module {
   reg.io.read_i := rs1
   src1          := reg.io.read
 
-  alu.io.src1 := src1
+  alu.io.src1 := src1  
   // alu.io.addi := addi
   res      := alu.io.dst
   io.value := res
