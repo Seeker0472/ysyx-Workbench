@@ -23,6 +23,7 @@ case class InsP(
   val func3:     BitPat = BitPat.dontCare(3),
   val opcode:    BitPat)
     extends DecodePattern {
+  def instType :Inst_Type_Enum.Type =Inst_Type
   def bitPat: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
   def name:   String = name_in
 }
@@ -31,7 +32,8 @@ object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP): BitPat = {
-    val immType = op.Inst_Type
+    val immType = op.instType
+    // BitPat(immType.litValue.U((immType.getWidth).W))
     BitPat(immType.litValue.U((immType.getWidth).W))
   }
 }
