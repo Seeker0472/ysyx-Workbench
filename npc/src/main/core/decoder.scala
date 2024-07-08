@@ -247,6 +247,7 @@ class Decoder extends Module {
   //控制逻辑
   io.out.alu_use_Imm_2 := decodedResults(Use_IMM_2)
   io.out.alu_use_pc := decodedResults(Use_PC_1)
+  
   //目前只用实现加法
   io.out.alu_op_type := ALU_Op.add
   io.out.pc_jump := decodedResults(Is_Jump)
