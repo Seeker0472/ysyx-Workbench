@@ -73,8 +73,17 @@ object R_Write_Enable extends BoolDecodeField[InsP] {
     if(op.Inst_Type!=Inst_Type_Enum.S_Type||op.Inst_Type!=Inst_Type_Enum.B_Type)
       n else y
   }
-
 }
+
+object Is_Ebreak extends BoolDecodeField[InsP] {
+  def name: String = "Is_Ebreak"
+  // override def chiselType = Inst_Type_Enum()
+  def genTable(op: InsP)= {
+    if(op.opcode.equals(BitPat("b1110011"))&&op.func3.equals("b000")&&op.func7.equals("b0000000"))
+      y else n
+  }
+}
+
 
 
 class Decoder extends Module {
@@ -227,7 +236,7 @@ class Decoder extends Module {
   val rs2 = io.instr(24, 20)
   val rd  = io.instr(11, 7)
 
-  val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable)).decode(io.instr)
+  val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable,Is_Ebreak)).decode(io.instr)
   val Type    = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(
@@ -251,6 +260,8 @@ class Decoder extends Module {
   //目前只用实现加法
   io.out.alu_op_type := ALU_Op.add
   io.out.pc_jump := decodedResults(Is_Jump)
-  io.out.reg_write_enable := decodedResults(R_Write_Enable)//TODO:============================
+  io.out.reg_write_enable := decodedResults(R_Write_Enable)
+  
+  io.out.ebreak:=decodedResults(Is_Ebreak)
 
 }
