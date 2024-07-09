@@ -22,7 +22,7 @@ void call_ebreak()
     Log("Ebreak Called!!");
     // tfp->
      uint32_t regs_2_value = dut->rootp->core__DOT__reg_0__DOT__regs_10;
-     uint32_t pc = 00;
+     uint32_t pc = dut->rootp->core__DOT__ifu__DOT__pc;
 
      Log("nemu: %s at pc = " FMT_WORD,
           (
