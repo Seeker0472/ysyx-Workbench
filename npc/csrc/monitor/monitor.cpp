@@ -53,7 +53,7 @@ static int parse_args(int argc, char *argv[])
 }
 void welcome(){
     // printf("Welcome To YPC(Yuki Processor Core)!\n");
-    Log("Welcome To YPC(Yuki Processor Core)!");
+    Log("Welcome To YDB(Yuki Debugger)!");
 }
 
 void init_monitor(int argc, char *argv[]){
