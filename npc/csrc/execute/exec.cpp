@@ -12,7 +12,7 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 #include <isa.h>
 
 uint32_t mem_read(int pc);
-
+extern CPU_state* cpu;
 
 Vcore *dut;
 unsigned int sim_time = 0;
@@ -37,7 +37,7 @@ void call_ebreak()
     exit(0);
 }
 
-void update_reg_state(CPU_state* cpu){
+void update_reg_state(){
   cpu->gpr.pc = dut->rootp->core__DOT__ifu__DOT__pc;
   cpu->gpr[0] = dut->rootp->core__DOT__reg_0__DOT__regs_0;
   cpu->gpr[1] = dut->rootp->core__DOT__reg_0__DOT__regs_1;

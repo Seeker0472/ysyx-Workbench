@@ -42,6 +42,7 @@ VM_USER_LDLIBS = \
 
 # User .cpp files (from .cpp's on Verilator command line)
 VM_USER_CLASSES = \
+	reg \
 	exec \
 	main \
 	mem \
@@ -53,6 +54,7 @@ VM_USER_CLASSES = \
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc \
+	/home/seeker/Develop/ysyx-workbench/npc/csrc/cpu \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/execute \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/memory \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/monitor \
@@ -68,6 +70,8 @@ include $(VERILATOR_ROOT)/include/verilated.mk
 ### Executable rules... (from --exe)
 VPATH += $(VM_USER_DIR)
 
+reg.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/cpu/reg.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 exec.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 main.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/main.cpp
