@@ -13,6 +13,7 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 
 uint32_t mem_read(uint32_t pc);
 extern CPU_state* cpu;
+bool check_watch_point();
 
 Vcore *dut;
 unsigned int sim_time = 0;
