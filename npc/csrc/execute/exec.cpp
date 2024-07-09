@@ -19,7 +19,7 @@ void print_inst_asm(paddr_t pc,word_t inst)
 {
     char buf[100];
     void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-    disassemble(&buf, sizeof(buf), pc, (uint8_t *)inst, 4); // 反编译？
+    disassemble(buf, sizeof(buf), pc, (uint8_t *)inst, 4); // 反编译？
     printf("%s\n",buf);
 }
 
@@ -102,8 +102,8 @@ void single_cycle()
         nemu_state.state = NEMU_STOP;
 
     //TODO::在某一些条件下打印指令！！！！
-    uint32_t pc = dut->io_pc
-    uint32_t addr = dut->io_inst_now
+    uint32_t pc = dut->io_pc;
+    uint32_t addr = dut->io_inst_now;
     print_inst_asm(pc,addr);
 
 
