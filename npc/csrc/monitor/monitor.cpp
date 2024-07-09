@@ -51,7 +51,7 @@ static int parse_args(int argc, char *argv[])
   return 0;
 }
 void welcome(){
-    printf("Welcome To npc(New Processor Core!)\n");
+    printf("Welcome To YPC(Yuki Processor Core)!\n");
 }
 
 void init_monitor(int argc, char *argv[]){
