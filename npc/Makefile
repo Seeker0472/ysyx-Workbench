@@ -10,7 +10,7 @@ ROOT_DIR := $(shell pwd)
 
 CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
-HINCLUDE := $(ROOT_DIR)/csrc/include/debug.h
+HINCLUDE := $(ROOT_DIR)/csrc/include/
 
 test:
 	mill -i $(PRJ).test
