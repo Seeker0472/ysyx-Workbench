@@ -84,6 +84,7 @@ void single_cycle()
     if (wave_enable)
         tfp->dump(sim_time++); // Dump波形信息
     dut->io_instr = mem_read(dut->io_pc);//下一条指令
+    update_reg_state();
     // printf("%x\n", dut->io_instr);
 
 }
