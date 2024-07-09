@@ -21,6 +21,8 @@ static int wave_enable = true;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
 {
+    if(nemu_state.state ==NEMU_ABORT)
+        return;
     Log("Ebreak Called!!");
     // tfp->
     uint32_t regs_2_value = dut->rootp->core__DOT__reg_0__DOT__regs_10;
