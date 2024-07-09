@@ -4,3 +4,10 @@
 
 #define word_t uint32_t 
 #define paddr_t uint32_t 
+
+//TODO:寄存器的数量！！
+typedef struct {
+  word_t gpr[32];
+  vaddr_t pc;
+} CPU_state;
+

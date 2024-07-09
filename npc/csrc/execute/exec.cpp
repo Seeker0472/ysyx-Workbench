@@ -9,6 +9,7 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 
 #include "svdpi.h"
 #include "Vcore__Dpi.h"
+#include <isa.h>
 
 uint32_t mem_read(int pc);
 
@@ -35,6 +36,43 @@ void call_ebreak()
     delete tfp;
     exit(0);
 }
+
+void update_reg_state(CPU_state* cpu){
+  cpu->gpr.pc = dut->rootp->core__DOT__ifu__DOT__pc;
+  cpu->gpr[0] = dut->rootp->core__DOT__reg_0__DOT__regs_0;
+  cpu->gpr[1] = dut->rootp->core__DOT__reg_0__DOT__regs_1;
+  cpu->gpr[2] = dut->rootp->core__DOT__reg_0__DOT__regs_2;
+  cpu->gpr[3] = dut->rootp->core__DOT__reg_0__DOT__regs_3;
+  cpu->gpr[4] = dut->rootp->core__DOT__reg_0__DOT__regs_4;
+  cpu->gpr[5] = dut->rootp->core__DOT__reg_0__DOT__regs_5;
+  cpu->gpr[6] = dut->rootp->core__DOT__reg_0__DOT__regs_6;
+  cpu->gpr[7] = dut->rootp->core__DOT__reg_0__DOT__regs_7;
+  cpu->gpr[8] = dut->rootp->core__DOT__reg_0__DOT__regs_8;
+  cpu->gpr[9] = dut->rootp->core__DOT__reg_0__DOT__regs_9;
+  cpu->gpr[10] = dut->rootp->core__DOT__reg_0__DOT__regs_10;
+  cpu->gpr[11] = dut->rootp->core__DOT__reg_0__DOT__regs_11;
+  cpu->gpr[12] = dut->rootp->core__DOT__reg_0__DOT__regs_12;
+  cpu->gpr[13] = dut->rootp->core__DOT__reg_0__DOT__regs_13;
+  cpu->gpr[14] = dut->rootp->core__DOT__reg_0__DOT__regs_14;
+  cpu->gpr[15] = dut->rootp->core__DOT__reg_0__DOT__regs_15;
+  cpu->gpr[16] = dut->rootp->core__DOT__reg_0__DOT__regs_16;
+  cpu->gpr[17] = dut->rootp->core__DOT__reg_0__DOT__regs_17;
+  cpu->gpr[18] = dut->rootp->core__DOT__reg_0__DOT__regs_18;
+  cpu->gpr[19] = dut->rootp->core__DOT__reg_0__DOT__regs_19;
+  cpu->gpr[20] = dut->rootp->core__DOT__reg_0__DOT__regs_20;
+  cpu->gpr[21] = dut->rootp->core__DOT__reg_0__DOT__regs_21;
+  cpu->gpr[22] = dut->rootp->core__DOT__reg_0__DOT__regs_22;
+  cpu->gpr[23] = dut->rootp->core__DOT__reg_0__DOT__regs_23;
+  cpu->gpr[24] = dut->rootp->core__DOT__reg_0__DOT__regs_24;
+  cpu->gpr[25] = dut->rootp->core__DOT__reg_0__DOT__regs_25;
+  cpu->gpr[26] = dut->rootp->core__DOT__reg_0__DOT__regs_26;
+  cpu->gpr[27] = dut->rootp->core__DOT__reg_0__DOT__regs_27;
+  cpu->gpr[28] = dut->rootp->core__DOT__reg_0__DOT__regs_28;
+  cpu->gpr[29] = dut->rootp->core__DOT__reg_0__DOT__regs_29;
+  cpu->gpr[30] = dut->rootp->core__DOT__reg_0__DOT__regs_30;
+  cpu->gpr[31] = dut->rootp->core__DOT__reg_0__DOT__regs_31;
+}
+
 void single_cycle()
 {
     dut->clock = 0;
@@ -45,11 +83,11 @@ void single_cycle()
     dut->eval();
     if (wave_enable)
         tfp->dump(sim_time++); // Dump波形信息
-
     dut->io_instr = mem_read(dut->io_pc);//下一条指令
     // printf("%x\n", dut->io_instr);
 
 }
+
 
 void reset(int n)
 {
