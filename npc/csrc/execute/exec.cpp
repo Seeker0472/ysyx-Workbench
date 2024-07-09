@@ -35,7 +35,7 @@ void call_ebreak()
 
     tfp->close(); // 关闭VCD文件
     delete tfp;
-    nemu_state.state=NEMU_END;
+    nemu_state.state=NEMU_ABORT;
     // exit(0);
 }
 
