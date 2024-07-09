@@ -57,6 +57,7 @@ void welcome(){
 }
 
 void init_monitor(int argc, char *argv[]){
+    printf("\n");
     parse_args(argc, argv);
     init_img(img_file);
     init_runtime();
