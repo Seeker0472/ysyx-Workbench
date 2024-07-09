@@ -117,14 +117,15 @@ void init_runtime(){
 
 int run(int step)
 {
+
+    while ((step--)!=0)
+    {
     switch (nemu_state.state) {
         case NEMU_ABORT:case NEMU_END:
         printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
         return -1;
         default: nemu_state.state = NEMU_RUNNING;
     }
-    while ((step--)!=0)
-    {
         single_cycle();
         if (nemu_state.state != NEMU_RUNNING) break;//出现异常
         tfp->flush();
