@@ -8,7 +8,7 @@ ARGS ?=
 
 ROOT_DIR := $(shell pwd)
 
-SRC_DIR := .
+SRC_DIR := csrc
 C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c')
 ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -exec realpath {} \;)
 
