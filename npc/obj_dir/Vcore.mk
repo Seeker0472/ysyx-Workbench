@@ -41,17 +41,17 @@ VM_USER_LDLIBS = \
 
 # User .cpp files (from .cpp's on Verilator command line)
 VM_USER_CLASSES = \
-	mem \
-	monitor \
 	exec \
 	main \
+	mem \
+	monitor \
 
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
-	/home/seeker/Develop/ysyx-workbench/npc/crsc \
-	/home/seeker/Develop/ysyx-workbench/npc/crsc/monitor \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/execute \
+	/home/seeker/Develop/ysyx-workbench/npc/csrc/memory \
+	/home/seeker/Develop/ysyx-workbench/npc/csrc/monitor \
 
 
 ### Default rules...
@@ -63,13 +63,13 @@ include $(VERILATOR_ROOT)/include/verilated.mk
 ### Executable rules... (from --exe)
 VPATH += $(VM_USER_DIR)
 
-mem.o: /home/seeker/Develop/ysyx-workbench/npc/crsc/mem.cpp
-	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-monitor.o: /home/seeker/Develop/ysyx-workbench/npc/crsc/monitor/monitor.cpp
-	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 exec.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 main.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/main.cpp
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+mem.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/memory/mem.cpp
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+monitor.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/monitor.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 
 ### Link rules... (from --exe)

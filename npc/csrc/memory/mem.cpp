@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <cstdint>
 static uint32_t mem[10000000]  = {
     0x00448493,
     0x00448493,
