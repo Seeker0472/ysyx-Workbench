@@ -17,8 +17,11 @@ CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' )
 ABS_CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' -exec realpath {} \;)
 C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
+# $(shell llvm-config --cxxflags)
+CXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS --CFLAGS -D__STDC_FORMAT_MACROS --CFLAGS -D__STDC_LIMIT_MACROS
+
 FLAGS := --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
-FLAGS += --CFLAGS $(shell llvm-config --cxxflags) -fPIE --LDFLAGS $(shell llvm-config --libs)
+FLAGS += ${CXXFLAGS} --CFLAGS  -fPIE --LDFLAGS $(shell llvm-config --libs)
 
 CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
