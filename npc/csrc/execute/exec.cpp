@@ -20,6 +20,8 @@ void call_ebreak()
 {
     Log("Ebreak Called!!");
     // tfp->
+    printf("%x\n", dut->rootp->core__DOT__reg_0__DOT__regs_1);
+
     tfp->close(); // 关闭VCD文件
     delete tfp;
     exit(0);
@@ -34,7 +36,6 @@ void single_cycle()
     dut->eval();
     if (wave_enable)
         tfp->dump(sim_time++); // Dump波形信息
-    printf("%x\n", dut->rootp->core__DOT__reg_0__DOT__regs_1);
 
     dut->io_instr = mem_read(dut->io_pc);//下一条指令
     // printf("%x\n", dut->io_instr);
