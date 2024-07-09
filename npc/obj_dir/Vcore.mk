@@ -50,6 +50,7 @@ VM_USER_CLASSES = \
 	expr \
 	sdb \
 	watchpoint \
+	log \
 
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
@@ -59,6 +60,7 @@ VM_USER_DIR = \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/memory \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/monitor \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb \
+	/home/seeker/Develop/ysyx-workbench/npc/csrc/utils \
 
 
 ### Default rules...
@@ -85,6 +87,8 @@ expr.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/expr.c
 sdb.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/sdb.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 watchpoint.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/watchpoint.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+log.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/log.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 
 ### Link rules... (from --exe)
