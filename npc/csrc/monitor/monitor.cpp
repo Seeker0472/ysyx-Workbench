@@ -1,5 +1,6 @@
 #include <getopt.h>
 #include <stdio.h>
+#include <iostream>
 
 static char *img_file = NULL;
 static char *elf_file = NULL;
