@@ -15,6 +15,7 @@ class REG extends Module{
     })
 
     val regs = RegInit(VecInit(Seq.fill(32)(0.U(32.W))))
+    regs(0.U):=0.U
     io.read_1:=regs(io.read_No_1)
     io.read_2:=regs(io.read_No_2)
 
