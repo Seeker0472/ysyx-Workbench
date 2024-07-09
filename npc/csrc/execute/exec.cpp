@@ -29,7 +29,7 @@ void call_ebreak()
            (regs_2_value == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           pc);
-    printf("%x\n", regs_2_value);
+    // printf("%x\n", regs_2_value);
 
     tfp->close(); // 关闭VCD文件
     delete tfp;
