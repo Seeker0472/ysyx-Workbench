@@ -111,7 +111,7 @@ void init_runtime(){
 
 int run(int step)
 {
-    while ((step--)>0)
+    while ((step--)!=0)
     {
         single_cycle();
         tfp->flush();
