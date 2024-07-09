@@ -8,7 +8,7 @@ ARGS ?=
 
 ROOT_DIR := $(shell pwd)
 
-CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/crsc/mem.cpp $(ROOT_DIR)/crsc/monitor/monitor.cpp
+CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
 test:
 	mill -i $(PRJ).test
