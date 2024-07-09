@@ -49,13 +49,14 @@ static char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
+  // nemu_state=NEMU_RUNNING;
   run(-1);
   return 0;
 }
 
 
 static int cmd_q(char *args) {
-  // nemu_state.state=NEMU_QUIT;TODO::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;
+  nemu_state.state=NEMU_QUIT;
   return -1;
 }
 //my_func start!

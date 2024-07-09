@@ -85,6 +85,10 @@ void single_cycle()
         tfp->dump(sim_time++); // Dump波形信息
     dut->io_instr = mem_read(dut->io_pc);//下一条指令
     update_reg_state();
+    //TODO:＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊OPEN/CLOSE　ＷＰ
+    if(check_watch_point()&&nemu_state.state==NEMU_RUNNING) 
+        nemu_state.state=NEMU_STOP
+    
     // printf("%x\n", dut->io_instr);
 
 }
@@ -111,9 +115,16 @@ void init_runtime(){
 
 int run(int step)
 {
+    switch (nemu_state.state) {
+        case NEMU_ABORT:case NEMU_END:
+        printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+        return;
+        default: nemu_state.state = NEMU_RUNNING;
+    }
     while ((step--)!=0)
     {
         single_cycle();
+        if (nemu_state.state != NEMU_RUNNING) break;//出现异常
         tfp->flush();
     }
     return 0;
