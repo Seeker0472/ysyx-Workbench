@@ -9,8 +9,11 @@ ARGS ?=
 ROOT_DIR := $(shell pwd)
 
 SRC_DIR := csrc
-C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -name '*.cpp')
-ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -name '*.cpp' -exec realpath {} \;)
+C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' )
+ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -exec realpath {} \;)
+CPP_FILES := $(shell find $(SRC_DIR) -type f -name '*.cpp' )
+ABS_CPP_FILES := $(shell find $(SRC_DIR) -type f -name '*.cpp' -exec realpath {} \;)
+C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES)
 
 CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
@@ -51,5 +54,5 @@ sim:
 
 all: verilog sim
 	@echo "所有 .c 文件的绝对路径："
-	@echo "$(ABS_C_FILES)"
+	@echo "$(C_CPP_ABS)"
 -include ../Makefile
