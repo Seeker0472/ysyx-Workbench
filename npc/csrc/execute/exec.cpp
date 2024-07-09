@@ -22,12 +22,13 @@ void call_ebreak()
     Log("Ebreak Called!!");
     // tfp->
      uint32_t regs_2_value = dut->rootp->core__DOT__reg_0__DOT__regs_10;
+     uint32_t pc = 00;
 
      Log("nemu: %s at pc = " FMT_WORD,
           (
            (regs_2_value == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
-          nemu_state.halt_pc);
+          pc);
     printf("%x\n", regs_2_value);
 
     tfp->close(); // 关闭VCD文件
