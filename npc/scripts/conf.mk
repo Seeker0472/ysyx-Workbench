@@ -24,7 +24,7 @@ endif
 Q            := @
 KCONFIG_PATH := $(NPC_HOME)/tools/kconfig
 FIXDEP_PATH  := $(NPC_HOME)/tools/fixdep
-Kconfig      := $(NPC_HOME)/Kconfig
+Kconfig      := $(NPC_HOME)/csrc/Kconfig
 rm-distclean += include/generated include/config .config .config.old
 silent := -s
 
@@ -45,10 +45,12 @@ $(MCONF):
 # 	$(Q)$(MAKE) $(silent) -C $(FIXDEP_PATH)
 
 menuconfig: $(MCONF) $(CONF) 
-	echo $(Q)$(MCONF) $(Kconfig)
-	echo $(Q)$(CONF) $(silent) --syncconfig $(Kconfig)
+
 	$(Q)$(MCONF) $(Kconfig)
 	$(Q)$(CONF) $(silent) --syncconfig $(Kconfig)
+	@rm -rf csrc/include/generated
+	@mv -f include/generated csrc/include
+	@rm -rf include
 
 savedefconfig: $(CONF)
 	$(Q)$< $(silent) --$@=configs/defconfig $(Kconfig)
