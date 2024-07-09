@@ -230,11 +230,16 @@ class Decoder extends Module {
   )
 
   //Imms
-  val immI = io.instr(31, 20)
-  val immS = Cat(io.instr(31, 25), io.instr(11, 7))
-  val immB = Cat(io.instr(31, 31), io.instr(7, 7), io.instr(11, 7), io.instr(30, 25), io.instr(11, 8), 0.U(1.W))
-  val immU = Cat(io.instr(31, 12), 0.U(12.W))
-  val immJ = Cat(io.instr(31, 31), io.instr(19, 12), io.instr(20, 20), io.instr(30, 21), 0.U(1.W))
+  val imm_I_Raw = io.instr(31, 20)
+  val immI = Cat(Fill(20, imm_I_Raw(11)), imm_I_Raw)
+  val imm_S_Raw = Cat(io.instr(31, 25), io.instr(11, 7))
+  val immS  = Cat(Fill(20, imm_S_Raw(11)), imm_S_Raw)
+  val imm_B_Raw = Cat(io.instr(31, 31), io.instr(7, 7), io.instr(11, 7), io.instr(30, 25), io.instr(11, 8), 0.U(1.W))
+  val immB = Cat(Fill(19, imm_B_Raw(12)), imm_B_Raw)
+  val imm_U_Raw = Cat(io.instr(31, 12), 0.U(12.W))
+  val immU = imm_U_Raw
+  val imm_J_Raw = Cat(io.instr(31, 31), io.instr(19, 12), io.instr(20, 20), io.instr(30, 21), 0.U(1.W))
+  val immJ = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
 
   // val opcode = io.instr(6, 0)
   val rs1 = io.instr(19, 15)
