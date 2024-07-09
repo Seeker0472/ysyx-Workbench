@@ -35,7 +35,7 @@ void single_cycle()
     printf("%x\n", dut->io_pc);
 
     dut->io_instr = mem_read(dut->io_pc);//下一条指令
-    printf("%x\n", dut->io_instr);
+    // printf("%x\n", dut->io_instr);
 
 }
 
