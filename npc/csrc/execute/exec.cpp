@@ -14,7 +14,7 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
 bool check_watch_point();
-extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte) 
+extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 void print_inst_asm(paddr_t pc,word_t inst)
 {
