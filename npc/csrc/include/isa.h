@@ -11,3 +11,6 @@ typedef struct {
   vaddr_t pc;
 } CPU_state;
 
+word_t isa_reg_str2val(const char *s, bool *success);
+int run(int step);
+void isa_reg_display();

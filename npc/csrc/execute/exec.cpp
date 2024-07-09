@@ -108,9 +108,9 @@ void init_runtime(){
     reset(10);                  // 复位10个周期
 }
 
-int run()
+int run(int step)
 {
-    while (1)
+    while ((step--)>0)
     {
         single_cycle();
         tfp->flush();

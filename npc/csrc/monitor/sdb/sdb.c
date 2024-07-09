@@ -48,7 +48,7 @@ static char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  cpu_exec(-1);
+  run(-1);
   return 0;
 }
 
@@ -62,7 +62,7 @@ static int cmd_step(char *args){
   int time=1;
   if(args)
     sscanf(args,"%d",&time);
-  cpu_exec(time);
+  run(time);
   // printf("cmd_step :%d",time);
   return 0;
 }
