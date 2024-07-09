@@ -155,7 +155,7 @@ int main(int argc, char **argv)
     // sleep(1);
     printf("%x\n", dut->io_pc);
     dut->io_instr = mem_read(dut->io_pc);
-    tfp-》flush()
+    tfp->flush()
     //   if(dut->io_pc==0x80000028){
     // tfp->close(); // 关闭VCD文件
 
