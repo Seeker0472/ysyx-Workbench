@@ -10,6 +10,8 @@ void init_img(char *img_file);
 int init_runtime();
 int run();
 void init_log(const char *log_file);
+void init_sdb();
+
 
 static int parse_args(int argc, char *argv[])
 {
