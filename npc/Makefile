@@ -10,7 +10,7 @@ ROOT_DIR := $(shell pwd)
 
 CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
-HINCLUDE := $(ROOT_DIR)/csrc/include/
+HINCLUDE := 
 
 test:
 	mill -i $(PRJ).test
@@ -39,7 +39,7 @@ sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
 	
-	verilator -cc --top core  ./build/core.sv --trace --exe  ${CINCLUDE} -I$(HINCLUDE)
+	verilator -cc --top core  ./build/core.sv --trace --exe  ${CINCLUDE} -I$(ROOT_DIR)/csrc/include/
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
 
