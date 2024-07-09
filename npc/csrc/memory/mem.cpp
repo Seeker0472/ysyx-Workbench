@@ -25,11 +25,13 @@ static uint32_t mem[10000000]  = {
     0x00448493,
 };
 
-uint32_t mem_read(int pc)
+uint32_t mem_read(uint32_t pc)
 {
   return mem[(pc - 0x80000000) / 4];
 }
-
+uint32_t warp_pmem_read(uint32_t addr){
+  return mem_read(addr);
+}
 
 void init_img(char *img_file)
 {
