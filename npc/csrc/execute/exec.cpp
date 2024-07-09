@@ -24,7 +24,7 @@ void call_ebreak()
      uint32_t regs_2_value = dut->rootp->core__DOT__reg_0__DOT__regs_10;
      uint32_t pc = dut->rootp->core__DOT__ifu__DOT__pc;
 
-     Log("nemu: %s at pc = " FMT_WORD,
+     Log("YDB: %s at pc = " FMT_WORD,
           (
            (regs_2_value == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
