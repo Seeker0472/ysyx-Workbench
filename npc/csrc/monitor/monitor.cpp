@@ -12,6 +12,10 @@ int run();
 void init_log(const char *log_file);
 void init_sdb();
 void init_reg();
+void init_disasm(const char *triple);
+
+#define CONFIG_ITRACE
+//TODO------PUT INTO　KCONFIG!!!!!!!!!!!!!!!!
 
 
 static int parse_args(int argc, char *argv[])
@@ -68,6 +72,8 @@ void init_monitor(int argc, char *argv[]){
     init_reg();
     init_img(img_file);
     init_runtime();
+    init_disasm();
+    IFDEF(CONFIG_ITRACE, init_disasm(MUXDEF(CONFIG_RV64, "riscv64","riscv32")"-pc-linux-gnu"));
     welcome();
     // run();
 }

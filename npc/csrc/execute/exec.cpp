@@ -21,7 +21,7 @@ static int wave_enable = true;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
 {
-    if(nemu_state.state ==NEMU_ABORT)//Prevent_Display_Twice!!!!!------TODO:Why called Twice????
+    if (nemu_state.state == NEMU_ABORT) // Prevent_Display_Twice!!!!!------TODO:Why called Twice????
         return;
     Log("Ebreak Called!!");
     // tfp->

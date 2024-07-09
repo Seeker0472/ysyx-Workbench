@@ -13,11 +13,14 @@ import Constants_Val.CVAL
 
 class core extends Module {
   val io = IO(new Bundle {
-    val pc    = Output(UInt(CVAL.DLEN.W))
-    val value = Output(UInt(CVAL.DLEN.W))
-    val addr  = Input(UInt(CVAL.DLEN.W))
-    val instr = Input(UInt(CVAL.ILEN.W))
+    val pc       = Output(UInt(CVAL.DLEN.W))
+    val value    = Output(UInt(CVAL.DLEN.W))
+    val addr     = Input(UInt(CVAL.DLEN.W))
+    val instr    = Input(UInt(CVAL.ILEN.W))
+    val inst_now = Output(UInt(CVAL.DLEN.W))
   })
+  
+  io.inst_now := io.instr//输出当前指令到Debugger环境---可能以后需要Debug
 
   val decoder = Module(new Decoder())
   val reg     = Module(new REG())
@@ -40,7 +43,7 @@ class core extends Module {
   reg.io.write_No  := decoder.io.out.rd
 
   exu.io.in.imm := decoder.io.out.imm
-  exu.io.in.pc := ifu.io.pc
+  exu.io.in.pc  := ifu.io.pc
 
   //pass_cont_sig to EXU
   exu.io.in.alu_use_Imm_2 := decoder.io.out.alu_use_Imm_2
@@ -50,9 +53,9 @@ class core extends Module {
   //Write_ENABLE!!
   reg.io.write_en := decoder.io.out.reg_write_enable
 //ebreak
-  br_han.io.halt:=decoder.io.out.ebreak
+  br_han.io.halt := decoder.io.out.ebreak
 
-  io.value:=exu.io.out.reg_out
+  io.value := exu.io.out.reg_out
 
   //exu
   ifu.io.next_pc        := exu.io.out.n_pc
