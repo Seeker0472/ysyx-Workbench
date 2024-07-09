@@ -35,8 +35,6 @@ VM_PREFIX = Vcore
 VM_MODPREFIX = Vcore
 # User CFLAGS (from -CFLAGS on Verilator command line)
 VM_USER_CFLAGS = \
-	-I/home/seeker/Develop/ysyx-workbench/npc/csrc/include/ \
-	-save-temps \
 	-I/usr/lib/llvm-14/include \
 	-std=c++14 \
 	-fno-exceptions \
@@ -45,11 +43,13 @@ VM_USER_CFLAGS = \
 	-D__STDC_FORMAT_MACROS \
 	-D__STDC_LIMIT_MACROS \
 	-fPIE \
+	-I/home/seeker/Develop/ysyx-workbench/npc/csrc/include/ \
+	-save-temps \
 
 # User LDLIBS (from -LDFLAGS on Verilator command line)
 VM_USER_LDLIBS = \
-	-lreadline \
 	-lLLVM-14 \
+	-lreadline \
 
 # User .cpp files (from .cpp's on Verilator command line)
 VM_USER_CLASSES = \

@@ -12,7 +12,7 @@ int run();
 void init_log(const char *log_file);
 void init_sdb();
 void init_reg();
-void init_disasm(const char *triple);
+extern "C" void init_disasm(const char *triple);
 
 #define CONFIG_ITRACE 1
 //TODO------PUT INTO　KCONFIG!!!!!!!!!!!!!!!!
