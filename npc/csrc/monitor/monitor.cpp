@@ -1,6 +1,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <iostream>
+#include "debug.h"
 
 static char *img_file = NULL;
 static char *elf_file = NULL;
@@ -52,6 +53,7 @@ static int parse_args(int argc, char *argv[])
 }
 void welcome(){
     printf("Welcome To YPC(Yuki Processor Core)!\n");
+    Log("Welcome To YPC(Yuki Processor Core)!\n");
 }
 
 void init_monitor(int argc, char *argv[]){
