@@ -78,16 +78,16 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
         vlSelf->core__DOT__reg_0__DOT__regs_13 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_12 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_8 = 0U;
-        vlSelf->core__DOT__reg_0__DOT__regs_1 = 0U;
-        vlSelf->core__DOT__reg_0__DOT__regs_3 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_0 = 0U;
-        vlSelf->core__DOT__reg_0__DOT__regs_5 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_2 = 0U;
-        vlSelf->core__DOT__reg_0__DOT__regs_7 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_4 = 0U;
-        vlSelf->core__DOT__reg_0__DOT__regs_9 = 0U;
+        vlSelf->core__DOT__reg_0__DOT__regs_1 = 0U;
+        vlSelf->core__DOT__reg_0__DOT__regs_5 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_6 = 0U;
+        vlSelf->core__DOT__reg_0__DOT__regs_3 = 0U;
+        vlSelf->core__DOT__reg_0__DOT__regs_9 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_10 = 0U;
+        vlSelf->core__DOT__reg_0__DOT__regs_7 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_11 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_28 = 0U;
         vlSelf->core__DOT__reg_0__DOT__regs_29 = 0U;
@@ -179,46 +179,49 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
              & (0x400U == (0xf80U & vlSelf->io_instr)))) {
             vlSelf->core__DOT__reg_0__DOT__regs_8 = vlSelf->io_value;
         }
-        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
-             & (0x80U == (0xf80U & vlSelf->io_instr)))) {
-            vlSelf->core__DOT__reg_0__DOT__regs_1 = vlSelf->io_value;
-        }
-        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
-             & (0x180U == (0xf80U & vlSelf->io_instr)))) {
-            vlSelf->core__DOT__reg_0__DOT__regs_3 = vlSelf->io_value;
-        }
-        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
-             & (0U == (0xf80U & vlSelf->io_instr)))) {
-            vlSelf->core__DOT__reg_0__DOT__regs_0 = vlSelf->io_value;
-        }
-        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
-             & (0x280U == (0xf80U & vlSelf->io_instr)))) {
-            vlSelf->core__DOT__reg_0__DOT__regs_5 = vlSelf->io_value;
-        }
+        vlSelf->core__DOT__reg_0__DOT__regs_0 = (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
+                                                  & (0U 
+                                                     == 
+                                                     (0xf80U 
+                                                      & vlSelf->io_instr)))
+                                                  ? vlSelf->io_value
+                                                  : 0U);
         if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
              & (0x100U == (0xf80U & vlSelf->io_instr)))) {
             vlSelf->core__DOT__reg_0__DOT__regs_2 = vlSelf->io_value;
-        }
-        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
-             & (0x380U == (0xf80U & vlSelf->io_instr)))) {
-            vlSelf->core__DOT__reg_0__DOT__regs_7 = vlSelf->io_value;
         }
         if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
              & (0x200U == (0xf80U & vlSelf->io_instr)))) {
             vlSelf->core__DOT__reg_0__DOT__regs_4 = vlSelf->io_value;
         }
         if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
-             & (0x480U == (0xf80U & vlSelf->io_instr)))) {
-            vlSelf->core__DOT__reg_0__DOT__regs_9 = vlSelf->io_value;
+             & (0x80U == (0xf80U & vlSelf->io_instr)))) {
+            vlSelf->core__DOT__reg_0__DOT__regs_1 = vlSelf->io_value;
+        }
+        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
+             & (0x280U == (0xf80U & vlSelf->io_instr)))) {
+            vlSelf->core__DOT__reg_0__DOT__regs_5 = vlSelf->io_value;
         }
         if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
              & (0x300U == (0xf80U & vlSelf->io_instr)))) {
             vlSelf->core__DOT__reg_0__DOT__regs_6 = vlSelf->io_value;
         }
         if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
+             & (0x180U == (0xf80U & vlSelf->io_instr)))) {
+            vlSelf->core__DOT__reg_0__DOT__regs_3 = vlSelf->io_value;
+        }
+        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
+             & (0x480U == (0xf80U & vlSelf->io_instr)))) {
+            vlSelf->core__DOT__reg_0__DOT__regs_9 = vlSelf->io_value;
+        }
+        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
              & (0x500U == (0xf80U & vlSelf->io_instr)))) {
             vlSelf->core__DOT__reg_0__DOT__regs_10 
                 = vlSelf->io_value;
+        }
+        if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
+             & (0x380U == (0xf80U & vlSelf->io_instr)))) {
+            vlSelf->core__DOT__reg_0__DOT__regs_7 = vlSelf->io_value;
         }
         if (((IData)(vlSelf->core__DOT___decoder_io_out_reg_write_enable) 
              & (0x580U == (0xf80U & vlSelf->io_instr)))) {
@@ -457,7 +460,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__ico(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 699, "", "Input combinational region did not converge.");
+            VL_FATAL_MT("build/core.sv", 698, "", "Input combinational region did not converge.");
         }
         __VicoIterCount = ((IData)(1U) + __VicoIterCount);
         __VicoContinue = 0U;
@@ -473,7 +476,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__nba(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 699, "", "NBA region did not converge.");
+            VL_FATAL_MT("build/core.sv", 698, "", "NBA region did not converge.");
         }
         __VnbaIterCount = ((IData)(1U) + __VnbaIterCount);
         __VnbaContinue = 0U;
@@ -484,7 +487,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
                 Vcore___024root___dump_triggers__act(vlSelf);
 #endif
-                VL_FATAL_MT("build/core.sv", 699, "", "Active region did not converge.");
+                VL_FATAL_MT("build/core.sv", 698, "", "Active region did not converge.");
             }
             vlSelf->__VactIterCount = ((IData)(1U) 
                                        + vlSelf->__VactIterCount);

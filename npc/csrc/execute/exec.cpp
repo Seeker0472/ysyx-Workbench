@@ -19,7 +19,7 @@ static int wave_enable = true;
 void call_ebreak()
 {
     Log("Ebreak Called!!");
-    tfp->
+    // tfp->
     tfp->close(); // 关闭VCD文件
     delete tfp;
     exit(0);
