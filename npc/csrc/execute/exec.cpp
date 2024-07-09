@@ -21,7 +21,7 @@ void call_ebreak()
 {
     Log("Ebreak Called!!");
     // tfp->
-     uint32_t regs_2_value = dut->rootp->core__DOT__reg_0__DOT__regs_2;
+     uint32_t regs_2_value = dut->rootp->core__DOT__reg_0__DOT__regs_10;
     printf("%x\n", regs_2_value);
 
     tfp->close(); // 关闭VCD文件
