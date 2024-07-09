@@ -11,6 +11,7 @@ int init_runtime();
 int run();
 void init_log(const char *log_file);
 void init_sdb();
+void init_reg();
 
 
 static int parse_args(int argc, char *argv[])
@@ -64,6 +65,7 @@ void init_monitor(int argc, char *argv[]){
     parse_args(argc, argv);
     init_log(NULL);//TODO:::::::
     init_sdb();
+    init_reg();
     init_img(img_file);
     init_runtime();
     welcome();
