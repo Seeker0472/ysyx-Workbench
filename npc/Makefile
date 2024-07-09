@@ -39,7 +39,7 @@ sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
 	
-	verilator -cc --top core  ./build/core.sv --trace --exe  ${CINCLUDE} -I$(ROOT_DIR)/csrc/include/
+	verilator -cc --top core  ./build/core.sv --trace --exe  ${CINCLUDE} --CXXFLAGS -I$(ROOT_DIR)/csrc/include/
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
 
