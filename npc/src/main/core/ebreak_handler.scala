@@ -11,8 +11,9 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
     """import "DPI-C" function void call_ebreak();
       |module ebreak_handler(
       |  input halt
+      |  input clock
       |);
-      |always @(*) begin
+      |always @(posedge clock) begin
       |   if (halt) begin
       |      call_ebreak();
       |  end
