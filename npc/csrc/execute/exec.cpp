@@ -35,6 +35,8 @@ void single_cycle()
     printf("%x\n", dut->io_pc);
 
     dut->io_instr = mem_read(dut->io_pc);//下一条指令
+    printf("%x\n", dut->io_instr);
+
 }
 
 void reset(int n)
@@ -44,7 +46,7 @@ void reset(int n)
         single_cycle();
     dut->reset = 0;
 }
-int init_runtime(){
+void init_runtime(){
     dut = new Vcore;              // Initialize the DUT instance
     Verilated::traceEverOn(true); // 启用波形追踪
     tfp = new VerilatedVcdC;
