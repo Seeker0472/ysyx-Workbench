@@ -6,7 +6,7 @@ SED_CMD = sed -i "s/^.*\.v$$//"
 
 ARGS ?=
 
-CINCLUDE := ./csrc/main.cpp ./csrc/execute/exec.c ./crsc/memory/mem.c ./crsc/monitor/monitor.c
+CINCLUDE := ./csrc/main.cpp ./csrc/exec.c ./crsc/memory/mem.c ./crsc/monitor/monitor.c
 
 test:
 	mill -i $(PRJ).test
