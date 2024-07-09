@@ -2,6 +2,7 @@
 #include <iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
+#include <debug.h>
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
 
@@ -17,7 +18,7 @@ static int wave_enable = true;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
 {
-    printf("Ebreak Called!!\n");
+    Log("Ebreak Called!!");
     tfp->close(); // 关闭VCD文件
     delete tfp;
     exit(0);

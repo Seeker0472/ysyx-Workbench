@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cstdint>
+#include <debug.h>
 static uint32_t mem[10000000]  = {
     0x00448493,
     0x00448493,
@@ -39,7 +40,7 @@ void init_img(char *img_file)
     fseek(fp, 0, SEEK_END);
     long size = ftell(fp);
     // Log("The image is %s, size = %ld", img_file, size);
-    printf("The image is %s, size = %ld\n", img_file, size);
+    Log("The image is %s, size = %ld", img_file, size);
     fseek(fp, 0, SEEK_SET);
     int ret = fread(mem, size, 1, fp);
     // assert(ret == 1);
@@ -48,6 +49,6 @@ void init_img(char *img_file)
   }
   else
   {
-    printf("No Img file Loaded,Using Default IMG\n");
+    Log("No Img file Loaded,Using Default IMG");
   }
 }

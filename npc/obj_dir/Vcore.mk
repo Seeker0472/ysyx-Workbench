@@ -35,6 +35,7 @@ VM_PREFIX = Vcore
 VM_MODPREFIX = Vcore
 # User CFLAGS (from -CFLAGS on Verilator command line)
 VM_USER_CFLAGS = \
+	-I/home/seeker/Develop/ysyx-workbench/npc/csrc/include/ \
 
 # User LDLIBS (from -LDFLAGS on Verilator command line)
 VM_USER_LDLIBS = \
