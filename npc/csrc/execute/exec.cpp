@@ -11,7 +11,7 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 #include "Vcore__Dpi.h"
 #include <isa.h>
 
-uint32_t mem_read(int pc);
+uint32_t mem_read(uint32_t pc);
 extern CPU_state* cpu;
 
 Vcore *dut;
