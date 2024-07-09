@@ -8,7 +8,7 @@ ARGS ?=
 
 ROOT_DIR := $(shell pwd)
 
-# CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.c $(ROOT_DIR)/crsc/mem.c $(ROOT_DIR)/crsc/monitor/monitor.c
+CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/crsc/mem.cpp $(ROOT_DIR)/crsc/monitor/monitor.cpp
 
 test:
 	mill -i $(PRJ).test
@@ -37,7 +37,7 @@ sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
 	
-	verilator -cc --top core  ./build/core.sv --trace --exe  $(ROOT_DIR)/csrc/main.cpp
+	verilator -cc --top core  ./build/core.sv --trace --exe  ${CINCLUDE}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
 
