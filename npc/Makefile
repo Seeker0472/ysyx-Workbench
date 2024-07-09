@@ -7,7 +7,7 @@ SED_CMD = sed -i "s/^.*\.v$$//"
 ARGS ?=
 
 ROOT_DIR := $(shell pwd)
-
+# 写的一坨大便！
 SRC_DIR := csrc
 C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' )
 ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -exec realpath {} \;)

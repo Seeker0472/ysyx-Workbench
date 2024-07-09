@@ -15,6 +15,14 @@ uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
 bool check_watch_point();
 
+void print_inst_asm(paddr_t pc,word_t inst)
+{
+    char buf[100];
+    void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+    disassemble(&buf, sizeof(buf), pc, (uint8_t *)inst, 4); // 反编译？
+    printf("%s\n",buf);
+}
+
 Vcore *dut;
 unsigned int sim_time = 0;
 static int wave_enable = true;
@@ -92,6 +100,12 @@ void single_cycle()
     // TODO:＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊OPEN/CLOSE　ＷＰ
     if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
         nemu_state.state = NEMU_STOP;
+
+    //TODO::在某一些条件下打印指令！！！！
+    uint32_t pc = dut->io_pc
+    uint32_t addr = dut->io_inst_now
+    print_inst_asm(pc,addr);
+
 
     // printf("%x\n", dut->io_instr);
 }
