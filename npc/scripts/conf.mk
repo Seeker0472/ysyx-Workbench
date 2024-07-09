@@ -22,9 +22,9 @@ $(warning $(COLOR_RED)To build the project, first run 'make menuconfig'.$(COLOR_
 endif
 
 Q            := @
-KCONFIG_PATH := $(NEMU_HOME)/tools/kconfig
-FIXDEP_PATH  := $(NEMU_HOME)/tools/fixdep
-Kconfig      := $(NEMU_HOME)/Kconfig
+KCONFIG_PATH := $(NPC_HOME)/csrc/tools/kconfig
+FIXDEP_PATH  := $(NPC_HOME)/csrc/tools/fixdep
+Kconfig      := $(NPC_HOME)/Kconfig
 rm-distclean += include/generated include/config .config .config.old
 silent := -s
 
@@ -40,11 +40,11 @@ $(MCONF):
 	echo $(Q)$(MAKE) $(silent) -C $(KCONFIG_PATH) NAME=mconf
 	$(Q)$(MAKE) $(silent) -C $(KCONFIG_PATH) NAME=mconf
 
-$(FIXDEP):
-	echo $(Q)$(MAKE) $(silent) -C $(FIXDEP_PATH)
-	$(Q)$(MAKE) $(silent) -C $(FIXDEP_PATH)
+# $(FIXDEP):
+# 	echo $(Q)$(MAKE) $(silent) -C $(FIXDEP_PATH)
+# 	$(Q)$(MAKE) $(silent) -C $(FIXDEP_PATH)
 
-menuconfig: $(MCONF) $(CONF) $(FIXDEP)
+menuconfig: $(MCONF) $(CONF) 
 	echo $(Q)$(MCONF) $(Kconfig)
 	echo $(Q)$(CONF) $(silent) --syncconfig $(Kconfig)
 	$(Q)$(MCONF) $(Kconfig)

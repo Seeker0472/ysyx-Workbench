@@ -62,5 +62,5 @@ void init_monitor(int argc, char *argv[]){
     init_img(img_file);
     init_runtime();
     welcome();
-    run();
+    // run();
 }
