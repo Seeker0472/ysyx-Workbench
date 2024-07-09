@@ -73,7 +73,7 @@ void init_monitor(int argc, char *argv[]){
     init_img(img_file);
     init_runtime();
     MUXDEF(CONFIG_RV64, "riscv64","riscv32")"-pc-linux-gnu";
-    IFDEF(CONFIG_ITRACE, init_disasm((MUXDEF(CONFIG_RV64, "riscv64","riscv32"),"-pc-linux-gnu")));
+    IFDEF(CONFIG_ITRACE, init_disasm((MUXDEF(CONFIG_RV64, "riscv64","riscv32")"-pc-linux-gnu")));
     welcome();
     // run();
 }
