@@ -32,7 +32,7 @@ void single_cycle()
     dut->eval();
     if (wave_enable)
         tfp->dump(sim_time++); // Dump波形信息
-    printf("%x\n", dut->io_pc);
+    // printf("%x\n", dut->io_pc);
 
     dut->io_instr = mem_read(dut->io_pc);//下一条指令
     // printf("%x\n", dut->io_instr);
