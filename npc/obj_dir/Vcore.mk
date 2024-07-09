@@ -51,7 +51,6 @@ VM_USER_DIR = \
 	./crsc/memory \
 	./crsc/monitor \
 	./csrc \
-	./csrc/execute \
 
 
 ### Default rules...
@@ -67,7 +66,7 @@ mem.o: ./crsc/memory/mem.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 monitor.o: ./crsc/monitor/monitor.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
-exec.o: ./csrc/execute/exec.c
+exec.o: ./csrc/exec.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 main.o: ./csrc/main.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
