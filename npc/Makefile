@@ -17,6 +17,9 @@ CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' )
 ABS_CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' -exec realpath {} \;)
 C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
+FLAGS := --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
+FLAGS += --CFLAGS $(shell llvm-config --cxxflags) -fPIE --LDFLAGS $(shell llvm-config --libs)
+
 CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
 HINCLUDE := 
@@ -50,12 +53,12 @@ sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
 	
-	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS} --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
+	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
 
 gdb:
-	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS} --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --CFLAGS -g --LDFLAGS -lreadline
+	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	gdb ./obj_dir/Vcore $(ARGS) $(IMG)
 all: verilog sim
