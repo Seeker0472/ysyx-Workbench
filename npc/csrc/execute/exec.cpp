@@ -17,7 +17,7 @@ static int wave_enable = true;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
 {
-    printf("Ebreak Called!!");
+    printf("Ebreak Called!!\n");
     tfp->close(); // 关闭VCD文件
     delete tfp;
     exit(0);
