@@ -10,7 +10,7 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
   setInline("ebreak_handler.v",
     """import "DPI-C" function void call_ebreak();
       |module ebreak_handler(
-      |  input halt
+      |  input halt,
       |  input clock
       |);
       |always @(posedge clock) begin
