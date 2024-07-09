@@ -302,7 +302,7 @@ int get_main_op(int p,int q){
         else
           assert(0);//括号不匹配！
       break;
-      default:
+      // default:
     }
   p++;
   }
