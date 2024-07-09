@@ -16,10 +16,10 @@ void isa_reg_display() {
   printf(" | ");
   printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
   for(int i=0;i<16;i++){
-    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);,printf("%-4s \t%-20d\t%-10x\t",regs[i],cpu.gpr[i],cpu.gpr[i]););
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu->gpr[i],cpu->gpr[i]);,printf("%-4s \t%-20d\t%-10x\t",regs[i],cpu->gpr[i],cpu->gpr[i]););
       
       printf(" | ");
-    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]);,printf("%-4s \t%-20d\t%-10x\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]););
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i+16],cpu->gpr[i+16],cpu->gpr[i+16]);,printf("%-4s \t%-20d\t%-10x\t",regs[i+16],cpu->gpr[i+16],cpu->gpr[i+16]););
 
       
       printf("\n");
