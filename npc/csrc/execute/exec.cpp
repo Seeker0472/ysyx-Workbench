@@ -88,7 +88,7 @@ void single_cycle()
     update_reg_state();
     //TODO:＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊OPEN/CLOSE　ＷＰ
     if(check_watch_point()&&nemu_state.state==NEMU_RUNNING) 
-        nemu_state.state=NEMU_STOP
+        nemu_state.state=NEMU_STOP;
     
     // printf("%x\n", dut->io_instr);
 
@@ -119,7 +119,7 @@ int run(int step)
     switch (nemu_state.state) {
         case NEMU_ABORT:case NEMU_END:
         printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-        return;
+        return -1;
         default: nemu_state.state = NEMU_RUNNING;
     }
     while ((step--)!=0)
