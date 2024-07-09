@@ -145,6 +145,7 @@ int run(int step)
             //TODO::在某一些条件下打印指令！！！！
     uint32_t pc = dut->io_pc;
     uint32_t addr = dut->io_inst_now;
+    printf("%x %x \n",pc,addr);
     print_inst_asm(pc,addr);
 
         if (nemu_state.state != NEMU_RUNNING)

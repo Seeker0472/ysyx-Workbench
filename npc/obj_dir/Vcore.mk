@@ -39,7 +39,6 @@ VM_USER_CFLAGS = \
 	-save-temps \
 	-I/usr/lib/llvm-14/include \
 	-std=c++14 \
-	-D__STDC_FORMAT_MACROS \
 	-fno-exceptions \
 	-D_GNU_SOURCE \
 	-D__STDC_CONSTANT_MACROS \
