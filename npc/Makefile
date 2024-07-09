@@ -53,4 +53,5 @@ sim:
 all: verilog sim
 	@echo "所有 .c 文件的绝对路径："
 	@echo "$(ABS_C_CPP_FILES)"
+	
 -include ../Makefile
