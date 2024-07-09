@@ -1,4 +1,4 @@
-// #include <Vcore.h>
+#include <Vcore.h>
 #include <iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
