@@ -9,6 +9,7 @@ static char *elf_file = NULL;
 void init_img(char *img_file);
 int init_runtime();
 int run();
+void init_log(const char *log_file);
 
 static int parse_args(int argc, char *argv[])
 {
@@ -59,6 +60,7 @@ void welcome(){
 void init_monitor(int argc, char *argv[]){
     // printf("\n");
     parse_args(argc, argv);
+    init_log(NULL);//TODO:::::::
     init_img(img_file);
     init_runtime();
     welcome();
