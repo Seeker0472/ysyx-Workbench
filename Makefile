@@ -1,4 +1,4 @@
-STUID = ysyx_NAN
+STUID = ysyx_23060325
 STUNAME = 郭明轩
 # NEMU_HOME = /home/seeker/Develop/ysyx-workbench/npc
 
