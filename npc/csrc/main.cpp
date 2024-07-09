@@ -155,11 +155,11 @@ int main(int argc, char **argv)
     // sleep(1);
     printf("%x\n", dut->io_pc);
     dut->io_instr = mem_read(dut->io_pc);
-      if(dut->io_pc==0x80000010){
-    tfp->close(); // 关闭VCD文件
+    tfp.flush()
+    //   if(dut->io_pc==0x80000028){
+    // tfp->close(); // 关闭VCD文件
 
-        return 0;}
-    // std::cout<<"1"<<dut->clk<<dut->led<<std::endl;
+    //     return 0;}
   }
   tfp->close(); // 关闭VCD文件
   delete tfp;
