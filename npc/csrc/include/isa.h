@@ -4,6 +4,7 @@
 
 #define word_t uint32_t 
 #define paddr_t uint32_t 
+#define vaddr_t uint32_t
 
 //TODO:寄存器的数量！！
 typedef struct {

@@ -115,4 +115,5 @@ int run(int step)
         single_cycle();
         tfp->flush();
     }
+    return 0;
 }
