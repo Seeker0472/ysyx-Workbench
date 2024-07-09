@@ -36,7 +36,7 @@ static int parse_args(int argc, char *argv[])
       break;
     case 1:
       img_file = optarg;
-      printf("%s", img_file);
+      // printf("%s", img_file);
       return 0;
     default:
       printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
@@ -57,7 +57,7 @@ void welcome(){
 }
 
 void init_monitor(int argc, char *argv[]){
-    printf("\n");
+    // printf("\n");
     parse_args(argc, argv);
     init_img(img_file);
     init_runtime();
