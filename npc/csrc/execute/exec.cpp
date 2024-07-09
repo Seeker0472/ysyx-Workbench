@@ -38,7 +38,7 @@ void call_ebreak()
 }
 
 void update_reg_state(){
-  cpu->gpr->pc = dut->rootp->core__DOT__ifu__DOT__pc;
+  cpu->gpr.pc = dut->rootp->core__DOT__ifu__DOT__pc;
   cpu->gpr[0] = dut->rootp->core__DOT__reg_0__DOT__regs_0;
   cpu->gpr[1] = dut->rootp->core__DOT__reg_0__DOT__regs_1;
   cpu->gpr[2] = dut->rootp->core__DOT__reg_0__DOT__regs_2;
