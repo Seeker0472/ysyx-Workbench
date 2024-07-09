@@ -51,6 +51,7 @@ VM_USER_CLASSES = \
 	expr \
 	sdb \
 	watchpoint \
+	disasm \
 	log \
 	state \
 
@@ -89,6 +90,8 @@ expr.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/expr.c
 sdb.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/sdb.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 watchpoint.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/watchpoint.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+disasm.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/disasm.cc
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 log.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/log.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
