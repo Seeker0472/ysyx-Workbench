@@ -6,6 +6,8 @@ SED_CMD = sed -i "s/^.*\.v$$//"
 
 ARGS ?=
 
+CINCLUDE := ./csrc/main.cpp ./csrc/execute/exec.c ./crsc/memory/mem.c ./crsc/monitor/monitor.c
+
 test:
 	mill -i $(PRJ).test
 
@@ -33,7 +35,7 @@ sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
 	
-	verilator -cc --top core  ./build/core.sv --trace --exe ./csrc/main.cpp 
+	verilator -cc --top core  ./build/core.sv --trace --exe  ${CINCLUDE}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
 

@@ -1,0 +1,66 @@
+#include <Vcore.h>
+#include <iostream>
+#include <verilated.h>
+#include <verilated_vcd_c.h>
+// #include <bits/getopt_ext.h>
+static VerilatedVcdC *tfp; // 用于生成波形的指针
+
+#include "svdpi.h"
+#include "Vcore__Dpi.h"
+
+uint32_t mem_read(int pc);
+
+
+Vcore *dut;
+unsigned int sim_time = 0;
+static int wave_enable = true;
+// 使用DPI-C机制实现ebreak
+void call_ebreak()
+{
+    printf("Ebreak Called!!");
+    tfp->close(); // 关闭VCD文件
+    delete tfp;
+    exit(0);
+}
+void single_cycle()
+{
+    printf("%x\n", dut->io_pc);
+    dut->clock = 0;
+    dut->eval();
+    if (wave_enable)
+        tfp->dump(sim_time++); // Dump波形信息
+    dut->clock = 1;
+    dut->eval();
+    if (wave_enable)
+        tfp->dump(sim_time++); // Dump波形信息
+
+    dut->io_instr = mem_read(dut->io_pc);//下一条指令
+}
+
+void reset(int n)
+{
+    dut->reset = 1;
+    while (n-- > 0)
+        single_cycle();
+    dut->reset = 0;
+}
+int init_runtime(){
+    dut = new Vcore;              // Initialize the DUT instance
+    Verilated::traceEverOn(true); // 启用波形追踪
+    tfp = new VerilatedVcdC;
+    dut->trace(tfp, 99); // 跟踪99级信号
+    if (wave_enable)
+        tfp->open("./build/waveform.vcd"); // 打开VCD文件
+    else
+        tfp->open("/dev/null"); // 不开启追踪，放弃记录
+    reset(10);                  // 复位10个周期
+}
+
+int run()
+{
+    while (1)
+    {
+        single_cycle();
+        tfp->flush();
+    }
+}
