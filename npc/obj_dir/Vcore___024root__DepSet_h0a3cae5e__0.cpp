@@ -30,6 +30,7 @@ VL_INLINE_OPT void Vcore___024root___ico_sequent__TOP__0(Vcore___024root* vlSelf
     Vcore__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___ico_sequent__TOP__0\n"); );
     // Body
+    vlSelf->io_inst_now = vlSelf->io_instr;
     vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_28 
         = (IData)((0U == (0xbe000000U & vlSelf->io_instr)));
     vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_29 

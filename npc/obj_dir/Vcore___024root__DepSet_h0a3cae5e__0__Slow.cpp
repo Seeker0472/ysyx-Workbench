@@ -31,6 +31,7 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___stl_sequent__TOP__0\n"); );
     // Body
     vlSelf->io_pc = vlSelf->core__DOT__ifu__DOT__pc;
+    vlSelf->io_inst_now = vlSelf->io_instr;
     vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_28 
         = (IData)((0U == (0xbe000000U & vlSelf->io_instr)));
     vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_29 

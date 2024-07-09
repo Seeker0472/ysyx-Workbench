@@ -13,7 +13,9 @@ C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' )
 ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -exec realpath {} \;)
 CPP_FILES := $(shell find $(SRC_DIR) -type f -name '*.cpp' )
 ABS_CPP_FILES := $(shell find $(SRC_DIR) -type f -name '*.cpp' -exec realpath {} \;)
-C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES)
+CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' )
+ABS_CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' -exec realpath {} \;)
+C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 

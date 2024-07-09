@@ -47,6 +47,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         VL_OUT(io_value,31,0);
         VL_IN(io_addr,31,0);
         VL_IN(io_instr,31,0);
+        VL_OUT(io_inst_now,31,0);
         IData/*31:0*/ core__DOT___exu_io_out_n_pc;
         IData/*31:0*/ core__DOT__decoder__DOT__casez_tmp;
         IData/*31:0*/ core__DOT__reg_0__DOT__regs_0;
@@ -82,9 +83,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         IData/*31:0*/ core__DOT__reg_0__DOT__regs_30;
         IData/*31:0*/ core__DOT__reg_0__DOT__regs_31;
         IData/*31:0*/ core__DOT__reg_0__DOT__casez_tmp;
-        IData/*31:0*/ core__DOT__ifu__DOT__pc;
     };
     struct {
+        IData/*31:0*/ core__DOT__ifu__DOT__pc;
         IData/*31:0*/ core__DOT__exu__DOT___alu_io_result;
         IData/*31:0*/ __VactIterCount;
         VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;

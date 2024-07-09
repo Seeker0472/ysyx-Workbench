@@ -160,6 +160,7 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->io_value = VL_RAND_RESET_I(32);
     vlSelf->io_addr = VL_RAND_RESET_I(32);
     vlSelf->io_instr = VL_RAND_RESET_I(32);
+    vlSelf->io_inst_now = VL_RAND_RESET_I(32);
     vlSelf->core__DOT___exu_io_out_n_pc = VL_RAND_RESET_I(32);
     vlSelf->core__DOT___decoder_io_out_alu_use_Imm_2 = VL_RAND_RESET_I(1);
     vlSelf->core__DOT___decoder_io_out_pc_jump = VL_RAND_RESET_I(1);

@@ -90,11 +90,12 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
     bufp->chgIData(oldp+47,(vlSelf->io_value),32);
     bufp->chgIData(oldp+48,(vlSelf->io_addr),32);
     bufp->chgIData(oldp+49,(vlSelf->io_instr),32);
-    bufp->chgCData(oldp+50,((0x1fU & (vlSelf->io_instr 
-                                      >> 0xfU))),5);
+    bufp->chgIData(oldp+50,(vlSelf->io_inst_now),32);
     bufp->chgCData(oldp+51,((0x1fU & (vlSelf->io_instr 
+                                      >> 0xfU))),5);
+    bufp->chgCData(oldp+52,((0x1fU & (vlSelf->io_instr 
                                       >> 7U))),5);
-    bufp->chgIData(oldp+52,((0x3fffffffU & (~ (vlSelf->io_instr 
+    bufp->chgIData(oldp+53,((0x3fffffffU & (~ (vlSelf->io_instr 
                                                >> 2U)))),30);
 }
 

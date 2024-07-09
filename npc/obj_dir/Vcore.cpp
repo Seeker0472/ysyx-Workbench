@@ -16,6 +16,7 @@ Vcore::Vcore(VerilatedContext* _vcontextp__, const char* _vcname__)
     , io_value{vlSymsp->TOP.io_value}
     , io_addr{vlSymsp->TOP.io_addr}
     , io_instr{vlSymsp->TOP.io_instr}
+    , io_inst_now{vlSymsp->TOP.io_inst_now}
     , __PVT____024unit{vlSymsp->TOP.__PVT____024unit}
     , rootp{&(vlSymsp->TOP)}
 {

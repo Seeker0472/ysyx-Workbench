@@ -38,6 +38,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore VL_NOT_FINAL : public VerilatedModel {
     VL_OUT(&io_value,31,0);
     VL_IN(&io_addr,31,0);
     VL_IN(&io_instr,31,0);
+    VL_OUT(&io_inst_now,31,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
