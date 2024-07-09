@@ -102,10 +102,6 @@ void single_cycle()
     if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
         nemu_state.state = NEMU_STOP;
 
-    //TODO::在某一些条件下打印指令！！！！
-    uint32_t pc = dut->io_pc;
-    uint32_t addr = dut->io_inst_now;
-    print_inst_asm(pc,addr);
 
 
     // printf("%x\n", dut->io_instr);
@@ -146,6 +142,11 @@ int run(int step)
             nemu_state.state = NEMU_RUNNING;
         }
         single_cycle();
+            //TODO::在某一些条件下打印指令！！！！
+    uint32_t pc = dut->io_pc;
+    uint32_t addr = dut->io_inst_now;
+    print_inst_asm(pc,addr);
+
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常
         tfp->flush();
