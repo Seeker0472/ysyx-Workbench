@@ -152,10 +152,10 @@ int main(int argc, char **argv)
   while (1)
   {
     single_cycle();
+    tfp->flush();
     // sleep(1);
     printf("%x\n", dut->io_pc);
     dut->io_instr = mem_read(dut->io_pc);
-    tfp->flush();
     //   if(dut->io_pc==0x80000028){
     // tfp->close(); // 关闭VCD文件
 
