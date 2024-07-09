@@ -123,6 +123,6 @@ void assert_fail_msg() {
   isa_reg_display();
   //打印iringbuf！
   IFDEF(CONFIG_ITRACE,print_iringbuf());
-  statistic();
+//   statistic(); TODO:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;
 }
 
