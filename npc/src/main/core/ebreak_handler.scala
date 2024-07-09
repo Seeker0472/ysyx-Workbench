@@ -12,7 +12,7 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
       |module ebreak_handler(
       |  input halt
       |);
-      |always @(clock) begin
+      |always @(*) begin
       |   if (halt) begin
       |      call_ebreak();
       |  end
