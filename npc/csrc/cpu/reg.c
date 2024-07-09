@@ -50,5 +50,5 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 }
 
 void init_reg(){
-  cpu=malloc(sizeof(CPU_state));
+  cpu=(CPU_state*)malloc(sizeof(CPU_state));
 }
