@@ -19,7 +19,7 @@
 #include <readline/history.h>
 #include <utils.h>
 #include "sdb.h"
-#include <memory/host.h>
+// #include <memory/host.h>
 word_t expr(char *e, bool *success);
 word_t warp_pmem_read(paddr_t addr) ;
 

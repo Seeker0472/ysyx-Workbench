@@ -46,6 +46,9 @@ VM_USER_CLASSES = \
 	main \
 	mem \
 	monitor \
+	expr \
+	sdb \
+	watchpoint \
 
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
@@ -53,6 +56,7 @@ VM_USER_DIR = \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/execute \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/memory \
 	/home/seeker/Develop/ysyx-workbench/npc/csrc/monitor \
+	/home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb \
 
 
 ### Default rules...
@@ -71,6 +75,12 @@ main.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/main.cpp
 mem.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/memory/mem.cpp
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 monitor.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/monitor.cpp
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+expr.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/expr.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+sdb.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/sdb.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+watchpoint.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/watchpoint.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 
 ### Link rules... (from --exe)
