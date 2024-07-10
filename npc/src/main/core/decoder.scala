@@ -24,6 +24,7 @@ case class InsP(
   val opcode:    BitPat)
     extends DecodePattern {
   def bitPat: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
+  def pattern: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
   def name:   String = name_in
 }
 
@@ -92,7 +93,7 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
     // if(op.name=="ecall/break")
     //   y else n
     if (
-      op.bitPat == BitPat.N(11) ## BitPat
+      op.pattern == BitPat.N(11) ## BitPat
         .Y(1) ## BitPat.N(13) ## BitPat("b1110011")
     ) BitPat(true.B)
     else BitPat(false.B)
