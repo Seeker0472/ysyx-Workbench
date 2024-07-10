@@ -79,7 +79,7 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
   def name: String = "Is_Ebreak"
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP)= {
-    if(op.opcode.equals(BitPat("b1110011"))&&op.func3.equals(BitPat("b000"))&&op.func7.equals(BitPat("b0000001")))
+    if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
       y else n
     // if(op.bitPat==BitPat("b00000000000100000000000001110011"))
       // y else n
