@@ -6,15 +6,15 @@
 
 extern CPU_state *cpu;
 extern CPU_state *ref_cpu;
-
+bool difftest_check_regs(){
+    return true;
+}
 void difftest_check_state(){
     if(!difftest_check_regs()){
 
     }
 }
-bool difftest_check_regs(){
-    return true;
-}
+
 
 void difftest_init_all(){
     difftest_init(0);
