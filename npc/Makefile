@@ -25,7 +25,7 @@ LINK_NEMU := --LDFLAGS  -l${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 CXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
 
 FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
-FLAGS += ${CXXFLAGS} --CFLAGS -fPIE ${LINK_NEMU} --LDFLAGS $(shell llvm-config --libs) 
+FLAGS += ${CXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU}
 
 # CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
