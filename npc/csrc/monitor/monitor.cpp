@@ -3,7 +3,6 @@
 #include <iostream>
 #include "debug.h"
 #include <common.h>
-#include <diftest.h>
 
 static char *img_file = NULL;
 static char *elf_file = NULL;
@@ -17,6 +16,7 @@ void init_reg();
 extern "C" void init_disasm(const char *triple);
 void sdb_set_batch_mode();
 void init_ftrace(char *filepath);
+void difftest_init_all();
 
 
 
@@ -79,7 +79,7 @@ void init_monitor(int argc, char *argv[]){
     // 初始化反汇编
     IFDEF(CONFIG_ITRACE, init_disasm((MUXDEF(CONFIG_RV64, "riscv64","riscv32")"-pc-linux-gnu")));
     init_ftrace(elf_file);
-    difftest_init(0);
+    difftest_init_all();
     welcome();
     // run();
 }

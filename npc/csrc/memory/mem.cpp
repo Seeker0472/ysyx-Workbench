@@ -4,7 +4,7 @@
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, int len, word_t data);
-static uint32_t mem[10000000]  = {
+uint32_t mem[10000000]  = {
     0x00448493,
     0x00448493,
     0x00100073,
@@ -27,6 +27,7 @@ static uint32_t mem[10000000]  = {
     0x00448493,
     0x00448493,
 };
+word_t mem_size=0;
 
 uint32_t mem_read(uint32_t pc)
 {
@@ -41,13 +42,13 @@ uint32_t warp_pmem_read(uint32_t addr){
 
 void init_img(char *img_file)
 {
-  size_t size = 0;
+  // size_t size = 0;
   if (img_file != NULL)
   {
     FILE *fp = fopen(img_file, "rb");
     // Assert(fp, "Can not open '%s'", img_file);
     fseek(fp, 0, SEEK_END);
-    size = ftell(fp);
+    mem_size = ftell(fp);
     // Log("The image is %s, size = %ld", img_file, size);
     Log("The image is %s, size = %ld", img_file, size);
     fseek(fp, 0, SEEK_SET);
