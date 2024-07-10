@@ -9,33 +9,6 @@ CPU_state *ref_cpu;
 extern uint32_t mem[10000000];
 extern word_t mem_size;
 
-bool difftest_check_regs(){
-    if(cpu->pc!=ref_cpu->pc)
-    for(int i=0;i<MUXDEF(CONFIG_RVE,16,32);i++){
-        if(cpu->gpr[i]!=ref_cpu->gpr[i]){
-            reg_display(cpu);
-            reg_display(cpu_ref);
-
-            printf("----------------%d\n",i);
-            return false;
-        }
-    }
-    return true;
-}
-void difftest_check_state(){
-    difftest_regcpy(ref_cpu,DIFFTEST_TO_DUT);
-    if(!difftest_check_regs()){
-        assert(0);
-    }
-}
-
-
-void difftest_init_all(){
-    difftest_init(0);
-    ref_cpu=(CPU_state*)malloc(sizeof(CPU_state));
-    difftest_regcpy(cpu,DIFFTEST_TO_REF);
-    difftest_memcpy(0x80000000,mem,mem_size,DIFFTEST_TO_REF);
-}
 //temp!!
 void reg_display(CPU_state *cpu) {
   printf("================================================regs================================================\n");
@@ -65,4 +38,33 @@ void reg_display(CPU_state *cpu) {
 #endif
 
   MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-20d\t%-10x\t\n","pc",cpu->pc,cpu->pc);)
+}
+
+
+bool difftest_check_regs(){
+    if(cpu->pc!=ref_cpu->pc)
+    for(int i=0;i<MUXDEF(CONFIG_RVE,16,32);i++){
+        if(cpu->gpr[i]!=ref_cpu->gpr[i]){
+            reg_display(cpu);
+            reg_display(cpu_ref);
+
+            printf("----------------%d\n",i);
+            return false;
+        }
+    }
+    return true;
+}
+void difftest_check_state(){
+    difftest_regcpy(ref_cpu,DIFFTEST_TO_DUT);
+    if(!difftest_check_regs()){
+        assert(0);
+    }
+}
+
+
+void difftest_init_all(){
+    difftest_init(0);
+    ref_cpu=(CPU_state*)malloc(sizeof(CPU_state));
+    difftest_regcpy(cpu,DIFFTEST_TO_REF);
+    difftest_memcpy(0x80000000,mem,mem_size,DIFFTEST_TO_REF);
 }
