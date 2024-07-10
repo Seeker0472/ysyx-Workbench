@@ -70,3 +70,5 @@ all: verilog sim
 	# @echo "所有 .c 文件的绝对路径："
 	# @echo "$(C_CPP_ABS)"
 -include ../Makefile
+
+# TODO:　Batch-Mode amd more inst!!!!

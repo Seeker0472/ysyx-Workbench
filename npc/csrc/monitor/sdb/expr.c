@@ -32,7 +32,6 @@ bool check_parentheses(int p,int q);
 enum {
   TK_NOTYPE = 256, TK_EQ,
   TK_NUM,TK_HEX,TK_REG,TK_NOTEQ,TK_AND,TK_DEREFENCE
-  /* TODO: Add more token types */
 
 };
 
@@ -41,13 +40,11 @@ static struct rule {
   int token_type;
 } rules[] = {
 
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
-  {"0x[0-9,a-f,A-F]+", TK_HEX}, // hex-TODO:怎么处理？
+
+  {"0x[0-9,a-f,A-F]+", TK_HEX}, // hex
   {"[0-9]+",TK_NUM},
   {" +", TK_NOTYPE},    // spaces
-  {"\\$\\w+",TK_REG},     // reg-TODO:怎么处理？
+  {"\\$\\w+",TK_REG},     // reg
   {"\\(",'('},
   {"\\)",')'},
   {"\\+", '+'},         // +

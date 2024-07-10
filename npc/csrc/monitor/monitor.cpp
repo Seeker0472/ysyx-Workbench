@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "debug.h"
+#include <common.h>
 
 static char *img_file = NULL;
 static char *elf_file = NULL;
@@ -16,8 +17,7 @@ extern "C" void init_disasm(const char *triple);
 void sdb_set_batch_mode();
 void init_ftrace(char *filepath);
 
-#define CONFIG_ITRACE 1
-//TODO------PUT INTO　KCONFIG!!!!!!!!!!!!!!!!
+
 
 char * log_file =NULL;
 
