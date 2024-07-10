@@ -13,7 +13,7 @@ bool difftest_check_regs(){
     if(cpu->pc!=ref_cpu->pc)
     for(int i=0;i<MUXDEF(CONFIG_RVE,16,32);i++){
         if(cpu->gpr[i]!=ref_cpu->gpr[i]){
-            printf("%d",i);
+            printf("----------------%d\n",i);
             return false;
             }
     }
