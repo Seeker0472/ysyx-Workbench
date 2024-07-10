@@ -13,6 +13,8 @@ trace_node* nodes;
 
 int layer=0;
 
+const char* error="???";
+
 void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加一项
 	Log("Symbol Table Added: name=%s len=%lu addr=%x",name,len,start_addr);
 	trace_node* tail=nodes;
@@ -31,14 +33,14 @@ void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加�
 	tail->next=NULL;
 }
 
-char *find_symbol(paddr_t addr){
+const char *find_symbol(paddr_t addr){
     trace_node* now=nodes->next;
     for(;now!=NULL;now=now->next){
         if(now->start_addr<=addr&&now->start_addr+now->length>addr){
             return now->name;
         }
     }
-    return "???";
+    return error;
 }
 
 void read_symbol_table(const char *filename) {
@@ -61,7 +63,7 @@ void read_symbol_table(const char *filename) {
     fseek(file,header.e_shoff,SEEK_SET);
     // 读取节头表
     // Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
-    MUXDEF(CONFIG_RV64,Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);, Elf32_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum););
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *shdrs = (Elf64_Shdr *)malloc(header.e_shentsize * header.e_shnum);, Elf32_Shdr *shdrs = (Elf32_Shdr *)malloc(header.e_shentsize * header.e_shnum););
     if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!= header.e_shnum)
 		assert(0);//读取的数量不对
 	// Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
@@ -99,14 +101,14 @@ void read_symbol_table(const char *filename) {
     }
     //读取Symbol
     // Elf64_Sym *symbols = malloc(symtab->sh_size);
-    MUXDEF(CONFIG_RV64,Elf64_Sym *symbols = malloc(symtab->sh_size);,Elf32_Sym *symbols = malloc(symtab->sh_size););
+    MUXDEF(CONFIG_RV64,Elf64_Sym *symbols = (Elf64_Sym *)malloc(symtab->sh_size);,Elf32_Sym *symbols = (Elf32_Sym *)malloc(symtab->sh_size););
 
     fseek(file, symtab->sh_offset, SEEK_SET);
     if(fread(symbols, 1, symtab->sh_size, file)!=symtab->sh_size)
 		assert(0);//读取的数量不对
 
     // 读取符号表
-    char *strtab_data = malloc(strtab->sh_size);
+    char *strtab_data = (char*)malloc(strtab->sh_size);
     fseek(file, strtab->sh_offset, SEEK_SET);
     if(fread(strtab_data, 1, strtab->sh_size, file)!=strtab->sh_size)
 		assert(0);//读取的数量不对
@@ -140,7 +142,7 @@ void init_ftrace(char *filepath){
 	}
 	Log("Reading Symbol Table from %s",filepath);
 	//初始化头结点
-	nodes=malloc(sizeof(trace_node));
+	nodes=(trace_node*)malloc(sizeof(trace_node));
 	nodes->length=0;nodes->start_addr=0;nodes->next=NULL;
 
     read_symbol_table(filepath);

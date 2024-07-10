@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
+#pragma GCC diagnostic ignored "-Wnarrowing"
 
 //my_func
 void write_iringbuf(paddr_t pc, word_t inst);

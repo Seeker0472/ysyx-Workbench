@@ -130,7 +130,7 @@ static int test_pr()
 {
   FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
   int result;
-  char *exp = malloc(700 * sizeof(char));
+  char *exp =(char*) malloc(700 * sizeof(char));
   int time=0;
   while (fscanf(fp, "%d %s\n", &result, exp) != -1)
   {
@@ -217,7 +217,7 @@ static struct {
   { "p", "Eval expression", cmd_eval },
   { "w", "Set WatchPoint", cmd_watch },
   { "d", "Delete WatchPoint", cmd_del_watch },
-  { "t", "t", test_pr },
+  { "t", "t", (int (*)(char*))test_pr },//TODO:???????????????????????????????????????????????????
   /* TODO: Add more commands */
 
 };

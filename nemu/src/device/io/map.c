@@ -18,6 +18,8 @@
 #include <memory/vaddr.h>
 #include <device/map.h>
 
+#pragma GCC diagnostic ignored "-Wpointer-arith"
+
 #define IO_SPACE_MAX (2 * 1024 * 1024)
 
 static uint8_t *io_space = NULL;
@@ -47,7 +49,7 @@ static void invoke_callback(io_callback_t c, paddr_t offset, int len, bool is_wr
 }
 
 void init_map() {
-  io_space = malloc(IO_SPACE_MAX);
+  io_space = (uint8_t*)malloc(IO_SPACE_MAX);
   assert(io_space);
   p_space = io_space;
 }

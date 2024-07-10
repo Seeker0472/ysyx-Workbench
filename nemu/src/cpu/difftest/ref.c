@@ -41,9 +41,9 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
   // assert(0);
   if(DIFFTEST_TO_DUT){
-    copy_reg(&cpu,dut);
+    copy_reg(&cpu,(CPU_state*)dut);
   }else{
-    copy_reg(dut,&cpu);
+    copy_reg((CPU_state*)dut,&cpu);
   }
 }
 // 让REF执行`n`条指令
