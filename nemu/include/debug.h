@@ -20,15 +20,29 @@
 #include <stdio.h>
 #include <utils.h>
 
+#ifdef CONFIG_LOG 
 #define Log(format, ...) \
     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
-        __FILE__, __LINE__, __func__, ## __VA_ARGS__)
-//自定义颜色
-#define Info_N(fmt, ...) \
-    printf(ANSI_FG_WHITE fmt , ##__VA_ARGS__)
+        __FILE__, __LINE__, __func__, ## __VA_ARGS__) 
+#elif
+#define Log(format, ...)
+#endif
 
+//自定义颜色
+#ifdef CONFIG_LOG 
+#define Info_N(fmt, ...) \
+    printf(ANSI_FG_WHITE fmt , ##__VA_ARGS__) 
+#elif
+#define Info_N(format, ...)
+#endif
+
+#ifdef CONFIG_LOG 
 #define Info_R(fmt, ...) \
     printf(ANSI_FG_MAGENTA fmt , ##__VA_ARGS__)
+
+#elif
+#define Info_R(format, ...)
+#endif
 
 #define Assert(cond, format, ...) \
   do { \

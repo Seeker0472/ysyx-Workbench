@@ -126,6 +126,10 @@ endmenu
 
 menu "Testing and Debugging"
 
+config LOG
+  depends on TARGET_NATIVE_ELF
+  bool "Enable log"
+  default y
 
 config TRACE
   bool "Enable tracer"
