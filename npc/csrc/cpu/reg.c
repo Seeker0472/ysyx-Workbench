@@ -10,7 +10,7 @@ const char *regs[] = {
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
-void isa_reg_display() {
+void reg_display(CPU_state* cpu) {
   printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
   printf(" | ");
@@ -39,7 +39,15 @@ void isa_reg_display() {
 
   MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-20d\t%-10x\t\n","pc",cpu->pc,cpu->pc);)
 }
-
+void isa_reg_display(){
+  reg_display(cpu);
+}
+void reg_display_diff(CPU_state* nemu){
+  printf("YPC Regs::\n");
+  reg_display(cpu);
+  printf("NEMU Regs::\n");
+  reg_display(nemu);
+}
 
 
 //获取寄存器的值，s应该传入$xx
