@@ -34,6 +34,9 @@ void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加�
 }
 
 const char *find_symbol(paddr_t addr){
+    // if(!nodes){
+    //     return;
+    // }
     trace_node* now=nodes->next;
     for(;now!=NULL;now=now->next){
         if(now->start_addr<=addr&&now->start_addr+now->length>addr){
@@ -136,7 +139,7 @@ void read_symbol_table(const char *filename) {
 
 //初始化函数名表，(用链表维护)
 void init_ftrace(char *filepath){
-    	//初始化头结点
+    //初始化头结点
 	nodes=(trace_node*)malloc(sizeof(trace_node));
 	nodes->length=0;nodes->start_addr=0;nodes->next=NULL;
 	if(filepath==NULL){
