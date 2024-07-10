@@ -192,6 +192,7 @@ int run(int step)
         }
         uint32_t pc = dut->io_pc;
         single_cycle();
+        tfp->flush();
         g_nr_guest_inst++;
         word_t inst = dut->io_inst_now;
         if (step < PRINT_INST_MIN)
@@ -201,7 +202,6 @@ int run(int step)
 
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常
-        tfp->flush();
     }
     return 0;
 }
