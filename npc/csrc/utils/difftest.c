@@ -17,7 +17,7 @@ bool difftest_check_regs(){
     if(!difftest_check_reg("pc",cpu->pc,ref_cpu->pc,cpu->pc));
       return false;
     for(int i=0;i<MUXDEF(CONFIG_RVE,16,32);i++){
-      printf("%d\n",i);
+      printf("-----------------------------------------%d\n",i);
         if(!difftest_check_reg(regs[i],cpu->pc,ref_cpu->gpr[i],cpu->gpr[i]));
           return false;
     }
