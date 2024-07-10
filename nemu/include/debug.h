@@ -24,7 +24,7 @@
 #define Log(format, ...) \
     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__) 
-#elif
+#else
 #define Log(format, ...)
 #endif
 
@@ -32,15 +32,14 @@
 #ifdef CONFIG_LOG 
 #define Info_N(fmt, ...) \
     printf(ANSI_FG_WHITE fmt , ##__VA_ARGS__) 
-#elif
+#else
 #define Info_N(format, ...)
 #endif
 
 #ifdef CONFIG_LOG 
 #define Info_R(fmt, ...) \
     printf(ANSI_FG_MAGENTA fmt , ##__VA_ARGS__)
-
-#elif
+#else
 #define Info_R(format, ...)
 #endif
 
