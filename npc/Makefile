@@ -61,7 +61,7 @@ sim:
 	# @echo "Write this Makefile by yourself."
 	
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  ${FLAGS}
-	make -j -C obj_dir -f Vcore.mk CXX=gcc Vcore
+	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
 
 gdb:
