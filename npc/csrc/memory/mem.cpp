@@ -27,7 +27,7 @@ uint32_t mem[10000000]  = {
     0x00448493,
     0x00448493,
 };
-word_t mem_size=0;
+word_t mem_size=84;
 
 uint32_t mem_read(uint32_t pc)
 {
