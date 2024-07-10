@@ -62,6 +62,7 @@ VM_USER_CLASSES = \
 	watchpoint \
 	disasm \
 	log \
+	mtrace \
 	state \
 
 # User .cpp directories (from .cpp's on Verilator command line)
@@ -103,6 +104,8 @@ watchpoint.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/monitor/sdb/watchpoin
 disasm.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/disasm.cc
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 log.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/log.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+mtrace.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/mtrace.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 state.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/state.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
