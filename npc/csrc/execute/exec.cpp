@@ -3,7 +3,7 @@
 #include <iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-#include <debug.h>
+#include <common.h>
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
 
@@ -15,18 +15,47 @@ uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
 bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-void ftrace_check_inst(paddr_t pc_now,word_t inst);
-
+void ftrace_check_inst(paddr_t pc_now, word_t inst);
 
 #define PRINT_INST_MIN 10
 
+static void trace_and_difftest(paddr_t pc, word_t inst_in)
+{
+#ifdef CONFIG_ITRACE
+    char buf[200];
+    char *p = buf;
+    p += snprintf(p, sizeof(buf), FMT_WORD ":", pc); // 打印地址
+    int ilen = 4;
+    int i;
+    uint8_t *inst = (uint8_t *)&inst_in;
+    for (i = ilen - 1; i >= 0; i--)
+    {
+        p += snprintf(p, 4, " %02x", inst[i]);
+    }
+    int ilen_max = 4;
+    int space_len = ilen_max - ilen;
+    if (space_len < 0)
+        space_len = 0;
+    space_len = space_len * 3 + 1;
+    memset(p, ' ', space_len);
+    p += space_len;
+    disassemble(p, buf + sizeof(buf) - p,
+                pc, (uint8_t *)&isnt_in, ilen);
+#ifdef CONFIG_ITRACE_COND // 在condition为true的时候记录！
+    if (ITRACE_COND)
+    {
+        log_write("%s\n", _this->logbuf);
+    } // 把缓冲区数据打印出来
+#endif
+#endif
+}
 
 void print_inst_asm(paddr_t pc, word_t inst)
 {
     char buf[100];
     char *pbuf = buf;
-    pbuf += snprintf(buf,14,"0x%08x : ",pc);
-    disassemble(pbuf,pbuf-buf + sizeof(buf), pc, (uint8_t *)(&inst), 8); // 反编译？
+    pbuf += snprintf(buf, 14, "0x%08x : ", pc);
+    disassemble(pbuf, pbuf - buf + sizeof(buf), pc, (uint8_t *)(&inst), 8); // 反编译？
     printf("%s\n", buf);
 }
 
@@ -104,9 +133,11 @@ void single_cycle()
         tfp->dump(sim_time++);            // Dump波形信息
     dut->io_instr = mem_read(dut->io_pc); // 下一条指令
     update_reg_state();
-    // TODO:＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊OPEN/CLOSE　ＷＰ
+
+#ifdef CONFIG_WATCHPOINT
     if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
         nemu_state.state = NEMU_STOP;
+#endif
 
     // printf("%x\n", dut->io_instr);
 }
@@ -149,14 +180,12 @@ int run(int step)
         uint32_t pc = dut->io_pc;
         single_cycle();
         word_t inst = dut->io_inst_now;
-        //I-Trace!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (step < PRINT_INST_MIN)
             print_inst_asm(pc, inst);
         // TODO::在某一些条件下打印指令！！！！
-        
-        //ftrace--------------------
-        ftrace_check_inst(pc,inst);
-
+        trace_and_difftest();
+        // ftrace--------------------
+        ftrace_check_inst(pc, inst);
 
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常
