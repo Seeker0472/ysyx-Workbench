@@ -10,12 +10,7 @@ extern uint32_t mem[10000000];
 extern word_t mem_size;
 
 //temp!!
-const char *regs[] = {
-  "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
-  "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
-  "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
-  "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
-};
+extern const char *regs[];
 void reg_display(CPU_state *cpu) {
   printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
