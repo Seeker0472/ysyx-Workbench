@@ -11,6 +11,8 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 #include "Vcore__Dpi.h"
 #include <isa.h>
 
+uint64_t g_nr_guest_inst = 0;
+
 uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
 bool check_watch_point();
@@ -179,11 +181,12 @@ int run(int step)
         }
         uint32_t pc = dut->io_pc;
         single_cycle();
+        g_nr_guest_inst++;
         word_t inst = dut->io_inst_now;
         if (step < PRINT_INST_MIN)
             print_inst_asm(pc, inst);
         // TODO::在某一些条件下打印指令！！！！
-        trace_and_difftest(pc,inst);
+        trace_and_difftest(pc, inst);
         // ftrace--------------------
         ftrace_check_inst(pc, inst);
 
