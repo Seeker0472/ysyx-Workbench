@@ -183,7 +183,7 @@ int run(int step)
         if (step < PRINT_INST_MIN)
             print_inst_asm(pc, inst);
         // TODO::在某一些条件下打印指令！！！！
-        trace_and_difftest(pc,addr);
+        trace_and_difftest(pc,inst);
         // ftrace--------------------
         ftrace_check_inst(pc, inst);
 
@@ -198,7 +198,7 @@ int run(int step)
 void assert_fail_msg()
 {
     isa_reg_display();
-    // 打印iringbuf！
-    IFDEF(CONFIG_ITRACE, print_iringbuf());
+    // 打印iringbuf！TODO:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;
+    // IFDEF(CONFIG_ITRACE, print_iringbuf());
     //   statistic(); TODO:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;
 }
