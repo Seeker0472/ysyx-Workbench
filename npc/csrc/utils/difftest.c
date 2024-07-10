@@ -18,7 +18,7 @@ bool difftest_check_regs(){
 
 void difftest_init_all(){
     difftest_init(0);
-    ref_cpu=malloc(sizeof(CPU_state));
+    ref_cpu=(CPU_state*)malloc(sizeof(CPU_state));
     difftest_regcpy(cpu,DIFFTEST_TO_REF);
     // difftest_memcpy();
 }

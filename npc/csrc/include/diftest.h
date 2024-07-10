@@ -12,5 +12,5 @@ extern "C" void difftest_raise_intr(word_t NO);
 // 初始化REF的DiffTest功能
 extern "C" void difftest_init(int port);
 
-// enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
+enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
 
