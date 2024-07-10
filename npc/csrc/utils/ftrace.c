@@ -167,5 +167,5 @@ void ftrace_check_inst(paddr_t pc_now,word_t inst){
     if(((inst&0xfff)==0xef)||((inst&0x7fff)==0xe7))
         ftrace_func_call(pc_now,inst);
     else if(inst==0x8067)
-        ftrace_func_ret(pc,inst);
+        ftrace_func_ret(pc_now,inst);
 }
