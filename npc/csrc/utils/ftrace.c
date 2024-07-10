@@ -32,6 +32,7 @@ void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加�
 }
 
 char *find_symbol(paddr_t addr){
+    assert(nodes);
     trace_node* now=nodes->next;
     for(;now!=NULL;now=now->next){
         if(now->start_addr<=addr&&now->start_addr+now->length>addr){
@@ -134,14 +135,15 @@ void read_symbol_table(const char *filename) {
 
 //初始化函数名表，(用链表维护)
 void init_ftrace(char *filepath){
+	//初始化头结点
+	nodes=(trace_node*)malloc(sizeof(trace_node));
+	nodes->length=0;nodes->start_addr=0;nodes->next=NULL;
 	if(filepath==NULL){
 		Log("Empty File Path,Won't read Symbol Table!");
 		return;
 	}
 	Log("Reading Symbol Table from %s",filepath);
-	//初始化头结点
-	nodes=(trace_node*)malloc(sizeof(trace_node));
-	nodes->length=0;nodes->start_addr=0;nodes->next=NULL;
+
 
     read_symbol_table(filepath);
 }
@@ -168,4 +170,5 @@ void ftrace_check_inst(paddr_t pc_now,word_t inst){
         ftrace_func_call(pc_now,inst);
     else if(inst==0x8067)
         ftrace_func_ret(pc_now,inst);
+
 }
