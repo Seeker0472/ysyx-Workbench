@@ -60,6 +60,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     // ftrace--------------------
     ftrace_check_inst(pc, inst_in);
 #endif
+difftest_check_state();
 }
 
 void print_inst_asm(paddr_t pc, word_t inst)
