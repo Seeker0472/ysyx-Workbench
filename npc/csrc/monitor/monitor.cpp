@@ -14,6 +14,7 @@ void init_sdb();
 void init_reg();
 extern "C" void init_disasm(const char *triple);
 void sdb_set_batch_mode();
+void init_ftrace(char *filepath);
 
 #define CONFIG_ITRACE 1
 //TODO------PUT INTO　KCONFIG!!!!!!!!!!!!!!!!
@@ -76,6 +77,7 @@ void init_monitor(int argc, char *argv[]){
     init_runtime();
     // 初始化反汇编
     IFDEF(CONFIG_ITRACE, init_disasm((MUXDEF(CONFIG_RV64, "riscv64","riscv32")"-pc-linux-gnu")));
+    init_ftrace(elf_file);
     welcome();
     // run();
 }
