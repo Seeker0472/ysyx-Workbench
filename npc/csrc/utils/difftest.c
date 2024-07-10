@@ -5,7 +5,7 @@
 
 
 extern CPU_state *cpu;
-extern CPU_state *ref_cpu;
+CPU_state *ref_cpu;
 bool difftest_check_regs(){
     return true;
 }
