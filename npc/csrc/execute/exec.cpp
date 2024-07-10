@@ -28,7 +28,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     char buf[200];
     char *p = buf;
     p += snprintf(p, sizeof(buf), FMT_WORD ":", pc); // 打印地址
-    printf("0x%08"  "x"  ":", pc);
+    printf("0x%08x"":", pc);
     int ilen = 4;
     int i;
     uint8_t *inst = (uint8_t *)&inst_in;
