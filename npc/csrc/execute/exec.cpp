@@ -49,7 +49,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     if (CONFIG_ITRACE_COND)
     {
         // printf("BUF++%s\n",buf);
-        log_write("%s\n", buf);
+        log_write("LLLL%s\n", buf);
     } // 把缓冲区数据打印出来
 #endif
 #endif
