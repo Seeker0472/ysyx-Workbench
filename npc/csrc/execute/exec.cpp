@@ -16,12 +16,14 @@ extern CPU_state *cpu;
 bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
-void print_inst_asm(paddr_t pc,word_t inst)
+#define PRINT_INST_MIN 10
+
+
+void print_inst_asm(paddr_t pc, word_t inst)
 {
     char buf[100];
-    // void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
     disassemble(buf, sizeof(buf), pc, (uint8_t *)(&inst), 8); // 反编译？
-    printf("%s\n",buf);
+    printf("%s\n", buf);
 }
 
 Vcore *dut;
@@ -102,8 +104,6 @@ void single_cycle()
     if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
         nemu_state.state = NEMU_STOP;
 
-
-
     // printf("%x\n", dut->io_instr);
 }
 
@@ -129,8 +129,9 @@ void init_runtime()
 
 int run(int step)
 {
+    int now = step;
 
-    while ((step--) != 0)
+    while ((now--) != 0)
     {
         switch (nemu_state.state)
         {
@@ -141,12 +142,14 @@ int run(int step)
         default:
             nemu_state.state = NEMU_RUNNING;
         }
+        if (step < PRINT_INST_MIN)
+        {
+            uint32_t pc = dut->io_pc;
+            uint32_t addr = dut->io_inst_now;
+            print_inst_asm(pc, addr);
+        }
         single_cycle();
-            //TODO::在某一些条件下打印指令！！！！
-    uint32_t pc = dut->io_pc;
-    uint32_t addr = dut->io_inst_now;
-    printf("%x %x \n",pc,addr);
-    print_inst_asm(pc,addr);
+        // TODO::在某一些条件下打印指令！！！！
 
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常
