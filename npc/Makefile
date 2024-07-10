@@ -5,6 +5,7 @@ TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
 
 ARGS ?=
+IMG  ?=
 
 ROOT_DIR := $(shell pwd)
 # 写的一坨大便！
