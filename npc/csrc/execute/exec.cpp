@@ -22,8 +22,8 @@ extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int
 void print_inst_asm(paddr_t pc, word_t inst)
 {
     char buf[100];
-    snprintf(buf,13,"0x%08x : ",pc);
-    disassemble(buf+13, sizeof(buf)-13, pc, (uint8_t *)(&inst), 8); // 反编译？
+    snprintf(buf,14,"0x%08x : ",pc);
+    disassemble(buf+14, sizeof(buf)-14, pc, (uint8_t *)(&inst), 8); // 反编译？
     printf("%s\n", buf);
 }
 
