@@ -87,16 +87,17 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
-    // y else n
+    if(op.opcode.rawString.matches("1110011"))
+    y else n
     // if(op.bitPat==BitPat("b??????????????000?????1110011"))
     //   y else n
     // if(op.name=="ecall/break")
     //   y else n
-    if (
-      BitPat.N(11) ## BitPat
-        .Y(1) ## BitPat.N(13) ## BitPat("b1110011")==op.pattern
-    ) BitPat(true.B)
-    else BitPat(false.B)
+    // if (
+    //   BitPat.N(11) ## BitPat
+    //     .Y(1) ## BitPat.N(13) ## BitPat("b1110011")==op.pattern
+    // ) BitPat(true.B)
+    // else BitPat(false.B)
 
   }
 }
