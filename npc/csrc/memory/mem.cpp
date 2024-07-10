@@ -30,9 +30,9 @@ static uint32_t mem[10000000]  = {
 
 uint32_t mem_read(uint32_t pc)
 {
-  //mtrace
-  //TODO: Write  Enable-------------------------------------------------
-  record_pread(pc,4);
+  // //mtrace
+  // //TODO: Write  Enable-------------------------------------------------
+  // record_pread(pc,4);
   return mem[(pc - 0x80000000) / 4];
 }
 uint32_t warp_pmem_read(uint32_t addr){
