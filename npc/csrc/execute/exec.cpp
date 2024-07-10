@@ -5,6 +5,8 @@
 #include <verilated_vcd_c.h>
 #include <common.h>
 #include <utils.h>
+# include <diftest.h>
+
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
 
@@ -60,6 +62,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     // ftrace--------------------
     ftrace_check_inst(pc, inst_in);
 #endif
+difftest_exec(1);
 difftest_check_state();
 }
 
