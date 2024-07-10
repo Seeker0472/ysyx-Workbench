@@ -15,6 +15,8 @@ uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
 bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+void ftrace_check_inst(paddr_t pc_now,word_t inst);
+
 
 #define PRINT_INST_MIN 10
 
@@ -146,11 +148,15 @@ int run(int step)
         }
         uint32_t pc = dut->io_pc;
         single_cycle();
-        uint32_t addr = dut->io_inst_now;
+        word_t inst = dut->io_inst_now;
         //I-Trace!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (step < PRINT_INST_MIN)
-            print_inst_asm(pc, addr);
+            print_inst_asm(pc, inst);
         // TODO::在某一些条件下打印指令！！！！
+        
+        //ftrace--------------------
+        ftrace_check_inst(pc,inst);
+
 
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常

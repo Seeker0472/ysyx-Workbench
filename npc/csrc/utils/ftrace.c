@@ -162,3 +162,10 @@ void ftrace_func_ret(paddr_t pc_now,paddr_t address){
     // printf("ret [%s(0x%x)]\n",find_symbol(address),address);
     printf("ret [%s]\n",find_symbol(pc_now));
 }
+
+void ftrace_check_inst(paddr_t pc_now,word_t inst){
+    if(((inst&0xfff)==0xef)||((inst&0x7fff)==0xe7))
+        ftrace_func_call(pc_now,inst);
+    else if(inst==0x8067)
+        ftrace_func_ret(pc,inst);
+}
