@@ -4,6 +4,7 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include <common.h>
+#include <utils.h>
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
 
