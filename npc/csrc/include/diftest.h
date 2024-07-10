@@ -8,6 +8,7 @@ void difftest_exec(uint64_t n);
 //为中断准备
 void difftest_raise_intr(word_t NO);
 // 初始化REF的DiffTest功能
-void difftest_init(int port);
+extern "C" void difftest_init(int port);
+
 
 
