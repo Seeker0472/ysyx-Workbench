@@ -20,11 +20,11 @@
 
 void copy_reg(CPU_state* src,CPU_state* dst){
   for(int i=0;i<MUXDEF(CONFIG_RVE,16,32);i++){
-    printf("copying %d",src->gpr[i]);
+    // printf("copying %d",src->gpr[i]);
     dst->gpr[i]=src->gpr[i];
   }
   dst->pc=src->pc;
-    printf("copying %d",src->pc);
+    // printf("copying %d",src->pc);
 
 }
 
@@ -60,7 +60,7 @@ __EXPORT void difftest_raise_intr(word_t NO) {
 }
 // 初始化REF的DiffTest功能
 __EXPORT void difftest_init(int port) {
-  printf("Initing difftest!\n");
+  Log("Initing difftest!\n");
   void init_mem();
   init_mem();
   /* Perform ISA dependent initialization. */
