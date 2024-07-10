@@ -46,7 +46,7 @@ bool difftest_check_regs(){
     for(int i=0;i<MUXDEF(CONFIG_RVE,16,32);i++){
         if(cpu->gpr[i]!=ref_cpu->gpr[i]){
             reg_display(cpu);
-            reg_display(cpu_ref);
+            reg_display(ref_cpu);
 
             printf("----------------%d\n",i);
             return false;
