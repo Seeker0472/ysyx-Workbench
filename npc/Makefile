@@ -65,7 +65,7 @@ sim:
 gdb:
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
-	gdb ./obj_dir/Vcore $(ARGS) $(IMG)
+	gdb --args ./obj_dir/Vcore  $(ARGS) $(IMG)
 all: verilog sim
 	# @echo "所有 .c 文件的绝对路径："
 	# @echo "$(C_CPP_ABS)"
