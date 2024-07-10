@@ -13,7 +13,7 @@ void difftest_check_state(){
     }
 }
 bool difftest_check_regs(){
-
+    return true;
 }
 
 void difftest_init_all(){
