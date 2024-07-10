@@ -40,7 +40,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     memset(p, ' ', space_len);
     p += space_len;
     disassemble(p, buf + sizeof(buf) - p,
-                pc, (uint8_t *)&isnt_in, ilen);
+                pc, (uint8_t *)&inst_in, ilen);
 #ifdef CONFIG_ITRACE_COND // 在condition为true的时候记录！
     if (ITRACE_COND)
     {
@@ -183,7 +183,7 @@ int run(int step)
         if (step < PRINT_INST_MIN)
             print_inst_asm(pc, inst);
         // TODO::在某一些条件下打印指令！！！！
-        trace_and_difftest();
+        trace_and_difftest(pc,addr);
         // ftrace--------------------
         ftrace_check_inst(pc, inst);
 
