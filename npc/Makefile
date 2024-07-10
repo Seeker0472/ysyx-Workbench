@@ -18,14 +18,14 @@ CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' )
 ABS_CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' -exec realpath {} \;)
 C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
-# LINK_NEMU := -shared -o ${NEMU_HOME}/build/riscv32-nemu-interpreter-so 
+LINK_NEMU := --LDFLAGS -shared -o ${NEMU_HOME}/build/riscv32-nemu-interpreter-so 
 
 # $(shell llvm-config --cxxflags)
 # deleted:::::   --CFLAGS -D__STDC_FORMAT_MACROS
 CXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
 
 FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
-FLAGS += ${CXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) --LDFLAGS ${LINK_NEMU}
+FLAGS += ${CXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU}
 
 # CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
