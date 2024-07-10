@@ -19,7 +19,7 @@ class REG extends Module{
     io.read_1:=regs(io.read_No_1)
     io.read_2:=regs(io.read_No_2)
 
-    when(io.write_en){
-        regs(io.write_No):= io.reg_write_data
-    }
+  when(io.write_en && io.write_No =/= 0.U) {
+    regs(io.write_No) := io.reg_write_data
+  }
 }
