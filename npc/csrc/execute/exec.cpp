@@ -20,7 +20,7 @@ void print_inst_asm(paddr_t pc,word_t inst)
 {
     char buf[100];
     // void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-    disassemble(buf, sizeof(buf), pc, (uint8_t *)inst, 8); // 反编译？
+    disassemble(buf, sizeof(buf), pc, (uint8_t *)(&inst), 8); // 反编译？
     printf("%s\n",buf);
 }
 
