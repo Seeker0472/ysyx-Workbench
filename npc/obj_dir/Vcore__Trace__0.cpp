@@ -67,35 +67,19 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
         bufp->chgIData(oldp+25,(vlSelf->core__DOT__reg_0__DOT__regs_13),32);
         bufp->chgIData(oldp+26,(vlSelf->core__DOT__reg_0__DOT__regs_14),32);
         bufp->chgIData(oldp+27,(vlSelf->core__DOT__reg_0__DOT__regs_15),32);
-        bufp->chgIData(oldp+28,(vlSelf->core__DOT__reg_0__DOT__regs_16),32);
-        bufp->chgIData(oldp+29,(vlSelf->core__DOT__reg_0__DOT__regs_17),32);
-        bufp->chgIData(oldp+30,(vlSelf->core__DOT__reg_0__DOT__regs_18),32);
-        bufp->chgIData(oldp+31,(vlSelf->core__DOT__reg_0__DOT__regs_19),32);
-        bufp->chgIData(oldp+32,(vlSelf->core__DOT__reg_0__DOT__regs_20),32);
-        bufp->chgIData(oldp+33,(vlSelf->core__DOT__reg_0__DOT__regs_21),32);
-        bufp->chgIData(oldp+34,(vlSelf->core__DOT__reg_0__DOT__regs_22),32);
-        bufp->chgIData(oldp+35,(vlSelf->core__DOT__reg_0__DOT__regs_23),32);
-        bufp->chgIData(oldp+36,(vlSelf->core__DOT__reg_0__DOT__regs_24),32);
-        bufp->chgIData(oldp+37,(vlSelf->core__DOT__reg_0__DOT__regs_25),32);
-        bufp->chgIData(oldp+38,(vlSelf->core__DOT__reg_0__DOT__regs_26),32);
-        bufp->chgIData(oldp+39,(vlSelf->core__DOT__reg_0__DOT__regs_27),32);
-        bufp->chgIData(oldp+40,(vlSelf->core__DOT__reg_0__DOT__regs_28),32);
-        bufp->chgIData(oldp+41,(vlSelf->core__DOT__reg_0__DOT__regs_29),32);
-        bufp->chgIData(oldp+42,(vlSelf->core__DOT__reg_0__DOT__regs_30),32);
-        bufp->chgIData(oldp+43,(vlSelf->core__DOT__reg_0__DOT__regs_31),32);
     }
-    bufp->chgBit(oldp+44,(vlSelf->clock));
-    bufp->chgBit(oldp+45,(vlSelf->reset));
-    bufp->chgIData(oldp+46,(vlSelf->io_pc),32);
-    bufp->chgIData(oldp+47,(vlSelf->io_value),32);
-    bufp->chgIData(oldp+48,(vlSelf->io_addr),32);
-    bufp->chgIData(oldp+49,(vlSelf->io_instr),32);
-    bufp->chgIData(oldp+50,(vlSelf->io_inst_now),32);
-    bufp->chgCData(oldp+51,((0x1fU & (vlSelf->io_instr 
+    bufp->chgBit(oldp+28,(vlSelf->clock));
+    bufp->chgBit(oldp+29,(vlSelf->reset));
+    bufp->chgIData(oldp+30,(vlSelf->io_pc),32);
+    bufp->chgIData(oldp+31,(vlSelf->io_value),32);
+    bufp->chgIData(oldp+32,(vlSelf->io_addr),32);
+    bufp->chgIData(oldp+33,(vlSelf->io_instr),32);
+    bufp->chgIData(oldp+34,(vlSelf->io_inst_now),32);
+    bufp->chgCData(oldp+35,((0x1fU & (vlSelf->io_instr 
                                       >> 0xfU))),5);
-    bufp->chgCData(oldp+52,((0x1fU & (vlSelf->io_instr 
+    bufp->chgCData(oldp+36,((0x1fU & (vlSelf->io_instr 
                                       >> 7U))),5);
-    bufp->chgIData(oldp+53,((0x3fffffffU & (~ (vlSelf->io_instr 
+    bufp->chgIData(oldp+37,((0x3fffffffU & (~ (vlSelf->io_instr 
                                                >> 2U)))),30);
 }
 

@@ -36,6 +36,66 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
         = (IData)((0U == (0xbe000000U & vlSelf->io_instr)));
     vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_29 
         = (IData)((0U == (0xfe000000U & vlSelf->io_instr)));
+    vlSelf->core__DOT__reg_0__DOT__casez_tmp = ((0x40000U 
+                                                 & vlSelf->io_instr)
+                                                 ? 
+                                                ((0x20000U 
+                                                  & vlSelf->io_instr)
+                                                  ? 
+                                                 ((0x10000U 
+                                                   & vlSelf->io_instr)
+                                                   ? 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_15
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_14)
+                                                   : 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_13
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_12))
+                                                  : 
+                                                 ((0x10000U 
+                                                   & vlSelf->io_instr)
+                                                   ? 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_11
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_10)
+                                                   : 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_9
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_8)))
+                                                 : 
+                                                ((0x20000U 
+                                                  & vlSelf->io_instr)
+                                                  ? 
+                                                 ((0x10000U 
+                                                   & vlSelf->io_instr)
+                                                   ? 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_7
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_6)
+                                                   : 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_5
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_4))
+                                                  : 
+                                                 ((0x10000U 
+                                                   & vlSelf->io_instr)
+                                                   ? 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_3
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_2)
+                                                   : 
+                                                  ((0x8000U 
+                                                    & vlSelf->io_instr)
+                                                    ? vlSelf->core__DOT__reg_0__DOT__regs_1
+                                                    : vlSelf->core__DOT__reg_0__DOT__regs_0))));
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_5 
         = ((0x20U & (vlSelf->io_instr << 5U)) | ((0x10U 
                                                   & (vlSelf->io_instr 
@@ -88,130 +148,6 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                                                                    & (~ 
                                                                       (vlSelf->io_instr 
                                                                        >> 0xeU))))))))));
-    vlSelf->core__DOT__reg_0__DOT__casez_tmp = ((0x80000U 
-                                                 & vlSelf->io_instr)
-                                                 ? 
-                                                ((0x40000U 
-                                                  & vlSelf->io_instr)
-                                                  ? 
-                                                 ((0x20000U 
-                                                   & vlSelf->io_instr)
-                                                   ? 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_31
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_30)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_29
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_28))
-                                                   : 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_27
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_26)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_25
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_24)))
-                                                  : 
-                                                 ((0x20000U 
-                                                   & vlSelf->io_instr)
-                                                   ? 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_23
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_22)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_21
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_20))
-                                                   : 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_19
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_18)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_17
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_16))))
-                                                 : 
-                                                ((0x40000U 
-                                                  & vlSelf->io_instr)
-                                                  ? 
-                                                 ((0x20000U 
-                                                   & vlSelf->io_instr)
-                                                   ? 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_15
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_14)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_13
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_12))
-                                                   : 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_11
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_10)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_9
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_8)))
-                                                  : 
-                                                 ((0x20000U 
-                                                   & vlSelf->io_instr)
-                                                   ? 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_7
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_6)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_5
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_4))
-                                                   : 
-                                                  ((0x10000U 
-                                                    & vlSelf->io_instr)
-                                                    ? 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_3
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_2)
-                                                    : 
-                                                   ((0x8000U 
-                                                     & vlSelf->io_instr)
-                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_1
-                                                     : vlSelf->core__DOT__reg_0__DOT__regs_0)))));
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_18 
         = ((0x80U & (vlSelf->io_instr << 7U)) | ((0x40U 
                                                   & (vlSelf->io_instr 

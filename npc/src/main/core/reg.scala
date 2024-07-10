@@ -14,7 +14,7 @@ class REG extends Module{
         val reg_write_data = Input(UInt(CVAL.DLEN.W))
     })
 
-    val regs = RegInit(VecInit(Seq.fill(16)(0.U(CVAL.DLEN.W))))
+    val regs = RegInit(VecInit(Seq.fill(CVAL.REG_NUM)(0.U(CVAL.DLEN.W))))
     regs(0.U):=0.U
     io.read_1:=regs(io.read_No_1)
     io.read_2:=regs(io.read_No_2)

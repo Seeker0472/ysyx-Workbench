@@ -46,7 +46,7 @@ VL_ATTR_COLD void Vcore___024root___eval_settle(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__stl(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 698, "", "Settle region did not converge.");
+            VL_FATAL_MT("build/core.sv", 586, "", "Settle region did not converge.");
         }
         __VstlIterCount = ((IData)(1U) + __VstlIterCount);
         __VstlContinue = 0U;
@@ -197,22 +197,6 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->core__DOT__reg_0__DOT__regs_13 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_14 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_15 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_16 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_17 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_18 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_19 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_20 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_21 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_22 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_23 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_24 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_25 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_26 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_27 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_28 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_29 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_30 = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__reg_0__DOT__regs_31 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__ifu__DOT__pc = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__exu__DOT___alu_io_result = VL_RAND_RESET_I(32);
