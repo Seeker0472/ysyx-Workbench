@@ -93,8 +93,8 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
     // if(op.name=="ecall/break")
     //   y else n
     if (
-      op.pattern == BitPat.N(11) ## BitPat
-        .Y(1) ## BitPat.N(13) ## BitPat("b1110011")
+      BitPat.N(11) ## BitPat
+        .Y(1) ## BitPat.N(13) ## BitPat("b1110011")==op.pattern
     ) BitPat(true.B)
     else BitPat(false.B)
 
