@@ -114,7 +114,7 @@ void update_reg_state()
     cpu->gpr[13] = dut->rootp->core__DOT__reg_0__DOT__regs_13;
     cpu->gpr[14] = dut->rootp->core__DOT__reg_0__DOT__regs_14;
     cpu->gpr[15] = dut->rootp->core__DOT__reg_0__DOT__regs_15;
-#ifdef CONFIG_RV64
+#ifndef CONFIG_RVE
     cpu->gpr[16] = dut->rootp->core__DOT__reg_0__DOT__regs_16;
     cpu->gpr[17] = dut->rootp->core__DOT__reg_0__DOT__regs_17;
     cpu->gpr[18] = dut->rootp->core__DOT__reg_0__DOT__regs_18;

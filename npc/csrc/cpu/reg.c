@@ -15,7 +15,7 @@ void isa_reg_display() {
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
   printf(" | ");
   printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
-  for(int i=0;i<16;i++){
+  for(int i=0;i<MUXDEF(CONFIG_RVE, 8, 16);i++){
     MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu->gpr[i],cpu->gpr[i]);,printf("%-4s \t%-20d\t%-10x\t",regs[i],cpu->gpr[i],cpu->gpr[i]););
       
       printf(" | ");
