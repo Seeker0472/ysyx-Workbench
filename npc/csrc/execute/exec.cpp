@@ -77,7 +77,6 @@ void print_inst_asm(paddr_t pc, word_t inst)
 
 Vcore *dut;
 unsigned int sim_time = 0;
-static int wave_enable = true;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
 {
@@ -143,12 +142,11 @@ void single_cycle()
 {
     dut->clock = 0;
     dut->eval();
-    if (wave_enable)
-        tfp->dump(sim_time++); // Dump波形信息
+    IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
+         
     dut->clock = 1;
     dut->eval();
-    if (wave_enable)
-        tfp->dump(sim_time++);            // Dump波形信息
+    IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
     dut->io_instr = mem_read(dut->io_pc); // 下一条指令
     update_reg_state();
 
@@ -173,11 +171,8 @@ void init_runtime()
     Verilated::traceEverOn(true); // 启用波形追踪
     tfp = new VerilatedVcdC;
     dut->trace(tfp, 99); // 跟踪99级信号
-    if (wave_enable)
-        tfp->open("./build/waveform.vcd"); // 打开VCD文件
-    else
-        tfp->open("/dev/null"); // 不开启追踪，放弃记录
-    reset(10);                  // 复位10个周期
+    MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");,tfp->open("/dev/null");)// 打开VCD文件
+    reset(5);                  // 复位5个周期
 }
 
 int run(int step)

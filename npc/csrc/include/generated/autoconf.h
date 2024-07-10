@@ -16,3 +16,4 @@
 #define CONFIG_TRACE_START 0
 #define CONFIG_TRACE 1
 #define CONFIG_ISA "riscv32"
+#define CONFIG_WAVE_FORM 1
