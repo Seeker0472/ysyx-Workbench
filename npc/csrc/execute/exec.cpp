@@ -42,7 +42,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     disassemble(p, buf + sizeof(buf) - p,
                 pc, (uint8_t *)&inst_in, ilen);
 #ifdef CONFIG_ITRACE_COND // 在condition为true的时候记录！
-    if (ITRACE_COND)
+    if (CONFIG_ITRACE_COND)
     {
         log_write("%s\n", _this->logbuf);
     } // 把缓冲区数据打印出来
