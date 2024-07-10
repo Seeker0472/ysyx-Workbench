@@ -48,7 +48,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
 #ifdef CONFIG_ITRACE_COND // 在condition为true的时候记录！
     if (CONFIG_ITRACE_COND)
     {
-        printf("BUF++%s\n",buf);
+        // printf("BUF++%s\n",buf);
         log_write("%s\n", buf);
     } // 把缓冲区数据打印出来
 #endif
