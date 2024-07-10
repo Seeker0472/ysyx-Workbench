@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <cstdint>
 #include <debug.h>
+
+void record_pread(paddr_t addr, int len);
+void record_pwrite(paddr_t addr, int len, word_t data);
 static uint32_t mem[10000000]  = {
     0x00448493,
     0x00448493,
@@ -27,6 +30,9 @@ static uint32_t mem[10000000]  = {
 
 uint32_t mem_read(uint32_t pc)
 {
+  //mtrace
+  //TODO: Write  Enable-------------------------------------------------
+  record_pread(pc,4);
   return mem[(pc - 0x80000000) / 4];
 }
 uint32_t warp_pmem_read(uint32_t addr){
