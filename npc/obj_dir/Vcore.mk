@@ -4,7 +4,7 @@
 # Execute this makefile from the object directory:
 #    make -f Vcore.mk
 
-default: Vcore
+default: /home/seeker/Develop/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so
 
 ### Constants...
 # Perl executable (from $PERL)
@@ -49,6 +49,7 @@ VM_USER_CFLAGS = \
 VM_USER_LDLIBS = \
 	-lreadline \
 	-lLLVM-14 \
+	-shared \
 
 # User .cpp files (from .cpp's on Verilator command line)
 VM_USER_CLASSES = \
@@ -114,7 +115,7 @@ state.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/state.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 
 ### Link rules... (from --exe)
-Vcore: $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) $(VM_PREFIX)__ALL.a $(VM_HIER_LIBS)
+/home/seeker/Develop/ysyx-workbench/nemu/build/riscv32-nemu-interpreter-so: $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) $(VM_PREFIX)__ALL.a $(VM_HIER_LIBS)
 	$(LINK) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) $(LIBS) $(SC_LIBS) -o $@
 
 
