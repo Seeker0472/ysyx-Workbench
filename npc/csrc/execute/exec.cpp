@@ -147,6 +147,7 @@ int run(int step)
         uint32_t pc = dut->io_pc;
         single_cycle();
         uint32_t addr = dut->io_inst_now;
+        //I-Trace!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (step < PRINT_INST_MIN)
             print_inst_asm(pc, addr);
         // TODO::在某一些条件下打印指令！！！！
