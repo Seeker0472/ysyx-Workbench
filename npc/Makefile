@@ -18,7 +18,7 @@ CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' )
 ABS_CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' -exec realpath {} \;)
 C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
-LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS -lriscv32-nemu-interpreter-so
+LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS riscv32-nemu-interpreter-so
 
 # $(shell llvm-config --cxxflags)
 # deleted:::::   --CFLAGS -D__STDC_FORMAT_MACROS
