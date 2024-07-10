@@ -39,18 +39,22 @@ object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
 object Use_IMM_2 extends BoolDecodeField[InsP] {
   def name: String = "Use_IMM"
   // override def chiselType = Inst_Type_Enum()
-  def genTable(op: InsP)= {
-    if(op.Inst_Type==Inst_Type_Enum.I_Type||op.Inst_Type==Inst_Type_Enum.S_Type||op.Inst_Type==Inst_Type_Enum.J_Type)
-      y else n
+  def genTable(op: InsP) = {
+    if (
+      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.J_Type
+    )
+      y
+    else n
   }
 }
 //src1是否选择PC -- J-Type & B-Type
 object Use_PC_1 extends BoolDecodeField[InsP] {
   def name: String = "Use_PC_1"
   // override def chiselType = Inst_Type_Enum()
-  def genTable(op: InsP)= {
-    if(op.Inst_Type==Inst_Type_Enum.J_Type||op.Inst_Type==Inst_Type_Enum.B_Type)
-      y else n
+  def genTable(op: InsP) = {
+    if (op.Inst_Type == Inst_Type_Enum.J_Type || op.Inst_Type == Inst_Type_Enum.B_Type)
+      y
+    else n
   }
 }
 
@@ -58,9 +62,10 @@ object Use_PC_1 extends BoolDecodeField[InsP] {
 object Is_Jump extends BoolDecodeField[InsP] {
   def name: String = "Is_Jump"
   // override def chiselType = Inst_Type_Enum()
-  def genTable(op: InsP)= {
-    if(op.Inst_Type==Inst_Type_Enum.J_Type||op.opcode==BitPat("b1100111"))
-      y else n
+  def genTable(op: InsP) = {
+    if (op.Inst_Type == Inst_Type_Enum.J_Type || op.opcode == BitPat("b1100111"))
+      y
+    else n
   }
 
 }
@@ -69,27 +74,31 @@ object Is_Jump extends BoolDecodeField[InsP] {
 object R_Write_Enable extends BoolDecodeField[InsP] {
   def name: String = "Reg_W_En"
   // override def chiselType = Inst_Type_Enum()
-  def genTable(op: InsP)= {
-    if(op.Inst_Type==Inst_Type_Enum.S_Type||op.Inst_Type==Inst_Type_Enum.B_Type)
-      n else y
+  def genTable(op: InsP) = {
+    if (op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type)
+      n
+    else y
   }
 }
 
 object Is_Ebreak extends BoolDecodeField[InsP] {
   def name: String = "Is_Ebreak"
   // override def chiselType = Inst_Type_Enum()
-  def genTable(op: InsP)= {
+  def genTable(op: InsP) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
-      // y else n
-    if(op.bitPat==BitPat("b??????????????000?????1110011"))
-      y else n
+    // y else n
+    // if(op.bitPat==BitPat("b??????????????000?????1110011"))
+    //   y else n
     // if(op.name=="ecall/break")
     //   y else n
+    if (
+      op.bitPat == BitPat.N(11) ## BitPat
+        .Y(1) ## BitPat.N(13) ## BitPat("b1110011")
+    ) BitPat(true.B)
+    else BitPat(false.B)
 
   }
 }
-
-
 
 class Decoder extends Module {
   val io = IO(new Bundle {
@@ -231,23 +240,24 @@ class Decoder extends Module {
 
   //Imms
   val imm_I_Raw = io.instr(31, 20)
-  val immI = Cat(Fill(20, imm_I_Raw(11)), imm_I_Raw)
+  val immI      = Cat(Fill(20, imm_I_Raw(11)), imm_I_Raw)
   val imm_S_Raw = Cat(io.instr(31, 25), io.instr(11, 7))
-  val immS  = Cat(Fill(20, imm_S_Raw(11)), imm_S_Raw)
+  val immS      = Cat(Fill(20, imm_S_Raw(11)), imm_S_Raw)
   val imm_B_Raw = Cat(io.instr(31, 31), io.instr(7, 7), io.instr(11, 7), io.instr(30, 25), io.instr(11, 8), 0.U(1.W))
-  val immB = Cat(Fill(19, imm_B_Raw(12)), imm_B_Raw)
+  val immB      = Cat(Fill(19, imm_B_Raw(12)), imm_B_Raw)
   val imm_U_Raw = Cat(io.instr(31, 12), 0.U(12.W))
-  val immU = imm_U_Raw
+  val immU      = imm_U_Raw
   val imm_J_Raw = Cat(io.instr(31, 31), io.instr(19, 12), io.instr(20, 20), io.instr(30, 21), 0.U(1.W))
-  val immJ = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
+  val immJ      = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
 
   // val opcode = io.instr(6, 0)
   val rs1 = io.instr(19, 15)
   val rs2 = io.instr(24, 20)
   val rd  = io.instr(11, 7)
 
-  val decodedResults = new DecodeTable(Patterns, Seq(InstType,Use_IMM_2,Use_PC_1,Is_Jump,R_Write_Enable,Is_Ebreak)).decode(io.instr)
-  val Type    = decodedResults(InstType)
+  val decodedResults =
+    new DecodeTable(Patterns, Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak)).decode(io.instr)
+  val Type = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(
       // Inst_Type_Enum.R_Type -> Rval2, // R-Type
@@ -265,13 +275,13 @@ class Decoder extends Module {
 
   //控制逻辑
   io.out.alu_use_Imm_2 := decodedResults(Use_IMM_2)
-  io.out.alu_use_pc := decodedResults(Use_PC_1)
-  
+  io.out.alu_use_pc    := decodedResults(Use_PC_1)
+
   //目前只用实现加法
-  io.out.alu_op_type := ALU_Op.add
-  io.out.pc_jump := decodedResults(Is_Jump)
+  io.out.alu_op_type      := ALU_Op.add
+  io.out.pc_jump          := decodedResults(Is_Jump)
   io.out.reg_write_enable := decodedResults(R_Write_Enable)
-  
-  io.out.ebreak:=decodedResults(Is_Ebreak)
+
+  io.out.ebreak := decodedResults(Is_Ebreak)
 
 }
