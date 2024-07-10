@@ -144,13 +144,11 @@ int run(int step)
         default:
             nemu_state.state = NEMU_RUNNING;
         }
+        uint32_t pc = dut->io_pc;
         single_cycle();
+        uint32_t addr = dut->io_inst_now;
         if (step < PRINT_INST_MIN)
-        {
-            uint32_t pc = dut->io_pc;
-            uint32_t addr = dut->io_inst_now;
             print_inst_asm(pc, addr);
-        }
         // TODO::在某一些条件下打印指令！！！！
 
         if (nemu_state.state != NEMU_RUNNING)
