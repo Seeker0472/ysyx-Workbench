@@ -66,8 +66,7 @@ object Is_Jump extends BoolDecodeField[InsP] {
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (op.Inst_Type == Inst_Type_Enum.J_Type || op.opcode.rawString.matches("1100111"))
-      y
-    else n
+      y else n
   }
 
 }
