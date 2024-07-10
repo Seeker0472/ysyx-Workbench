@@ -41,12 +41,13 @@ uint32_t warp_pmem_read(uint32_t addr){
 
 void init_img(char *img_file)
 {
+  size_t size = 0;
   if (img_file != NULL)
   {
     FILE *fp = fopen(img_file, "rb");
     // Assert(fp, "Can not open '%s'", img_file);
     fseek(fp, 0, SEEK_END);
-    long size = ftell(fp);
+    size = ftell(fp);
     // Log("The image is %s, size = %ld", img_file, size);
     Log("The image is %s, size = %ld", img_file, size);
     fseek(fp, 0, SEEK_SET);
