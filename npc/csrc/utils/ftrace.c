@@ -61,7 +61,7 @@ void read_symbol_table(const char *filename) {
     fseek(file,header.e_shoff,SEEK_SET);
     // 读取节头表
     // Elf64_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum);
-    MUXDEF(CONFIG_RV64,Elf64_Shdr *shdrs = (Elf32_Shdr*)malloc(header.e_shentsize * header.e_shnum);, Elf32_Shdr *shdrs = malloc(header.e_shentsize * header.e_shnum););
+    MUXDEF(CONFIG_RV64,Elf64_Shdr *shdrs = (Elf32_Shdr*)malloc(header.e_shentsize * header.e_shnum);, Elf32_Shdr *shdrs = (Elf32_Shdr *)malloc(header.e_shentsize * header.e_shnum););
     if(fread(shdrs, header.e_shentsize, header.e_shnum, file)!= header.e_shnum)
 		assert(0);//读取的数量不对
 	// Log("%lu-----%d",fread(shdrs, header.e_shentsize, header.e_shnum, file),header.e_shnum);
@@ -99,7 +99,7 @@ void read_symbol_table(const char *filename) {
     }
     //读取Symbol
     // Elf64_Sym *symbols = malloc(symtab->sh_size);
-    MUXDEF(CONFIG_RV64,Elf64_Sym *symbols = (Elf64_Sym*)malloc(symtab->sh_size);,Elf32_Sym *symbols = malloc(symtab->sh_size););
+    MUXDEF(CONFIG_RV64,Elf64_Sym *symbols = (Elf64_Sym*)malloc(symtab->sh_size);,Elf32_Sym *symbols = (Elf32_Sym *)malloc(symtab->sh_size););
 
     fseek(file, symtab->sh_offset, SEEK_SET);
     if(fread(symbols, 1, symtab->sh_size, file)!=symtab->sh_size)
@@ -140,7 +140,7 @@ void init_ftrace(char *filepath){
 	}
 	Log("Reading Symbol Table from %s",filepath);
 	//初始化头结点
-	nodes=malloc(sizeof(trace_node));
+	nodes=(trace_node*)malloc(sizeof(trace_node));
 	nodes->length=0;nodes->start_addr=0;nodes->next=NULL;
 
     read_symbol_table(filepath);
