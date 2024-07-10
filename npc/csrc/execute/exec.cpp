@@ -46,7 +46,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
 #ifdef CONFIG_ITRACE_COND // 在condition为true的时候记录！
     if (CONFIG_ITRACE_COND)
     {
-        log_write("%s\n", _this->logbuf);
+        log_write("%s\n", buf);
     } // 把缓冲区数据打印出来
 #endif
 #endif
