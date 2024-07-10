@@ -19,7 +19,7 @@ class REG extends Module{
     io.read_1:=regs(io.read_No_1)
     io.read_2:=regs(io.read_No_2)
 
-  when(io.write_en && io.write_No =/= 0.U) {
+  when(io.write_en && io.write_No =/= 0.U) {//保证寄存器不被写入
     regs(io.write_No) := io.reg_write_data
   }
 }

@@ -25,6 +25,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
     CData/*7:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_10;
     CData/*6:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13;
     CData/*7:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_18;
+    CData/*0:0*/ core__DOT__reg_0__DOT___GEN;
     CData/*0:0*/ __VstlFirstIteration;
     CData/*0:0*/ __VicoFirstIteration;
     CData/*0:0*/ __Vtrigprevexpr___TOP__clock__0;
