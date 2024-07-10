@@ -20,11 +20,12 @@ case class InsP(
   val Inst_Type: Inst_Type_Enum.Type,
   val name_in:   String = "Not Implemented!",
   val func7:     BitPat = BitPat.dontCare(7),
+  val rs2 :BitPat = BitPat.dontCare(5),
   val func3:     BitPat = BitPat.dontCare(3),
   val opcode:    BitPat)
     extends DecodePattern {
-  def bitPat: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
-  def pattern: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
+  def bitPat: BitPat = func7 ##rs2## BitPat.dontCare(5) ## func3 ## BitPat.dontCare(5) ## opcode
+  // def pattern: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
   def name:   String = name_in
 }
 
@@ -87,7 +88,7 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
-    if(op.opcode.rawString.matches("1110011"))
+    if(op.opcode.rawString.matches("1110011")&&op.func3.rawString.matches("000")&&op.rs2.rawString.matches(("00001")))
     y else n
     // if(op.bitPat==BitPat("b??????????????000?????1110011"))
     //   y else n
@@ -236,7 +237,7 @@ class Decoder extends Module {
     InsP(name_in = "lui", Inst_Type   = Inst_Type_Enum.U_Type, opcode = BitPat("b0110111")),
     InsP(name_in = "auipc", Inst_Type = Inst_Type_Enum.U_Type, opcode = BitPat("b0010111")),
     //blocks
-    InsP(name_in = "ecall/break", Inst_Type = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"))
+    InsP(name_in = "ecall/break", Inst_Type = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"),func3 = BitPat("b000"),rs2=BitPat("b00001"))
     // InsP(name_in = "ebreak", opcode = BitPat("0010111"))
   )
 
