@@ -50,9 +50,9 @@ void init_img(char *img_file)
     fseek(fp, 0, SEEK_END);
     mem_size = ftell(fp);
     // Log("The image is %s, size = %ld", img_file, size);
-    Log("The image is %s, size = %ld", img_file, size);
+    Log("The image is %s, size = %ld", img_file, mem_size);
     fseek(fp, 0, SEEK_SET);
-    int ret = fread(mem, size, 1, fp);
+    int ret = fread(mem, mem_size, 1, fp);
     // assert(ret == 1);
     fclose(fp);
     // return size;
