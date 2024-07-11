@@ -49,7 +49,7 @@ uint32_t mem_read(uint32_t pc)
 extern "C" int pmem_read(int raddr)
 {
   // 总是读取地址为`raddr & ~0x3u`的4字节返回
-  // log("mem_read");
+  log("mem_read");
   return mem_read(raddr);
 }
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
@@ -57,7 +57,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   // 总是往地址为`waddr & ~0x3u`的4字节按写掩码`wmask`写入`wdata`
   // `wmask`中每比特表示`wdata`中1个字节的掩码,
   // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
-  // log("mem_write");
+  log("mem_write");
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
   uint32_t new_data = current_data;
