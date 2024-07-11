@@ -1434,6 +1434,8 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
         Vcore___024unit____Vdpiimwrap_pmem_read_TOP____024unit(vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp, vlSelf->__Vfunc_pmem_read__1__Vfuncout);
         vlSelf->core__DOT__exu__DOT___mem_read_data 
             = vlSelf->__Vfunc_pmem_read__1__Vfuncout;
+    } else {
+        vlSelf->core__DOT__exu__DOT___mem_read_data = 0U;
     }
     if (((0x1ffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_9)) 
          | (IData)(((0x23U == (0x3fU & vlSelf->io_instr)) 
@@ -1451,8 +1453,6 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                                                                     == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
                                                                     ? 0xfU
                                                                     : 0xffU))));
-    } else {
-        vlSelf->core__DOT__exu__DOT___mem_read_data = 0U;
     }
     vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19 
         = (0xffffU & ((2U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
