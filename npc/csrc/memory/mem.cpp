@@ -51,7 +51,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   // Log("mem_write");
   int length = 0;
   for (int i = 0; i < 4; i++)
-    if (wdata & (1 << (*2)))
+    if (wdata & (1 << (i*2)))
       length++;
 
   record_pwrite(waddr, length, wdata);
