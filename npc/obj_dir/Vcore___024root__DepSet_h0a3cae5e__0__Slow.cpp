@@ -1448,15 +1448,15 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                          : ((1U & (IData)(vlSelf->core__DOT___decoder_io_out_alu_op_type))
                              ? VL_LTS_III(32, vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1, vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)
                              : VL_SHIFTRS_III(32,32,32, vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1, 
-                                              (0xfU 
+                                              (0x1fU 
                                                & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))))
             : ((4U & (IData)(vlSelf->core__DOT___decoder_io_out_alu_op_type))
                 ? ((2U & (IData)(vlSelf->core__DOT___decoder_io_out_alu_op_type))
                     ? ((1U & (IData)(vlSelf->core__DOT___decoder_io_out_alu_op_type))
                         ? VL_SHIFTR_III(32,32,32, vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1, 
-                                        (0xfU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2))
+                                        (0x1fU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2))
                         : (vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 
-                           << (0xfU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))
+                           << (0x1fU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))
                     : ((1U & (IData)(vlSelf->core__DOT___decoder_io_out_alu_op_type))
                         ? (vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 
                            & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)

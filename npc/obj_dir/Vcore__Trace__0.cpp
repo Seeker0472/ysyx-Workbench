@@ -90,9 +90,9 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
         bufp->chgIData(oldp+15,(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1),32);
         bufp->chgIData(oldp+16,(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2),32);
         bufp->chgIData(oldp+17,(vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp),32);
-        bufp->chgQData(oldp+18,((0x7fffffffffffULL 
+        bufp->chgQData(oldp+18,((0x7fffffffffffffffULL 
                                  & ((QData)((IData)(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1)) 
-                                    << (0xfU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))),47);
+                                    << (0x1fU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))),63);
         bufp->chgBit(oldp+20,(((4U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
                                 ? ((2U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
                                     ? ((1U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))

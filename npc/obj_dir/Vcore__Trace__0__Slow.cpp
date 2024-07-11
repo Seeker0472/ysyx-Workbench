@@ -75,7 +75,7 @@ VL_ATTR_COLD void Vcore___024root__trace_init_sub__TOP__0(Vcore___024root* vlSel
     tracep->declBus(c+4,0,"io_in_alu_op_type",-1, VerilatedTraceSigDirection::INPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 3,0);
     tracep->declBus(c+18,0,"io_result",-1, VerilatedTraceSigDirection::OUTPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
     tracep->declBus(c+18,0,"casez_tmp",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
-    tracep->declQuad(c+19,0,"sll",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 46,0);
+    tracep->declQuad(c+19,0,"sll",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 62,0);
     tracep->popPrefix();
     tracep->pushPrefix("comp", VerilatedTracePrefixType::SCOPE_MODULE);
     tracep->declBus(c+12,0,"io_src1",-1, VerilatedTraceSigDirection::INPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
@@ -245,10 +245,9 @@ VL_ATTR_COLD void Vcore___024root__trace_full_0_sub_0(Vcore___024root* vlSelf, V
     bufp->fullIData(oldp+16,(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1),32);
     bufp->fullIData(oldp+17,(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2),32);
     bufp->fullIData(oldp+18,(vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp),32);
-    bufp->fullQData(oldp+19,((0x7fffffffffffULL & ((QData)((IData)(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1)) 
-                                                   << 
-                                                   (0xfU 
-                                                    & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))),47);
+    bufp->fullQData(oldp+19,((0x7fffffffffffffffULL 
+                              & ((QData)((IData)(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1)) 
+                                 << (0x1fU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))),63);
     bufp->fullBit(oldp+21,(((4U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
                              ? ((2U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
                                  ? ((1U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
