@@ -320,7 +320,7 @@ class Decoder extends Module {
     InsP(name_in = "bne", Inst_Type  = Inst_Type_Enum.B_Type, opcode = BitPat("b1100011"), func3 = BitPat("b001")),
     InsP(name_in = "blt", Inst_Type  = Inst_Type_Enum.B_Type, opcode = BitPat("b1100011"), func3 = BitPat("b100")),
     InsP(name_in = "bge", Inst_Type  = Inst_Type_Enum.B_Type, opcode = BitPat("b1100011"), func3 = BitPat("b101")),
-    InsP(name_in = "blut", Inst_Type = Inst_Type_Enum.B_Type, opcode = BitPat("b1100011"), func3 = BitPat("b110")),
+    InsP(name_in = "bltu", Inst_Type = Inst_Type_Enum.B_Type, opcode = BitPat("b1100011"), func3 = BitPat("b110")),
     InsP(name_in = "bgeu", Inst_Type = Inst_Type_Enum.B_Type, opcode = BitPat("b1100011"), func3 = BitPat("b111")),
     //block5
     InsP(name_in = "jal", Inst_Type  = Inst_Type_Enum.J_Type, opcode = BitPat("b1101111")),

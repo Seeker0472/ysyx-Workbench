@@ -142,6 +142,7 @@ void update_reg_state()
 
 void single_cycle()
 {
+    dut->io_instr = mem_read(dut->io_pc); // 取指令
     dut->clock = 0;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
@@ -149,7 +150,8 @@ void single_cycle()
     dut->clock = 1;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
-    dut->io_instr = mem_read(dut->io_pc); // 下一条指令
+    printf("%x\n",dut->io_pc);
+    // dut->io_instr = mem_read(dut->io_pc); // 下一条指令
     update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
@@ -163,6 +165,10 @@ void single_cycle()
 void reset(int n)
 {
     dut->reset = 1;
+    dut->clock = 0;
+    dut->eval();    
+    dut->clock = 1;
+    dut->eval();
     while (n-- > 0)
         single_cycle();
     dut->reset = 0;
