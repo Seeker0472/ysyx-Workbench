@@ -3,13 +3,6 @@
 #include <debug.h>
 #include <common.h>
 
-void log(const char *log)
-{
-  Log("%s\n", log);
-}
-
-
-
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, int len, word_t data);
 uint32_t mem[0x8000000] = {
@@ -37,12 +30,10 @@ uint32_t mem[0x8000000] = {
 };
 word_t mem_size = 84;
 
-
 uint32_t mem_read(uint32_t pc)
 {
   // //mtrace
   // //TODO: Write  Enable-------------------------------------------------
-  // record_pread(pc,4);
   return mem[(pc - 0x80000000) / 4];
 }
 
@@ -57,7 +48,13 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   // 总是往地址为`waddr & ~0x3u`的4字节按写掩码`wmask`写入`wdata`
   // `wmask`中每比特表示`wdata`中1个字节的掩码,
   // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
-  log("mem_write");
+  // Log("mem_write");
+  int length = 0;
+  for (int i = 0; i < 4; i++)
+    if (wdata & (1 << (*2)))
+      length++;
+
+  record_pwrite(waddr, length, wdata);
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
   uint32_t new_data = current_data;
@@ -72,9 +69,9 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
 
-
 uint32_t warp_pmem_read(uint32_t addr)
 {
+  record_pread(addr, 4);
   return mem_read(addr);
 }
 
