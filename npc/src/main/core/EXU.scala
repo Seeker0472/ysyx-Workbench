@@ -64,7 +64,7 @@ class EXU extends Module {
   val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
   val pc_plus4 = io.in.pc + 4.U
 
-  val next_pc  =Mux(io.in.pc_jump || ( io.in.is_branch && go_branch), result, pc_plus4)
+  val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
   io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, alu.io.result)
   io.out.n_pc    := next_pc
 }
@@ -76,7 +76,7 @@ class Branch_comp extends Module {
     val comp_type = Input(Branch_Type())
     val result    = Output(Bool())
   })
-  MuxLookup(io.comp_type, false.B)(
+  io.result := MuxLookup(io.comp_type, false.B)(
     Seq(
       Branch_Type.beq -> (io.src1 === io.src2),
       Branch_Type.bne -> (io.src1 =/= io.src2),
