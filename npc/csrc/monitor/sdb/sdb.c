@@ -120,7 +120,7 @@ static int cmd_scan_mem(char *args){
     // printf("readMem %lu %lu %lu %lu" ,warp_pmem_read(addr,1),warp_pmem_read(addr+1,1),warp_pmem_read(addr+2,1),warp_pmem_read(addr+3,1));
     #ifdef RV64
     printf("<0x%010x>    0x%08lx\n",addr,warp_pmem_read(addr));
-    #elif ISA_riscv
+    #else
     printf("<0x%010x>    0x%08x\n",addr,warp_pmem_read(addr));
     #endif
     addr+=4;
