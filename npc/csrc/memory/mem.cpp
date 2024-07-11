@@ -41,7 +41,7 @@ extern "C" int pmem_read(int raddr)
 {
   // 总是读取地址为`raddr & ~0x3u`的4字节返回
   // Log("mem_read");
-  record_pread(addr, 4);
+  record_pread(raddr, 4);
   return mem_read(raddr);
 }
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
