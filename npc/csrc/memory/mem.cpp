@@ -49,7 +49,7 @@ uint32_t mem_read(uint32_t pc)
 extern "C" int pmem_read(int raddr)
 {
   // 总是读取地址为`raddr & ~0x3u`的4字节返回
-  log("mem_read");
+  Log("mem_read");
   return mem_read(raddr);
 }
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
