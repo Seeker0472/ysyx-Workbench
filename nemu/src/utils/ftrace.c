@@ -37,6 +37,7 @@ const char *find_symbol(paddr_t addr){
     // if(!nodes){
     //     return;
     // }
+            // Log("Request_ADDR:  %x",addr);
     trace_node* now=nodes->next;
     for(;now!=NULL;now=now->next){
         if(now->start_addr<=addr&&now->start_addr+now->length>addr){
