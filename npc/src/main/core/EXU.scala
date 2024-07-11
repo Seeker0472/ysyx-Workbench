@@ -12,7 +12,7 @@ class EXU extends Module {
     val out = Output(new EXU_O)
   })
   val alu_val1 = Mux(io.in.alu_use_pc, io.in.pc, io.in.src1)
-  val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, io.in.src1)
+  val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, io.in.src2)
 
   val mem = Module(new MEM()) //TODO::::::把Mem模块放在执行单元是否科学？？？
 
