@@ -44,11 +44,7 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-<<<<<<< HEAD
   {"0x[0-9,a-f,A-F]+", TK_HEX}, // hex-TODO:怎么处理？
-=======
-  {"0x[0-9]+", TK_HEX}, // hex-TODO:怎么处理？
->>>>>>> 2ccb128 (before starting pa2)
   {"[0-9]+",TK_NUM},
   {" +", TK_NOTYPE},    // spaces
   {"\\$\\w+",TK_REG},     // reg-TODO:怎么处理？
@@ -155,13 +151,9 @@ static bool make_token(char *e)
           break;
         case TK_REG:
           tokens[nr_token].type = TK_REG;
-<<<<<<< HEAD
           strncpy(tokens[nr_token].str,substr_start,substr_len);
           (tokens[nr_token].str)[substr_len] = '\0';
           nr_token++;
-=======
-          strncpy(tokens[nr_token++].str,substr_start,substr_len);
->>>>>>> 2ccb128 (before starting pa2)
           break;
         default:
           tokens[nr_token++].type = rules[i].token_type;
@@ -196,67 +188,6 @@ word_t expr(char *e, bool *success) {
   return result;
 }
 
-long eval(int p,int q) {
-  if (p > q) {
-    /* Bad expression */
-    assert(0);
-  }
-  else if (p == q) {
-    /* Single token.
-     * For now this token should be a number.
-     * Return the value of the number.
-     */
-    if(tokens[p].type==TK_REG){
-      bool success=false;
-      word_t result=isa_reg_str2val(tokens[p].str,&success);
-      if(success){
-        return result;
-      }else{
-        assert(0);
-      }
-    }
-    if(tokens[p].type==TK_HEX){
-      long val;
-      sscanf(tokens[p].str,"%lx",&val);
-      return val;
-    }
-    if(tokens[p].type!=TK_NUM)
-      assert(0);
-    long val;
-    // char* str;
-    //TODO:溢出怎么办？
-    sscanf(tokens[p].str,"%lu",&val);
-    return val;
-  }
-  else if (check_parentheses(p, q) == true) {
-    /* The expression is surrounded by a matched pair of parentheses.
-     * If that is the case, just throw away the parentheses.
-     */
-    return eval(p + 1, q - 1);
-  }
-  else {
-    //先计算主运算符
-    int op=get_main_op(p,q);
-    int op_type = tokens[op].type;
-    long val1 =0;
-    if(op_type!=TK_DEREFENCE)
-      val1= eval(p, op - 1);
-    long val2 = eval(op + 1, q);
-
-    switch (op_type) {
-      case '+': return val1 + val2;
-      case '-': return val1-val2;
-      case '*': return val1*val2;
-      case '/': return val1/val2;
-      case TK_EQ :return val1==val2;
-      case TK_NOTEQ :return val1!=val2;
-      case TK_AND: return val1&&val2;
-      case TK_DEREFENCE: return warp_pmem_read(val2);//TODO!-读出一个整数
-      // case 
-      default: assert(0);
-    }
-  }
-}
 
 int get_main_op(int p,int q){
   //逐个扫描(+ -)>(* /)
@@ -400,82 +331,3 @@ long eval(int p,int q) {
   }
 }
 
-int get_main_op(int p,int q){
-  //逐个扫描(+ -)>(* /)
-  //遇到括号要处理
-  int pos=-1;
-  char stack[32];
-  int top=0;
-  int priority=-1;//运算符优先级,参考 https://en.cppreference.com/w/c/language/operator_precedence
-  while(p<=q){
-    switch(tokens[p].type){
-      case TK_DEREFENCE:
-        if(top==0&&priority<2){
-          pos=p;
-          priority=2;
-        }
-      break;
-      case '+':
-      case '-':
-      if(top==0&&priority<=4){
-          pos=p;
-          priority=4;
-      }
-      break;
-      case '*':
-      case '/':
-        // if(top==0&&(pos==-1||!(tokens[pos].type=='+'||tokens[pos].type=='-'))){
-        if(top==0&&priority<=3){
-          pos=p;
-          priority=3;
-        }
-      break;
-      case TK_EQ:
-      case TK_NOTEQ:
-        if(top==0&&priority<7){
-          pos=p;
-          priority=7;
-        }
-      break;
-      case TK_AND:
-        if(top==0&&priority<11){
-          pos=p;
-          priority=11;
-        }
-      break;
-      case '(':
-        stack[top++]='(';
-      break;
-      case ')':
-        if(stack[top-1]=='(')
-          top--;
-        else
-          assert(0);//括号不匹配！
-      break;
-      default:
-    }
-  p++;
-  }
-  return pos;
-}
-
-bool check_parentheses(int p,int q){
-  if(tokens[p].type=='('){
-  // char stack1[32]={};
-  int top=0;
-  while(p<q){
-    if(tokens[p].type=='('){
-      // stack1[top++]='(';
-      top++;
-    }
-    if(tokens[p].type==')'){
-      top--;
-    }
-    if(top==0)
-      return false;
-    p++;
-  }
-  return true;
-}
-return false;
-}
