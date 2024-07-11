@@ -187,6 +187,8 @@ void ftrace_check_inst(paddr_t pc_now, word_t inst)
 {
     if (prev_call)
         ftrace_func_call(pc_now, inst);
+    if (prev_ret)
+        ftrace_func_ret(pc_now, inst);
     if (((inst & 0xfff) == 0xef) || ((inst & 0x7fff) == 0xe7))
         prev_call = true;
     else
@@ -196,6 +198,5 @@ void ftrace_check_inst(paddr_t pc_now, word_t inst)
         prev_ret = true;
     else
         prev_ret = false;
-    if (prev_ret)
-        ftrace_func_ret(pc_now, inst);
+
 }
