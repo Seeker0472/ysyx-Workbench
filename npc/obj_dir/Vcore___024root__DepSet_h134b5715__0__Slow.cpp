@@ -46,7 +46,7 @@ VL_ATTR_COLD void Vcore___024root___eval_settle(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__stl(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 608, "", "Settle region did not converge.");
+            VL_FATAL_MT("build/core.sv", 605, "", "Settle region did not converge.");
         }
         __VstlIterCount = ((IData)(1U) + __VstlIterCount);
         __VstlContinue = 0U;
@@ -171,7 +171,6 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_5 = VL_RAND_RESET_I(6);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_6 = VL_RAND_RESET_I(7);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_11 = VL_RAND_RESET_I(8);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_12 = VL_RAND_RESET_I(9);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13 = VL_RAND_RESET_I(10);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_14 = VL_RAND_RESET_I(7);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16 = VL_RAND_RESET_I(16);
@@ -182,7 +181,6 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->core__DOT__decoder__DOT__casez_tmp = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_29 = VL_RAND_RESET_I(1);
     vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_30 = VL_RAND_RESET_I(1);
-    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_31 = VL_RAND_RESET_I(7);
     vlSelf->core__DOT__reg_0__DOT__regs_0 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_1 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_2 = VL_RAND_RESET_I(32);
