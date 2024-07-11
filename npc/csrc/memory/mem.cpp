@@ -8,12 +8,7 @@ void log(const char *log)
   Log("%s\n", log);
 }
 
-extern "C" int pmem_read(int raddr)
-{
-  // 总是读取地址为`raddr & ~0x3u`的4字节返回
-  // log("mem_read");
-  return mem_read(raddr);
-}
+
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, int len, word_t data);
@@ -41,6 +36,22 @@ uint32_t mem[10000000] = {
     0x00448493,
 };
 word_t mem_size = 84;
+
+
+uint32_t mem_read(uint32_t pc)
+{
+  // //mtrace
+  // //TODO: Write  Enable-------------------------------------------------
+  // record_pread(pc,4);
+  return mem[(pc - 0x80000000) / 4];
+}
+
+extern "C" int pmem_read(int raddr)
+{
+  // 总是读取地址为`raddr & ~0x3u`的4字节返回
+  // log("mem_read");
+  return mem_read(raddr);
+}
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
 {
   // 总是往地址为`waddr & ~0x3u`的4字节按写掩码`wmask`写入`wdata`
@@ -60,13 +71,8 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   }
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
-uint32_t mem_read(uint32_t pc)
-{
-  // //mtrace
-  // //TODO: Write  Enable-------------------------------------------------
-  // record_pread(pc,4);
-  return mem[(pc - 0x80000000) / 4];
-}
+
+
 uint32_t warp_pmem_read(uint32_t addr)
 {
   return mem_read(addr);
