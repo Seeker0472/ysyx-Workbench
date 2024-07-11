@@ -73,7 +73,7 @@ gdb:
 	make -j -C obj_dir -f Vcore.mk Vcore
 	gdb   --args ./obj_dir/Vcore  $(ARGS) $(IMG)
 all: verilog sim
-	# @echo "所有 .c 文件的绝对路径："
+	# @echo "所有文件的绝对路径："
 	# @echo "$(C_CPP_ABS)"
 -include ../Makefile
 

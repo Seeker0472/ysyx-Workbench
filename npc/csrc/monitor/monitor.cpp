@@ -78,8 +78,8 @@ void init_monitor(int argc, char *argv[]){
     init_runtime();
     // 初始化反汇编
     IFDEF(CONFIG_ITRACE, init_disasm((MUXDEF(CONFIG_RV64, "riscv64","riscv32")"-pc-linux-gnu")));
-    init_ftrace(elf_file);
-    difftest_init_all();
+    IFDEF(CONFIG_FTRACE,init_ftrace(elf_file););
+    IFDEF(CONFIG_DIFFTEST,difftest_init_all(););
     welcome();
     // run();
 }

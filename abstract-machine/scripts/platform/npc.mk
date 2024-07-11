@@ -14,7 +14,7 @@ LDFLAGS   += -T $(AM_HOME)/scripts/linker.ld \
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\"
 
-NPC_ARGS ?=
+NPC_ARGS ?= -l $(shell dirname $(IMAGE).elf)/nemu-log.txt -b
 
 .PHONY: $(AM_HOME)/am/src/riscv/npc/trm.c
 
