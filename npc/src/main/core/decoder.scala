@@ -8,10 +8,8 @@ import core.IO._
 import chisel3.util.BitPat
 import chisel3.util.experimental.decode.DecodeField
 import chisel3.util.experimental.decode._
-//TODO::Decoder API0
-object Inst extends ChiselEnum {
-  val inv, add, jal, sub, xor, or, and, sll, srl, sra, slt, lh = Value
-}
+
+
 object Inst_Type_Enum extends ChiselEnum {
   val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type = Value
 }
@@ -89,16 +87,20 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
     if(op.opcode.rawString.matches("1110011")&&op.func3.rawString.matches("000")&&op.rs2.rawString.matches(("00001")))
     y else n
-    // if(op.bitPat==BitPat("b??????????????000?????1110011"))
-    //   y else n
-    // if(op.name=="ecall/break")
-    //   y else n
-    // if (
-    //   BitPat.N(11) ## BitPat
-    //     .Y(1) ## BitPat.N(13) ## BitPat("b1110011")==op.pattern
-    // ) BitPat(true.B)
-    // else BitPat(false.B)
-
+  }
+}
+object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
+  def name: String = "InstType"
+  override def chiselType = ALU_Op()
+  def genTable(op: InsP): BitPat = {
+    var op_type=ALU_Op.inv
+    op.name_in match{
+      case "add" =>ALU_Op.add
+      case "addi" =>ALU_Op.add
+      case "jal" =>ALU_Op.add
+      case "jalr" =>ALU_Op.add
+    }
+    BitPat(op_type.litValue.U((op_type.getWidth).W))
   }
 }
 
@@ -258,7 +260,7 @@ class Decoder extends Module {
   val rd  = io.instr(11, 7)
 
   val decodedResults =
-    new DecodeTable(Patterns, Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak)).decode(io.instr)
+    new DecodeTable(Patterns, Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak,ALUOp_Gen)).decode(io.instr)
   val Type = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(
@@ -280,7 +282,7 @@ class Decoder extends Module {
   io.out.alu_use_pc    := decodedResults(Use_PC_1)
 
   //目前只用实现加法
-  io.out.alu_op_type      := ALU_Op.add
+  io.out.alu_op_type      := decodedResults(ALUOp_Gen)
   io.out.pc_jump          := decodedResults(Is_Jump)
   io.out.reg_write_enable := decodedResults(R_Write_Enable)
 
