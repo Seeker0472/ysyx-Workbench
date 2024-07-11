@@ -68,74 +68,6 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                                                              & (~ 
                                                                 (vlSelf->io_instr 
                                                                  >> 6U))))))));
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_49 
-        = ((0x100U & (vlSelf->io_instr << 8U)) | ((0x80U 
-                                                   & (vlSelf->io_instr 
-                                                      << 6U)) 
-                                                  | ((0x40U 
-                                                      & ((~ 
-                                                          (vlSelf->io_instr 
-                                                           >> 2U)) 
-                                                         << 6U)) 
-                                                     | ((0x20U 
-                                                         & ((~ 
-                                                             (vlSelf->io_instr 
-                                                              >> 3U)) 
-                                                            << 5U)) 
-                                                        | ((0x10U 
-                                                            & ((~ 
-                                                                (vlSelf->io_instr 
-                                                                 >> 4U)) 
-                                                               << 4U)) 
-                                                           | ((8U 
-                                                               & (vlSelf->io_instr 
-                                                                  >> 2U)) 
-                                                              | ((4U 
-                                                                  & (vlSelf->io_instr 
-                                                                     >> 4U)) 
-                                                                 | ((2U 
-                                                                     & (vlSelf->io_instr 
-                                                                        >> 0xbU)) 
-                                                                    | (1U 
-                                                                       & (vlSelf->io_instr 
-                                                                          >> 0xeU))))))))));
-    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_44 
-        = (IData)((0U == (0x6000U & vlSelf->io_instr)));
-    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_40 
-        = (IData)((0x4000U == (0x6000U & vlSelf->io_instr)));
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_28 
-        = ((0x80U & (vlSelf->io_instr << 7U)) | ((0x40U 
-                                                  & (vlSelf->io_instr 
-                                                     << 5U)) 
-                                                 | ((0x20U 
-                                                     & ((~ 
-                                                         (vlSelf->io_instr 
-                                                          >> 2U)) 
-                                                        << 5U)) 
-                                                    | ((0x10U 
-                                                        & ((~ 
-                                                            (vlSelf->io_instr 
-                                                             >> 3U)) 
-                                                           << 4U)) 
-                                                       | ((8U 
-                                                           & (vlSelf->io_instr 
-                                                              >> 1U)) 
-                                                          | ((4U 
-                                                              & ((~ 
-                                                                  (vlSelf->io_instr 
-                                                                   >> 5U)) 
-                                                                 << 2U)) 
-                                                             | ((2U 
-                                                                 & ((~ 
-                                                                     (vlSelf->io_instr 
-                                                                      >> 6U)) 
-                                                                    << 1U)) 
-                                                                | (1U 
-                                                                   & (vlSelf->io_instr 
-                                                                      >> 0xdU)))))))));
-    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_71 
-        = ((2U & ((~ (vlSelf->io_instr >> 0xdU)) << 1U)) 
-           | (1U & (vlSelf->io_instr >> 0xeU)));
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = ((0x40000U 
                                                  & vlSelf->io_instr)
                                                  ? 
@@ -196,6 +128,134 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                                                     & vlSelf->io_instr)
                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_1
                                                     : vlSelf->core__DOT__reg_0__DOT__regs_0))));
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_49 
+        = ((0x100U & (vlSelf->io_instr << 8U)) | ((0x80U 
+                                                   & (vlSelf->io_instr 
+                                                      << 6U)) 
+                                                  | ((0x40U 
+                                                      & ((~ 
+                                                          (vlSelf->io_instr 
+                                                           >> 2U)) 
+                                                         << 6U)) 
+                                                     | ((0x20U 
+                                                         & ((~ 
+                                                             (vlSelf->io_instr 
+                                                              >> 3U)) 
+                                                            << 5U)) 
+                                                        | ((0x10U 
+                                                            & ((~ 
+                                                                (vlSelf->io_instr 
+                                                                 >> 4U)) 
+                                                               << 4U)) 
+                                                           | ((8U 
+                                                               & (vlSelf->io_instr 
+                                                                  >> 2U)) 
+                                                              | ((4U 
+                                                                  & (vlSelf->io_instr 
+                                                                     >> 4U)) 
+                                                                 | ((2U 
+                                                                     & (vlSelf->io_instr 
+                                                                        >> 0xbU)) 
+                                                                    | (1U 
+                                                                       & (vlSelf->io_instr 
+                                                                          >> 0xeU))))))))));
+    vlSelf->core__DOT__reg_0__DOT__casez_tmp_0 = ((0x800000U 
+                                                   & vlSelf->io_instr)
+                                                   ? 
+                                                  ((0x400000U 
+                                                    & vlSelf->io_instr)
+                                                    ? 
+                                                   ((0x200000U 
+                                                     & vlSelf->io_instr)
+                                                     ? 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_15
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_14)
+                                                     : 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_13
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_12))
+                                                    : 
+                                                   ((0x200000U 
+                                                     & vlSelf->io_instr)
+                                                     ? 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_11
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_10)
+                                                     : 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_9
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_8)))
+                                                   : 
+                                                  ((0x400000U 
+                                                    & vlSelf->io_instr)
+                                                    ? 
+                                                   ((0x200000U 
+                                                     & vlSelf->io_instr)
+                                                     ? 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_7
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_6)
+                                                     : 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_5
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_4))
+                                                    : 
+                                                   ((0x200000U 
+                                                     & vlSelf->io_instr)
+                                                     ? 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_3
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_2)
+                                                     : 
+                                                    ((0x100000U 
+                                                      & vlSelf->io_instr)
+                                                      ? vlSelf->core__DOT__reg_0__DOT__regs_1
+                                                      : vlSelf->core__DOT__reg_0__DOT__regs_0))));
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_44 
+        = (IData)((0U == (0x6000U & vlSelf->io_instr)));
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_28 
+        = ((0x80U & (vlSelf->io_instr << 7U)) | ((0x40U 
+                                                  & (vlSelf->io_instr 
+                                                     << 5U)) 
+                                                 | ((0x20U 
+                                                     & ((~ 
+                                                         (vlSelf->io_instr 
+                                                          >> 2U)) 
+                                                        << 5U)) 
+                                                    | ((0x10U 
+                                                        & ((~ 
+                                                            (vlSelf->io_instr 
+                                                             >> 3U)) 
+                                                           << 4U)) 
+                                                       | ((8U 
+                                                           & (vlSelf->io_instr 
+                                                              >> 1U)) 
+                                                          | ((4U 
+                                                              & ((~ 
+                                                                  (vlSelf->io_instr 
+                                                                   >> 5U)) 
+                                                                 << 2U)) 
+                                                             | ((2U 
+                                                                 & ((~ 
+                                                                     (vlSelf->io_instr 
+                                                                      >> 6U)) 
+                                                                    << 1U)) 
+                                                                | (1U 
+                                                                   & (vlSelf->io_instr 
+                                                                      >> 0xdU)))))))));
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_40 
+        = (IData)((0x4000U == (0x6000U & vlSelf->io_instr)));
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_71 
+        = ((2U & ((~ (vlSelf->io_instr >> 0xdU)) << 1U)) 
+           | (1U & (vlSelf->io_instr >> 0xeU)));
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_8 
         = ((0x40U & (vlSelf->io_instr << 6U)) | ((0x20U 
                                                   & (vlSelf->io_instr 
@@ -1354,9 +1414,11 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                                           | (0x7fffU 
                                              == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_57)))))))))))))
             ? vlSelf->core__DOT__decoder__DOT__casez_tmp
-            : vlSelf->core__DOT__reg_0__DOT__casez_tmp);
+            : vlSelf->core__DOT__reg_0__DOT__casez_tmp_0);
     vlSelf->core__DOT__exu__DOT__comp__DOT___io_result_T_18 
-        = (1U == (IData)(vlSelf->core__DOT___decoder_io_out_branch_type));
+        = ((1U == (IData)(vlSelf->core__DOT___decoder_io_out_branch_type)) 
+           & (vlSelf->core__DOT__reg_0__DOT__casez_tmp 
+              == vlSelf->core__DOT__reg_0__DOT__casez_tmp_0));
     vlSelf->core__DOT___decoder_io_out_mem_read_type 
         = ((((IData)(((3U == (0x7fU & vlSelf->io_instr)) 
                       & (IData)(vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_40))) 
@@ -1440,7 +1502,7 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
     if (((0x1ffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_9)) 
          | (IData)(((0x23U == (0x3fU & vlSelf->io_instr)) 
                     & (IData)(vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_45))))) {
-        Vcore___024unit____Vdpiimwrap_pmem_write_TOP____024unit(vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp, vlSelf->core__DOT__reg_0__DOT__casez_tmp, 
+        Vcore___024unit____Vdpiimwrap_pmem_write_TOP____024unit(vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp, vlSelf->core__DOT__reg_0__DOT__casez_tmp_0, 
                                                                 ((0U 
                                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
                                                                   ? 0U
@@ -1475,16 +1537,31 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                                                   & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
                                                   ? 
                                                  ((1U 
-                                                   & (~ (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))) 
-                                                  || (IData)(vlSelf->core__DOT__exu__DOT__comp__DOT___io_result_T_18))
+                                                   & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
+                                                   ? (IData)(vlSelf->core__DOT__exu__DOT__comp__DOT___io_result_T_18)
+                                                   : 
+                                                  (vlSelf->core__DOT__reg_0__DOT__casez_tmp 
+                                                   >= vlSelf->core__DOT__reg_0__DOT__casez_tmp_0))
                                                   : 
-                                                 (~ (IData)(vlSelf->core__DOT___decoder_io_out_branch_type)))
+                                                 ((1U 
+                                                   & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
+                                                   ? 
+                                                  (vlSelf->core__DOT__reg_0__DOT__casez_tmp 
+                                                   < vlSelf->core__DOT__reg_0__DOT__casez_tmp_0)
+                                                   : 
+                                                  VL_GTES_III(32, vlSelf->core__DOT__reg_0__DOT__casez_tmp, vlSelf->core__DOT__reg_0__DOT__casez_tmp_0)))
                                                  : 
-                                                ((1U 
-                                                  & (~ 
-                                                     ((IData)(vlSelf->core__DOT___decoder_io_out_branch_type) 
-                                                      >> 1U))) 
-                                                 && (IData)(vlSelf->core__DOT__exu__DOT__comp__DOT___io_result_T_18))) 
+                                                ((2U 
+                                                  & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
+                                                  ? 
+                                                 ((1U 
+                                                   & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
+                                                   ? 
+                                                  VL_LTS_III(32, vlSelf->core__DOT__reg_0__DOT__casez_tmp, vlSelf->core__DOT__reg_0__DOT__casez_tmp_0)
+                                                   : 
+                                                  (vlSelf->core__DOT__reg_0__DOT__casez_tmp 
+                                                   != vlSelf->core__DOT__reg_0__DOT__casez_tmp_0))
+                                                  : (IData)(vlSelf->core__DOT__exu__DOT__comp__DOT___io_result_T_18))) 
                                                & ((0xffU 
                                                    == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
                                                   | (0xffU 

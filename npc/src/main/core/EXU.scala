@@ -47,7 +47,7 @@ class EXU extends Module {
       Load_Type.lhu -> mrres(15, 0).zext
     )
   )
-  val mem_read_result = mem_read_result_sint.asUInt
+  val mem_read_result = mem_read_result_sint.asUInt // 读取内存
 
   val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
     Seq(
@@ -65,7 +65,7 @@ class EXU extends Module {
   val pc_plus4 = io.in.pc + 4.U
 
   val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
-  io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, alu.io.result)
+  io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, result)
   io.out.n_pc    := next_pc
 }
 
