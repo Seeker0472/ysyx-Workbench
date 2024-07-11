@@ -8,6 +8,5 @@
 #define CONFIG_DIFFTEST 1
 #define CONFIG_ISA_riscv 1
 #define CONFIG_FTRACE 1
-#define CONFIG_MTRACE 1
 #define CONFIG_RVE 1
 #define CONFIG_ISA "riscv32"
