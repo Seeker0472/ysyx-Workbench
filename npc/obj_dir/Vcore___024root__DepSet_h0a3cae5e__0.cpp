@@ -1453,27 +1453,30 @@ VL_INLINE_OPT void Vcore___024root___ico_sequent__TOP__0(Vcore___024root* vlSelf
                                                   & vlSelf->core__DOT__exu__DOT___mem_read_data)
                                                   : 0U))));
     vlSelf->core__DOT__exu__DOT__result = ((IData)(vlSelf->core__DOT___decoder_io_out_mem_read_enable)
-                                            ? ((5U 
-                                                == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
-                                                ? (0xffffU 
-                                                   & vlSelf->core__DOT__exu__DOT___mem_read_data)
-                                                : (
-                                                   (4U 
-                                                    == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
-                                                    ? 
-                                                   (0xffU 
-                                                    & vlSelf->core__DOT__exu__DOT___mem_read_data)
-                                                    : 
-                                                   ((3U 
-                                                     == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
-                                                     ? vlSelf->core__DOT__exu__DOT___mem_read_data
-                                                     : 
-                                                    (((- (IData)(
-                                                                 (1U 
-                                                                  & ((IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19) 
-                                                                     >> 0xfU)))) 
-                                                      << 0x10U) 
-                                                     | (IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19)))))
+                                            ? (((5U 
+                                                 == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
+                                                 ? 
+                                                (0xffffU 
+                                                 & vlSelf->core__DOT__exu__DOT___mem_read_data)
+                                                 : 
+                                                ((4U 
+                                                  == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
+                                                  ? 
+                                                 (0xffU 
+                                                  & vlSelf->core__DOT__exu__DOT___mem_read_data)
+                                                  : 
+                                                 ((3U 
+                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
+                                                   ? vlSelf->core__DOT__exu__DOT___mem_read_data
+                                                   : 
+                                                  (((- (IData)(
+                                                               (1U 
+                                                                & ((IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19) 
+                                                                   >> 0xfU)))) 
+                                                    << 0x10U) 
+                                                   | (IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19))))) 
+                                               >> (3U 
+                                                   & vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp))
                                             : vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp);
     vlSelf->io_value = ((IData)(vlSelf->core__DOT___decoder_io_out_pc_jump)
                          ? ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc)

@@ -42,7 +42,7 @@ extern "C" int pmem_read(int raddr)
   // 总是读取地址为`raddr & ~0x3u`的4字节返回
   // Log("mem_read");
   int aligned_addr = raddr & ~0x3u; // 对齐地址
-  record_pread(aligned_addr, 4);
+  record_pread(raddr, 4);
   return mem_read(aligned_addr);
 }
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
@@ -53,7 +53,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   // Log("mem_write");
   int length = 0;
   for (int i = 0; i < 4; i++)
-    if (wdata & (1 << (i*2)))
+    if (wdata & (3 << (i*2)))
       length++;
 
   record_pwrite(waddr, length, wdata);
@@ -63,7 +63,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
   for (int i = 0; i < 4; ++i)
   {
-    if (wmask & (1 << i))
+    if (wmask & (3 << (i*2)))
     {
       ((uint8_t *)&new_data)[i] = ((uint8_t *)&wdata)[i];
     }
