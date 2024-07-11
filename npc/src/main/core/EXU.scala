@@ -51,9 +51,9 @@ class EXU extends Module {
 
   val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
     Seq(
-      Store_Type.sb -> "b00000000000000000000000011111111".U(32.W),
-      Store_Type.sh -> "b00000000000000001111111111111111".U(32.W),
-      Store_Type.sw -> "b11111111111111111111111111111111".U(32.W)
+      Store_Type.sb -> "b00000011".U(8.W),
+      Store_Type.sh -> "b00001111".U(8.W),
+      Store_Type.sw -> "b11111111".U(8.W)
     )
   )
   mem.io.write_mask := mem_write_mask

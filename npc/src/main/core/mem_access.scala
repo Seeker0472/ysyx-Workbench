@@ -15,7 +15,7 @@ class MEM extends BlackBox with HasBlackBoxInline {
     val write_enable = Input(Bool())
     val write_addr   = Input(UInt(CVAL.DLEN.W))
     val write_data   = Input(UInt(CVAL.DLEN.W))
-    val write_mask   = Input(UInt(CVAL.DLEN.W))
+    val write_mask   = Input(UInt(8.W))
   })
   setInline(
     "mem_access.v",
@@ -27,7 +27,7 @@ class MEM extends BlackBox with HasBlackBoxInline {
       |  output reg [31:0] read_data,
       |  input [31:0] write_addr,
       |  input [31:0] write_data,
-      |  input [31:0] write_mask,
+      |  input [7:0] write_mask,
       |  input  write_enable,
       |  input  read_enable,
       |);
