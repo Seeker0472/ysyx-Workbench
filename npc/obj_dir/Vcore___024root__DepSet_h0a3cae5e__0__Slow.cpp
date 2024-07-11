@@ -1175,25 +1175,18 @@ VL_ATTR_COLD void Vcore___024root___stl_sequent__TOP__0(Vcore___024root* vlSelf)
                                                                                 == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_57))))))))))))
                                                      ? 
                                                     (((- (IData)(
-                                                                 (1U 
-                                                                  & (vlSelf->io_instr 
-                                                                     >> 8U)))) 
-                                                      << 0x12U) 
-                                                     | ((0x20000U 
+                                                                 (vlSelf->io_instr 
+                                                                  >> 0x1fU))) 
+                                                      << 0xcU) 
+                                                     | ((0x800U 
                                                          & (vlSelf->io_instr 
-                                                            >> 0xeU)) 
-                                                        | ((0x10000U 
+                                                            << 4U)) 
+                                                        | ((0x7e0U 
                                                             & (vlSelf->io_instr 
-                                                               << 9U)) 
-                                                           | ((0xf800U 
-                                                               & (vlSelf->io_instr 
-                                                                  << 4U)) 
-                                                              | ((0x7e0U 
-                                                                  & (vlSelf->io_instr 
-                                                                     >> 0x14U)) 
-                                                                 | (0x1eU 
-                                                                    & (vlSelf->io_instr 
-                                                                       >> 7U)))))))
+                                                               >> 0x14U)) 
+                                                           | (0x1eU 
+                                                              & (vlSelf->io_instr 
+                                                                 >> 7U)))))
                                                      : 
                                                     (((- (IData)(
                                                                  (vlSelf->io_instr 

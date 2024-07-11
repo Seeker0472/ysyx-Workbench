@@ -40,7 +40,7 @@ object Use_IMM_2 extends BoolDecodeField[InsP] {
   def genTable(op: InsP) = {
     if (
       op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.Inst_Type == Inst_Type_Enum.J_Type || op.name_in
-        .matches("auipc")
+        .matches("auipc")||op.name_in.matches("lui")
     )
       y
     else n
@@ -188,6 +188,7 @@ object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
       case "sra" | "srai"                                          => ALU_Op.sra
       case "slt" | "slti"                                          => ALU_Op.slt
       case "sltu" | "sltiu"                                        => ALU_Op.sltu
+      case "lui"                                                   => ALU_Op.pass_imm
       case _                                                       => ALU_Op.inv
     }
     BitPat(op_type.litValue.U((op_type.getWidth).W))
