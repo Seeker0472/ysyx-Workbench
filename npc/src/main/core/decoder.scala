@@ -43,7 +43,7 @@ object Use_IMM_2 extends BoolDecodeField[InsP] {
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (
-      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.J_Type
+      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.J_Type||op.name_in.matches("auipc")
     )
       y
     else n
@@ -54,7 +54,7 @@ object Use_PC_1 extends BoolDecodeField[InsP] {
   def name: String = "Use_PC_1"
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
-    if (op.Inst_Type == Inst_Type_Enum.J_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.opcode.rawString.matches("1100111"))//jalr
+    if (op.Inst_Type == Inst_Type_Enum.J_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.name_in.matches("auipc")|| op.opcode.rawString.matches("1100111"))//auipc||jalr
       y
     else n
   }
