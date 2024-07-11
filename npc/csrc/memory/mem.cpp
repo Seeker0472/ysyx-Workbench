@@ -12,7 +12,7 @@ extern "C" int pmem_read(int raddr)
 {
   // 总是读取地址为`raddr & ~0x3u`的4字节返回
   // log("mem_read");
-  return mem_read(addr);
+  return mem_read(raddr);
 }
 
 void record_pread(paddr_t addr, int len);
