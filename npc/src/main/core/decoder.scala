@@ -93,8 +93,7 @@ object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
   def name: String = "ALUOp_Gen"
   override def chiselType = ALU_Op()
   def genTable(op: InsP): BitPat = {
-    var op_type=ALU_Op.inv
-    op_type=op.name_in match{
+    val op_type=op.name_in match{
       case "add" =>ALU_Op.add
       case "addi" =>ALU_Op.add
       case "jal" =>ALU_Op.add
