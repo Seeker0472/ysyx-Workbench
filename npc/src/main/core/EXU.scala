@@ -15,7 +15,7 @@ class EXU extends Module {
   val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, io.in.src2)
 
   val mem = Module(new MEM()) //TODO::::::把Mem模块放在执行单元是否科学？？？
-
+  mem.io.clock := clock  // 连接时钟信号
   val alu = Module(new ALU())
 
   val comp = Module(new Branch_comp())
