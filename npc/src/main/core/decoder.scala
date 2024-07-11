@@ -39,7 +39,7 @@ object Use_IMM_2 extends BoolDecodeField[InsP] {
   def name: String = "Use_IMM"
   def genTable(op: InsP) = {
     if (
-      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.J_Type || op.name_in
+      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.Inst_Type == Inst_Type_Enum.J_Type || op.name_in
         .matches("auipc")
     )
       y
@@ -73,7 +73,7 @@ object Is_Jump extends BoolDecodeField[InsP] {
 object R_Write_Enable extends BoolDecodeField[InsP] {
   def name: String = "Reg_W_En"
   def genTable(op: InsP) = {
-    if (op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type)
+    if (op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type) //！！注意这里是if() n else y!!!!!!!!
       n
     else y
   }
@@ -112,7 +112,7 @@ object Mem_LoadType extends DecodeField[InsP, Load_Type.Type] {
       case "010" => Load_Type.lw
       case "100" => Load_Type.lbu
       case "101" => Load_Type.lhu
-      case _ =>Load_Type.inv
+      case _     => Load_Type.inv
     }
     BitPat(load_type.litValue.U((load_type.getWidth).W))
   }
@@ -128,17 +128,44 @@ object Write_En extends BoolDecodeField[InsP] {
   }
 }
 
-object Mem_WriteType extends DecodeField[InsP,Store_Type.Type]{
+object Mem_WriteType extends DecodeField[InsP, Store_Type.Type] {
   def name: String = "Mem_WriteType"
   override def chiselType = Store_Type()
   def genTable(op: InsP) = {
-    val stype = op.func3.rawString match{
-      case "000"=> Store_Type.sb
-      case "001"=> Store_Type.sh
-      case "010"=> Store_Type.sw
-      case _ => Store_Type.inv
+    val stype = op.func3.rawString match {
+      case "000" => Store_Type.sb
+      case "001" => Store_Type.sh
+      case "010" => Store_Type.sw
+      case _     => Store_Type.inv
     }
     BitPat(stype.litValue.U((stype.getWidth).W))
+  }
+}
+
+//Branch
+object Is_Branch extends BoolDecodeField[InsP] {
+  def name: String = "Is_Branch"
+  def genTable(op: InsP) = {
+    if (op.Inst_Type == Inst_Type_Enum.B_Type)
+      y
+    else n
+  }
+}
+
+object BranchType extends DecodeField[InsP, Branch_Type.Type] {
+  def name: String = "Branch_Type"
+  override def chiselType = Branch_Type()
+  def genTable(op: InsP) = {
+    val btype = op.func3.rawString match {
+      case "000" => Branch_Type.beq
+      case "001" => Branch_Type.bne
+      case "100" => Branch_Type.blt
+      case "101" => Branch_Type.bge
+      case "110" => Branch_Type.bltu
+      case "111" => Branch_Type.bgeu
+      case _     => Branch_Type.inv
+    }
+    BitPat(btype.litValue.U((btype.getWidth).W))
   }
 }
 
@@ -331,7 +358,21 @@ class Decoder extends Module {
   val decodedResults =
     new DecodeTable(
       Patterns,
-      Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak, ALUOp_Gen, Read_En,Write_En,Mem_LoadType,Mem_WriteType)
+      Seq(
+        InstType,
+        Use_IMM_2,
+        Use_PC_1,
+        Is_Jump,
+        R_Write_Enable,
+        Is_Ebreak,
+        ALUOp_Gen,
+        Read_En,
+        Write_En,
+        Mem_LoadType,
+        Mem_WriteType,
+        Is_Branch,
+        BranchType
+      )
     )
       .decode(io.instr)
   val Type = decodedResults(InstType)
@@ -362,10 +403,12 @@ class Decoder extends Module {
 
   io.out.mem_read_enable := decodedResults(Read_En)
 
-  io.out.mem_write_enable := decodedResults(Write_En) 
+  io.out.mem_write_enable := decodedResults(Write_En)
 
-  io.out.mem_write_type :=decodedResults(Mem_WriteType)
-  io.out.mem_read_type :=decodedResults(Mem_LoadType)
+  io.out.mem_write_type := decodedResults(Mem_WriteType)
+  io.out.mem_read_type  := decodedResults(Mem_LoadType)
 
+  io.out.is_branch   := decodedResults(Is_Branch)
+  io.out.branch_type := decodedResults(BranchType)
 
 }

@@ -16,7 +16,15 @@ class EXU extends Module {
 
   val mem = Module(new MEM()) //TODO::::::把Mem模块放在执行单元是否科学？？？
 
-  val alu = Module(new ALU)
+  val alu = Module(new ALU())
+
+  val comp = Module(new Branch_comp())
+
+  comp.io.src1      := io.in.src1
+  comp.io.src2      := io.in.src2
+  comp.io.comp_type := io.in.branch_type
+  val go_branch = comp.io.result
+
   alu.io.in.src1        := alu_val1
   alu.io.in.src2        := alu_val2
   alu.io.in.alu_op_type := io.in.alu_op_type
@@ -41,19 +49,41 @@ class EXU extends Module {
   )
   val mem_read_result = mem_read_result_sint.asUInt
 
-  val mem_write_mask =MuxLookup(io.in.mem_write_type,0.U)(Seq(
-  Store_Type.sb -> "b00000000000000000000000011111111".U(32.W),
-  Store_Type.sh -> "b00000000000000001111111111111111".U(32.W),
-  Store_Type.sw -> "b11111111111111111111111111111111".U(32.W)
-  ))
-  mem.io.write_mask:=mem_write_mask
-  mem.io.write_data :=io.in.src2
+  val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
+    Seq(
+      Store_Type.sb -> "b00000000000000000000000011111111".U(32.W),
+      Store_Type.sh -> "b00000000000000001111111111111111".U(32.W),
+      Store_Type.sw -> "b11111111111111111111111111111111".U(32.W)
+    )
+  )
+  mem.io.write_mask := mem_write_mask
+  mem.io.write_data := io.in.src2
 
   //如果是store，Reg_Write_Enable应该是False
   // val result   = alu.io.result
   val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
   val pc_plus4 = io.in.pc + 4.U
-  val next_pc  = Mux(io.in.pc_jump, result, pc_plus4)
+
+  val next_pc  =Mux(io.in.pc_jump || ( io.in.is_branch && go_branch), result, pc_plus4)
   io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, alu.io.result)
   io.out.n_pc    := next_pc
+}
+
+class Branch_comp extends Module {
+  val io = IO(new Bundle {
+    val src1      = UInt(CVAL.DLEN.W)
+    val src2      = UInt(CVAL.DLEN.W)
+    val comp_type = Branch_Type()
+    val result    = Bool()
+  })
+  MuxLookup(io.comp_type, false.B)(
+    Seq(
+      Branch_Type.beq -> (io.src1 === io.src2),
+      Branch_Type.bne -> (io.src1 =/= io.src2),
+      Branch_Type.blt -> (io.src1.asSInt < io.src2.asSInt),
+      Branch_Type.bge -> (io.src1.asSInt >= io.src2.asSInt),
+      Branch_Type.bltu -> (io.src1 < io.src2),
+      Branch_Type.bgeu -> (io.src1 >= io.src2)
+    )
+  )
 }

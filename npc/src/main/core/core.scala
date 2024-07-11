@@ -58,6 +58,10 @@ class core extends Module {
   exu.io.in.mem_write_enable := decoder.io.out.mem_write_enable
   exu.io.in.mem_write_type   := decoder.io.out.mem_write_type
 
+  //pass branch_sig to exu
+  exu.io.in.is_branch   := decoder.io.out.is_branch
+  exu.io.in.branch_type := decoder.io.out.branch_type
+
   //Write_ENABLE!!
   reg.io.write_en := decoder.io.out.reg_write_enable
 //ebreak

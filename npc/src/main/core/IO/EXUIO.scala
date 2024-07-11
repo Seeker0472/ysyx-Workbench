@@ -17,6 +17,9 @@ class EXU_I extends Bundle {
   val mem_read_type    = Load_Type()
   val mem_write_enable = Bool()
   val mem_write_type   = Store_Type()
+
+  val is_branch   = Bool()
+  val branch_type = Branch_Type()
 }
 
 class EXU_O extends Bundle {
