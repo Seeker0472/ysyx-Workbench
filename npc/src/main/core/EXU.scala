@@ -42,9 +42,9 @@ class EXU extends Module {
   val mem_read_result = mem_read_result_sint.asUInt
 
   val mem_write_mask =MuxLookup(io.in.mem_write_type,0.U)(Seq(
-    Store_Type.sb -> 0x000000ff.U,
-    Store_Type.sh -> 0x0000ffff.U,
-    Store_Type.sw -> 0xffffffff.U,
+    Store_Type.sb -> 0x000000ff.U(CVAL.DLEN.W),
+    Store_Type.sh -> 0x0000ffff.U(CVAL.DLEN.W),
+    Store_Type.sw -> 0xffffffff.U(CVAL.DLEN.W),
   ))
   mem.io.write_mask:=mem_write_mask
   mem.io.write_data :=io.in.src2
