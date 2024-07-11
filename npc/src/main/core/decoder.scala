@@ -37,7 +37,6 @@ object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
 //src2是否选择Imm
 object Use_IMM_2 extends BoolDecodeField[InsP] {
   def name: String = "Use_IMM"
-  // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (
       op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.J_Type || op.name_in
@@ -50,7 +49,6 @@ object Use_IMM_2 extends BoolDecodeField[InsP] {
 //src1是否选择PC -- J-Type & B-Type
 object Use_PC_1 extends BoolDecodeField[InsP] {
   def name: String = "Use_PC_1"
-  // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (
       op.Inst_Type == Inst_Type_Enum.J_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.name_in.matches("auipc")
@@ -63,7 +61,6 @@ object Use_PC_1 extends BoolDecodeField[InsP] {
 //是否是无条件跳转
 object Is_Jump extends BoolDecodeField[InsP] {
   def name: String = "Is_Jump"
-  // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (op.Inst_Type == Inst_Type_Enum.J_Type || op.opcode.rawString.matches("1100111"))
       y
@@ -75,7 +72,6 @@ object Is_Jump extends BoolDecodeField[InsP] {
 //Reg_write_Enable
 object R_Write_Enable extends BoolDecodeField[InsP] {
   def name: String = "Reg_W_En"
-  // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type)
       n
@@ -83,9 +79,9 @@ object R_Write_Enable extends BoolDecodeField[InsP] {
   }
 }
 
+//ebreak
 object Is_Ebreak extends BoolDecodeField[InsP] {
   def name: String = "Is_Ebreak"
-  // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
     if (
@@ -95,6 +91,59 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
     else n
   }
 }
+
+//mem
+object Read_En extends BoolDecodeField[InsP] {
+  def name: String = "Read_En"
+  def genTable(op: InsP) = {
+    if (op.opcode.rawString.matches("0000011"))
+      y
+    else n
+  }
+}
+
+object Mem_LoadType extends DecodeField[InsP, Load_Type.Type] {
+  def name: String = "Mem_LoadType"
+  override def chiselType = Load_Type()
+  def genTable(op: InsP): BitPat = {
+    val load_type = op.func3.rawString match {
+      case "000" => Load_Type.lb
+      case "001" => Load_Type.lh
+      case "010" => Load_Type.lw
+      case "100" => Load_Type.lbu
+      case "101" => Load_Type.lhu
+      case _ =>Load_Type.inv
+    }
+    BitPat(load_type.litValue.U((load_type.getWidth).W))
+  }
+}
+
+//mem
+object Write_En extends BoolDecodeField[InsP] {
+  def name: String = "Read_En"
+  def genTable(op: InsP) = {
+    if (op.opcode.rawString.matches("0100011"))
+      y
+    else n
+  }
+}
+
+object Mem_WriteType extends DecodeField[InsP,Store_Type.Type]{
+  def name: String = "WriteMask"
+  override def chiselType = Store_Type()
+  def genTable(op: InsP) = {
+    val stype = op.func3.rawString match{
+      case "000"=> Store_Type.sb
+      case "001"=> Store_Type.sh
+      case "010"=> Store_Type.sw
+      case _ => Store_Type.inv
+    }
+    BitPat(stype.litValue.U((stype.getWidth).W))
+  }
+}
+
+//TODO:Load_Type;Save_Mask
+
 object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
   def name: String = "ALUOp_Gen"
   override def chiselType = ALU_Op()
@@ -280,7 +329,10 @@ class Decoder extends Module {
   val rd  = io.instr(11, 7)
 
   val decodedResults =
-    new DecodeTable(Patterns, Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak, ALUOp_Gen))
+    new DecodeTable(
+      Patterns,
+      Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak, ALUOp_Gen, Read_En,Write_En,Mem_LoadType,Mem_WriteType)
+    )
       .decode(io.instr)
   val Type = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
@@ -302,11 +354,18 @@ class Decoder extends Module {
   io.out.alu_use_Imm_2 := decodedResults(Use_IMM_2)
   io.out.alu_use_pc    := decodedResults(Use_PC_1)
 
-  //目前只用实现加法
   io.out.alu_op_type      := decodedResults(ALUOp_Gen)
   io.out.pc_jump          := decodedResults(Is_Jump)
   io.out.reg_write_enable := decodedResults(R_Write_Enable)
 
   io.out.ebreak := decodedResults(Is_Ebreak)
+
+  io.out.mem_read_enable := decodedResults(Read_En)
+
+  io.out.mem_write_enable := decodedResults(Write_En) 
+
+  io.out.mem_write_type :=decodedResults(Mem_WriteType)
+  io.out.mem_read_type :=decodedResults(Mem_LoadType)
+
 
 }

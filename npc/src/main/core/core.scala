@@ -19,14 +19,15 @@ class core extends Module {
     val instr    = Input(UInt(CVAL.ILEN.W))
     val inst_now = Output(UInt(CVAL.DLEN.W))
   })
-  
-  io.inst_now := io.instr//输出当前指令到Debugger环境---可能以后需要Debug
+
+  io.inst_now := io.instr //输出当前指令到Debugger环境---可能以后需要Debug
 
   val decoder = Module(new Decoder())
   val reg     = Module(new REG())
   val br_han  = Module(new ebreak_handler())
   val ifu     = Module(new IFU())
   val exu     = Module(new EXU())
+  val mem     = Module(new MEM())
 
   //fetch_inst
   io.pc          := ifu.io.pc
@@ -50,6 +51,13 @@ class core extends Module {
   exu.io.in.alu_use_pc    := decoder.io.out.alu_use_pc
   exu.io.in.alu_op_type   := decoder.io.out.alu_op_type
   exu.io.in.pc_jump       := decoder.io.out.pc_jump
+
+  //pass_mem__sig to exu
+  exu.io.in.mem_read_enable  := decoder.io.out.mem_read_enable
+  exu.io.in.mem_read_type    := decoder.io.out.mem_read_type
+  exu.io.in.mem_write_enable := decoder.io.out.mem_write_enable
+  exu.io.in.mem_write_type   := decoder.io.out.mem_write_type
+
   //Write_ENABLE!!
   reg.io.write_en := decoder.io.out.reg_write_enable
 //ebreak
