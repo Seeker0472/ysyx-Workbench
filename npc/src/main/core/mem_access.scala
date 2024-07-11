@@ -24,14 +24,13 @@ class MEM extends BlackBox with HasBlackBoxInline {
       |input int write_addr, input int write_data, input byte write_mask);
       |module MEM(
       |  input [31:0] read_addr,
-      |  output [31:0] read_data,
+      |  output reg [31:0] read_data,
       |  input [31:0] write_addr,
       |  input [31:0] write_data,
       |  input [31:0] write_mask,
       |  input  write_enable,
       |  input  read_enable,
       |);
-      |reg [31:0] read_data;
       |always @(*) begin
       |  if (read_enable) begin // 有读写请求时
       |    read_data = pmem_read(read_addr);
