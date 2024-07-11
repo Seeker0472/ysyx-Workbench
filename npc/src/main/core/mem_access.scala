@@ -22,7 +22,7 @@ class MEM extends BlackBox with HasBlackBoxInline {
     """import "DPI-C" function int pmem_read(input int read_addr);
       |import "DPI-C" function void pmem_write(
       |input int write_addr, input int write_data, input byte write_mask);
-      |module ebreak_handler(
+      |module MEM(
       |  input [31:0] read_addr,
       |  input [31:0] write_addr,
       |  input [31:0] write_data,
