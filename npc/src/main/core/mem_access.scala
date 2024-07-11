@@ -30,6 +30,7 @@ class MEM extends BlackBox with HasBlackBoxInline {
       |  input [7:0] write_mask,
       |  input  write_enable,
       |  input  read_enable
+      |input clock
       |);
       |always @(clock) begin
       |  if (read_enable) begin // 有读写请求时
