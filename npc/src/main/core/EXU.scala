@@ -47,8 +47,8 @@ class EXU extends Module {
       Load_Type.lhu -> mrres(15, 0).zext
     )
   )
-  val mem_read_result = mem_read_result_sint.asUInt // 读取内存
-
+  val mem_read_result = mem_read_result_sint.asUInt >>( alu.io.result &(0x3.U))
+// 读取内存
   val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
     Seq(
       Store_Type.sb -> "b00000011".U(8.W),
