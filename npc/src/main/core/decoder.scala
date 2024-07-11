@@ -99,6 +99,7 @@ object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
       case "addi" =>ALU_Op.add
       case "jal" =>ALU_Op.add
       case "jalr" =>ALU_Op.add
+      case _ => ALU_Op.inv
     }
     BitPat(op_type.litValue.U((op_type.getWidth).W))
   }
