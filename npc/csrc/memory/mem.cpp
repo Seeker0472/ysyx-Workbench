@@ -42,7 +42,8 @@ extern "C" int pmem_read(int raddr)
   // 总是读取地址为`raddr & ~0x3u`的4字节返回
   // Log("mem_read");
   int aligned_addr = raddr & ~0x3u; // 对齐地址
-  record_pread(raddr, 4);
+  IFDEF(CONFIG_MTRACE,record_pread(raddr, 4););
+  
   return mem_read(aligned_addr);
 }
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
@@ -55,8 +56,8 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   for (int i = 0; i < 4; i++)
     if (wdata & (3 << (i*2)))
       length++;
-
-  record_pwrite(waddr, length, wdata);
+IFDEF(CONFIG_MTRACE,record_pwrite(waddr, length, wdata););
+  
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
   uint32_t new_data = current_data;
