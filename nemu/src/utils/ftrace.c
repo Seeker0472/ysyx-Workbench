@@ -40,6 +40,7 @@ const char *find_symbol(paddr_t addr){
     trace_node* now=nodes->next;
     for(;now!=NULL;now=now->next){
         if(now->start_addr<=addr&&now->start_addr+now->length>addr){
+            Log("Request_ADDR:  %x",addr);
             return now->name;
         }
     }
@@ -119,16 +120,16 @@ void read_symbol_table(const char *filename) {
     //符号表的数量
     int num_symbols = symtab->sh_size / MUXDEF(CONFIG_RV64,sizeof(Elf64_Sym),sizeof(Elf32_Sym));
 
-    printf("\nSymbols:\n");
-    for (int i = 0; i < num_symbols; i++) {
-        if(symbols[i].st_size!=0){
-        printf("Symbol %d: %s -----%d\n", i, &strtab_data[symbols[i].st_name],symbols[i].st_name);//section的st_name是0！！！RTFM！！！
-        printf("  Value: %x\n", symbols[i].st_value);
-        printf("  Size: %d\n", symbols[i].st_size);
-        printf("  Info: %d\n", symbols[i].st_info);
-        printf("  Other: %d\n", symbols[i].st_other);
-        printf("  Section Index: %d\n", symbols[i].st_shndx);}
-        }
+    // printf("\nSymbols:\n");
+    // for (int i = 0; i < num_symbols; i++) {
+    //     if(symbols[i].st_size!=0){
+    //     printf("Symbol %d: %s -----%d\n", i, &strtab_data[symbols[i].st_name],symbols[i].st_name);//section的st_name是0！！！RTFM！！！
+    //     printf("  Value: %x\n", symbols[i].st_value);
+    //     printf("  Size: %d\n", symbols[i].st_size);
+    //     printf("  Info: %d\n", symbols[i].st_info);
+    //     printf("  Other: %d\n", symbols[i].st_other);
+    //     printf("  Section Index: %d\n", symbols[i].st_shndx);}
+    //     }
 	for (int i = 0; i < num_symbols; i++) {
 		if(symbols[i].st_size!=0){
 			add_symbol(symbols[i].st_value,symbols[i].st_size,&strtab_data[symbols[i].st_name]);
