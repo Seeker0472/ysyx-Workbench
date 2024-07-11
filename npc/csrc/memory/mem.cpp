@@ -12,7 +12,7 @@ void log(const char *log)
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, int len, word_t data);
-uint32_t mem[10000000] = {
+uint32_t mem[0x8000000] = {
     0x00448493,
     0x00448493,
     0x00100073,
