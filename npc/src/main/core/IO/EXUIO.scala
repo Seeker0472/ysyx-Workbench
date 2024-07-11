@@ -12,11 +12,19 @@ class EXU_I extends Bundle {
   val alu_use_pc    = Bool()
   val alu_op_type   = ALU_Op()
   val pc_jump       = Bool()
+
+  val mem_read_enable  = Bool()
+  val mem_read_type    = Load_Type()
+  val mem_write_enable = Bool()
+  val mem_write_type   = Store_Type()
+
+  val is_branch   = Bool()
+  val branch_type = Branch_Type()
 }
 
 class EXU_O extends Bundle {
   val reg_out = UInt(Constants_Val.CVAL.DLEN.W)
-  val n_pc   = UInt(Constants_Val.CVAL.DLEN.W)
+  val n_pc    = UInt(Constants_Val.CVAL.DLEN.W)
   //TODO:Write_ENABLE!!
 
 }

@@ -46,7 +46,7 @@ VL_ATTR_COLD void Vcore___024root___eval_settle(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__stl(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 605, "", "Settle region did not converge.");
+            VL_FATAL_MT("build/core.sv", 1335, "", "Settle region did not converge.");
         }
         __VstlIterCount = ((IData)(1U) + __VstlIterCount);
         __VstlContinue = 0U;
@@ -131,6 +131,9 @@ VL_ATTR_COLD void Vcore___024root___dump_triggers__act(Vcore___024root* vlSelf) 
     if ((1ULL & vlSelf->__VactTriggered.word(0U))) {
         VL_DBG_MSGF("         'act' region trigger index 0 is active: @(posedge clock)\n");
     }
+    if ((2ULL & vlSelf->__VactTriggered.word(0U))) {
+        VL_DBG_MSGF("         'act' region trigger index 1 is active: @(negedge clock)\n");
+    }
 }
 #endif  // VL_DEBUG
 
@@ -145,6 +148,9 @@ VL_ATTR_COLD void Vcore___024root___dump_triggers__nba(Vcore___024root* vlSelf) 
     }
     if ((1ULL & vlSelf->__VnbaTriggered.word(0U))) {
         VL_DBG_MSGF("         'nba' region trigger index 0 is active: @(posedge clock)\n");
+    }
+    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        VL_DBG_MSGF("         'nba' region trigger index 1 is active: @(negedge clock)\n");
     }
 }
 #endif  // VL_DEBUG
@@ -162,25 +168,67 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->io_instr = VL_RAND_RESET_I(32);
     vlSelf->io_inst_now = VL_RAND_RESET_I(32);
     vlSelf->core__DOT___exu_io_out_n_pc = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT___decoder_io_out_alu_use_Imm_2 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT___decoder_io_out_alu_op_type = VL_RAND_RESET_I(4);
     vlSelf->core__DOT___decoder_io_out_pc_jump = VL_RAND_RESET_I(1);
-    vlSelf->core__DOT___decoder_io_out_reg_write_enable = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT___decoder_io_out_mem_read_enable = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT___decoder_io_out_mem_read_type = VL_RAND_RESET_I(3);
+    vlSelf->core__DOT___decoder_io_out_mem_write_type = VL_RAND_RESET_I(2);
+    vlSelf->core__DOT___decoder_io_out_branch_type = VL_RAND_RESET_I(3);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T = VL_RAND_RESET_I(8);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_1 = VL_RAND_RESET_I(8);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_2 = VL_RAND_RESET_I(8);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_3 = VL_RAND_RESET_I(8);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_5 = VL_RAND_RESET_I(6);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_6 = VL_RAND_RESET_I(7);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_11 = VL_RAND_RESET_I(8);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13 = VL_RAND_RESET_I(10);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_14 = VL_RAND_RESET_I(7);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16 = VL_RAND_RESET_I(16);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_17 = VL_RAND_RESET_I(8);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_18 = VL_RAND_RESET_I(8);
-    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_20 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_6 = VL_RAND_RESET_I(6);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_8 = VL_RAND_RESET_I(9);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_9 = VL_RAND_RESET_I(8);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_11 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_14 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16 = VL_RAND_RESET_I(8);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_17 = VL_RAND_RESET_I(9);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_18 = VL_RAND_RESET_I(10);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_19 = VL_RAND_RESET_I(7);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_20 = VL_RAND_RESET_I(9);
     vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_21 = VL_RAND_RESET_I(15);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_22 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_23 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_24 = VL_RAND_RESET_I(9);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_28 = VL_RAND_RESET_I(8);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_34 = VL_RAND_RESET_I(9);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_38 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_40 = VL_RAND_RESET_I(8);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_44 = VL_RAND_RESET_I(10);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_45 = VL_RAND_RESET_I(15);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_46 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_51 = VL_RAND_RESET_I(9);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_52 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_54 = VL_RAND_RESET_I(10);
+    vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_57 = VL_RAND_RESET_I(15);
     vlSelf->core__DOT__decoder__DOT__casez_tmp = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_29 = VL_RAND_RESET_I(1);
-    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_30 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_35 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_36 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_37 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_38 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_42 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_43 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_47 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_48 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_57 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_59 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_60 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_61 = VL_RAND_RESET_I(1);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_62 = VL_RAND_RESET_I(3);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_63 = VL_RAND_RESET_I(2);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_64 = VL_RAND_RESET_I(6);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_65 = VL_RAND_RESET_I(7);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_66 = VL_RAND_RESET_I(8);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_67 = VL_RAND_RESET_I(7);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_68 = VL_RAND_RESET_I(3);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_69 = VL_RAND_RESET_I(10);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_70 = VL_RAND_RESET_I(4);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_71 = VL_RAND_RESET_I(2);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_72 = VL_RAND_RESET_I(8);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_73 = VL_RAND_RESET_I(10);
+    vlSelf->core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_74 = VL_RAND_RESET_I(2);
     vlSelf->core__DOT__reg_0__DOT__regs_0 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_1 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_2 = VL_RAND_RESET_I(32);
@@ -198,9 +246,16 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->core__DOT__reg_0__DOT__regs_14 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__regs_15 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__reg_0__DOT__casez_tmp_0 = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__reg_0__DOT___GEN = VL_RAND_RESET_I(1);
     vlSelf->core__DOT__ifu__DOT__pc = VL_RAND_RESET_I(32);
-    vlSelf->core__DOT__exu__DOT___alu_io_result = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__exu__DOT___mem_read_data = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19 = VL_RAND_RESET_I(16);
+    vlSelf->core__DOT__exu__DOT__result = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2 = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__exu__DOT__comp__DOT___io_result_T_18 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__clock__0 = VL_RAND_RESET_I(1);
     for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;
