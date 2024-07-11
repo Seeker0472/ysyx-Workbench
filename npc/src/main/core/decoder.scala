@@ -90,7 +90,7 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
   }
 }
 object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
-  def name: String = "InstType"
+  def name: String = "ALUOp_Gen"
   override def chiselType = ALU_Op()
   def genTable(op: InsP): BitPat = {
     var op_type=ALU_Op.inv
