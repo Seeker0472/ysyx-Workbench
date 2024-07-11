@@ -35,12 +35,12 @@ class MEM extends BlackBox with HasBlackBoxInline {
       |  if (read_enable) begin // 有读写请求时
       |    read_data = pmem_read(read_addr);
       |  end
-      |    if (write_enable) begin // 有写请求时
-      |      pmem_write(write_addr, write_data, write_mask);
-      |    end
       |  else begin
       |    read_data = 0;
       |  end
+      |    if (write_enable) begin // 有写请求时
+      |      pmem_write(write_addr, write_data, write_mask);
+      |    end
       |end
       |endmodule
     """.stripMargin

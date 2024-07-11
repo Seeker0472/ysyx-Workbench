@@ -1441,7 +1441,15 @@ VL_INLINE_OPT void Vcore___024root___ico_sequent__TOP__0(Vcore___024root* vlSelf
                                                                 ((0U 
                                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
                                                                   ? 0U
-                                                                  : 0xffU));
+                                                                  : 
+                                                                 ((1U 
+                                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
+                                                                   ? 3U
+                                                                   : 
+                                                                  ((2U 
+                                                                    == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
+                                                                    ? 0xfU
+                                                                    : 0xffU))));
     } else {
         vlSelf->core__DOT__exu__DOT___mem_read_data = 0U;
     }
@@ -1760,7 +1768,15 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
                                                                 ((0U 
                                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
                                                                   ? 0U
-                                                                  : 0xffU));
+                                                                  : 
+                                                                 ((1U 
+                                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
+                                                                   ? 3U
+                                                                   : 
+                                                                  ((2U 
+                                                                    == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
+                                                                    ? 0xfU
+                                                                    : 0xffU))));
     } else {
         vlSelf->core__DOT__exu__DOT___mem_read_data = 0U;
     }

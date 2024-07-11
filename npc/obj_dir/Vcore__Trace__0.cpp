@@ -57,12 +57,13 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
         bufp->chgBit(oldp+9,(((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
                               | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_40)))));
         bufp->chgCData(oldp+10,(vlSelf->core__DOT___decoder_io_out_branch_type),3);
-        bufp->chgIData(oldp+11,(((0U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
+        bufp->chgCData(oldp+11,(((0U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
                                   ? 0U : ((1U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
-                                           ? 0xffU : 
-                                          ((2U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
-                                            ? 0xffffU
-                                            : 0xffffffffU)))),32);
+                                           ? 3U : (
+                                                   (2U 
+                                                    == (IData)(vlSelf->core__DOT___decoder_io_out_mem_write_type))
+                                                    ? 0xfU
+                                                    : 0xffU)))),8);
         bufp->chgBit(oldp+12,((1U & ((4U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
                                       ? ((2U & (IData)(vlSelf->core__DOT___decoder_io_out_branch_type))
                                           ? ((1U & 
