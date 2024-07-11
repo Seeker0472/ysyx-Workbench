@@ -217,17 +217,19 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
     vlSelf->core__DOT__exu__DOT___alu_io_result = (
                                                    (((0xffU 
                                                       == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_10)) 
-                                                     | ((0x7fU 
-                                                         == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13)) 
-                                                        | (0xffU 
-                                                           == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_17))))
+                                                     | ((0x1ffU 
+                                                         == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_11)) 
+                                                        | ((0x7fU 
+                                                            == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13)) 
+                                                           | (0xffU 
+                                                              == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_17)))))
                                                      ? vlSelf->core__DOT__ifu__DOT__pc
                                                      : vlSelf->core__DOT__reg_0__DOT__casez_tmp) 
                                                    + 
                                                    ((IData)(vlSelf->core__DOT___decoder_io_out_alu_use_Imm_2)
                                                      ? vlSelf->core__DOT__decoder__DOT__casez_tmp
                                                      : vlSelf->core__DOT__reg_0__DOT__casez_tmp));
-    if ((0x3ffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_12))) {
+    if (vlSelf->core__DOT___decoder_io_out_pc_jump) {
         vlSelf->io_value = ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc);
         vlSelf->core__DOT___exu_io_out_n_pc = vlSelf->core__DOT__exu__DOT___alu_io_result;
     } else {
@@ -300,7 +302,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__ico(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 594, "", "Input combinational region did not converge.");
+            VL_FATAL_MT("build/core.sv", 598, "", "Input combinational region did not converge.");
         }
         __VicoIterCount = ((IData)(1U) + __VicoIterCount);
         __VicoContinue = 0U;
@@ -316,7 +318,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__nba(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 594, "", "NBA region did not converge.");
+            VL_FATAL_MT("build/core.sv", 598, "", "NBA region did not converge.");
         }
         __VnbaIterCount = ((IData)(1U) + __VnbaIterCount);
         __VnbaContinue = 0U;
@@ -327,7 +329,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
                 Vcore___024root___dump_triggers__act(vlSelf);
 #endif
-                VL_FATAL_MT("build/core.sv", 594, "", "Active region did not converge.");
+                VL_FATAL_MT("build/core.sv", 598, "", "Active region did not converge.");
             }
             vlSelf->__VactIterCount = ((IData)(1U) 
                                        + vlSelf->__VactIterCount);

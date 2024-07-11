@@ -20,6 +20,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
     VL_IN8(clock,0,0);
     VL_IN8(reset,0,0);
     CData/*0:0*/ core__DOT___decoder_io_out_alu_use_Imm_2;
+    CData/*0:0*/ core__DOT___decoder_io_out_pc_jump;
     CData/*0:0*/ core__DOT___decoder_io_out_reg_write_enable;
     CData/*7:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T;
     CData/*7:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_1;
@@ -29,13 +30,15 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
     CData/*6:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13;
     CData/*7:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16;
     CData/*7:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_17;
-    CData/*0:0*/ core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_27;
     CData/*0:0*/ core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_28;
+    CData/*0:0*/ core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_29;
+    CData/*6:0*/ core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_30;
     CData/*0:0*/ core__DOT__reg_0__DOT___GEN;
     CData/*0:0*/ __VstlFirstIteration;
     CData/*0:0*/ __VicoFirstIteration;
     CData/*0:0*/ __Vtrigprevexpr___TOP__clock__0;
     CData/*0:0*/ __VactContinue;
+    SData/*8:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_11;
     SData/*9:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_12;
     SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_15;
     SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_19;
