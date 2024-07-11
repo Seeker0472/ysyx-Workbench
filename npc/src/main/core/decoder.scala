@@ -9,7 +9,6 @@ import chisel3.util.BitPat
 import chisel3.util.experimental.decode.DecodeField
 import chisel3.util.experimental.decode._
 
-
 object Inst_Type_Enum extends ChiselEnum {
   val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type = Value
 }
@@ -18,13 +17,13 @@ case class InsP(
   val Inst_Type: Inst_Type_Enum.Type,
   val name_in:   String = "Not Implemented!",
   val func7:     BitPat = BitPat.dontCare(7),
-  val rs2 :BitPat = BitPat.dontCare(5),
+  val rs2:       BitPat = BitPat.dontCare(5),
   val func3:     BitPat = BitPat.dontCare(3),
   val opcode:    BitPat)
     extends DecodePattern {
-  def bitPat: BitPat = func7 ##rs2## BitPat.dontCare(5) ## func3 ## BitPat.dontCare(5) ## opcode
+  def bitPat: BitPat = func7 ## rs2 ## BitPat.dontCare(5) ## func3 ## BitPat.dontCare(5) ## opcode
   // def pattern: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
-  def name:   String = name_in
+  def name: String = name_in
 }
 
 object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
@@ -41,7 +40,8 @@ object Use_IMM_2 extends BoolDecodeField[InsP] {
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (
-      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.J_Type||op.name_in.matches("auipc")
+      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.J_Type || op.name_in
+        .matches("auipc")
     )
       y
     else n
@@ -52,7 +52,9 @@ object Use_PC_1 extends BoolDecodeField[InsP] {
   def name: String = "Use_PC_1"
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
-    if (op.Inst_Type == Inst_Type_Enum.J_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.name_in.matches("auipc"))//auipc
+    if (
+      op.Inst_Type == Inst_Type_Enum.J_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.name_in.matches("auipc")
+    ) //auipc
       y
     else n
   }
@@ -64,7 +66,8 @@ object Is_Jump extends BoolDecodeField[InsP] {
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     if (op.Inst_Type == Inst_Type_Enum.J_Type || op.opcode.rawString.matches("1100111"))
-      y else n
+      y
+    else n
   }
 
 }
@@ -85,19 +88,31 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
   // override def chiselType = Inst_Type_Enum()
   def genTable(op: InsP) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
-    if(op.opcode.rawString.matches("1110011")&&op.func3.rawString.matches("000")&&op.rs2.rawString.matches(("00001")))
-    y else n
+    if (
+      op.opcode.rawString.matches("1110011") && op.func3.rawString.matches("000") && op.rs2.rawString.matches(("00001"))
+    )
+      y
+    else n
   }
 }
 object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
   def name: String = "ALUOp_Gen"
   override def chiselType = ALU_Op()
   def genTable(op: InsP): BitPat = {
-    val op_type=op.name_in match{
-      case "add" |"addi"|"jal" |"jalr"| "auipc"  =>ALU_Op.add
-      case "sub" =>ALU_Op.sub
-      case "xor" =>ALU_Op.xor
-      case _ => ALU_Op.inv
+    val op_type = op.name_in match {
+      case "add" | "addi" | "jal" | "jalr" | "auipc"               => ALU_Op.add
+      case "lb" | "lh" | "lw" | "lbu" | "lhu" | "sb" | "sh" | "sw" => ALU_Op.add
+      case "beq" | "bne" | "blt" | "bge" | "bltu" | "bgeu"         => ALU_Op.add
+      case "sub"                                                   => ALU_Op.sub
+      case "xor" | "xori"                                          => ALU_Op.xor
+      case "or" | "ori"                                            => ALU_Op.or
+      case "and" | "andi"                                          => ALU_Op.and
+      case "sll" | "slli"                                          => ALU_Op.sll
+      case "srl" | "srli"                                          => ALU_Op.srl
+      case "sra" | "srai"                                          => ALU_Op.sra
+      case "slt" | "slti"                                          => ALU_Op.slt
+      case "sltu" | "sltiu"                                        => ALU_Op.sltu
+      case _                                                       => ALU_Op.inv
     }
     BitPat(op_type.litValue.U((op_type.getWidth).W))
   }
@@ -237,7 +252,13 @@ class Decoder extends Module {
     InsP(name_in = "lui", Inst_Type   = Inst_Type_Enum.U_Type, opcode = BitPat("b0110111")),
     InsP(name_in = "auipc", Inst_Type = Inst_Type_Enum.U_Type, opcode = BitPat("b0010111")),
     //blocks
-    InsP(name_in = "ecall/break", Inst_Type = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"),func3 = BitPat("b000"),rs2=BitPat("b00001"))
+    InsP(
+      name_in   = "ecall/break",
+      Inst_Type = Inst_Type_Enum.I_Type,
+      opcode    = BitPat("b1110011"),
+      func3     = BitPat("b000"),
+      rs2       = BitPat("b00001")
+    )
     // InsP(name_in = "ebreak", opcode = BitPat("0010111"))
   )
 
@@ -259,7 +280,8 @@ class Decoder extends Module {
   val rd  = io.instr(11, 7)
 
   val decodedResults =
-    new DecodeTable(Patterns, Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak,ALUOp_Gen)).decode(io.instr)
+    new DecodeTable(Patterns, Seq(InstType, Use_IMM_2, Use_PC_1, Is_Jump, R_Write_Enable, Is_Ebreak, ALUOp_Gen))
+      .decode(io.instr)
   val Type = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(

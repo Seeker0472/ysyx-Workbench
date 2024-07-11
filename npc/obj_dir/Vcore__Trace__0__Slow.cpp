@@ -148,13 +148,13 @@ VL_ATTR_COLD void Vcore___024root__trace_full_0_sub_0(Vcore___024root* vlSelf, V
     // Init
     uint32_t* const oldp VL_ATTR_UNUSED = bufp->oldp(vlSymsp->__Vm_baseCode);
     // Body
-    bufp->fullBit(oldp+1,((0x7fffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_23))));
+    bufp->fullBit(oldp+1,((0x7fffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_24))));
     bufp->fullIData(oldp+2,(vlSelf->core__DOT__decoder__DOT__casez_tmp),32);
     bufp->fullBit(oldp+3,(vlSelf->core__DOT___decoder_io_out_alu_use_Imm_2));
     bufp->fullBit(oldp+4,(((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_7)) 
                            | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13)) 
                               | ((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
-                                 | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_20)))))));
+                                 | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_21)))))));
     bufp->fullCData(oldp+5,(vlSelf->__VdfgRegularize_hd87f99a1_0_0),4);
     bufp->fullBit(oldp+6,(vlSelf->core__DOT___decoder_io_out_pc_jump));
     bufp->fullBit(oldp+7,(vlSelf->core__DOT___decoder_io_out_reg_write_enable));
