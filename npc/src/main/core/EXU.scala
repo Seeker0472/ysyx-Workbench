@@ -71,10 +71,10 @@ class EXU extends Module {
 
 class Branch_comp extends Module {
   val io = IO(new Bundle {
-    val src1      = UInt(CVAL.DLEN.W)
-    val src2      = UInt(CVAL.DLEN.W)
-    val comp_type = Branch_Type()
-    val result    = Bool()
+    val src1      = Input(UInt(CVAL.DLEN.W))
+    val src2      = Input(UInt(CVAL.DLEN.W))
+    val comp_type = Input(Branch_Type())
+    val result    = Output(Bool())
   })
   MuxLookup(io.comp_type, false.B)(
     Seq(
