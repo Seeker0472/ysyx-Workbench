@@ -154,14 +154,6 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
         }
     }
     vlSelf->io_pc = vlSelf->core__DOT__ifu__DOT__pc;
-    if (vlSelf->core__DOT___decoder_io_out_pc_jump) {
-        vlSelf->io_value = ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc);
-        vlSelf->core__DOT___exu_io_out_n_pc = 0U;
-    } else {
-        vlSelf->io_value = 0U;
-        vlSelf->core__DOT___exu_io_out_n_pc = ((IData)(4U) 
-                                               + vlSelf->core__DOT__ifu__DOT__pc);
-    }
     vlSelf->core__DOT__reg_0__DOT__casez_tmp = ((0x40000U 
                                                  & vlSelf->io_instr)
                                                  ? 
@@ -222,6 +214,29 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
                                                     & vlSelf->io_instr)
                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_1
                                                     : vlSelf->core__DOT__reg_0__DOT__regs_0))));
+    vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2 
+        = ((IData)(vlSelf->core__DOT___decoder_io_out_alu_use_Imm_2)
+            ? vlSelf->core__DOT__decoder__DOT__casez_tmp
+            : vlSelf->core__DOT__reg_0__DOT__casez_tmp);
+    vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 
+        = (((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_7)) 
+            | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13)) 
+               | ((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
+                  | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_20)))))
+            ? vlSelf->core__DOT__ifu__DOT__pc : vlSelf->core__DOT__reg_0__DOT__casez_tmp);
+    vlSelf->core__DOT__exu__DOT___alu_io_result = ((IData)(vlSelf->__VdfgRegularize_hd87f99a1_0_0)
+                                                    ? 
+                                                   (vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 
+                                                    + vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)
+                                                    : 0U);
+    if (vlSelf->core__DOT___decoder_io_out_pc_jump) {
+        vlSelf->io_value = ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc);
+        vlSelf->core__DOT___exu_io_out_n_pc = vlSelf->core__DOT__exu__DOT___alu_io_result;
+    } else {
+        vlSelf->io_value = vlSelf->core__DOT__exu__DOT___alu_io_result;
+        vlSelf->core__DOT___exu_io_out_n_pc = ((IData)(4U) 
+                                               + vlSelf->core__DOT__ifu__DOT__pc);
+    }
 }
 
 void Vcore___024root___eval_triggers__act(Vcore___024root* vlSelf);
@@ -287,7 +302,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__ico(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 624, "", "Input combinational region did not converge.");
+            VL_FATAL_MT("build/core.sv", 655, "", "Input combinational region did not converge.");
         }
         __VicoIterCount = ((IData)(1U) + __VicoIterCount);
         __VicoContinue = 0U;
@@ -303,7 +318,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__nba(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 624, "", "NBA region did not converge.");
+            VL_FATAL_MT("build/core.sv", 655, "", "NBA region did not converge.");
         }
         __VnbaIterCount = ((IData)(1U) + __VnbaIterCount);
         __VnbaContinue = 0U;
@@ -314,7 +329,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
                 Vcore___024root___dump_triggers__act(vlSelf);
 #endif
-                VL_FATAL_MT("build/core.sv", 624, "", "Active region did not converge.");
+                VL_FATAL_MT("build/core.sv", 655, "", "Active region did not converge.");
             }
             vlSelf->__VactIterCount = ((IData)(1U) 
                                        + vlSelf->__VactIterCount);
