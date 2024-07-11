@@ -343,7 +343,7 @@ class Decoder extends Module {
   val immI      = Cat(Fill(20, imm_I_Raw(11)), imm_I_Raw)
   val imm_S_Raw = Cat(io.instr(31, 25), io.instr(11, 7))
   val immS      = Cat(Fill(20, imm_S_Raw(11)), imm_S_Raw)
-  val imm_B_Raw = Cat(io.instr(31, 31), io.instr(7, 7), io.instr(11, 7), io.instr(30, 25), io.instr(11, 8), 0.U(1.W))
+  val imm_B_Raw = Cat(io.instr(31, 31), io.instr(7, 7), io.instr(30, 25), io.instr(11, 8), 0.U(1.W))
   val immB      = Cat(Fill(19, imm_B_Raw(12)), imm_B_Raw)
   val imm_U_Raw = Cat(io.instr(31, 12), 0.U(12.W))
   val immU      = imm_U_Raw
