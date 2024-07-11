@@ -120,7 +120,7 @@ object Mem_LoadType extends DecodeField[InsP, Load_Type.Type] {
 
 //mem
 object Write_En extends BoolDecodeField[InsP] {
-  def name: String = "Read_En"
+  def name: String = "Write_En"
   def genTable(op: InsP) = {
     if (op.opcode.rawString.matches("0100011"))
       y
@@ -129,7 +129,7 @@ object Write_En extends BoolDecodeField[InsP] {
 }
 
 object Mem_WriteType extends DecodeField[InsP,Store_Type.Type]{
-  def name: String = "WriteMask"
+  def name: String = "Mem_WriteType"
   override def chiselType = Store_Type()
   def genTable(op: InsP) = {
     val stype = op.func3.rawString match{
