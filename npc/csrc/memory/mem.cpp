@@ -4,7 +4,7 @@
 #include <common.h>
 
 void log(const char * log){
-  Log(log);
+  Log("%s\n",log);
 }
 
 extern "C" int pmem_read(int raddr) {
