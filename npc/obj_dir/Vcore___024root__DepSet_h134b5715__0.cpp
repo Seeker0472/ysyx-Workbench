@@ -43,7 +43,6 @@ void Vcore___024root___eval_act(Vcore___024root* vlSelf) {
 
 void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf);
 void Vcore___024root___nba_sequent__TOP__1(Vcore___024root* vlSelf);
-void Vcore___024root___nba_sequent__TOP__2(Vcore___024root* vlSelf);
 void Vcore___024root___nba_comb__TOP__0(Vcore___024root* vlSelf);
 
 void Vcore___024root___eval_nba(Vcore___024root* vlSelf) {
@@ -57,9 +56,6 @@ void Vcore___024root___eval_nba(Vcore___024root* vlSelf) {
     }
     if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcore___024root___nba_sequent__TOP__1(vlSelf);
-    }
-    if ((1ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        Vcore___024root___nba_sequent__TOP__2(vlSelf);
     }
     if ((3ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcore___024root___nba_comb__TOP__0(vlSelf);
@@ -226,19 +222,6 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__0(Vcore___024root* vlSelf
                                                     & vlSelf->io_instr)
                                                     ? vlSelf->core__DOT__reg_0__DOT__regs_1
                                                     : vlSelf->core__DOT__reg_0__DOT__regs_0))));
-    vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 
-        = ((1U & ((IData)((0x17U == (0x7fU & vlSelf->io_instr))) 
-                  | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
-                     | ((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_19)) 
-                        | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_40))))))
-            ? vlSelf->core__DOT__ifu__DOT__pc : vlSelf->core__DOT__reg_0__DOT__casez_tmp);
-}
-
-VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__2(Vcore___024root* vlSelf) {
-    (void)vlSelf;  // Prevent unused variable warning
-    Vcore__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___nba_sequent__TOP__2\n"); );
-    // Body
     vlSelf->core__DOT__reg_0__DOT__casez_tmp_0 = ((0x800000U 
                                                    & vlSelf->io_instr)
                                                    ? 
@@ -299,6 +282,12 @@ VL_INLINE_OPT void Vcore___024root___nba_sequent__TOP__2(Vcore___024root* vlSelf
                                                       & vlSelf->io_instr)
                                                       ? vlSelf->core__DOT__reg_0__DOT__regs_1
                                                       : vlSelf->core__DOT__reg_0__DOT__regs_0))));
+    vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 
+        = ((1U & ((IData)((0x17U == (0x7fU & vlSelf->io_instr))) 
+                  | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
+                     | ((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_19)) 
+                        | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_40))))))
+            ? vlSelf->core__DOT__ifu__DOT__pc : vlSelf->core__DOT__reg_0__DOT__casez_tmp);
     vlSelf->core__DOT__exu__DOT__comp__DOT___io_result_T_18 
         = ((1U == (IData)(vlSelf->core__DOT___decoder_io_out_branch_type)) 
            & (vlSelf->core__DOT__reg_0__DOT__casez_tmp 

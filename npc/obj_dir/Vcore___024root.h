@@ -65,7 +65,6 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         CData/*0:0*/ __VstlFirstIteration;
         CData/*0:0*/ __VicoFirstIteration;
         CData/*0:0*/ __Vtrigprevexpr___TOP__clock__0;
-        CData/*0:0*/ __VactDidInit;
         CData/*0:0*/ __VactContinue;
         SData/*8:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_8;
         SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_11;
@@ -83,9 +82,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         SData/*14:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_45;
         SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_46;
         SData/*8:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_51;
+        SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_52;
     };
     struct {
-        SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_52;
         SData/*9:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_54;
         SData/*14:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_57;
         SData/*9:0*/ core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_69;

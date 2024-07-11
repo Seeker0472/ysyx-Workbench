@@ -1531,13 +1531,9 @@ void Vcore___024root___eval_triggers__act(Vcore___024root* vlSelf) {
     // Body
     vlSelf->__VactTriggered.set(0U, ((IData)(vlSelf->clock) 
                                      & (~ (IData)(vlSelf->__Vtrigprevexpr___TOP__clock__0))));
-    vlSelf->__VactTriggered.set(1U, ((IData)(vlSelf->clock) 
-                                     != (IData)(vlSelf->__Vtrigprevexpr___TOP__clock__0)));
+    vlSelf->__VactTriggered.set(1U, ((~ (IData)(vlSelf->clock)) 
+                                     & (IData)(vlSelf->__Vtrigprevexpr___TOP__clock__0)));
     vlSelf->__Vtrigprevexpr___TOP__clock__0 = vlSelf->clock;
-    if (VL_UNLIKELY((1U & (~ (IData)(vlSelf->__VactDidInit))))) {
-        vlSelf->__VactDidInit = 1U;
-        vlSelf->__VactTriggered.set(1U, 1U);
-    }
 #ifdef VL_DEBUG
     if (VL_UNLIKELY(vlSymsp->_vm_contextp__->debug())) {
         Vcore___024root___dump_triggers__act(vlSelf);
