@@ -65,6 +65,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         CData/*0:0*/ __VstlFirstIteration;
         CData/*0:0*/ __VicoFirstIteration;
         CData/*0:0*/ __Vtrigprevexpr___TOP__clock__0;
+        CData/*0:0*/ __VactDidInit;
         CData/*0:0*/ __VactContinue;
         SData/*8:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_8;
         SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_11;
@@ -82,9 +83,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         SData/*14:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_45;
         SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_46;
         SData/*8:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_51;
-        SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_52;
     };
     struct {
+        SData/*15:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_52;
         SData/*9:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_54;
         SData/*14:0*/ core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_57;
         SData/*9:0*/ core__DOT__decoder__DOT____VdfgRegularize_hb9908eda_0_69;
@@ -121,14 +122,13 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         IData/*31:0*/ core__DOT__exu__DOT____Vcellinp__alu__io_in_src2;
         IData/*31:0*/ core__DOT__exu__DOT____Vcellinp__alu__io_in_src1;
         IData/*31:0*/ core__DOT__exu__DOT__alu__DOT__casez_tmp;
-        IData/*31:0*/ __Vfunc_pmem_read__1__Vfuncout;
         IData/*31:0*/ __VactIterCount;
         VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
     };
     VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<1> __VicoTriggered;
-    VlTriggerVec<1> __VactTriggered;
-    VlTriggerVec<1> __VnbaTriggered;
+    VlTriggerVec<2> __VactTriggered;
+    VlTriggerVec<2> __VnbaTriggered;
 
     // INTERNAL VARIABLES
     Vcore__Syms* const vlSymsp;
