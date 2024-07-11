@@ -152,7 +152,7 @@ void ftrace_func_call(paddr_t pc_now,paddr_t target){
     printf("0x%x: ",pc_now);
     for(int i=0;i<layer;i++)
         printf("  ");
-    printf("call [%s@0x%x]\n",find_symbol(target),target);
+    printf("call [%s@0x%x]\n",find_symbol(pc_now),pc_now);
     layer++;
 }
 
