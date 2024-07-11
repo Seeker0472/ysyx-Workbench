@@ -150,10 +150,10 @@ VL_ATTR_COLD void Vcore___024root__trace_full_0_sub_0(Vcore___024root* vlSelf, V
     bufp->fullBit(oldp+4,(((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_10)) 
                            | ((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13)) 
                               | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_17))))));
-    bufp->fullBit(oldp+5,(vlSelf->core__DOT___decoder_io_out_pc_jump));
+    bufp->fullBit(oldp+5,((0x3ffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_12))));
     bufp->fullBit(oldp+6,(vlSelf->core__DOT___decoder_io_out_reg_write_enable));
     bufp->fullIData(oldp+7,(vlSelf->core__DOT__reg_0__DOT__casez_tmp),32);
-    bufp->fullIData(oldp+8,(((IData)(vlSelf->core__DOT___decoder_io_out_pc_jump)
+    bufp->fullIData(oldp+8,(((0x3ffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_12))
                               ? vlSelf->core__DOT__exu__DOT___alu_io_result
                               : ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc))),32);
     bufp->fullIData(oldp+9,((((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_10)) 

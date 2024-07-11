@@ -16,7 +16,7 @@ extern "C" {
 
 
     // DPI IMPORTS
-    // DPI import at build/core.sv:667:30
+    // DPI import at build/core.sv:666:30
     extern void call_ebreak();
 
 #ifdef __cplusplus
