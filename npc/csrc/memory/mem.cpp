@@ -41,7 +41,7 @@ extern "C" int pmem_read(int raddr)
 {
   // 总是读取地址为`raddr & ~0x3u`的4字节返回
   // Log("mem_read");
-  int aligned_addr = waddr & ~0x3u; // 对齐地址
+  int aligned_addr = raddr & ~0x3u; // 对齐地址
   record_pread(aligned_addr, 4);
   return mem_read(raddr);
 }
