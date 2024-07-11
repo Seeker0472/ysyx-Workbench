@@ -19,21 +19,30 @@ class MEM extends BlackBox with HasBlackBoxInline {
   })
   setInline(
     "mem_access.v",
-    """import "DPI-C" function int pmem_read(input int raddr);
+    """import "DPI-C" function int pmem_read(input int read_addr);
       |import "DPI-C" function void pmem_write(
-      |input int waddr, input int wdata, input byte wmask);
+      |input int write_addr, input int write_data, input byte write_mask);
+      |module ebreak_handler(
+      |  input [31:0] read_addr,
+      |  input [31:0] write_addr,
+      |  input [31:0] write_data,
+      |  input [31:0] write_mask,
+      |  input  write_enable,
+      |  input  read_enable,
+      |);
       |reg [31:0] read_data;
       |always @(*) begin
       |  if (read_enable) begin // 有读写请求时
       |    read_data = pmem_read(read_addr);
+      |  end
       |    if (write_enable) begin // 有写请求时
       |      pmem_write(write_addr, write_data, write_mask);
       |    end
-      |  end
       |  else begin
       |    read_data = 0;
       |  end
       |end
+      |endmodule
     """.stripMargin
   )
 }
