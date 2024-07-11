@@ -24,14 +24,30 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
     uint32_t* const oldp VL_ATTR_UNUSED = bufp->oldp(vlSymsp->__Vm_baseCode + 1);
     // Body
     if (VL_UNLIKELY(vlSelf->__Vm_traceActivity[1U])) {
-        bufp->chgBit(oldp+0,((0x7fffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_24))));
+        bufp->chgBit(oldp+0,((0x7fffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_35))));
         bufp->chgIData(oldp+1,(vlSelf->core__DOT__decoder__DOT__casez_tmp),32);
-        bufp->chgBit(oldp+2,(vlSelf->core__DOT___decoder_io_out_alu_use_Imm_2));
-        bufp->chgBit(oldp+3,(((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_7)) 
+        bufp->chgBit(oldp+2,(((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T)) 
+                              | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_1)) 
+                                 | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_2)) 
+                                    | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_4)) 
+                                       | ((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_6)) 
+                                          | ((0x3ffU 
+                                              == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_15)) 
+                                             | ((0x7fU 
+                                                 == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
+                                                | ((0xffffU 
+                                                    == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_18)) 
+                                                   | ((0xffU 
+                                                       == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_20)) 
+                                                      | ((0xffffU 
+                                                          == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_28)) 
+                                                         | (0x7fffU 
+                                                            == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_35))))))))))))));
+        bufp->chgBit(oldp+3,(((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_6)) 
                               | ((0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_13)) 
                                  | ((0x7fU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_16)) 
-                                    | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_21)))))));
-        bufp->chgCData(oldp+4,(vlSelf->__VdfgRegularize_hd87f99a1_0_0),4);
+                                    | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_26)))))));
+        bufp->chgCData(oldp+4,(vlSelf->core__DOT___decoder_io_out_alu_op_type),4);
         bufp->chgBit(oldp+5,(vlSelf->core__DOT___decoder_io_out_pc_jump));
         bufp->chgBit(oldp+6,(vlSelf->core__DOT___decoder_io_out_reg_write_enable));
     }
@@ -39,11 +55,11 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
                      | vlSelf->__Vm_traceActivity[2U]))) {
         bufp->chgIData(oldp+7,(vlSelf->core__DOT__reg_0__DOT__casez_tmp),32);
         bufp->chgIData(oldp+8,(((IData)(vlSelf->core__DOT___decoder_io_out_pc_jump)
-                                 ? vlSelf->core__DOT__exu__DOT___alu_io_result
+                                 ? vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp
                                  : ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc))),32);
         bufp->chgIData(oldp+9,(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1),32);
         bufp->chgIData(oldp+10,(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2),32);
-        bufp->chgIData(oldp+11,(vlSelf->core__DOT__exu__DOT___alu_io_result),32);
+        bufp->chgIData(oldp+11,(vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp),32);
         bufp->chgQData(oldp+12,((0x7fffffffffffULL 
                                  & ((QData)((IData)(vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1)) 
                                     << (0xfU & vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)))),47);
