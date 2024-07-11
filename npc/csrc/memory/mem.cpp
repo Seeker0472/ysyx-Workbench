@@ -43,7 +43,7 @@ extern "C" int pmem_read(int raddr)
   // Log("mem_read");
   int aligned_addr = raddr & ~0x3u; // 对齐地址
   record_pread(aligned_addr, 4);
-  return mem_read(raddr);
+  return mem_read(aligned_addr);
 }
 extern "C" void pmem_write(int waddr, int wdata, char wmask)
 {
