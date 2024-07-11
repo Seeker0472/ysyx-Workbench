@@ -17,6 +17,8 @@ class MEM extends BlackBox with HasBlackBoxInline {
     val write_data   = Input(UInt(CVAL.DLEN.W))
     val write_mask   = Input(UInt(8.W))
   })
+  val myClock = IO(Input(Clock()))
+  this.clock := myClock
   setInline(
     "mem_access.v",
     """import "DPI-C" function int pmem_read(input int read_addr);
