@@ -39,7 +39,7 @@ class core extends Module {
   //r/w_reg
   reg.io.read_No_1 := decoder.io.out.rs1
   exu.io.in.src1   := reg.io.read_1
-  reg.io.read_No_2 := decoder.io.out.rs1
+  reg.io.read_No_2 := decoder.io.out.rs2
   exu.io.in.src2   := reg.io.read_2
   reg.io.write_No  := decoder.io.out.rd
 
