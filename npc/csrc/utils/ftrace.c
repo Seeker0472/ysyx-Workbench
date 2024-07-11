@@ -173,7 +173,7 @@ void ftrace_check_inst(paddr_t pc_now,word_t inst){
     else
         prev_call=false;
 
-    else if(inst==0x8067)
+    if(inst==0x8067)
         ftrace_func_ret(pc_now,inst);
 
 }
