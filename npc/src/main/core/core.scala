@@ -27,7 +27,7 @@ class core extends Module {
   val br_han  = Module(new ebreak_handler())
   val ifu     = Module(new IFU())
   val exu     = Module(new EXU())
-  val mem     = Module(new MEM())
+  // val mem     = Module(new MEM())
 
   //fetch_inst
   io.pc          := ifu.io.pc
