@@ -6,7 +6,7 @@
 
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   uint32_t code = inl(KBD_ADDR);
-  printf("kbd->keydown=%x,,kbd->keycode=%x\n",(code & KEYDOWN_MASK ? true : false),code & ~KEYDOWN_MASK);
+  printf("kbd->keydown=%d,,kbd->keycode=%d\n",(code & KEYDOWN_MASK ? true : false),code & ~KEYDOWN_MASK);
   kbd->keydown =  (code & KEYDOWN_MASK ? true : false);
   kbd->keycode = code & ~KEYDOWN_MASK;
 }
