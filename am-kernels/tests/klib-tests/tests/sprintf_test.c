@@ -10,7 +10,6 @@ int main(){
     for(int i=0;i<8;i++){
         memset(buffer,0,30);
         sprintf(buffer,"%d",val[i]);
-        // printf("Fail!");
         assert(memcmp(buffer,result[i],30));
     }
     return 0;
