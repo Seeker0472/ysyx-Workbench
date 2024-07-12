@@ -70,7 +70,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
       ((uint8_t *)&new_data)[i] = ((uint8_t *)&wdata)[i-offset];
     }
   }
-  printf("new_data=%x\n",new_data);
+  printf("new_data=%x off=%x\n",new_data,offset);
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
 
