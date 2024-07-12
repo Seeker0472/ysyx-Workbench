@@ -105,7 +105,7 @@ int sprintf(char *out, const char *fmt, ...) {
   va_start(args,fmt);
   int len=vsprintf(out,fmt,args);
   va_end(args);
-  putstr(out);
+  // putstr(out);
   return len;
 }
 // int sprintf(char *out, const char *fmt, ...) {
