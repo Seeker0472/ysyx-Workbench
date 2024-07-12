@@ -18,5 +18,5 @@ void record_pwrite(paddr_t addr, char wmask, word_t data)
         wmask >>= 1;
         index--;
     }
-    MUXDEF(CONFIG_RV64, Info_R("WriteAddr at: 0x%x wmask:%s 0x%lx\n", addr, binaryStr, data);, Info_R("WriteAddr at: 0x%x len:%s 0x%x\n", addr, binaryStr, data);)
+    MUXDEF(CONFIG_RV64, Info_R("WriteAddr at: 0x%x wmask:%s 0x%lx\n", addr, binaryStr, data);, Info_R("WriteAddr at: 0x%x wmask:%s 0x%x\n", addr, binaryStr, data);)
 }
