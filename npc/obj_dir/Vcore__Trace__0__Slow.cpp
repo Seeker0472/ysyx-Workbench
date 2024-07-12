@@ -68,7 +68,7 @@ VL_ATTR_COLD void Vcore___024root__trace_init_sub__TOP__0(Vcore___024root* vlSel
     tracep->declBus(c+10,0,"io_in_branch_type",-1, VerilatedTraceSigDirection::INPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 2,0);
     tracep->declBus(c+40,0,"io_out_reg_out",-1, VerilatedTraceSigDirection::OUTPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
     tracep->declBus(c+51,0,"io_out_n_pc",-1, VerilatedTraceSigDirection::OUTPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
-    tracep->declQuad(c+52,0,"mrrm",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 32,0);
+    tracep->declQuad(c+52,0,"mrrm",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 39,0);
     tracep->declBus(c+11,0,"casez_tmp",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 7,0);
     tracep->declBus(c+54,0,"result",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
     tracep->pushPrefix("alu", VerilatedTracePrefixType::SCOPE_MODULE);
@@ -330,7 +330,7 @@ VL_ATTR_COLD void Vcore___024root__trace_full_0_sub_0(Vcore___024root* vlSelf, V
                                      | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_40)))))
                                ? vlSelf->core__DOT__exu__DOT__result
                                : ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc))),32);
-    bufp->fullQData(oldp+52,(vlSelf->core__DOT__exu__DOT__mrrm),33);
+    bufp->fullQData(oldp+52,(vlSelf->core__DOT__exu__DOT__mrrm),40);
     bufp->fullIData(oldp+54,(vlSelf->core__DOT__exu__DOT__result),32);
     bufp->fullIData(oldp+55,(vlSelf->core__DOT__exu__DOT___mem_read_data),32);
 }
