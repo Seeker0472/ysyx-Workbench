@@ -33,7 +33,11 @@ int vsprintf(char *out, const char *fmt, va_list args) {
         out_offset=print_num(out,out_offset,va_arg(args,int));
       }else if(*(p)=='s'){
         out_offset=print_str(out,out_offset,va_arg(args,char *));
+      }else if (*(p)=='c')
+      {
+        out[out_offset++]=va_arg(args,int);
       }
+      
       break;
     // case '':
     //   break;
