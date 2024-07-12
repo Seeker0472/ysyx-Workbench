@@ -78,7 +78,7 @@ READELF   = $(CROSS_COMPILE)readelf
 
 ### Compilation flags
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
-INCFLAGS += $(addprefix -I, $(INC_PATH)) -march=rv32ima
+INCFLAGS += $(addprefix -I, $(INC_PATH)) 
 
 ARCH_H := arch/$(ARCH).h
 CFLAGS   += -g -O2 -MMD -Wall -Werror $(INCFLAGS) \
@@ -87,8 +87,8 @@ CFLAGS   += -g -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -D__PLATFORM__=$(PLATFORM) -D__PLATFORM_$(shell echo $(PLATFORM) | tr a-z A-Z | tr - _) \
             -DARCH_H=\"$(ARCH_H)\" \
             -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector \
-            -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
-CXXFLAGS += -g  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
+            -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden -march=rv32ima
+CXXFLAGS += -g  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions -march=rv32ima
 ASFLAGS  += -MMD $(INCFLAGS)
 LDFLAGS  += -z noexecstack 
 
