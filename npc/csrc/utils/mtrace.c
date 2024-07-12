@@ -7,12 +7,12 @@ void record_pread(paddr_t addr, int len){
 void record_pwrite(paddr_t addr, char wmask, word_t data){
     int strsize=9;
         char binaryStr[strsize]; 
-    int index = strSize - 2; // 最后一位留给 null 终止符
-    binaryStr[strSize - 1] = '\0'; // 设置字符串终止符
+    int index = strsize - 2; // 最后一位留给 null 终止符
+    binaryStr[strsize - 1] = '\0'; // 设置字符串终止符
 
     while (index >= 0) {
-        binaryStr[index] = (num & 1) ? '1' : '0';
-        num >>= 1;
+        binaryStr[index] = (wmask & 1) ? '1' : '0';
+        wmask >>= 1;
         index--;
     }
     MUXDEF(CONFIG_RV64,Info_R("WriteAddr at: 0x%x wmask:%s 0x%lx\n",addr,binaryStr,data);,Info_R("WriteAddr at: 0x%x len:%s 0x%x\n",addr,binaryStr,data);)
