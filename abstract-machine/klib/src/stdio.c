@@ -7,8 +7,7 @@
 int sprintf(char *out, const char *fmt, ...);
 int printf(const char *fmt, ...) {
   char out_buf[100000000];
-  putch('A');
-  putch('\n');
+
   sprintf(out_buf,fmt);
   int i=0;
   for(;i<100000000;i++){
@@ -18,7 +17,7 @@ int printf(const char *fmt, ...) {
       putch(out_buf[i]);
   }
   return i;
-  // panic("Not implemented4");
+  panic("Not implemented4");
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
