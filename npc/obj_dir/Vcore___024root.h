@@ -117,12 +117,12 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
         IData/*31:0*/ core__DOT__reg_0__DOT__casez_tmp_0;
         IData/*31:0*/ core__DOT__ifu__DOT__pc;
         IData/*31:0*/ core__DOT__exu__DOT___mem_read_data;
-        IData/*31:0*/ core__DOT__exu__DOT__mrrm;
         IData/*31:0*/ core__DOT__exu__DOT__result;
         IData/*31:0*/ core__DOT__exu__DOT____Vcellinp__alu__io_in_src2;
         IData/*31:0*/ core__DOT__exu__DOT____Vcellinp__alu__io_in_src1;
         IData/*31:0*/ core__DOT__exu__DOT__alu__DOT__casez_tmp;
         IData/*31:0*/ __VactIterCount;
+        QData/*32:0*/ core__DOT__exu__DOT__mrrm;
         VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
     };
     VlTriggerVec<1> __VstlTriggered;

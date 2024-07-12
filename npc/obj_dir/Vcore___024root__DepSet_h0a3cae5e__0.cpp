@@ -1439,36 +1439,40 @@ VL_INLINE_OPT void Vcore___024root___ico_sequent__TOP__0(Vcore___024root* vlSelf
                         ? (vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src1 
                            + vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2)
                         : 0U))));
-    vlSelf->core__DOT__exu__DOT__mrrm = (vlSelf->core__DOT__exu__DOT___mem_read_data 
-                                         >> (3U & vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp));
+    vlSelf->core__DOT__exu__DOT__mrrm = (0x1ffffffffULL 
+                                         & ((QData)((IData)(vlSelf->core__DOT__exu__DOT___mem_read_data)) 
+                                            >> (6U 
+                                                & (vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp 
+                                                   << 1U))));
     vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19 
         = (0xffffU & ((2U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
-                       ? vlSelf->core__DOT__exu__DOT__mrrm
+                       ? (IData)(vlSelf->core__DOT__exu__DOT__mrrm)
                        : ((0xff00U & ((- (IData)(((1U 
                                                    == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type)) 
-                                                  & (vlSelf->core__DOT__exu__DOT__mrrm 
-                                                     >> 7U)))) 
+                                                  & (IData)(
+                                                            (vlSelf->core__DOT__exu__DOT__mrrm 
+                                                             >> 7U))))) 
                                       << 8U)) | ((1U 
                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
                                                   ? 
                                                  (0xffU 
-                                                  & vlSelf->core__DOT__exu__DOT__mrrm)
+                                                  & (IData)(vlSelf->core__DOT__exu__DOT__mrrm))
                                                   : 0U))));
     vlSelf->core__DOT__exu__DOT__result = ((IData)(vlSelf->core__DOT___decoder_io_out_mem_read_enable)
                                             ? ((5U 
                                                 == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
                                                 ? (0xffffU 
-                                                   & vlSelf->core__DOT__exu__DOT__mrrm)
+                                                   & (IData)(vlSelf->core__DOT__exu__DOT__mrrm))
                                                 : (
                                                    (4U 
                                                     == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
                                                     ? 
                                                    (0xffU 
-                                                    & vlSelf->core__DOT__exu__DOT__mrrm)
+                                                    & (IData)(vlSelf->core__DOT__exu__DOT__mrrm))
                                                     : 
                                                    ((3U 
                                                      == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
-                                                     ? vlSelf->core__DOT__exu__DOT__mrrm
+                                                     ? (IData)(vlSelf->core__DOT__exu__DOT__mrrm)
                                                      : 
                                                     (((- (IData)(
                                                                  (1U 
