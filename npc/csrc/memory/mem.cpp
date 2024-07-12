@@ -63,11 +63,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
   uint32_t new_data = current_data;
 
-  for (int i = offset; i < 4; ++i)
+  for (int i = 0; i+offset < 4; ++i)
   {
     if (wmask & (3 << (i * 2)))
     {
-      ((uint8_t *)&new_data)[i] = ((uint8_t *)&wdata)[i-offset];
+      ((uint8_t *)&new_data)[i+offset] = ((uint8_t *)&wdata)[i];
     }
   }
   printf("new_data=%x off=%x\n",new_data,offset);
