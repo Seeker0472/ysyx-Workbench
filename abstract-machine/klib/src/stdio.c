@@ -10,7 +10,6 @@ int printf(const char *fmt, ...) {
 
   char out_buf[8000];
   
-
   sprintf(out_buf,fmt);
   // putstr(out_buf);
   int i=0;
