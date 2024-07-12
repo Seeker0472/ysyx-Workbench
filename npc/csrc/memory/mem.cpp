@@ -4,7 +4,7 @@
 #include <common.h>
 
 void record_pread(paddr_t addr, int len);
-void record_pwrite(paddr_t addr, int len, word_t data);
+void record_pwrite(paddr_t addr, char wmask, word_t data);
 uint32_t mem[0x8000000] = {
     0x00448493,
     0x00448493,
