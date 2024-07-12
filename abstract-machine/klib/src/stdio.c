@@ -10,38 +10,6 @@ int print_str(char *out,size_t out_offset,char* val);
 int sprintf(char *out, const char *fmt, ...);
 int vsprintf(char *out, const char *fmt, va_list args);
 
-// int printf(const char *fmt, ...) {
-//   char out[500];
-//   size_t out_offset=0;
-//   va_list args;
-//   va_start(args,fmt);
-//   const char *p = fmt;
-//   while(*p!='\0'){
-//     switch (*p)
-//     {
-//     case '\\':
-//       break;
-//     case '%':
-//       if(*(++p)=='d'){
-//         out_offset=print_num(out,out_offset,va_arg(args,unsigned));
-//       }else if(*(p)=='s'){
-//         out_offset=print_str(out,out_offset,va_arg(args,char *));
-//       }
-//       break;
-//     // case '':
-//     //   break;
-//     default:
-//       out[out_offset++]=*p;
-//       break;
-//     }
-//     p++;
-//   }
-//   out[out_offset]='\0';
-//   putstr(out);
-//   return out_offset;
-//   // return 0;
-// }
-
 int printf(const char *fmt, ...){
   char out[40000];
   va_list args;
@@ -77,7 +45,6 @@ int vsprintf(char *out, const char *fmt, va_list args) {
   }
   out[out_offset]='\0';
   return out_offset;
-  // panic("Not implemented3");
 }
 //TOW Helper Func Defined By Myself
 //递归打印val
@@ -108,36 +75,6 @@ int sprintf(char *out, const char *fmt, ...) {
   // putstr(out);
   return len;
 }
-// int sprintf(char *out, const char *fmt, ...) {
-
-//   size_t out_offset=0;
-//   va_list args;
-//   va_start(args,fmt);
-//   const char *p = fmt;
-//   while(*p!='\0'){
-//     switch (*p)
-//     {
-//     case '\\':
-//       break;
-//     case '%':
-//       if(*(++p)=='d'){
-//         out_offset=print_num(out,out_offset,va_arg(args,int));
-//       }else if(*(p)=='s'){
-//         out_offset=print_str(out,out_offset,va_arg(args,char *));
-//       }
-//       break;
-//     // case '':
-//     //   break;
-//     default:
-//       out[out_offset++]=*p;
-//       break;
-//     }
-//     p++;
-//   }
-//   out[out_offset]='\0';
-//   return out_offset;
-// }
-
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
   panic("Not implemented1");
