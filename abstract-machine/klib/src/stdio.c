@@ -7,6 +7,8 @@
 int sprintf(char *out, const char *fmt, ...);
 int printf(const char *fmt, ...) {
   char out_buf[100000000];
+  putch('A');
+  putch('\n');
   sprintf(out_buf,fmt);
   int i=0;
   for(;i<100000000;i++){
