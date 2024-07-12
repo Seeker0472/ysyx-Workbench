@@ -4,9 +4,19 @@
 #include <stdarg.h>
 //TODO: stdarg是如何实现的?
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
-
+int sprintf(char *out, const char *fmt, ...);
 int printf(const char *fmt, ...) {
-  panic("Not implemented4");
+  char out_buf[100000000];
+  sprintf(out_buf,fmt);
+  int i=0;
+  for(;i<100000000;i++){
+    if(out_buf[i]=='\0')
+      break;
+    else
+      putch(out_buf[i]);
+  }
+  return i;
+  // panic("Not implemented4");
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
