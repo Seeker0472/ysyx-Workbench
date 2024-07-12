@@ -250,6 +250,7 @@ VL_ATTR_COLD void Vcore___024root___ctor_var_reset(Vcore___024root* vlSelf) {
     vlSelf->core__DOT__reg_0__DOT___GEN = VL_RAND_RESET_I(1);
     vlSelf->core__DOT__ifu__DOT__pc = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__exu__DOT___mem_read_data = VL_RAND_RESET_I(32);
+    vlSelf->core__DOT__exu__DOT__mrrm = VL_RAND_RESET_Q(35);
     vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19 = VL_RAND_RESET_I(16);
     vlSelf->core__DOT__exu__DOT__result = VL_RAND_RESET_I(32);
     vlSelf->core__DOT__exu__DOT____Vcellinp__alu__io_in_src2 = VL_RAND_RESET_I(32);
