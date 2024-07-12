@@ -351,31 +351,43 @@ VL_INLINE_OPT void Vcore___024root___nba_comb__TOP__0(Vcore___024root* vlSelf) {
     Vcore__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___nba_comb__TOP__0\n"); );
     // Body
-    vlSelf->core__DOT__exu__DOT__result = ((IData)(vlSelf->core__DOT___decoder_io_out_mem_read_enable)
-                                            ? (((5U 
-                                                 == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
-                                                 ? 
-                                                (0xffffU 
-                                                 & vlSelf->core__DOT__exu__DOT___mem_read_data)
-                                                 : 
-                                                ((4U 
+    vlSelf->core__DOT__exu__DOT__mrrm = (vlSelf->core__DOT__exu__DOT___mem_read_data 
+                                         >> (3U & vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp));
+    vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19 
+        = (0xffffU & ((2U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
+                       ? vlSelf->core__DOT__exu__DOT__mrrm
+                       : ((0xff00U & ((- (IData)(((1U 
+                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type)) 
+                                                  & (vlSelf->core__DOT__exu__DOT__mrrm 
+                                                     >> 7U)))) 
+                                      << 8U)) | ((1U 
                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
                                                   ? 
                                                  (0xffU 
-                                                  & vlSelf->core__DOT__exu__DOT___mem_read_data)
-                                                  : 
-                                                 ((3U 
-                                                   == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
-                                                   ? vlSelf->core__DOT__exu__DOT___mem_read_data
-                                                   : 
-                                                  (((- (IData)(
-                                                               (1U 
-                                                                & ((IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19) 
-                                                                   >> 0xfU)))) 
-                                                    << 0x10U) 
-                                                   | (IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19))))) 
-                                               >> (3U 
-                                                   & vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp))
+                                                  & vlSelf->core__DOT__exu__DOT__mrrm)
+                                                  : 0U))));
+    vlSelf->core__DOT__exu__DOT__result = ((IData)(vlSelf->core__DOT___decoder_io_out_mem_read_enable)
+                                            ? ((5U 
+                                                == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
+                                                ? (0xffffU 
+                                                   & vlSelf->core__DOT__exu__DOT__mrrm)
+                                                : (
+                                                   (4U 
+                                                    == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
+                                                    ? 
+                                                   (0xffU 
+                                                    & vlSelf->core__DOT__exu__DOT__mrrm)
+                                                    : 
+                                                   ((3U 
+                                                     == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
+                                                     ? vlSelf->core__DOT__exu__DOT__mrrm
+                                                     : 
+                                                    (((- (IData)(
+                                                                 (1U 
+                                                                  & ((IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19) 
+                                                                     >> 0xfU)))) 
+                                                      << 0x10U) 
+                                                     | (IData)(vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19)))))
                                             : vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp);
     vlSelf->io_value = ((IData)(vlSelf->core__DOT___decoder_io_out_pc_jump)
                          ? ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc)
@@ -485,7 +497,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__ico(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 1336, "", "Input combinational region did not converge.");
+            VL_FATAL_MT("build/core.sv", 1335, "", "Input combinational region did not converge.");
         }
         __VicoIterCount = ((IData)(1U) + __VicoIterCount);
         __VicoContinue = 0U;
@@ -501,7 +513,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vcore___024root___dump_triggers__nba(vlSelf);
 #endif
-            VL_FATAL_MT("build/core.sv", 1336, "", "NBA region did not converge.");
+            VL_FATAL_MT("build/core.sv", 1335, "", "NBA region did not converge.");
         }
         __VnbaIterCount = ((IData)(1U) + __VnbaIterCount);
         __VnbaContinue = 0U;
@@ -512,7 +524,7 @@ void Vcore___024root___eval(Vcore___024root* vlSelf) {
 #ifdef VL_DEBUG
                 Vcore___024root___dump_triggers__act(vlSelf);
 #endif
-                VL_FATAL_MT("build/core.sv", 1336, "", "Active region did not converge.");
+                VL_FATAL_MT("build/core.sv", 1335, "", "Active region did not converge.");
             }
             vlSelf->__VactIterCount = ((IData)(1U) 
                                        + vlSelf->__VactIterCount);

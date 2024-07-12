@@ -59,14 +59,15 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   IFDEF(CONFIG_MTRACE, record_pwrite(waddr, wmask, wdata););
 
   int aligned_addr = waddr & ~0x3u; // 对齐地址
+  int offset = waddr &0x3u;
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
   uint32_t new_data = current_data;
 
-  for (int i = 0; i < 4; ++i)
+  for (int i = offset; i < 4; ++i)
   {
     if (wmask & (3 << (i * 2)))
     {
-      ((uint8_t *)&new_data)[i] = ((uint8_t *)&wdata)[i];
+      ((uint8_t *)&new_data)[i] = ((uint8_t *)&wdata)[i-offset];
     }
   }
   printf("new_data=%x\n",new_data);

@@ -175,8 +175,9 @@ void Vcore___024root__trace_chg_0_sub_0(Vcore___024root* vlSelf, VerilatedVcd::B
                                     | (0xffU == (IData)(vlSelf->core__DOT__decoder__DOT___decodedResults_andMatrixOutputs_T_40)))))
                               ? vlSelf->core__DOT__exu__DOT__result
                               : ((IData)(4U) + vlSelf->core__DOT__ifu__DOT__pc))),32);
-    bufp->chgIData(oldp+51,(vlSelf->core__DOT__exu__DOT__result),32);
-    bufp->chgIData(oldp+52,(vlSelf->core__DOT__exu__DOT___mem_read_data),32);
+    bufp->chgIData(oldp+51,(vlSelf->core__DOT__exu__DOT__mrrm),32);
+    bufp->chgIData(oldp+52,(vlSelf->core__DOT__exu__DOT__result),32);
+    bufp->chgIData(oldp+53,(vlSelf->core__DOT__exu__DOT___mem_read_data),32);
 }
 
 void Vcore___024root__trace_cleanup(void* voidSelf, VerilatedVcd* /*unused*/) {
