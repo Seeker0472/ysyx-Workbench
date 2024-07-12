@@ -32,6 +32,7 @@ int atoi(const char* nptr) {
 }
 
 void *malloc(size_t size) {
+  printf("call malloc!");
   if(!addr)
     addr=heap.start;
   void* ret=addr;
