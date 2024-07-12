@@ -126,8 +126,8 @@ class alignas(VL_CACHE_LINE_BYTES) Vcore___024root final : public VerilatedModul
     };
     VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<1> __VicoTriggered;
-    VlTriggerVec<2> __VactTriggered;
-    VlTriggerVec<2> __VnbaTriggered;
+    VlTriggerVec<1> __VactTriggered;
+    VlTriggerVec<1> __VnbaTriggered;
 
     // INTERNAL VARIABLES
     Vcore__Syms* const vlSymsp;
