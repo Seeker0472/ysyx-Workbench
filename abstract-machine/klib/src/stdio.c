@@ -6,11 +6,13 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 int sprintf(char *out, const char *fmt, ...);
 int printf(const char *fmt, ...) {
-  panic("Not implemented4");
+  // panic("Not implemented4");
 
   char out_buf[8000];
+  
 
   sprintf(out_buf,fmt);
+  // putstr(out_buf);
   int i=0;
   for(;i<8000;i++){
     if(out_buf[i]=='\0')
