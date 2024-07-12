@@ -6,11 +6,11 @@
 
 /* gcc gen_test.c && ./a.out > test.c && movcc test.c movfusator/lib/softfloat64.o && ./a.out | grep FAIL */
 
-// #include <stdio.h>
-// #include <string.h>
+#include <stdio.h>
+#include <string.h>
 
-#include"trap.h"
-#include<limits.h>
+// #include"trap.h"
+// #include<limits.h>
 
 //static const double vd[]={-2.0, -1.0, 0.0, 1.0, 2.0};
 //static const float  vf[]={-2.0f, -1.0f, 0.0f, 1.0f, 2.0f};
