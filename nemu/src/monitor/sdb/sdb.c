@@ -175,8 +175,8 @@ static int cmd_watch(char *args){
     return 0;
   }
   WP* wp=new_wp();
-  // strncpy(wp->expr,args,501);//复制表达式
-  strcpy(wp->expr,args);//复制表达式
+  strncpy(wp->expr,args,499);//复制表达式
+  // strcpy(wp->expr,args);//复制表达式
   wp->last_result=succ?result:0;
   printf("Added watch_point :%s\n",args);
   return 0;
