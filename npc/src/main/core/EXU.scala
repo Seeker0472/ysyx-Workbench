@@ -36,18 +36,19 @@ class EXU extends Module {
   mem.io.read_addr  := alu.io.result
   mem.io.write_addr := alu.io.result
   val mrres = mem.io.read_data
-
+  val mrrm = mrres >>( alu.io.result &(0x3.U))// 读取内存,不对齐访问!!
   //注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.mem_read_type, 0.S)(
     Seq(
-      Load_Type.lb -> mrres(7, 0).asSInt,
-      Load_Type.lh -> mrres(15, 0).asSInt,
-      Load_Type.lw -> mrres(31, 0).asSInt,
-      Load_Type.lbu -> mrres(7, 0).zext,
-      Load_Type.lhu -> mrres(15, 0).zext
+      Load_Type.lb -> mrrm(7, 0).asSInt,
+      Load_Type.lh -> mrrm(15, 0).asSInt,
+      Load_Type.lw -> mrrm(31, 0).asSInt,
+      Load_Type.lbu -> mrrm(7, 0).zext,
+      Load_Type.lhu -> mrrm(15, 0).zext
     )
   )
-  val mem_read_result = mem_read_result_sint.asUInt >>( alu.io.result &(0x3.U))// 读取内存,不对齐访问!!
+  val mem_read_result = mem_read_result_sint.asUInt
+
 
   val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
     Seq(
