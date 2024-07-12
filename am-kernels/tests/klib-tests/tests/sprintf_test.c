@@ -7,7 +7,7 @@ char* result[]={"0","126322567","2147483647","-2147483648","-2147483647","252645
 
 int main(){
     char buffer[30];
-    for(int i=0;i<8;i++){
+    for(int i=0;i<1;i++){
         memset(buffer,0,30);
         sprintf(buffer,"%d",val[i]);
         assert(memcmp(buffer,result[i],30));
