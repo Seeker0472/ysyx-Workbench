@@ -52,11 +52,11 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   // `wmask`中每比特表示`wdata`中1个字节的掩码,
   // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
   // Log("mem_write");
-  int length = 0;
-  for (int i = 0; i < 4; i++)
-    if (wdata & (3 << (i * 2)))
-      length++;
-  IFDEF(CONFIG_MTRACE, record_pwrite(waddr, length, wdata););
+  // int length = 0;
+  // for (int i = 0; i < 4; i++)
+  //   if (wdata & (3 << (i * 2)))
+  //     length++;
+  IFDEF(CONFIG_MTRACE, record_pwrite(waddr, wmask, wdata););
 
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];

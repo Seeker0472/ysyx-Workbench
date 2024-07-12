@@ -4,7 +4,16 @@ void record_pread(paddr_t addr, int len){
     Info_N("ReadAddr at: 0x%x len:%d\n",addr,len);
 }
 
-void record_pwrite(paddr_t addr, int len, word_t data){
-    
-    MUXDEF(CONFIG_RV64,Info_R("WriteAddr at: 0x%x len:%d 0x%lx\n",addr,len,data);,Info_R("WriteAddr at: 0x%x len:%d 0x%x\n",addr,len,data);)
+void record_pwrite(paddr_t addr, char wmask, word_t data){
+    int strsize=9;
+        char binaryStr[strsize]; 
+    int index = strSize - 2; // 最后一位留给 null 终止符
+    binaryStr[strSize - 1] = '\0'; // 设置字符串终止符
+
+    while (index >= 0) {
+        binaryStr[index] = (num & 1) ? '1' : '0';
+        num >>= 1;
+        index--;
+    }
+    MUXDEF(CONFIG_RV64,Info_R("WriteAddr at: 0x%x wmask:%s 0x%lx\n",addr,binaryStr,data);,Info_R("WriteAddr at: 0x%x len:%s 0x%x\n",addr,binaryStr,data);)
 }
