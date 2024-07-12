@@ -351,11 +351,11 @@ VL_INLINE_OPT void Vcore___024root___nba_comb__TOP__0(Vcore___024root* vlSelf) {
     Vcore__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcore___024root___nba_comb__TOP__0\n"); );
     // Body
-    vlSelf->core__DOT__exu__DOT__mrrm = (0xffffffffffULL 
-                                         & VL_SHIFTR_QQI(40,40,10, (QData)((IData)(vlSelf->core__DOT__exu__DOT___mem_read_data)), 
-                                                         (0x300U 
-                                                          & (vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp 
-                                                             << 8U))));
+    vlSelf->core__DOT__exu__DOT__mrrm = (0x7ffffffffULL 
+                                         & ((QData)((IData)(vlSelf->core__DOT__exu__DOT___mem_read_data)) 
+                                            >> (0x18U 
+                                                & (vlSelf->core__DOT__exu__DOT__alu__DOT__casez_tmp 
+                                                   << 3U))));
     vlSelf->core__DOT__exu__DOT___mem_read_result_sint_T_19 
         = (0xffffU & ((2U == (IData)(vlSelf->core__DOT___decoder_io_out_mem_read_type))
                        ? (IData)(vlSelf->core__DOT__exu__DOT__mrrm)
