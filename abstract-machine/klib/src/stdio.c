@@ -7,6 +7,7 @@
 int sprintf(char *out, const char *fmt, ...);
 int printf(const char *fmt, ...) {
   char out_buf[100000000];
+  panic("Not implemented4");
 
   sprintf(out_buf,fmt);
   int i=0;
@@ -17,7 +18,6 @@ int printf(const char *fmt, ...) {
       putch(out_buf[i]);
   }
   return i;
-  panic("Not implemented4");
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
