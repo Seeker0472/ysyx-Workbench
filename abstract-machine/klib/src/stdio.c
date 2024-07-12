@@ -3,40 +3,25 @@
 #include <klib-macros.h>
 #include <stdarg.h>
 //TODO: stdarg是如何实现的?
+
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+int print_num(char *out,size_t out_offset,int val);
+int print_str(char *out,size_t out_offset,char* val);
+int sprintf(char *out, const char *fmt, ...);
+int vsprintf(char *out, const char *fmt, va_list args);
 
-int printf(const char *fmt, ...) {
-  panic("Not implemented4");
-}
-
-int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented3");
-}
-//TOW Helper Func Defined By Myself
-//递归打印val
-int print_num(char *out,size_t out_offset,int val){
-  int append=val%10;
-  if(val/10!=0)
-    out_offset=print_num(out,out_offset,val/10);
-  out[out_offset]=append+'0';
-  return out_offset+1;
-}
-//打印字符串
-int print_str(char *out,size_t out_offset,char* val){
-  size_t i=0;
-  while(val[i]!='\0'){
-    out[out_offset++]=val[i++];
-  }
-  return out_offset;
-}
-int sprintf(char *out, const char *fmt, ...) {
-  // panic("Not implemented");
-  //%s-recurrsive %d?
-  //123 7b 0111 1011
-  // size_t i=0;
-  size_t out_offset=0;
+int printf(const char *fmt, ...){
+  char out[40000];
   va_list args;
   va_start(args,fmt);
+  int len=vsprintf(out,fmt,args);
+  va_end(args);
+  putstr(out);
+  return len;
+}
+
+int vsprintf(char *out, const char *fmt, va_list args) {
+  size_t out_offset=0;
   const char *p = fmt;
   while(*p!='\0'){
     switch (*p)
@@ -61,7 +46,35 @@ int sprintf(char *out, const char *fmt, ...) {
   out[out_offset]='\0';
   return out_offset;
 }
-
+//TOW Helper Func Defined By Myself
+//递归打印val
+int print_num(char *out,size_t out_offset,int val){
+  if(val<0){
+  out[out_offset++]='-';
+  val=-val;
+  }
+  int append=val%10;
+  if(val/10!=0)
+    out_offset=print_num(out,out_offset,val/10);
+  out[out_offset]=append+'0';
+  return out_offset+1;
+}
+//打印字符串
+int print_str(char *out,size_t out_offset,char* val){
+  size_t i=0;
+  while(val[i]!='\0'){
+    out[out_offset++]=val[i++];
+  }
+  return out_offset;
+}
+int sprintf(char *out, const char *fmt, ...) {
+  va_list args;
+  va_start(args,fmt);
+  int len=vsprintf(out,fmt,args);
+  va_end(args);
+  // putstr(out);
+  return len;
+}
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
   panic("Not implemented1");
