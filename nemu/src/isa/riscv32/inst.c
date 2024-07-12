@@ -29,6 +29,7 @@ void ftrace_func_ret(paddr_t pc_now,paddr_t address);
 #define Mw vaddr_write
 #define Ext32(x) ((x)&0x80000000)?((x)|0xFFFFFFFF00000000):((x)&0x00000000FFFFFFFF)
 #define Ext16(x) ((x)&0x8000)?((x)|0xFFFFFFFFFFFF0000):((x)&0x000000000000FFFF)
+#define Ext8(x) ((x)&0x80)?((x)|0xFFFFFFFFFFFFFF00):((x)&0x0000000000000FF)
 #define Ext4(x) ((x)&0x8)?((x)|0xFFFFFFFFFFFFFFF0):((x)&0x000000000000000F)
 
 enum {
@@ -158,7 +159,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000000 ????? ????? 101 ????? 01100 11", srl   , R, R(rd)=(src1)>>(src2));
   INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div   , R, R(rd)=(src1)/(src2));
 
-  INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb  , I, R(rd)= Ext4(Mr(src1 + imm, 1)););
+  INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb  , I, R(rd)= Ext8(Mr(src1 + imm, 1)););
 
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
