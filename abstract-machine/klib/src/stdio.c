@@ -8,6 +8,7 @@ int sprintf(char *out, const char *fmt, ...);
 int printf(const char *fmt, ...) {
   // panic("Not implemented4");
   // assert(0);
+  // putstr("aaaaaaaaaaaaaaaaaaaaaaa\n");
 
   char out_buf[8000];
   
