@@ -6,7 +6,7 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 int sprintf(char *out, const char *fmt, ...);
 int printf(const char *fmt, ...) {
-  // panic("Not implemented4");
+  panic("Not implemented4");
 
   char out_buf[8000];
   
