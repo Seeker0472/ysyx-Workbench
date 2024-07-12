@@ -78,7 +78,7 @@ READELF   = $(CROSS_COMPILE)readelf
 
 ### Compilation flags
 INC_PATH += $(WORK_DIR)/include $(addsuffix /include/, $(addprefix $(AM_HOME)/, $(LIBS)))
-INCFLAGS += $(addprefix -I, $(INC_PATH))
+INCFLAGS += $(addprefix -I, $(INC_PATH)) -march=rv32ima
 
 ARCH_H := arch/$(ARCH).h
 CFLAGS   += -g -O2 -MMD -Wall -Werror $(INCFLAGS) \
