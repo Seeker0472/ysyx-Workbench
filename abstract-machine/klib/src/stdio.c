@@ -12,7 +12,7 @@ int sprintf(char *out, const char *fmt, ...);
 int vsprintf(char *out, const char *fmt, va_list args);
 
 int printf(const char *fmt, ...){
-  char out[40000];
+  char out[150];
   va_list args;
   va_start(args,fmt);
   int len=vsprintf(out,fmt,args);
