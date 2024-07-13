@@ -41,7 +41,7 @@ uint32_t mem_read(uint32_t pc)
   if (pc == 0xa0000048)
   {
     time = get_time();
-    printf("%lx\n", time);
+    // printf("%lx\n", time);
     return (uint32_t)time;
   }
   if (pc == 0xa000004c)
