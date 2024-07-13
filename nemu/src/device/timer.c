@@ -13,8 +13,6 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
-//模拟了i8253计时器的功能.
-
 #include <device/map.h>
 #include <device/alarm.h>
 #include <utils.h>

@@ -20,9 +20,6 @@
 
 #pragma GCC diagnostic ignored "-Wpointer-arith"
 
-void dtrace_read(const char * name,paddr_t addr,int len);
-void dtrace_write(const char * name,paddr_t addr,int len,word_t data);
-
 #define IO_SPACE_MAX (2 * 1024 * 1024)
 
 static uint8_t *io_space = NULL;
@@ -58,7 +55,6 @@ void init_map() {
 }
 
 word_t map_read(paddr_t addr, int len, IOMap *map) {
-  IFDEF(CONFIG_DTRACE,dtrace_read(map->name,addr,len););
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
   paddr_t offset = addr - map->low;
@@ -68,7 +64,6 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
 }
 
 void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
-  IFDEF(CONFIG_DTRACE,dtrace_write(map->name,addr,len,data););
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
   paddr_t offset = addr - map->low;

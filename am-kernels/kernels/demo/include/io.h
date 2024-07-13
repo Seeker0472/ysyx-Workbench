@@ -1,6 +1,6 @@
 #ifndef __DRAW_H__
 
-// #define HAS_GUI
+#define HAS_GUI
 
 #include <stdio.h>
 #include <am.h>
@@ -65,13 +65,11 @@ static inline int screen_tile_width() {
 }
 #else
 static inline void set_color(int c) {
-  // printf("\033[%dm", c);
-  printf("%dm", c);
+  printf("\033[%dm", c);
 }
 
 static inline void print_char(char c, int y, int x) {
   printf("\033[%d;%dH%c", y + 1, x + 1, c);
-  // printf("%d;%dH%c", y + 1, x + 1, c);
 }
 
 static inline void screen_clear() {

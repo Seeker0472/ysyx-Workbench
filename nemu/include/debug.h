@@ -31,14 +31,14 @@
 //自定义颜色
 #ifdef CONFIG_LOG 
 #define Info_N(fmt, ...) \
-    _Log(ANSI_FG_WHITE fmt , ##__VA_ARGS__) 
+    printf(ANSI_FG_WHITE fmt , ##__VA_ARGS__) 
 #else
 #define Info_N(format, ...)
 #endif
 
 #ifdef CONFIG_LOG 
 #define Info_R(fmt, ...) \
-    _Log(ANSI_FG_MAGENTA fmt , ##__VA_ARGS__)
+    printf(ANSI_FG_MAGENTA fmt , ##__VA_ARGS__)
 #else
 #define Info_R(format, ...)
 #endif
