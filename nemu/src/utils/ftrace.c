@@ -29,7 +29,7 @@ void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加�
 
 	tail->start_addr=start_addr;
 	tail->length=len;
-	strncpy(tail->name,name,64);
+	strncpy(tail->name,name,63);
 	tail->next=NULL;
 }
 

@@ -88,7 +88,7 @@ CFLAGS   += -g -O2 -MMD -Wall -Werror $(INCFLAGS) \
             -DARCH_H=\"$(ARCH_H)\" \
             -fno-asynchronous-unwind-tables -fno-builtin -fno-stack-protector \
             -Wno-main -U_FORTIFY_SOURCE -fvisibility=hidden
-CXXFLAGS += -g  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
+CXXFLAGS += -g -O2  $(CFLAGS) -ffreestanding -fno-rtti -fno-exceptions
 ASFLAGS  += -MMD $(INCFLAGS)
 LDFLAGS  += -z noexecstack 
 
