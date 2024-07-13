@@ -3,8 +3,8 @@
 #include <debug.h>
 #include <common.h>
 
-// uint64_t get_time();
-// uint64_t time = 114514;
+uint64_t get_time();
+uint64_t time_now = 114514;
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
@@ -38,16 +38,16 @@ uint32_t mem_read(uint32_t pc)
   // //mtrace
   // //TODO: Write  Enable-------------------------------------------------
 
-  // if (pc == 0xa0000048)
-  // {
-  //   time = get_time();
-  //   // printf("%lx\n", time);
-  //   return (uint32_t)time;
-  // }
-  // if (pc == 0xa000004c)
-  // {
-  //   return (uint32_t)(time >> 32);
-  // }
+  if (pc == 0xa0000048)
+  {
+    time_now = get_time();
+    // printf("%lx\n", time);
+    return (uint32_t)time_now;
+  }
+  if (pc == 0xa000004c)
+  {
+    return (uint32_t)(time_now >> 32);
+  }
   return mem[(pc - 0x80000000) / 4];
 }
 

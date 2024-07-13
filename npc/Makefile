@@ -61,7 +61,7 @@ clean:
 .PHONY: test verilog help reformat checkformat clean
 
 sim:
-	# $(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."
 	
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  ${FLAGS}
