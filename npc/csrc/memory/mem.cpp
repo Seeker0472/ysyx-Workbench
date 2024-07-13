@@ -66,7 +66,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   // printf("addr=%x off=%x data=%x\n",aligned_addr,offset,wdata);
 
   if(aligned_addr==0xa00003f8){
-    printf("%x-%c",wdata,(char)(wdata&wmask));
+    printf("%x-%c",wdata,wdata);
     putchar((char)(wdata&wmask));
     return;
   }
