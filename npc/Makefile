@@ -7,7 +7,7 @@ PRJ = playground
 TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
 
-ARGS ?= -h
+ARGS ?= 
 IMG  ?=
 
 ROOT_DIR := $(shell pwd)
