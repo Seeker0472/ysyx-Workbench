@@ -82,10 +82,10 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
 uint32_t warp_pmem_read(uint32_t addr)
 {
-  if (raddr == 0xa0000048) {   
+  if (addr == 0xa0000048) {   
     return (uint32_t)get_time();
 }
-  if (raddr == 0xa000004c) {   
+  if (addr == 0xa000004c) {   
     return (uint32_t)(get_time()>>32);
 }
   return mem_read(addr);

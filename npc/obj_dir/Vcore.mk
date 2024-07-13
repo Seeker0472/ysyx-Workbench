@@ -68,6 +68,7 @@ VM_USER_CLASSES = \
 	log \
 	mtrace \
 	state \
+	time \
 
 # User .cpp directories (from .cpp's on Verilator command line)
 VM_USER_DIR = \
@@ -116,6 +117,8 @@ log.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/log.c
 mtrace.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/mtrace.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 state.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/state.c
+	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
+time.o: /home/seeker/Develop/ysyx-workbench/npc/csrc/utils/time.c
 	$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -c -o $@ $<
 
 ### Link rules... (from --exe)
