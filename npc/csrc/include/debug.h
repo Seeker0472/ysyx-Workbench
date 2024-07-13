@@ -10,10 +10,10 @@
         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
 //自定义颜色
 #define Info_N(fmt, ...) \
-    _Log(ANSI_FG_WHITE fmt ANSI_NONE, ##__VA_ARGS__)
+    printf(ANSI_FG_WHITE fmt ANSI_NONE, ##__VA_ARGS__)
 
 #define Info_R(fmt, ...) \
-    _Log(ANSI_FG_MAGENTA fmt ANSI_NONE, ##__VA_ARGS__)
+    printf(ANSI_FG_MAGENTA fmt ANSI_NONE, ##__VA_ARGS__)
 
 #define Assert(cond, format, ...) \
   do { \

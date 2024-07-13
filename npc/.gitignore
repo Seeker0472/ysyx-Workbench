@@ -20,7 +20,4 @@ out/
 .idea/
 .idea_modules/
 test_run_dir/
-
 obj_dir
-
-csrc/include/generated
