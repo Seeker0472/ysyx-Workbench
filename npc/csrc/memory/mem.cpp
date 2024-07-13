@@ -65,9 +65,10 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
   printf("addr=%x off=%x\n",aligned_addr,offset);
 
-  if(aligned_addr==0x3F8){
+  if(aligned_addr==0xa00003f8){
     printf("PUTCHAR");
     putchar(wdata&wmask);
+    return;
   }
 
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
