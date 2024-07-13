@@ -12,10 +12,10 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
+#define CONFIG_TIMER_GETTIMEOFDAY
 
 #include <common.h>
 #include MUXDEF(CONFIG_TIMER_GETTIMEOFDAY, <sys/time.h>, <time.h>)
-#define CONFIG_TIMER_GETTIMEOFDAY
 
 IFDEF(CONFIG_TIMER_CLOCK_GETTIME,
     static_assert(CLOCKS_PER_SEC == 1000000, "CLOCKS_PER_SEC != 1000000"));
