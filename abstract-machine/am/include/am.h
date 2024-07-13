@@ -29,7 +29,7 @@ typedef struct {
   } event;
   uintptr_t cause, ref;
   const char *msg;
-} Event;//事件
+} Event;
 
 // A protected address space with user memory @area
 // and arch-dependent @ptr
@@ -55,8 +55,8 @@ void     ioe_write   (int reg, void *buf);
 #include "amdev.h"
 
 // ---------- CTE: Interrupt Handling and Context Switching ----------
-bool     cte_init    (Context *(*handler)(Event ev, Context *ctx));//用于进行CTE相关的初始化操作. 其中它还接受一个来自操作系统的事件处理回调函数的指针, 当发生事件时, CTE将会把事件和相关的上下文作为参数, 来调用这个回调函数, 交由操作系统进行后续处理.
-void     yield       (void);//用于进行自陷操作, 会触发一个编号为EVENT_YIELD事件. 不同的ISA会使用不同的自陷指令来触发自陷操作, 
+bool     cte_init    (Context *(*handler)(Event ev, Context *ctx));
+void     yield       (void);
 bool     ienabled    (void);
 void     iset        (bool enable);
 Context *kcontext    (Area kstack, void (*entry)(void *), void *arg);
