@@ -38,12 +38,12 @@ uint32_t mem_read(uint32_t pc)
   // //mtrace
   // //TODO: Write  Enable-------------------------------------------------
 
-    if (addr == 0xa0000048) {
+    if (pc == 0xa0000048) {
     time= get_time();
     printf("%lx\n",time);
     return (uint32_t)time;
 }
-  if (addr == 0xa000004c) {   
+  if (pc == 0xa000004c) {   
     return (uint32_t)(time>>32);
 }
   return mem[(pc - 0x80000000) / 4];
