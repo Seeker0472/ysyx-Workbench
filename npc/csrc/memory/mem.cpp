@@ -91,6 +91,7 @@ uint32_t warp_pmem_read(uint32_t addr)
   
   if (addr == 0xa0000048) {
     time= get_time();
+    printf("%lx\n",time);
     return (uint32_t)time;
 }
   if (addr == 0xa000004c) {   
