@@ -5,6 +5,7 @@
 //TODO: stdarg是如何实现的?
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+// #if defined(__NATIVE_USE_KLIB__)
 int print_num(char *out,size_t out_offset,int val);
 int print_str(char *out,size_t out_offset,char* val);
 int sprintf(char *out, const char *fmt, ...);
