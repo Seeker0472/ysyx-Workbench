@@ -63,6 +63,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   int offset = waddr &0x3u;
   if(aligned_addr==0x3F8){
+    printf("PUTCHAR");
     putchar(wdata);
   }
 
