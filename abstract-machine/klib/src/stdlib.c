@@ -34,10 +34,10 @@ int atoi(const char* nptr) {
 
 void *malloc(size_t size) {
   // printf("call malloc!");
-  // if(!addr)
-  //   addr=heap.start;
-  // void* ret=addr;
-  // addr+=size;
+  if(!addr)
+    addr=heap.start;
+  void* ret=addr;
+  addr+=size;
 
   // On native, malloc() will be called during initializaion of C runtime.
   // Therefore do not call panic() here, else it will yield a dead recursion:
@@ -46,8 +46,7 @@ void *malloc(size_t size) {
 
   // panic("Not implemented");
 #endif
-  // return ret;
-  return NULL;
+  return ret;
 }
 
 void free(void *ptr) {
