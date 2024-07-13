@@ -7,7 +7,7 @@ PRJ = playground
 TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
 
-ARGS ?=
+ARGS ?= -h
 IMG  ?=
 
 ROOT_DIR := $(shell pwd)
@@ -72,7 +72,7 @@ gdb:
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	gdb   --args ./obj_dir/Vcore  $(ARGS) $(IMG)
-all: verilog sim
+all: verilog sim	
 	# @echo "所有文件的绝对路径："
 	# @echo "$(C_CPP_ABS)"
 -include ../Makefile
