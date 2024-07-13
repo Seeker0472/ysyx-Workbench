@@ -12,11 +12,11 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
-#define CONFIG_TIMER_GETTIMEOFDAY
+// #define CONFIG_TIMER_GETTIMEOFDAY
 
 #include <common.h>
-// #include MUXDEF(CONFIG_TIMER_GETTIMEOFDAY, <sys/time.h>, <time.h>)
-#include <sys/time.h>
+#include MUXDEF(CONFIG_TIMER_GETTIMEOFDAY, <sys/time.h>, <time.h>)
+// #include <sys/time.h>
 
 IFDEF(CONFIG_TIMER_CLOCK_GETTIME,
     static_assert(CLOCKS_PER_SEC == 1000000, "CLOCKS_PER_SEC != 1000000"));
@@ -43,7 +43,6 @@ static uint64_t get_time_internal() {
 uint64_t get_time() {
   if (boot_time == 0) boot_time = get_time_internal();
   uint64_t now = get_time_internal();
-  printf("%lx",now);
   return now - boot_time;
 }
 
