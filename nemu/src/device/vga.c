@@ -76,6 +76,7 @@ void vga_update_screen() {
   // then zero out the sync register
   if(vgactl_port_base[1]){
   update_screen();
+  vgactl_port_base[1] = 0;
   // io_write(AM_GPU_FBDRAW 0, 0, vmem, screen_width(), screen_height(), false);
   }
 }
