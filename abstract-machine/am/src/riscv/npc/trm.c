@@ -15,7 +15,7 @@ Area heap = RANGE(&_heap_start, PMEM_END);
 #endif
 static const char mainargs[] = MAINARGS;
 
-#define SERIAL_PORT 0xa00003f8
+// #define SERIAL_PORT 0xa00003f8
 
 void putch(char ch) {//实现putch
   outb(SERIAL_PORT, ch);
