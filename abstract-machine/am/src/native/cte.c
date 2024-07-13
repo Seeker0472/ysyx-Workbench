@@ -2,7 +2,7 @@
 #include <string.h>
 #include "platform.h"
 
-#define TIMER_HZ 100
+#define TIMER_HZ 1000
 #define SYSCALL_INSTR_LEN 7
 
 static Context* (*user_handler)(Event, Context*) = NULL;
