@@ -4,6 +4,7 @@
 #include <common.h>
 
 uint64_t get_time();
+uint64_t time=0;
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
@@ -87,11 +88,13 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
 uint32_t warp_pmem_read(uint32_t addr)
 {
-  if (addr == 0xa0000048) {   
-    return (uint32_t)get_time();
+  
+  if (addr == 0xa0000048) {
+    time= get_time();
+    return (uint32_t)time;
 }
   if (addr == 0xa000004c) {   
-    return (uint32_t)(get_time()>>32);
+    return (uint32_t)(time>>32);
 }
   return mem_read(addr);
 }
