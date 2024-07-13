@@ -62,7 +62,8 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   int offset = waddr &0x3u;
-  printf("addr=%x current_data=%x new_data=%x off=%x\n",aligned_addr,current_data,new_data,offset);
+
+  printf("addr=%x off=%x\n",aligned_addr,offset);
 
   if(aligned_addr==0x3F8){
     printf("PUTCHAR");
@@ -79,6 +80,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
       ((uint8_t *)&new_data)[i+offset] = ((uint8_t *)&wdata)[i];
     }
   }
+  // printf("addr=%x current_data=%x new_data=%x off=%x\n",aligned_addr,current_data,new_data,offset);
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
 
