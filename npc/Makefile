@@ -69,7 +69,7 @@ sim:
 	./obj_dir/Vcore $(ARGS) $(IMG)
 
 gdb:
-	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS}
+	verilator --CFLAGS -g -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}   ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	gdb   --args ./obj_dir/Vcore  $(ARGS) $(IMG)
 all: verilog sim
