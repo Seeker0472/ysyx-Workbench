@@ -3,6 +3,9 @@
 #include <debug.h>
 #include <common.h>
 
+uint64_t get_time();
+uint64_t time = 114514;
+
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
 uint32_t mem[0x8000000] = {
@@ -34,6 +37,17 @@ uint32_t mem_read(uint32_t pc)
 {
   // //mtrace
   // //TODO: Write  Enable-------------------------------------------------
+
+  if (pc == 0xa0000048)
+  {
+    time = get_time();
+    // printf("%lx\n", time);
+    return (uint32_t)time;
+  }
+  if (pc == 0xa000004c)
+  {
+    return (uint32_t)(time >> 32);
+  }
   return mem[(pc - 0x80000000) / 4];
 }
 
@@ -59,23 +73,34 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   IFDEF(CONFIG_MTRACE, record_pwrite(waddr, wmask, wdata););
 
   int aligned_addr = waddr & ~0x3u; // 对齐地址
-  int offset = waddr &0x3u;
+  int offset = waddr & 0x3u;
+
+  // printf("addr=%x off=%x data=%x\n",aligned_addr,offset,wdata);
+
+  if (aligned_addr == 0xa00003f8)
+  {
+    printf("%c", wdata);
+    // putchar((char)(wdata&wmask));
+    return;
+  }
+
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
   uint32_t new_data = current_data;
 
-  for (int i = 0; i+offset < 4; ++i)
+  for (int i = 0; i + offset < 4; ++i)
   {
     if (wmask & (3 << (i * 2)))
     {
-      ((uint8_t *)&new_data)[i+offset] = ((uint8_t *)&wdata)[i];
+      ((uint8_t *)&new_data)[i + offset] = ((uint8_t *)&wdata)[i];
     }
   }
-  printf("current_data=%x new_data=%x off=%x\n",current_data,new_data,offset);
+  // printf("addr=%x current_data=%x new_data=%x off=%x\n",aligned_addr,current_data,new_data,offset);
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
 
 uint32_t warp_pmem_read(uint32_t addr)
 {
+
   return mem_read(addr);
 }
 
