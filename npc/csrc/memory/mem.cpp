@@ -3,6 +3,8 @@
 #include <debug.h>
 #include <common.h>
 
+uint64_t get_time();
+
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
 uint32_t mem[0x8000000] = {
@@ -60,6 +62,10 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   int offset = waddr &0x3u;
+  if(aligned_addr==0x3F8){
+    putchar(wdata);
+  }
+
   uint32_t current_data = mem[(aligned_addr - 0x80000000) / 4];
   uint32_t new_data = current_data;
 
@@ -76,6 +82,12 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
 uint32_t warp_pmem_read(uint32_t addr)
 {
+  if (raddr == 0xa0000048) {   
+    return (uint32_t)get_time();
+}
+  if (raddr == 0xa000004c) {   
+    return (uint32_t)(get_time()>>32);
+}
   return mem_read(addr);
 }
 
