@@ -4,7 +4,7 @@
 #include <common.h>
 
 uint64_t get_time();
-uint64_t time=0;
+uint64_t time=114514;
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
