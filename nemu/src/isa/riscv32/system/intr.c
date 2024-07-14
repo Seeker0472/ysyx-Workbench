@@ -31,7 +31,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 
   cpu.csr[1]=0xb;
   cpu.csr[2]=0x00001800;
-  
+  cpu.csr[3]=epc;
+
 
   return epc;
 }
