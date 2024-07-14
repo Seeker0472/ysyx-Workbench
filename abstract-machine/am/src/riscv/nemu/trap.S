@@ -37,6 +37,16 @@ f(30) f(31)
 #define OFFSET_STATUS ((NR_REGS + 1) * XLEN)
 #define OFFSET_EPC    ((NR_REGS + 2) * XLEN)
 
+# 这里似乎是把寄存器，mcause，mstatus，mepc放在了栈上?
+#### STACK
+##################
+#  mepc 
+#  mstatus 
+#  mcause 
+##################
+#   REGs         #
+################## <---sp
+
 .align 3
 .globl __am_asm_trap
 __am_asm_trap:

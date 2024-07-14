@@ -167,10 +167,11 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 010 ????? 00100 11", sltiu  , I, MUXDEF(RV64,R(rd)=((int64_t)src1)<((int64_t)(imm)),R(rd)=((int32_t)src1)<((int32_t)(imm))));
   INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , R, R(rd)=(uint32_t)((((uint64_t)src1)*((uint64_t)src2))>>32););//高位
 
-  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrs   , I, R(rd)=CSR(imm);CSR(imm)=CSR(imm) | src1);//csrw把rd置0;csrr把rs1置0
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw   , I, R(rd)=CSR(imm);CSR(imm)=src1);//csrw把rd置0;csrr把rs1置0
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs   , I, R(rd)=CSR(imm);CSR(imm)=CSR(imm) | src1;);//csrw把rd置0;csrr把rs1置0--printf("%x---%x--%x---",CSR(imm),src1,imm) ; printf("%d---",R(rd)) ;
 
   // INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall , N, NEMUTRAP(s->pc, R(MUXDEF(CONFIG_RVE,15,17))));
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, isa_raise_intr(R(MUXDEF(CONFIG_RVE,15,17)),CSR(0x341)));
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=isa_raise_intr(R(MUXDEF(CONFIG_RVE,15,17)),s->pc));
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));//Invalid--非法指令！！

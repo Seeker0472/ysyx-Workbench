@@ -25,9 +25,16 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   //mcause寄存器 - 存放触发异常的原因
 // void set_nemu_state(int state, vaddr_t pc, int halt_ret);
 //   set_nemu_state(NEMU_END, epc, NO);
-  assert(0);
+  // assert(0);
+  
+  Log("Trigged Exception!, No=%x Epc=%x",NO,epc);
 
-  return 0;
+  cpu.csr[1]=0xb;//mcause
+  cpu.csr[2]=0x1800;//mstatus
+  cpu.csr[3]=epc;//mepc
+
+
+  return cpu.csr[0];
 }
 
 word_t isa_query_intr() {
