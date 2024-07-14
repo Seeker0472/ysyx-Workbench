@@ -9,9 +9,8 @@ Context* __am_irq_handle(Context *c) {
     Event ev = {0};
     uintptr_t ecode = 0;
     switch (ccode) {
-      default: ev.event = EVENT_ERROR; break;
+      default: ev.event = EVENT_YIELD; break;
     }
-
     c = user_handler(ev, c);
     assert(c != NULL);
   }
