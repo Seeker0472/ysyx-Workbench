@@ -23,7 +23,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   //mepc寄存器 - 存放触发异常的PC
   //mstatus寄存器 - 存放处理器的状态
   //mcause寄存器 - 存放触发异常的原因
-  assert(0);
+void set_nemu_state(int state, vaddr_t pc, int halt_ret);
+  set_nemu_state(NEMU_END, epc, NO);
+  // assert(0);
 
   return 0;
 }
