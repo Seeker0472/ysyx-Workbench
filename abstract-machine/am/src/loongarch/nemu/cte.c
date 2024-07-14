@@ -6,16 +6,17 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 
 Context* __am_irq_handle(Context *c) {
   printf("c.mepc=%x mstatus=%x mcause=%x",c->mepc,c->mstatus,c->mcause);
-  if (user_handler) {
-    Event ev = {0};
-    uintptr_t ecode = 0;
-    switch (ccode) {
-      default: ev.event = EVENT_ERROR; break;
-    }
 
-    c = user_handler(ev, c);
-    assert(c != NULL);
-  }
+  // if (user_handler) {
+  //   Event ev = {0};
+  //   uintptr_t ecode = 0;
+  //   switch (ccode) {
+  //     default: ev.event = EVENT_ERROR; break;
+  //   }
+
+  //   c = user_handler(ev, c);
+  //   assert(c != NULL);
+  // }
 
   return c;
 }
