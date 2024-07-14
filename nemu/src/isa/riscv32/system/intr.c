@@ -25,7 +25,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   //mcause寄存器 - 存放触发异常的原因
 // void set_nemu_state(int state, vaddr_t pc, int halt_ret);
 //   set_nemu_state(NEMU_END, epc, NO);
-  assert(0);
+  // assert(0);
+  Log("Trigger Exception!");
 
   return 0;
 }
