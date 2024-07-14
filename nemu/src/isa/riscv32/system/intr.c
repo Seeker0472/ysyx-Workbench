@@ -26,8 +26,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 // void set_nemu_state(int state, vaddr_t pc, int halt_ret);
 //   set_nemu_state(NEMU_END, epc, NO);
   // assert(0);
+  IFDEF(CONFIG_ETRACE,Log("Trigged Exception!, No=%x Epc=%x",NO,epc););
   
-  Log("Trigged Exception!, No=%x Epc=%x",NO,epc);
 
   cpu.csr[1]=0xb;//mcause
   cpu.csr[2]=0x1800;//mstatus
