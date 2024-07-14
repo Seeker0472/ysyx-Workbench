@@ -19,6 +19,11 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * Then return the address of the interrupt/exception vector.
    */
+  //设置状态寄存器=> trap.S
+  //mepc寄存器 - 存放触发异常的PC
+  //mstatus寄存器 - 存放处理器的状态
+  //mcause寄存器 - 存放触发异常的原因
+  assert(0);
 
   return 0;
 }
