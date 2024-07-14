@@ -28,7 +28,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // assert(0);
   Log("Trigged Exception!, No=%x Epc=%x",NO,epc);
 
-  return 0;
+  return epc;
 }
 
 word_t isa_query_intr() {
