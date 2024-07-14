@@ -42,6 +42,7 @@ f(30) f(31)
 __am_asm_trap:
   addi sp, sp, -CONTEXT_SIZE
 
+# 似乎是在复制寄存器？(保存上下文)
   MAP(REGS, PUSH)
 
   csrr t0, mcause
