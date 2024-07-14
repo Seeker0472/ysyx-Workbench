@@ -30,6 +30,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   Log("Trigged Exception!, No=%x Epc=%x",NO,epc);
 
   cpu.csr[1]=0xb;
+  cpu.csr[2]=0x00001800;
+  
 
   return epc;
 }
