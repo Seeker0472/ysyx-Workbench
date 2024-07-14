@@ -171,6 +171,10 @@ config DTRACE
   bool "Emable Device Trace"
   default n
 
+config ETRACE
+  bool "Emable Exception Trace"
+  default n
+
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
   bool "Enable differential testing"
