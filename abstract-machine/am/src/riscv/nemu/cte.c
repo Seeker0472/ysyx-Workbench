@@ -44,6 +44,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   // Context *bottom=(Context *)kstack.end;
   printf("%x",arg);
   Context *top=(Context *)(((void *)kstack.end)-sizeof(Context));
+  top->gpr[10]=(int)arg;
   top->mepc=(uintptr_t)entry;
   top->mstatus=0x1800;
   top->mcause=0xb;
