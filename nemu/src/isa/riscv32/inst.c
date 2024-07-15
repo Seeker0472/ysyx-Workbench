@@ -172,7 +172,7 @@ static int decode_exec(Decode *s) {
 
   // INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall , N, NEMUTRAP(s->pc, R(MUXDEF(CONFIG_RVE,15,17))));
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=isa_raise_intr(R(MUXDEF(CONFIG_RVE,15,17)),s->dnpc));
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=cpu.csr[3]);
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=cpu.csr[3]+4);
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));//Invalid--非法指令！！
