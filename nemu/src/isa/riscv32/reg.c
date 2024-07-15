@@ -24,8 +24,19 @@ const char *regs[] = {
 };
 
 const char *csr_regs[] ={
-};
+  "mtvec",
+  "mcause",
+  "mstatus",
+  "mepc",
 
+};
+void print_csr_reg(){
+  printf("================================================csrs================================================\n");
+  printf("%-4s   \t%-20s\t%-10s\n","Name","Dec","Hex");  
+  for(int i=0;i<4;i++){
+    MUXDEF(CONFIG_RV64,printf("%-4s   \t%-20ld\t%-10lx\n",csr_regs[i],cpu.csr[i],cpu.csr[i]);,printf("%-4s \t%-20d\t%-10x\n",csr_regs[i],cpu.csr[i],cpu.csr[i]););
+  }
+}
 void isa_reg_display() {
   printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
@@ -40,8 +51,8 @@ void isa_reg_display() {
       
       printf("\n");
   }
-  MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-20d\t%-10x\t\n","pc",cpu.pc,cpu.pc);)
-  
+  MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-20d\t%-10x\t\n","pc",cpu.pc,cpu.pc););
+  print_csr_reg();
 }
 //获取寄存器的值，s应该传入$xx
 word_t isa_reg_str2val(const char *s, bool *success) {
