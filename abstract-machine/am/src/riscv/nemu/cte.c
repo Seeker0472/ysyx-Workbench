@@ -8,13 +8,15 @@ Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
-      default: ev.event = EVENT_YIELD; break;
+      // default: ; ev.event = EVENT_YIELD; break;
+      case 0xb:  c->mepc+=4;ev.event = EVENT_YIELD; break;
+      default: ev.event= EVENT_ERROR;break;
     }
 
     c = user_handler(ev, c);
     assert(c != NULL);
   }
-
+  
   return c;
 }
 
@@ -37,7 +39,17 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 }
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+  //TODO:是不是要在栈上放置点什么东西(是应该把内容保存在栈上吗)
+  // Context * con= malloc(sizeof(Context));
+  // Context *bottom=(Context *)kstack.end;
+  // printf("%x",arg);
+  Context *top=(Context *)(((void *)kstack.end)-sizeof(Context));
+  top->gpr[10]=(int)arg;
+  top->mepc=(uintptr_t)entry;
+  top->mstatus=0x1800;
+  top->mcause=0xb;
+  return top;
+  // return NULL;
 }
 
 void yield() {
