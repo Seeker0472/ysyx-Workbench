@@ -24,8 +24,19 @@ const char *regs[] = {
 };
 
 const char *csr_regs[] ={
-};
+  "mtvec",
+  "mcause",
+  "mstatus",
+  "mepc",
 
+};
+void print_csr_reg(){
+  printf("================================================csrs================================================\n");
+  printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
+  for(int i=0;i<4;i++){
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\n",csr_regs[i],cpu.csr[i],cpu.csr[i]);,printf("%-4s \t%-20d\t%-10x\n",csr_regs[i],cpu.csr[i],cpu.csr[i]););
+  }
+}
 void isa_reg_display() {
   printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
