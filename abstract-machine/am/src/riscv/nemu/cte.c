@@ -42,7 +42,6 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   //TODO:是不是要在栈上放置点什么东西(是应该把内容保存在栈上吗)
   // Context * con= malloc(sizeof(Context));
   // Context *bottom=(Context *)kstack.end;
-  printf("%x",arg);
   Context *top=(Context *)(((void *)kstack.end)-sizeof(Context));
   top->gpr[10]=(int)arg;
   top->mepc=(uintptr_t)entry;
