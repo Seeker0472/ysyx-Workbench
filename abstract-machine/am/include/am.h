@@ -60,6 +60,7 @@ void     yield       (void);//用于进行自陷操作, 会触发一个编号为
 bool     ienabled    (void);
 void     iset        (bool enable);
 Context *kcontext    (Area kstack, void (*entry)(void *), void *arg);
+//创建内核线程-kstack是栈的范围, entry是内核线程的入口, arg则是内核线程的参数. 要求内核线程不能从entry返回,
 
 // ----------------------- VME: Virtual Memory -----------------------
 bool     vme_init    (void *(*pgalloc)(int), void (*pgfree)(void *));

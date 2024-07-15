@@ -16,6 +16,7 @@ static void f(void *arg) {
   }
 }
 
+//进程调度
 static Context *schedule(Event ev, Context *prev) {
   current->cp = prev;
   current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
