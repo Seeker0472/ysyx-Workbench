@@ -1,6 +1,7 @@
 package core
 
 import chisel3._
+import chisel3.util._
 import Constants_Val._
 
 class REG extends Module {
@@ -14,11 +15,11 @@ class REG extends Module {
     val write_No       = Input(UInt(CVAL.REG_ADDR_LEN.W))
     val reg_write_data = Input(UInt(CVAL.DLEN.W))
 
-    val csr_read_No = Input(UInt(CVAL.CSR_ADDR_LEN))
+    val csr_read_No = Input(UInt(CVAL.CSR_ADDR_LEN.W))
     val csr_read    = Output(UInt(CVAL.DLEN.W))
 
     val csr_write_en   = Input(Bool())
-    val csr_write_No   = Input(UInt(CVAL.CSR_ADDR_LEN))
+    val csr_write_No   = Input(UInt(CVAL.CSR_ADDR_LEN.W))
     val csr_write_data = Input(UInt(CVAL.DLEN.W))
   })
 
@@ -49,7 +50,7 @@ class REG extends Module {
   when(io.write_en && io.write_No =/= 0.U) { //保证寄存器不被写入
     regs(io.write_No) := io.reg_write_data
   }
-  when(io.csr_write_en) {
+  when(io.csr_write_en) { 
     csrs(csr_r_ADDR) := io.csr_write_data
   }
 }
