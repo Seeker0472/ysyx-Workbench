@@ -85,8 +85,8 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
   def genTable(op: InsP) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
     if (
+      op.name_in=="ebreak"
       // op.opcode.rawString.matches("1110011") && op.func3.rawString.matches("000") && op.rs2.rawString.matches(("00001"))
-      op.name_in.matches("ebreak")
     )
       y
     else n
@@ -150,13 +150,6 @@ object Is_Branch extends BoolDecodeField[InsP] {
     if (op.Inst_Type == Inst_Type_Enum.B_Type)
       y
     else n
-  }
-}
-
-object CSR_Write_Enable extends BoolDecodeField[InsP] {
-  def name: String = "CSR_Write_Enable"
-  def genTable(op: InsP) = {
-n
   }
 }
 
@@ -338,13 +331,6 @@ class Decoder extends Module {
     InsP(name_in = "auipc", Inst_Type = Inst_Type_Enum.U_Type, opcode = BitPat("b0010111")),
     //blocks
     InsP(
-      name_in   = "ecall",
-      Inst_Type = Inst_Type_Enum.I_Type,
-      opcode    = BitPat("b1110011"),
-      func3     = BitPat("b000"),
-      rs2       = BitPat("b00001")
-    ),
-    InsP(
       name_in   = "ebreak",
       Inst_Type = Inst_Type_Enum.I_Type,
       opcode    = BitPat("b1110011"),
@@ -352,9 +338,22 @@ class Decoder extends Module {
       rs2       = BitPat("b00001")
     ),
     //csrs
-    InsP(name_in = "csrrw", Inst_Type  = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b001")),
+        InsP(
+      name_in   = "ebreak",
+      Inst_Type = Inst_Type_Enum.I_Type,
+      opcode    = BitPat("b1110011"),
+      func3     = BitPat("b000"),
+      rs2       = BitPat("b00000")
+    ),
     InsP(name_in = "csrrs", Inst_Type  = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b010")),
-
+    InsP(name_in = "csrrw", Inst_Type  = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b001")),
+    InsP(
+      name_in   = "mret",
+      Inst_Type = Inst_Type_Enum.R_Type,
+      opcode    = BitPat("b1110011"),
+      func3     = BitPat("b000"),
+      func7     = BitPat("b0011000")
+    ),
     // InsP(name_in = "ebreak", opcode = BitPat("0010111"))
   )
 
