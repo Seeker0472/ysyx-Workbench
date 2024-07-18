@@ -30,7 +30,7 @@ class core extends Module {
   // val mem     = Module(new MEM())
 
   //fetch_inst
-  io.pc          := ifu.io.pc
+  StageConnect(io.pc,ifu.io.pc)
   ifu.io.instr_i := io.instr
 
   //decode
