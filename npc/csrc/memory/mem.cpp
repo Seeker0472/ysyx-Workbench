@@ -80,6 +80,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   if (aligned_addr == 0xa00003f8)
   {
     printf("%c", wdata);
+    fflush(stdout);
     // putchar((char)(wdata&wmask));
     return;
   }
