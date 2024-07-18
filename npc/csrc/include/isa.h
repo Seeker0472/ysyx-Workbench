@@ -8,7 +8,8 @@
 
 //TODO:寄存器的数量！！
 typedef struct {
-  word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
+  // word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
+  word_t gpr[( 32)];
   vaddr_t pc;
 } CPU_state;
 
