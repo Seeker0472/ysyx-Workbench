@@ -40,7 +40,7 @@ object Use_IMM_2 extends BoolDecodeField[InsP] {
   def genTable(op: InsP) = {
     if (
       op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.Inst_Type == Inst_Type_Enum.J_Type || op.name_in
-        .matches("auipc")||op.name_in.matches("lui")
+        .matches("auipc") || op.name_in.matches("lui")
     )
       y
     else n
@@ -73,6 +73,7 @@ object Is_Jump extends BoolDecodeField[InsP] {
 object R_Write_Enable extends BoolDecodeField[InsP] {
   def name: String = "Reg_W_En"
   def genTable(op: InsP) = {
+    //ecall,ebreak有效因为rd为0
     if (op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type) //！！注意这里是if() n else y!!!!!!!!
       n
     else y
@@ -85,7 +86,7 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
   def genTable(op: InsP) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
     if (
-      op.name_in=="ebreak"
+      op.name_in == "ebreak"
       // op.opcode.rawString.matches("1110011") && op.func3.rawString.matches("000") && op.rs2.rawString.matches(("00001"))
     )
       y
@@ -150,6 +151,48 @@ object Is_Branch extends BoolDecodeField[InsP] {
     if (op.Inst_Type == Inst_Type_Enum.B_Type)
       y
     else n
+  }
+}
+
+//csrs
+object CSRRW extends BoolDecodeField[InsP] {
+  def name: String = "CSRRW"
+  def genTable(op: InsP) = {
+
+    //NO
+    if (op.name_in.matches("csrrw") || op.name_in.matches("csrrs")||op.name_in.matches("ecall")||op.name_in.matches("mret"))
+      y
+    else n
+  }
+}
+
+object Is_Ecall extends BoolDecodeField[InsP] {
+  def name: String = "Is_Ecall"
+  def genTable(op: InsP) = {
+    if (op.name_in.matches("ecall"))
+      y
+    else n
+  }
+}
+
+object Is_Mret extends BoolDecodeField[InsP] {
+  def name: String = "Is_Mret"
+  def genTable(op: InsP) = {
+    if (op.name_in.matches("mret"))
+      y
+    else n
+  }
+}
+
+object CSRR_ALU_Type extends DecodeField[InsP, CSRALU_Type.Type] {
+  def name: String = "CSRR_ALU_Type"
+  override def chiselType = CSRALU_Type()
+  def genTable(op: InsP) = {
+    val btype = op.name_in match {
+      case "csrrs" => CSRALU_Type.or
+      case _       => CSRALU_Type.passreg
+    }
+    BitPat(btype.litValue.U((btype.getWidth).W))
   }
 }
 
@@ -338,22 +381,22 @@ class Decoder extends Module {
       rs2       = BitPat("b00001")
     ),
     //csrs
-        InsP(
+    InsP(
       name_in   = "ebreak",
       Inst_Type = Inst_Type_Enum.I_Type,
       opcode    = BitPat("b1110011"),
       func3     = BitPat("b000"),
       rs2       = BitPat("b00000")
     ),
-    InsP(name_in = "csrrs", Inst_Type  = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b010")),
-    InsP(name_in = "csrrw", Inst_Type  = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b001")),
+    InsP(name_in = "csrrs", Inst_Type = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b010")),
+    InsP(name_in = "csrrw", Inst_Type = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b001")),
     InsP(
       name_in   = "mret",
       Inst_Type = Inst_Type_Enum.R_Type,
       opcode    = BitPat("b1110011"),
       func3     = BitPat("b000"),
       func7     = BitPat("b0011000")
-    ),
+    )
     // InsP(name_in = "ebreak", opcode = BitPat("0010111"))
   )
 
@@ -390,7 +433,11 @@ class Decoder extends Module {
         Mem_LoadType,
         Mem_WriteType,
         Is_Branch,
-        BranchType
+        BranchType,
+        CSRRW,
+        CSRR_ALU_Type,
+        Is_Mret,
+        Is_Ecall
       )
     )
       .decode(io.instr)
@@ -429,5 +476,11 @@ class Decoder extends Module {
 
   io.out.is_branch   := decodedResults(Is_Branch)
   io.out.branch_type := decodedResults(BranchType)
+
+  io.out.csrrw        := decodedResults(CSRRW)
+  io.out.csr_alu_type := decodedResults(CSRR_ALU_Type)
+
+  io.out.ecall := decodedResults(Is_Ecall)
+  io.out.mret  := decodedResults(Is_Mret)
 
 }

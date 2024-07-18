@@ -3,7 +3,7 @@ import chisel3._
 import Constants_Val._
 
 object ALU_Op extends ChiselEnum {
-  val inv, add, sub, xor, or, and, sll, srl, sra, slt, sltu,pass_imm = Value
+  val inv, add, sub, xor, or, and, sll, srl, sra, slt, sltu, pass_imm = Value
 }
 
 object Load_Type extends ChiselEnum {
@@ -15,6 +15,10 @@ object Store_Type extends ChiselEnum {
 
 object Branch_Type extends ChiselEnum {
   val inv, beq, bne, blt, bge, bltu, bgeu = Value
+}
+
+object CSRALU_Type extends ChiselEnum {
+  val passreg, or = Value
 }
 
 class DecoderO extends Bundle {
@@ -29,13 +33,19 @@ class DecoderO extends Bundle {
   val pc_jump          = Bool()
   val reg_write_enable = Bool()
   val ebreak           = Bool()
-  
+
   val mem_read_enable  = Bool()
   val mem_read_type    = Load_Type()
   val mem_write_enable = Bool()
   val mem_write_type   = Store_Type()
 
-  val is_branch        = Bool()
-  val branch_type      = Branch_Type()
+  val is_branch   = Bool()
+  val branch_type = Branch_Type()
+
+  val csrrw        = Bool()
+  val csr_alu_type = CSRALU_Type()
+
+  val ecall = Bool()
+  val mret  = Bool()
 
 }

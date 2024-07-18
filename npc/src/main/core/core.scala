@@ -37,20 +37,32 @@ class core extends Module {
   decoder.io.instr := ifu.io.instr
 
   //r/w_reg
-  reg.io.read_No_1 := decoder.io.out.rs1
-  exu.io.in.src1   := reg.io.read_1
-  reg.io.read_No_2 := decoder.io.out.rs2
-  exu.io.in.src2   := reg.io.read_2
-  reg.io.write_No  := decoder.io.out.rd
+  reg.io.read_No_1     := decoder.io.out.rs1
+  exu.io.in.src1       := reg.io.read_1
+  reg.io.read_No_2     := decoder.io.out.rs2
+  exu.io.in.src2       := reg.io.read_2
+  reg.io.write_No      := decoder.io.out.rd
+  reg.io.csr_read_No   := decoder.io.out.imm
+  exu.io.in.csr_mstvec := reg.io.csr_mstvec
+  exu.io.in.csr_val    := reg.io.csr_read
+  //TODO:same!?
+  reg.io.csr_write_No := decoder.io.out.imm
 
   exu.io.in.imm := decoder.io.out.imm
   exu.io.in.pc  := ifu.io.pc
+  //csr
+  // exu.
 
   //pass_cont_sig to EXU
   exu.io.in.alu_use_Imm_2 := decoder.io.out.alu_use_Imm_2
   exu.io.in.alu_use_pc    := decoder.io.out.alu_use_pc
   exu.io.in.alu_op_type   := decoder.io.out.alu_op_type
   exu.io.in.pc_jump       := decoder.io.out.pc_jump
+  //csrs_cont_sig
+  exu.io.in.csr_alu_type := decoder.io.out.csr_alu_type
+  exu.io.in.csrrw        := decoder.io.out.csrrw
+  exu.io.in.ecall        := decoder.io.out.ecall
+  exu.io.in.mret         := decoder.io.out.mret
 
   //pass_mem__sig to exu
   exu.io.in.mem_read_enable  := decoder.io.out.mem_read_enable
@@ -63,7 +75,8 @@ class core extends Module {
   exu.io.in.branch_type := decoder.io.out.branch_type
 
   //Write_ENABLE!!
-  reg.io.write_en := decoder.io.out.reg_write_enable
+  reg.io.write_en     := decoder.io.out.reg_write_enable
+  reg.io.csr_write_en := decoder.io.out.csrrw
 //ebreak
   br_han.io.halt := decoder.io.out.ebreak
 
@@ -72,5 +85,5 @@ class core extends Module {
   //exu
   ifu.io.next_pc        := exu.io.out.n_pc
   reg.io.reg_write_data := exu.io.out.reg_out
-
+  reg.io.csr_write_data := exu.io.out.csr_res
 }

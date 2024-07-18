@@ -15,7 +15,7 @@ class EXU extends Module {
   val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, io.in.src2)
 
   val mem = Module(new MEM()) //TODO::::::把Mem模块放在执行单元是否科学？？？
-  mem.io.clock := clock  // 连接时钟信号
+  mem.io.clock := clock // 连接时钟信号
   val alu = Module(new ALU())
 
   val comp = Module(new Branch_comp())
@@ -29,6 +29,17 @@ class EXU extends Module {
   alu.io.in.src2        := alu_val2
   alu.io.in.alu_op_type := io.in.alu_op_type
 
+  //csrr_alu
+  val or = io.in.csr_val | io.in.src1
+  val csr_alu_res = MuxLookup(io.in.csr_alu_type, or)(
+    Seq(
+      CSRALU_Type.or -> or,
+      CSRALU_Type.passreg -> io.in.src1
+    )
+  )
+  // io.out.csr_res := csr_alu_res
+  io.out.csr_res := Mux(io.in.ecall,io.in.pc,csr_alu_res)
+
   //mem R/W
   mem.io.read_enable  := io.in.mem_read_enable
   mem.io.write_enable := io.in.mem_write_enable
@@ -36,7 +47,7 @@ class EXU extends Module {
   mem.io.read_addr  := alu.io.result
   mem.io.write_addr := alu.io.result
   val mrres = mem.io.read_data
-  val mrrm = mrres >>( (alu.io.result &(0x3.U))<<3)// 读取内存,不对齐访问!!
+  val mrrm  = mrres >> ((alu.io.result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.mem_read_type, 0.S)(
     Seq(
@@ -48,7 +59,6 @@ class EXU extends Module {
     )
   )
   val mem_read_result = mem_read_result_sint.asUInt
-
 
   val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
     Seq(
@@ -62,12 +72,15 @@ class EXU extends Module {
 
   //如果是store，Reg_Write_Enable应该是False
   // val result   = alu.io.result
-  val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
+  // val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
+  val result   = Mux(io.in.mem_read_enable, mem_read_result, Mux(io.in.csrrw,io.in.csr_val,alu.io.result))
   val pc_plus4 = io.in.pc + 4.U
 
-  val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
+  // val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
+  val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, Mux(io.in.ecall,io.in.csr_mstvec,pc_plus4))
   io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, result)
-  io.out.n_pc    := next_pc
+  // io.out.n_pc    := next_pc
+  io.out.n_pc    := Mux(io.in.mret,io.in.csr_val,next_pc)
 }
 
 class Branch_comp extends Module {
