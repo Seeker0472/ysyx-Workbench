@@ -42,18 +42,17 @@ class core extends Module {
   reg.io.read_No_2     := decoder.io.out.rs2
   exu.io.in.src2       := reg.io.read_2
   reg.io.write_No      := decoder.io.out.rd
-  reg.io.csr_read_No   := decoder.io.out.imm
-  exu.io.in.csr_mstvec := reg.io.csr_mstvec
+  reg.io.csr_read_No   := decoder.io.out.imm//imm作为csr_read的寄存器地址，如果地址超出了范围，默认返回mepc
   exu.io.in.csr_val    := reg.io.csr_read
-  //TODO:same!?
+  exu.io.in.csr_mstvec := reg.io.csr_mstvec//<-这个是mstvec寄存器引出的线，永远是当前的mstvec的数据
+  //TODO:----csr_write_No----csr_read_No--same!?
   reg.io.csr_write_No := decoder.io.out.imm
-
+  
+  //pass information to exu
   exu.io.in.imm := decoder.io.out.imm
   exu.io.in.pc  := ifu.io.pc
-  //csr
-  // exu.
 
-  //pass_cont_sig to EXU
+  //pass_control_sig to EXU
   exu.io.in.alu_use_Imm_2 := decoder.io.out.alu_use_Imm_2
   exu.io.in.alu_use_pc    := decoder.io.out.alu_use_pc
   exu.io.in.alu_op_type   := decoder.io.out.alu_op_type
@@ -74,15 +73,15 @@ class core extends Module {
   exu.io.in.is_branch   := decoder.io.out.is_branch
   exu.io.in.branch_type := decoder.io.out.branch_type
 
-  //Write_ENABLE!!
+  //regs Write_ENABLE!!
   reg.io.write_en     := decoder.io.out.reg_write_enable
   reg.io.csr_write_en := decoder.io.out.csrrw
-//ebreak
+  //ebreak
   br_han.io.halt := decoder.io.out.ebreak
-
+  //其实没什么用，当初是为了防止exu被优化掉
   io.value := exu.io.out.reg_out
 
-  //exu
+  //write_back
   ifu.io.next_pc        := exu.io.out.n_pc
   reg.io.reg_write_data := exu.io.out.reg_out
   reg.io.csr_write_data := exu.io.out.csr_res

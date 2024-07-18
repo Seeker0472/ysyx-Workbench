@@ -101,7 +101,6 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
 
 uint32_t warp_pmem_read(uint32_t addr)
 {
-
   return mem_read(addr);
 }
 
