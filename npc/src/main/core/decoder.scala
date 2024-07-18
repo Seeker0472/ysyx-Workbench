@@ -378,14 +378,16 @@ class Decoder extends Module {
       Inst_Type = Inst_Type_Enum.I_Type,
       opcode    = BitPat("b1110011"),
       func3     = BitPat("b000"),
-      rs2       = BitPat("b00001")
+      rs2       = BitPat("b00001"),
+      func7=BitPat("b0000000")
     ),
     //csrs
     InsP(
-      name_in   = "ebreak",
+      name_in   = "ecall",
       Inst_Type = Inst_Type_Enum.I_Type,
       opcode    = BitPat("b1110011"),
       func3     = BitPat("b000"),
+      func7=BitPat("b0000000"),
       rs2       = BitPat("b00000")
     ),
     InsP(name_in = "csrrs", Inst_Type = Inst_Type_Enum.I_Type, opcode = BitPat("b1110011"), func3 = BitPat("b010")),
