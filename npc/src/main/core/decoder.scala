@@ -25,7 +25,7 @@ case class InsP(
   // def pattern: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
   def name: String = name_in
 }
-
+//返回指令的类型
 object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
@@ -103,7 +103,7 @@ object Read_En extends BoolDecodeField[InsP] {
     else n
   }
 }
-
+//读取内存的类型
 object Mem_LoadType extends DecodeField[InsP, Load_Type.Type] {
   def name: String = "Mem_LoadType"
   override def chiselType = Load_Type()
@@ -155,6 +155,7 @@ object Is_Branch extends BoolDecodeField[InsP] {
 }
 
 //csrs
+//由于这部分指令都需要读取/写入csr存储器，所以就rw放一起了，同时这个信号也作用于Mux来选择写入存储器的数据
 object CSRRW extends BoolDecodeField[InsP] {
   def name: String = "CSRRW"
   def genTable(op: InsP) = {
@@ -183,7 +184,7 @@ object Is_Mret extends BoolDecodeField[InsP] {
     else n
   }
 }
-
+//目前csr指令的alu是独立于其他的alu
 object CSRR_ALU_Type extends DecodeField[InsP, CSRALU_Type.Type] {
   def name: String = "CSRR_ALU_Type"
   override def chiselType = CSRALU_Type()
@@ -213,8 +214,7 @@ object BranchType extends DecodeField[InsP, Branch_Type.Type] {
   }
 }
 
-//TODO:Load_Type;Save_Mask
-
+//alu的运算类型
 object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
   def name: String = "ALUOp_Gen"
   override def chiselType = ALU_Op()
@@ -454,6 +454,7 @@ class Decoder extends Module {
       Inst_Type_Enum.J_Type -> immJ // J-type
     )
   )
+  //数据
   io.out.rs1 := rs1
   io.out.rs2 := rs2
   io.out.rd  := rd
