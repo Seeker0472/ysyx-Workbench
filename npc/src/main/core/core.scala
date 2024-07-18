@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 import os.stat
 import Constants_Val.CVAL
+import core.IO._
 
 // import os.write
 // import chisel3.Output
