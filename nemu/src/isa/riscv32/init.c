@@ -41,6 +41,6 @@ void init_isa() {
 
   /* Initialize this virtual computer system. */
   restart();
-  // cpu.csr[1]=0xb;//mcause
-  // cpu.csr[2]=0x1800;//mstatus
+  cpu.csr[1]=0xb;//mcause
+  cpu.csr[2]=0x1800;//mstatus
 }
