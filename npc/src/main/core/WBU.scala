@@ -14,10 +14,12 @@ class WBU extends Module {
     val out        = Decoupled(new WBU_O)
   })
   io.in.ready:=true.B
-  io.out.valid:=true.B
+  // io.out.valid:=true.B
+  io.out.valid:=io.in.valid
 
 
-  io.CSR_write.write_enable := io.in.bits.csrrw
+
+  io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
 //TODO:其实可以临时抽取？
   io.CSR_write.addr := io.in.bits.imm
 
@@ -43,7 +45,7 @@ class WBU extends Module {
   ) //跳转指令/ecall/正常pc+4
   io.Rwrite.data         := Mux(io.in.bits.pc_jump, pc_plus4, result) //跳转指令保存寄存器
   io.Rwrite.addr         := io.in.bits.reg_w_addr
-  io.Rwrite.write_enable := io.in.bits.reg_w_enable
+  io.Rwrite.write_enable := io.in.bits.reg_w_enable && io.in.valid
   // io.out.n_pc    := next_pc
   io.out.bits.n_pc := Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
   // TODO：这个地方感觉会延迟很高？

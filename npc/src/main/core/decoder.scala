@@ -239,7 +239,9 @@ class Decoder extends Module {
     val out    = Decoupled(new DecoderO)
   })
   io.in.ready  := true.B
-  io.out.valid := true.B
+  // io.out.valid := true.B
+  io.out.valid:=io.in.valid
+
   //pass_through
   io.out.bits.pc := io.in.bits.pc
 

@@ -10,7 +10,10 @@ class MEMAccess extends Module {
     val out = Decoupled(new MEMA_O)
   })
   io.in.ready :=true.B
-  io.out.valid:=true.B
+  // io.out.valid:=true.B
+  io.out.valid:=io.in.valid
+
+
   //pass_throughs
   io.out.bits.pc              := io.in.bits.pc
   io.out.bits.ecall           := io.in.bits.ecall
@@ -31,8 +34,8 @@ class MEMAccess extends Module {
   val mem = Module(new MEM())
   mem.io.clock :=clock
   //mem R/W
-  mem.io.read_enable  := io.in.bits.mem_read_enable
-  mem.io.write_enable := io.in.bits.mem_write_enable
+  mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
+  mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid
   //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
   mem.io.read_addr  := io.in.bits.alu_result
   mem.io.write_addr := io.in.bits.alu_result
