@@ -34,7 +34,7 @@ class MEM extends BlackBox with HasBlackBoxInline {
       |  input  read_enable,
       |input clock
       |);
-      |always @(*) begin
+      |always @(posedge clock) begin
       |  if (read_enable) begin // 有读写请求时
       |    read_data = pmem_read(read_addr);
       |  end
