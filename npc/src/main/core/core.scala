@@ -14,7 +14,7 @@ import Constants_Val.CVAL
 class core extends Module {
   val io = IO(new Bundle {
     val pc       = Output(UInt(CVAL.DLEN.W))
-    val value    = Output(UInt(CVAL.DLEN.W))
+    // val value    = Output(UInt(CVAL.DLEN.W))
     val addr     = Input(UInt(CVAL.DLEN.W))
     val instr    = Input(UInt(CVAL.ILEN.W))
     val inst_now = Output(UInt(CVAL.DLEN.W))
@@ -35,6 +35,7 @@ class core extends Module {
   ifu.io.instr_i := io.instr
 //decode_stage
   decoder.io.instr := ifu.io.instr
+  br_han.io.halt:=decoder.io.ebreak
 //exc
   exu.io.in   <> decoder.io.out
   exu.io.reg1 <> reg.io.Rread1
@@ -42,12 +43,12 @@ class core extends Module {
   exu.io.csr  <> reg.io.CSRread
 // exu.io.csr_mstvec:=reg.io.csr_mstvec
 //mem_access
-  memau.io.in := exu.io.out
+  memau.io.in <> exu.io.out
 //wb
-  wbu.io.in         := memau.io.out
+  wbu.io.in         <> memau.io.out
   wbu.io.csr_mstvec := reg.io.csr_mstvec
-  reg.io.Rwrite     := wbu.io.Rwrite
-  reg.io.CSRwrite   := wbu.io.CSR_write
+  reg.io.Rwrite     <> wbu.io.Rwrite
+  reg.io.CSRwrite   <> wbu.io.CSR_write
 
   ifu.io.next_pc := wbu.io.out.n_pc
 

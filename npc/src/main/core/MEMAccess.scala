@@ -27,6 +27,8 @@ class MEMAccess extends Module {
 
   //TODO:不应该在这里实例化！！！
   val mem = Module(new MEM())
+
+  mem.io.clock :=clock
   //mem R/W
   mem.io.read_enable  := io.in.mem_read_enable
   mem.io.write_enable := io.in.mem_write_enable
@@ -56,5 +58,7 @@ class MEMAccess extends Module {
   )
   mem.io.write_mask := mem_write_mask
   mem.io.write_data := io.in.src2
+
+  io.out.mem_read_result:=mem_read_result
 
 }

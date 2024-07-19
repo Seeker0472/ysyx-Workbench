@@ -34,7 +34,7 @@ class DecoderO extends Bundle {
   val alu_op_type      = ALU_Op()
   val pc_jump          = Bool()
   val reg_write_enable = Bool()
-  val ebreak           = Bool()
+  // val ebreak           = Bool()
 
   val mem_read_enable  = Bool()
   val mem_read_type    = Load_Type()

@@ -28,6 +28,7 @@ class EXU extends Module {
   io.out.reg_w_enable     := io.in.reg_write_enable
   io.out.mret             := io.in.mret
   io.out.imm              := io.in.imm
+  io.out.csrrw            := io.in.csrrw
 
   io.reg1.addr := io.in.rs1
   io.reg2.addr := io.in.rs2

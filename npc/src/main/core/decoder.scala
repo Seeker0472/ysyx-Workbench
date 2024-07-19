@@ -233,8 +233,14 @@ object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
 class Decoder extends Module {
   val io = IO(new Bundle {
     val instr = Input(UInt((CVAL.ILEN).W))
+    val pc =Input(UInt(CVAL.DLEN.W))
+    val ebreak =Output(Bool())
     val out   = Output(new DecoderO)
   })
+  //pass_through
+  io.out.pc := io.pc
+
+
   val Patterns = decodePatterns.Patterns
 
   //Imms
@@ -303,7 +309,7 @@ class Decoder extends Module {
   io.out.pc_jump          := decodedResults(Is_Jump)
   io.out.reg_write_enable := decodedResults(R_Write_Enable)
 
-  io.out.ebreak := decodedResults(Is_Ebreak)
+  io.ebreak := decodedResults(Is_Ebreak)
 
   io.out.mem_read_enable := decodedResults(Read_En)
 
