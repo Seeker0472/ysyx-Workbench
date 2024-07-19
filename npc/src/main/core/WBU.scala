@@ -1,0 +1,47 @@
+package core
+
+import chisel3._
+import chisel3.util._
+import core.IO._
+import Constants_Val._
+
+class WBU extends Module {
+  val io = IO(new Bundle {
+    val in         = Flipped(new MEMA_O)
+    val csr_mstvec = Input(UInt(CVAL.DLEN.W))
+    val Rwrite     = Flipped(new RegWriteIO)
+    val CSR_write  = (new CSRWriteIO)
+    val out        = (new WBU_O)
+  })
+  io.CSR_write.write_enable := io.in.csrrw
+//TODO:其实可以临时抽取？
+  io.CSR_write.addr := io.in.imm
+
+  io.CSR_write.data := Mux(io.in.ecall, io.in.pc, io.in.csr_alu_res) //ecall的时候保存pc寄存器/正常csr指令保存csr_alu的数据
+
+//wb
+  //如果是store，Reg_Write_Enable应该是False
+  // val result   = alu.io.result
+  // val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
+  val result =
+    Mux(
+      io.in.mem_read_enable,
+      io.in.mem_read_result,
+      Mux(io.in.csrrw, io.in.csr_val, io.in.alu_result)
+    ) //内存读取/csr操作/算数运算结果
+  val pc_plus4 = io.in.pc + 4.U
+
+  // val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
+  val next_pc = Mux(
+    io.in.pc_jump || (io.in.is_branch && io.in.go_branch),
+    result,
+    Mux(io.in.ecall, io.csr_mstvec, pc_plus4)
+  ) //跳转指令/ecall/正常pc+4
+  io.Rwrite.data         := Mux(io.in.pc_jump, pc_plus4, result) //跳转指令保存寄存器
+  io.Rwrite.addr         := io.in.reg_w_addr
+  io.Rwrite.write_enable := io.in.reg_w_enable
+  // io.out.n_pc    := next_pc
+  io.out.n_pc := Mux(io.in.mret, io.in.csr_val, next_pc) //mret恢复pc
+  // TODO：这个地方感觉会延迟很高？
+
+}

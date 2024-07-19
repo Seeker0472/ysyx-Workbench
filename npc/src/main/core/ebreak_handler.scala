@@ -7,7 +7,8 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val halt = Input(Bool())
   })
-  setInline("ebreak_handler.v",
+  setInline(
+    "ebreak_handler.v",
     """import "DPI-C" function void call_ebreak();
       |module ebreak_handler(
       |  input halt
@@ -18,5 +19,6 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
       |  end
       | end
       |endmodule
-    """.stripMargin)
+    """.stripMargin
+  )
 }

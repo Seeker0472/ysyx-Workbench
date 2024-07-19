@@ -13,7 +13,6 @@ object Inst_Type_Enum extends ChiselEnum {
   val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type = Value
 }
 
-
 //指令的类型
 object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   def name: String = "InstType"
@@ -150,7 +149,10 @@ object CSRRW extends BoolDecodeField[InsP] {
   def genTable(op: InsP) = {
 
     //NO
-    if (op.name_in.matches("csrrw") || op.name_in.matches("csrrs")||op.name_in.matches("ecall")||op.name_in.matches("mret"))
+    if (
+      op.name_in.matches("csrrw") || op.name_in.matches("csrrs") || op.name_in
+        .matches("ecall") || op.name_in.matches("mret")
+    )
       y
     else n
   }
@@ -231,9 +233,9 @@ object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
 class Decoder extends Module {
   val io = IO(new Bundle {
     val instr = Input(UInt((CVAL.ILEN).W))
-    val out = Output(new DecoderO)
+    val out   = Output(new DecoderO)
   })
-  val Patterns =decodePatterns.Patterns
+  val Patterns = decodePatterns.Patterns
 
   //Imms
   val imm_I_Raw = io.instr(31, 20)

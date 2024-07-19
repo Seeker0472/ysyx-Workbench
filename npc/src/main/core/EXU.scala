@@ -8,20 +8,42 @@ import chisel3.util.MuxLookup
 
 class EXU extends Module {
   val io = IO(new Bundle {
-    val in  = Input(new EXU_I)
+    val in   = Flipped(new DecoderO)
+    val reg1 = (new RegReadIO)
+    val reg2 = (new RegReadIO)
+    val csr  = (new CSRReadIO)
+    // val csr_mstvec=Input(UInt(CVAL.DLEN.W))
     val out = Output(new EXU_O)
   })
-  val alu_val1 = Mux(io.in.alu_use_pc, io.in.pc, io.in.src1)
-  val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, io.in.src2)
+  //pass_throughs
+  io.out.mem_read_enable  := io.in.mem_read_enable
+  io.out.mem_read_type    := io.in.mem_read_type
+  io.out.mem_write_enable := io.in.mem_write_enable
+  io.out.mem_write_type   := io.in.mem_write_type
+  io.out.pc               := io.in.pc //using!
+  io.out.ecall            := io.in.ecall
+  io.out.pc_jump          := io.in.pc_jump
+  io.out.is_branch        := io.in.is_branch
+  io.out.reg_w_addr       := io.in.rd
+  io.out.reg_w_enable     := io.in.reg_write_enable
+  io.out.mret             := io.in.mret
+  io.out.imm              := io.in.imm
 
-  val mem = Module(new MEM()) //TODO::::::把Mem模块放在执行单元是否科学？？？
-  mem.io.clock := clock // 连接时钟信号
+  io.reg1.addr := io.in.rs1
+  io.reg2.addr := io.in.rs2
+  io.csr.addr  := io.in.imm
+  val src1 = io.reg1.data
+  val src2 = io.reg2.data
+
+  val alu_val1 = Mux(io.in.alu_use_pc, io.in.pc, src1)
+  val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, src2)
+
   val alu = Module(new ALU())
 
   val comp = Module(new Branch_comp())
 //比较单元的输入
-  comp.io.src1      := io.in.src1
-  comp.io.src2      := io.in.src2
+  comp.io.src1      := src1
+  comp.io.src2      := src2
   comp.io.comp_type := io.in.branch_type
   val go_branch = comp.io.result
 //alu的输入
@@ -30,58 +52,18 @@ class EXU extends Module {
   alu.io.in.alu_op_type := io.in.alu_op_type
 
   //csrr_alu
-  val or = io.in.csr_val | io.in.src1
+  val or = io.csr.data | src1
   val csr_alu_res = MuxLookup(io.in.csr_alu_type, or)(
     Seq(
       CSRALU_Type.or -> or,
-      CSRALU_Type.passreg -> io.in.src1
+      CSRALU_Type.passreg -> src1
     )
   )
-  // io.out.csr_res := csr_alu_res
-  io.out.csr_res := Mux(io.in.ecall,io.in.pc,csr_alu_res)//ecall的时候保存pc寄存器/正常csr指令保存csr_alu的数据
-
-  //mem R/W
-  mem.io.read_enable  := io.in.mem_read_enable
-  mem.io.write_enable := io.in.mem_write_enable
-  //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
-  mem.io.read_addr  := alu.io.result
-  mem.io.write_addr := alu.io.result
-  val mrres = mem.io.read_data
-  val mrrm  = mrres >> ((alu.io.result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
-  //vv注意符号拓展！！！
-  val mem_read_result_sint = MuxLookup(io.in.mem_read_type, 0.S)(
-    Seq(
-      Load_Type.lb -> mrrm(7, 0).asSInt,
-      Load_Type.lh -> mrrm(15, 0).asSInt,
-      Load_Type.lw -> mrrm(31, 0).asSInt,
-      Load_Type.lbu -> mrrm(7, 0).zext,
-      Load_Type.lhu -> mrrm(15, 0).zext
-    )
-  )
-  val mem_read_result = mem_read_result_sint.asUInt
-
-  val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
-    Seq(
-      Store_Type.sb -> "b00000011".U(8.W),
-      Store_Type.sh -> "b00001111".U(8.W),
-      Store_Type.sw -> "b11111111".U(8.W)
-    )
-  )
-  mem.io.write_mask := mem_write_mask
-  mem.io.write_data := io.in.src2
-
-  //如果是store，Reg_Write_Enable应该是False
-  // val result   = alu.io.result
-  // val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
-  val result   = Mux(io.in.mem_read_enable, mem_read_result, Mux(io.in.csrrw,io.in.csr_val,alu.io.result))//内存读取/csr操作/算数运算结果
-  val pc_plus4 = io.in.pc + 4.U
-
-  // val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
-  val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, Mux(io.in.ecall,io.in.csr_mstvec,pc_plus4))//跳转指令/ecall/正常pc+4
-  io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, result)//跳转指令保存寄存器
-  // io.out.n_pc    := next_pc
-  io.out.n_pc    := Mux(io.in.mret,io.in.csr_val,next_pc)//mret恢复pc
-  // TODO：这个地方感觉会延迟很高？
+  io.out.alu_result  := alu.io.result //alu的运算结果
+  io.out.src2        := src2 //TODO:哪里需要？？
+  io.out.csr_alu_res := csr_alu_res
+  io.out.csr_val     := io.csr.data
+  io.out.go_branch   := go_branch
 }
 
 class Branch_comp extends Module {
