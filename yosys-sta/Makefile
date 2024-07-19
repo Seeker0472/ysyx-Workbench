@@ -1,10 +1,10 @@
 PROJ_PATH = $(shell pwd)
-VSRC_PATH =/home/seeker/Develop/ysyx-workbench/npc/vsrc
+# VSRC_PATH =/home/seeker/Develop/ysyx-workbench/npc/vsrc
 
 DESIGN ?= gcd
 SDC_FILE ?= $(PROJ_PATH)/example/gcd.sdc
-# RTL_FILES ?= $(shell find $(PROJ_PATH)/example -name "*.v")
-RTL_FILES ?= $(shell find $(VSRC_PATH) -name "*.v")
+RTL_FILES ?= $(shell find $(PROJ_PATH)/example -name "*.v")
+# RTL_FILES ?= $(shell find $(VSRC_PATH) -name "*.v")
 export CLK_FREQ_MHZ ?= 500
 
 RESULT_DIR = $(PROJ_PATH)/result/$(DESIGN)-$(CLK_FREQ_MHZ)MHz
