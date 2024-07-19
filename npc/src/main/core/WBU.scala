@@ -9,7 +9,7 @@ class WBU extends Module {
   val io = IO(new Bundle {
     val in         = Flipped(new MEMA_O)
     val csr_mstvec = Input(UInt(CVAL.DLEN.W))
-    val Rwrite     = Flipped(new RegWriteIO)
+    val Rwrite     = (new RegWriteIO)
     val CSR_write  = (new CSRWriteIO)
     val out        = (new WBU_O)
   })
