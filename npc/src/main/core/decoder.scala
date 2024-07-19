@@ -234,14 +234,14 @@ class Decoder extends Module {
   val io = IO(new Bundle {
     // val instr = Input(UInt((CVAL.ILEN).W))
     // val pc =Input(UInt(CVAL.DLEN.W))
-    val in = Flipped(Decoupled(new IFUO))
-    val ebreak =Output(Bool())
-    val out   = Decoupled(new DecoderO)
+    val in     = Flipped(Decoupled(new IFUO))
+    val ebreak = Output(Bool())
+    val out    = Decoupled(new DecoderO)
   })
-  io.in.ready:=true.B
+  io.in.ready  := true.B
+  io.out.valid := true.B
   //pass_through
   io.out.bits.pc := io.in.bits.pc
-
 
   val Patterns = decodePatterns.Patterns
 
@@ -250,12 +250,19 @@ class Decoder extends Module {
   val immI      = Cat(Fill(20, imm_I_Raw(11)), imm_I_Raw)
   val imm_S_Raw = Cat(io.in.bits.instr(31, 25), io.in.bits.instr(11, 7))
   val immS      = Cat(Fill(20, imm_S_Raw(11)), imm_S_Raw)
-  val imm_B_Raw = Cat(io.in.bits.instr(31, 31), io.in.bits.instr(7, 7), io.in.bits.instr(30, 25), io.in.bits.instr(11, 8), 0.U(1.W))
+  val imm_B_Raw =
+    Cat(io.in.bits.instr(31, 31), io.in.bits.instr(7, 7), io.in.bits.instr(30, 25), io.in.bits.instr(11, 8), 0.U(1.W))
   val immB      = Cat(Fill(19, imm_B_Raw(12)), imm_B_Raw)
   val imm_U_Raw = Cat(io.in.bits.instr(31, 12), 0.U(12.W))
   val immU      = imm_U_Raw
-  val imm_J_Raw = Cat(io.in.bits.instr(31, 31), io.in.bits.instr(19, 12), io.in.bits.instr(20, 20), io.in.bits.instr(30, 21), 0.U(1.W))
-  val immJ      = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
+  val imm_J_Raw = Cat(
+    io.in.bits.instr(31, 31),
+    io.in.bits.instr(19, 12),
+    io.in.bits.instr(20, 20),
+    io.in.bits.instr(30, 21),
+    0.U(1.W)
+  )
+  val immJ = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
 
   // val opcode = io.in.bits.instr(6, 0)
   val rs1 = io.in.bits.instr(19, 15)

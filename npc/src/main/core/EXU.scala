@@ -17,6 +17,7 @@ class EXU extends Module {
     // val csr_mstvec=Input(UInt(CVAL.DLEN.W))
     val out = Output(new EXU_O)
   })
+  io.in.ready := true.B
   //pass_throughs
   io.out.mem_read_enable  := io.in.bits.mem_read_enable
   io.out.mem_read_type    := io.in.bits.mem_read_type
