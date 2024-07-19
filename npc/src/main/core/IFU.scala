@@ -17,6 +17,14 @@ class IFU extends Module {
   })
   io.out.valid:=true.B
   io.in.ready:=true.B
+  
+  val s_idle :: s_wait_ready :: Nil = Enum(2)
+  val state = RegInit(s_idle)
+  state := MuxLookup(state, s_idle)(List(
+    s_idle       -> Mux(io.out.valid, s_wait_ready, s_idle),
+    s_wait_ready -> Mux(io.out.ready, s_idle, s_wait_ready)
+  ))
+
   val pc = RegInit("h80000000".U(CVAL.DLEN.W))
   io.out.bits.pc := pc
   io.pc     := pc
