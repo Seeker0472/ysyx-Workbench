@@ -49,3 +49,27 @@ class MEM extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
+
+// class MEM extends Module{
+//   val io = IO(new Bundle {
+//     val read_addr   = Input(UInt(CVAL.DLEN.W))
+//     val read_enable = Input(Bool())
+//     val read_data   = Output(UInt(CVAL.DLEN.W))
+
+//     val write_enable = Input(Bool())
+//     val write_addr   = Input(UInt(CVAL.DLEN.W))
+//     val write_data   = Input(UInt(CVAL.DLEN.W))
+//     val write_mask   = Input(UInt(8.W))
+//   })
+//     // 创建一个256x32位的同步读写内存
+//   val mem = SyncReadMem(256, UInt(32.W))
+
+//   // 写操作
+//   when(io.write_enable) {
+//     mem.write(io.write_addr, io.write_data&io.write_mask)
+//   }
+
+//   // 读操作
+//   io.read_data := mem.read(io.read_addr, (!io.write_enable)&&io.read_enable)
+
+// }

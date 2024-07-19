@@ -1,6 +1,8 @@
 package core
 
 import chisel3._
+import chisel3.util._
+
 import Constants_Val._
 import core.IO._
 import chisel3.util.Mux1H
@@ -8,36 +10,38 @@ import chisel3.util.MuxLookup
 
 class EXU extends Module {
   val io = IO(new Bundle {
-    val in   = Flipped(new DecoderO)
+    val in   = Flipped(Decoupled(new DecoderO))
     val reg1 = (new RegReadIO)
     val reg2 = (new RegReadIO)
     val csr  = (new CSRReadIO)
     // val csr_mstvec=Input(UInt(CVAL.DLEN.W))
-    val out = Output(new EXU_O)
+    val out = (Decoupled(new EXU_O))
   })
+  io.in.ready := true.B
+  io.out.valid:=true.B
   //pass_throughs
-  io.out.mem_read_enable  := io.in.mem_read_enable
-  io.out.mem_read_type    := io.in.mem_read_type
-  io.out.mem_write_enable := io.in.mem_write_enable
-  io.out.mem_write_type   := io.in.mem_write_type
-  io.out.pc               := io.in.pc //using!
-  io.out.ecall            := io.in.ecall
-  io.out.pc_jump          := io.in.pc_jump
-  io.out.is_branch        := io.in.is_branch
-  io.out.reg_w_addr       := io.in.rd
-  io.out.reg_w_enable     := io.in.reg_write_enable
-  io.out.mret             := io.in.mret
-  io.out.imm              := io.in.imm
-  io.out.csrrw            := io.in.csrrw
+  io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
+  io.out.bits.mem_read_type    := io.in.bits.mem_read_type
+  io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
+  io.out.bits.mem_write_type   := io.in.bits.mem_write_type
+  io.out.bits.pc               := io.in.bits.pc //using!
+  io.out.bits.ecall            := io.in.bits.ecall
+  io.out.bits.pc_jump          := io.in.bits.pc_jump
+  io.out.bits.is_branch        := io.in.bits.is_branch
+  io.out.bits.reg_w_addr       := io.in.bits.rd
+  io.out.bits.reg_w_enable     := io.in.bits.reg_write_enable
+  io.out.bits.mret             := io.in.bits.mret
+  io.out.bits.imm              := io.in.bits.imm
+  io.out.bits.csrrw            := io.in.bits.csrrw
 
-  io.reg1.addr := io.in.rs1
-  io.reg2.addr := io.in.rs2
-  io.csr.addr  := io.in.imm
+  io.reg1.addr := io.in.bits.rs1
+  io.reg2.addr := io.in.bits.rs2
+  io.csr.addr  := io.in.bits.imm
   val src1 = io.reg1.data
   val src2 = io.reg2.data
 
-  val alu_val1 = Mux(io.in.alu_use_pc, io.in.pc, src1)
-  val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, src2)
+  val alu_val1 = Mux(io.in.bits.alu_use_pc, io.in.bits.pc, src1)
+  val alu_val2 = Mux(io.in.bits.alu_use_Imm_2, io.in.bits.imm, src2)
 
   val alu = Module(new ALU())
 
@@ -45,26 +49,26 @@ class EXU extends Module {
 //比较单元的输入
   comp.io.src1      := src1
   comp.io.src2      := src2
-  comp.io.comp_type := io.in.branch_type
+  comp.io.comp_type := io.in.bits.branch_type
   val go_branch = comp.io.result
 //alu的输入
   alu.io.in.src1        := alu_val1
   alu.io.in.src2        := alu_val2
-  alu.io.in.alu_op_type := io.in.alu_op_type
+  alu.io.in.alu_op_type := io.in.bits.alu_op_type
 
   //csrr_alu
   val or = io.csr.data | src1
-  val csr_alu_res = MuxLookup(io.in.csr_alu_type, or)(
+  val csr_alu_res = MuxLookup(io.in.bits.csr_alu_type, or)(
     Seq(
       CSRALU_Type.or -> or,
       CSRALU_Type.passreg -> src1
     )
   )
-  io.out.alu_result  := alu.io.result //alu的运算结果
-  io.out.src2        := src2 //TODO:哪里需要？？
-  io.out.csr_alu_res := csr_alu_res
-  io.out.csr_val     := io.csr.data
-  io.out.go_branch   := go_branch
+  io.out.bits.alu_result  := alu.io.result //alu的运算结果
+  io.out.bits.src2        := src2 //TODO:哪里需要？？
+  io.out.bits.csr_alu_res := csr_alu_res
+  io.out.bits.csr_val     := io.csr.data
+  io.out.bits.go_branch   := go_branch
 }
 
 class Branch_comp extends Module {
