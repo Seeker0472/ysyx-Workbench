@@ -19,12 +19,12 @@ class EXU extends Module {
   val alu = Module(new ALU())
 
   val comp = Module(new Branch_comp())
-
+//比较单元的输入
   comp.io.src1      := io.in.src1
   comp.io.src2      := io.in.src2
   comp.io.comp_type := io.in.branch_type
   val go_branch = comp.io.result
-
+//alu的输入
   alu.io.in.src1        := alu_val1
   alu.io.in.src2        := alu_val2
   alu.io.in.alu_op_type := io.in.alu_op_type
@@ -38,17 +38,17 @@ class EXU extends Module {
     )
   )
   // io.out.csr_res := csr_alu_res
-  io.out.csr_res := Mux(io.in.ecall,io.in.pc,csr_alu_res)
+  io.out.csr_res := Mux(io.in.ecall,io.in.pc,csr_alu_res)//ecall的时候保存pc寄存器/正常csr指令保存csr_alu的数据
 
   //mem R/W
   mem.io.read_enable  := io.in.mem_read_enable
   mem.io.write_enable := io.in.mem_write_enable
-  //TODO: 这里需要设计两个信号吗
+  //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
   mem.io.read_addr  := alu.io.result
   mem.io.write_addr := alu.io.result
   val mrres = mem.io.read_data
   val mrrm  = mrres >> ((alu.io.result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
-  //注意符号拓展！！！
+  //vv注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.mem_read_type, 0.S)(
     Seq(
       Load_Type.lb -> mrrm(7, 0).asSInt,
@@ -73,14 +73,15 @@ class EXU extends Module {
   //如果是store，Reg_Write_Enable应该是False
   // val result   = alu.io.result
   // val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
-  val result   = Mux(io.in.mem_read_enable, mem_read_result, Mux(io.in.csrrw,io.in.csr_val,alu.io.result))
+  val result   = Mux(io.in.mem_read_enable, mem_read_result, Mux(io.in.csrrw,io.in.csr_val,alu.io.result))//内存读取/csr操作/算数运算结果
   val pc_plus4 = io.in.pc + 4.U
 
   // val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
-  val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, Mux(io.in.ecall,io.in.csr_mstvec,pc_plus4))
-  io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, result)
+  val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, Mux(io.in.ecall,io.in.csr_mstvec,pc_plus4))//跳转指令/ecall/正常pc+4
+  io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, result)//跳转指令保存寄存器
   // io.out.n_pc    := next_pc
-  io.out.n_pc    := Mux(io.in.mret,io.in.csr_val,next_pc)
+  io.out.n_pc    := Mux(io.in.mret,io.in.csr_val,next_pc)//mret恢复pc
+  // TODO：这个地方感觉会延迟很高？
 }
 
 class Branch_comp extends Module {
