@@ -44,6 +44,7 @@ test:
 	mill -i $(PRJ).test
 
 verilog: $(ABS_CHISEL_SOURCES)
+	echo $(ABS_CHISEL_SOURCES)
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
