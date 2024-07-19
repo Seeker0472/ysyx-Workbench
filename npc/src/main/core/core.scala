@@ -36,10 +36,10 @@ class core extends Module {
 //decode_stage
   decoder.io.instr := ifu.io.instr
 //exc
-  exu.io.in   := decoder.io.out
+  exu.io.in   <> decoder.io.out
   exu.io.reg1 <> reg.io.Rread1
   exu.io.reg2 <> reg.io.Rread2
-  exu.io.csr  := reg.io.CSRread
+  exu.io.csr  <> reg.io.CSRread
 // exu.io.csr_mstvec:=reg.io.csr_mstvec
 //mem_access
   memau.io.in := exu.io.out
