@@ -38,9 +38,9 @@ class core extends Module {
 //exc
   // exu.io.in <> decoder.io.out
   StageConnect(decoder.io.out,exu.io.in)
-  exu.io.reg1 := reg.io.Rread1
-  exu.io.reg2 := reg.io.Rread2
-  exu.io.csr := reg.io.CSRread
+  exu.io.reg1 <> reg.io.Rread1
+  exu.io.reg2 <> reg.io.Rread2
+  exu.io.csr <> reg.io.CSRread
 //mem_access
   memau.io.in <> exu.io.out
 //wb
