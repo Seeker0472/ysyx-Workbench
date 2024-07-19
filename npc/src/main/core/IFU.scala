@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 import Constants_Val._
 import core.IO._
+import Constants_Val.CVAL.DLEN
 //目前取指需要从顶层模块(core)中取出，所以就直接连线了
 //也许应该重构
 //存放PC，负责取出指令
@@ -21,6 +22,9 @@ class IFU extends Module {
     s_idle       -> Mux(!io.out.valid, s_wait_ready, s_idle),
     s_wait_ready -> Mux(io.out.ready, s_idle, s_wait_ready)
   ))
+  val inst = Reg(UInt(CVAL.DLEN.W))//模拟延迟
+  inst:=io.instr_i
+  io.out.bits.instr := inst
 
   io.out.valid:=state===s_wait_ready
   io.in.ready:=true.B
@@ -30,7 +34,6 @@ class IFU extends Module {
   io.out.bits.pc := pc
   io.pc     := pc
 
-  io.out.bits.instr := io.instr_i
   when(io.in.valid){
   pc           := io.in.bits.n_pc
   }
