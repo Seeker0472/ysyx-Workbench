@@ -46,11 +46,13 @@ class core extends Module {
   StageConnect(exu.io.out,memau.io.in)
 
 //wb
-  wbu.io.in <> memau.io.out
+  // wbu.io.in <> memau.io.out
+  StageConnect(memau.io.out,wbu.io.in)
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
 
-  ifu.io.in <> wbu.io.out
+  // ifu.io.in <> wbu.io.out
+  StageConnect(wbu.io.out,ifu.io.in)
 
 }

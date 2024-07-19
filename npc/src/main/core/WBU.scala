@@ -11,9 +11,10 @@ class WBU extends Module {
     val csr_mstvec = Input(UInt(CVAL.DLEN.W))
     val Rwrite     = (new RegWriteIO)
     val CSR_write  = (new CSRWriteIO)
-    val out        = (new WBU_O)
+    val out        = Decoupled(new WBU_O)
   })
   io.in.ready:=true.B
+  io.out.valid:=true.B
 
 
   io.CSR_write.write_enable := io.in.bits.csrrw
@@ -44,7 +45,7 @@ class WBU extends Module {
   io.Rwrite.addr         := io.in.bits.reg_w_addr
   io.Rwrite.write_enable := io.in.bits.reg_w_enable
   // io.out.n_pc    := next_pc
-  io.out.n_pc := Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
+  io.out.bits.n_pc := Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
   // TODO：这个地方感觉会延迟很高？
 
 }
