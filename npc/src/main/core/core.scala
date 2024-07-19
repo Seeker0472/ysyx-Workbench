@@ -14,7 +14,7 @@ import Constants_Val.CVAL
 class core extends Module {
   val io = IO(new Bundle {
     val pc       = Output(UInt(CVAL.DLEN.W))
-    val value    = Output(UInt(CVAL.DLEN.W))
+    // val value    = Output(UInt(CVAL.DLEN.W))
     val addr     = Input(UInt(CVAL.DLEN.W))
     val instr    = Input(UInt(CVAL.ILEN.W))
     val inst_now = Output(UInt(CVAL.DLEN.W))
@@ -27,62 +27,30 @@ class core extends Module {
   val br_han  = Module(new ebreak_handler())
   val ifu     = Module(new IFU())
   val exu     = Module(new EXU())
+  val memau   = Module(new MEMAccess())
+  val wbu     = Module(new WBU())
   // val mem     = Module(new MEM())
 
-  //fetch_inst
   io.pc          := ifu.io.pc
   ifu.io.instr_i := io.instr
-
-  //decode
+//decode_stage
+decoder.io.pc:=ifu.io.pc
   decoder.io.instr := ifu.io.instr
+  br_han.io.halt:=decoder.io.ebreak
+//exc
+  exu.io.in   <> decoder.io.out
+  exu.io.reg1 <> reg.io.Rread1
+  exu.io.reg2 <> reg.io.Rread2
+  exu.io.csr  <> reg.io.CSRread
+// exu.io.csr_mstvec:=reg.io.csr_mstvec
+//mem_access
+  memau.io.in <> exu.io.out
+//wb
+  wbu.io.in         <> memau.io.out
+  wbu.io.csr_mstvec := reg.io.csr_mstvec
+  reg.io.Rwrite     <> wbu.io.Rwrite
+  reg.io.CSRwrite   <> wbu.io.CSR_write
 
-  //r/w_reg
-  reg.io.read_No_1     := decoder.io.out.rs1
-  exu.io.in.src1       := reg.io.read_1
-  reg.io.read_No_2     := decoder.io.out.rs2
-  exu.io.in.src2       := reg.io.read_2
-  reg.io.write_No      := decoder.io.out.rd
-  reg.io.csr_read_No   := decoder.io.out.imm//imm作为csr_read的寄存器地址，如果地址超出了范围，默认返回mepc
-  exu.io.in.csr_val    := reg.io.csr_read
-  exu.io.in.csr_mstvec := reg.io.csr_mstvec//<-这个是mstvec寄存器引出的线，永远是当前的mstvec的数据
-  //TODO:----csr_write_No----csr_read_No--same!?
-  reg.io.csr_write_No := decoder.io.out.imm
-  
-  //pass information to exu
-  exu.io.in.imm := decoder.io.out.imm
-  exu.io.in.pc  := ifu.io.pc
+  ifu.io.next_pc := wbu.io.out.n_pc
 
-  //pass_control_sig to EXU
-  exu.io.in.alu_use_Imm_2 := decoder.io.out.alu_use_Imm_2
-  exu.io.in.alu_use_pc    := decoder.io.out.alu_use_pc
-  exu.io.in.alu_op_type   := decoder.io.out.alu_op_type
-  exu.io.in.pc_jump       := decoder.io.out.pc_jump
-  //csrs_cont_sig
-  exu.io.in.csr_alu_type := decoder.io.out.csr_alu_type
-  exu.io.in.csrrw        := decoder.io.out.csrrw
-  exu.io.in.ecall        := decoder.io.out.ecall
-  exu.io.in.mret         := decoder.io.out.mret
-
-  //pass_mem__sig to exu
-  exu.io.in.mem_read_enable  := decoder.io.out.mem_read_enable
-  exu.io.in.mem_read_type    := decoder.io.out.mem_read_type
-  exu.io.in.mem_write_enable := decoder.io.out.mem_write_enable
-  exu.io.in.mem_write_type   := decoder.io.out.mem_write_type
-
-  //pass branch_sig to exu
-  exu.io.in.is_branch   := decoder.io.out.is_branch
-  exu.io.in.branch_type := decoder.io.out.branch_type
-
-  //regs Write_ENABLE!!
-  reg.io.write_en     := decoder.io.out.reg_write_enable
-  reg.io.csr_write_en := decoder.io.out.csrrw
-  //ebreak
-  br_han.io.halt := decoder.io.out.ebreak
-  //其实没什么用，当初是为了防止exu被优化掉
-  io.value := exu.io.out.reg_out
-
-  //write_back
-  ifu.io.next_pc        := exu.io.out.n_pc
-  reg.io.reg_write_data := exu.io.out.reg_out
-  reg.io.csr_write_data := exu.io.out.csr_res
 }
