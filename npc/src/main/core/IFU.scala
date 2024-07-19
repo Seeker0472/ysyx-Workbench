@@ -12,7 +12,7 @@ class IFU extends Module {
     val in = (new WBU_O)
     val instr_i = Input(UInt(CVAL.ILEN.W))
     val pc      = Output(UInt(CVAL.DLEN.W))
-    val out     = Flipped(new IFUO())
+    val out     = (new IFUO())
   })
   val pc = RegInit("h80000000".U(CVAL.DLEN.W))
   io.out.pc := pc
