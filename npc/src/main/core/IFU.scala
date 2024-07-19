@@ -31,6 +31,8 @@ class IFU extends Module {
   io.pc     := pc
 
   io.out.bits.instr := io.instr_i
+  when(io.in.valid){
   pc           := io.in.bits.n_pc
+  }
   // io.addr:=io.pc
 }

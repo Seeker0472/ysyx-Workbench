@@ -9,8 +9,10 @@ class MEMAccess extends Module {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
   })
-  io.in.ready :=true.B
-  io.out.valid:=true.B
+  // io.in.ready :=true.B
+  // io.out.valid:=true.B
+  io.out.valid := io.in.ready
+
   //pass_throughs
   io.out.bits.pc              := io.in.bits.pc
   io.out.bits.ecall           := io.in.bits.ecall
