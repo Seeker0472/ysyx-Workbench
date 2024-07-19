@@ -19,7 +19,7 @@ class IFU extends Module {
   val state = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(List(
     s_idle       -> Mux(!io.out.valid, s_wait_ready, s_idle),
-    s_wait_ready -> Mux(!io.out.ready, s_idle, s_wait_ready)
+    s_wait_ready -> Mux(io.out.ready, s_idle, s_wait_ready)
   ))
 
   io.out.valid:=state===s_wait_ready
