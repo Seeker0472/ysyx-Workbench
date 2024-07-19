@@ -34,6 +34,7 @@ class core extends Module {
   io.pc          := ifu.io.pc
   ifu.io.instr_i := io.instr
 //decode_stage
+decoder.io.pc:=ifu.io.pc
   decoder.io.instr := ifu.io.instr
   br_han.io.halt:=decoder.io.ebreak
 //exc
