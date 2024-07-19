@@ -16,7 +16,7 @@ class MEM extends BlackBox with HasBlackBoxInline {
     val write_addr   = Input(UInt(CVAL.DLEN.W))
     val write_data   = Input(UInt(CVAL.DLEN.W))
     val write_mask   = Input(UInt(8.W))
-    val clock =Input(Clock())
+    val clock        = Input(Clock())
   })
 
   setInline(

@@ -22,6 +22,8 @@ object CSRALU_Type extends ChiselEnum {
 }
 
 class DecoderO extends Bundle {
+  val pc = UInt(CVAL.DLEN.W)
+
   val rs1 = UInt(5.W)
   val rs2 = UInt(5.W)
   val rd  = UInt(5.W)
@@ -32,7 +34,7 @@ class DecoderO extends Bundle {
   val alu_op_type      = ALU_Op()
   val pc_jump          = Bool()
   val reg_write_enable = Bool()
-  val ebreak           = Bool()
+  // val ebreak           = Bool()
 
   val mem_read_enable  = Bool()
   val mem_read_type    = Load_Type()
