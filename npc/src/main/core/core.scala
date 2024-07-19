@@ -42,7 +42,9 @@ class core extends Module {
   exu.io.reg2 <> reg.io.Rread2
   exu.io.csr <> reg.io.CSRread
 //mem_access
-  memau.io.in <> exu.io.out
+  // memau.io.in <> exu.io.out
+  StageConnect(exu.io.out,memau.io.in)
+
 //wb
   wbu.io.in <> memau.io.out
   wbu.io.csr_mstvec := reg.io.csr_mstvec

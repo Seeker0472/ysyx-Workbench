@@ -15,23 +15,24 @@ class EXU extends Module {
     val reg2 = (new RegReadIO)
     val csr  = (new CSRReadIO)
     // val csr_mstvec=Input(UInt(CVAL.DLEN.W))
-    val out = Output(new EXU_O)
+    val out = Output(Decoupled(new EXU_O))
   })
   io.in.ready := true.B
+  io.out.valid:=true.B
   //pass_throughs
-  io.out.mem_read_enable  := io.in.bits.mem_read_enable
-  io.out.mem_read_type    := io.in.bits.mem_read_type
-  io.out.mem_write_enable := io.in.bits.mem_write_enable
-  io.out.mem_write_type   := io.in.bits.mem_write_type
-  io.out.pc               := io.in.bits.pc //using!
-  io.out.ecall            := io.in.bits.ecall
-  io.out.pc_jump          := io.in.bits.pc_jump
-  io.out.is_branch        := io.in.bits.is_branch
-  io.out.reg_w_addr       := io.in.bits.rd
-  io.out.reg_w_enable     := io.in.bits.reg_write_enable
-  io.out.mret             := io.in.bits.mret
-  io.out.imm              := io.in.bits.imm
-  io.out.csrrw            := io.in.bits.csrrw
+  io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
+  io.out.bits.mem_read_type    := io.in.bits.mem_read_type
+  io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
+  io.out.bits.mem_write_type   := io.in.bits.mem_write_type
+  io.out.bits.pc               := io.in.bits.pc //using!
+  io.out.bits.ecall            := io.in.bits.ecall
+  io.out.bits.pc_jump          := io.in.bits.pc_jump
+  io.out.bits.is_branch        := io.in.bits.is_branch
+  io.out.bits.reg_w_addr       := io.in.bits.rd
+  io.out.bits.reg_w_enable     := io.in.bits.reg_write_enable
+  io.out.bits.mret             := io.in.bits.mret
+  io.out.bits.imm              := io.in.bits.imm
+  io.out.bits.csrrw            := io.in.bits.csrrw
 
   io.reg1.addr := io.in.bits.rs1
   io.reg2.addr := io.in.bits.rs2
@@ -63,11 +64,11 @@ class EXU extends Module {
       CSRALU_Type.passreg -> src1
     )
   )
-  io.out.alu_result  := alu.io.result //alu的运算结果
-  io.out.src2        := src2 //TODO:哪里需要？？
-  io.out.csr_alu_res := csr_alu_res
-  io.out.csr_val     := io.csr.data
-  io.out.go_branch   := go_branch
+  io.out.bits.alu_result  := alu.io.result //alu的运算结果
+  io.out.bits.src2        := src2 //TODO:哪里需要？？
+  io.out.bits.csr_alu_res := csr_alu_res
+  io.out.bits.csr_val     := io.csr.data
+  io.out.bits.go_branch   := go_branch
 }
 
 class Branch_comp extends Module {
