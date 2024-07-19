@@ -26,8 +26,8 @@ class IFU extends Module {
   // inst:=io.instr_i
   // io.out.bits.instr := inst
   io.out.bits.instr:=io.instr_i
-  // io.out.valid:=state===s_wait_ready
-  io.out.valid:=true.B
+  io.out.valid:=state===s_wait_ready
+  // io.out.valid:=true.B
   io.in.ready:=true.B
 
 
