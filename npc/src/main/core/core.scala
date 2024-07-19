@@ -4,7 +4,6 @@ import chisel3._
 import chisel3.util._
 import os.stat
 import Constants_Val.CVAL
-import core.IO._
 
 // import os.write
 // import chisel3.Output
@@ -31,7 +30,7 @@ class core extends Module {
   // val mem     = Module(new MEM())
 
   //fetch_inst
-  StageConnect(io.pc,ifu.io.pc)
+  io.pc          := ifu.io.pc
   ifu.io.instr_i := io.instr
 
   //decode
