@@ -9,7 +9,7 @@ import core.IO._
 class IFU extends Module {
   val io = IO(new Bundle {
     // val next_pc = Input(UInt(CVAL.DLEN.W))
-    val in = (new WBU_O)
+    val in = Flipped(new WBU_O)
     val instr_i = Input(UInt(CVAL.ILEN.W))
     val pc      = Output(UInt(CVAL.DLEN.W))
     val out     = (new IFUO())
