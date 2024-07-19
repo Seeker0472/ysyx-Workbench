@@ -98,6 +98,7 @@ void call_ebreak()
     tfp->flush(); // not-关闭VCD文件
     // delete tfp;
     nemu_state.state = NEMU_ABORT;
+    nemu_state.halt_ret=regs_2_value;
     // exit(0);
 }
 
