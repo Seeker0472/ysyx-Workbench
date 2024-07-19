@@ -22,10 +22,10 @@ class IFU extends Module {
     s_idle       -> Mux(!io.out.valid, s_wait_ready, s_idle),
     s_wait_ready -> Mux(io.out.ready, s_idle, s_wait_ready)
   ))
-  // val inst = Reg(UInt(CVAL.DLEN.W))//模拟延迟
-  // inst:=io.instr_i
-  // io.out.bits.instr := inst
-  io.out.bits.instr:=io.instr_i
+  val inst = Reg(UInt(CVAL.DLEN.W))//模拟延迟
+  inst:=io.instr_i
+  io.out.bits.instr := inst
+  // io.out.bits.instr:=io.instr_i
   io.out.valid:=state===s_wait_ready
   // io.out.valid:=true.B
   io.in.ready:=true.B
