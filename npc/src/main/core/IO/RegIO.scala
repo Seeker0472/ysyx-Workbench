@@ -4,8 +4,8 @@ import chisel3._
 import Constants_Val._
 
 class RegReadIO extends Bundle {
-  val addr = Output(UInt(CVAL.REG_ADDR_LEN.W))
-  val data = Input(UInt(CVAL.DLEN.W))
+  val addr = Input(UInt(CVAL.REG_ADDR_LEN.W))
+  val data = Output(UInt(CVAL.DLEN.W))
 }
 
 class RegWriteIO extends Bundle {
@@ -15,8 +15,8 @@ class RegWriteIO extends Bundle {
 }
 
 class CSRReadIO extends Bundle {
-  val addr = Output(UInt(CVAL.CSR_ADDR_LEN.W))
-  val data = Input(UInt(CVAL.DLEN.W))
+  val addr = Input(UInt(CVAL.CSR_ADDR_LEN.W))
+  val data = Output(UInt(CVAL.DLEN.W))
 }
 
 class CSRWriteIO extends Bundle {
