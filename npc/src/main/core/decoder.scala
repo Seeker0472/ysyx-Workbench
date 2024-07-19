@@ -14,7 +14,7 @@ object Inst_Type_Enum extends ChiselEnum {
 }
 
 
-//返回指令的类型
+//指令的类型
 object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
@@ -231,8 +231,6 @@ object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
 class Decoder extends Module {
   val io = IO(new Bundle {
     val instr = Input(UInt((CVAL.ILEN).W))
-    // val Reg1  = new RegReadIO
-    // val Reg2  = new RegReadIO
     val out = Output(new DecoderO)
   })
   val Patterns =decodePatterns.Patterns
