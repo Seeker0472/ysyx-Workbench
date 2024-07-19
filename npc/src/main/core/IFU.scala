@@ -1,6 +1,7 @@
 package core
 
 import chisel3._
+import chisel3.util._
 import Constants_Val._
 import core.IO._
 //目前取指需要从顶层模块(core)中取出，所以就直接连线了
@@ -12,13 +13,14 @@ class IFU extends Module {
     val in = Flipped(new WBU_O)
     val instr_i = Input(UInt(CVAL.ILEN.W))
     val pc      = Output(UInt(CVAL.DLEN.W))
-    val out     = (new IFUO())
+    val out     = Decoupled(new IFUO())
   })
+  io.out.valid:=true.B
   val pc = RegInit("h80000000".U(CVAL.DLEN.W))
-  io.out.pc := pc
+  io.out.bits.pc := pc
   io.pc     := pc
 
-  io.out.instr := io.instr_i
+  io.out.bits.instr := io.instr_i
   pc           := io.in.n_pc
   // io.addr:=io.pc
 }

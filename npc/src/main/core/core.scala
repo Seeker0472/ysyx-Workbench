@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 import os.stat
 import Constants_Val.CVAL
+import _root_.core.IO.StageConnect
 
 // import os.write
 // import chisel3.Output
@@ -31,7 +32,8 @@ class core extends Module {
   io.pc          := ifu.io.pc
   ifu.io.instr_i := io.instr
 //decode_stage
-  decoder.io.in <> ifu.io.out
+  // decoder.io.in <> ifu.io.out
+  StageConnect(ifu.io.out,decoder.io.in)
   br_han.io.halt := decoder.io.ebreak
 //exc
   exu.io.in <> decoder.io.out

@@ -234,32 +234,33 @@ class Decoder extends Module {
   val io = IO(new Bundle {
     // val instr = Input(UInt((CVAL.ILEN).W))
     // val pc =Input(UInt(CVAL.DLEN.W))
-    val in = Flipped(new IFUO)
+    val in = Flipped(Decoupled(new IFUO))
     val ebreak =Output(Bool())
     val out   = Output(new DecoderO)
   })
+  io.in.ready:=true.B
   //pass_through
-  io.out.pc := io.in.pc
+  io.out.pc := io.in.bits.pc
 
 
   val Patterns = decodePatterns.Patterns
 
   //Imms
-  val imm_I_Raw = io.in.instr(31, 20)
+  val imm_I_Raw = io.in.bits.instr(31, 20)
   val immI      = Cat(Fill(20, imm_I_Raw(11)), imm_I_Raw)
-  val imm_S_Raw = Cat(io.in.instr(31, 25), io.in.instr(11, 7))
+  val imm_S_Raw = Cat(io.in.bits.instr(31, 25), io.in.bits.instr(11, 7))
   val immS      = Cat(Fill(20, imm_S_Raw(11)), imm_S_Raw)
-  val imm_B_Raw = Cat(io.in.instr(31, 31), io.in.instr(7, 7), io.in.instr(30, 25), io.in.instr(11, 8), 0.U(1.W))
+  val imm_B_Raw = Cat(io.in.bits.instr(31, 31), io.in.bits.instr(7, 7), io.in.bits.instr(30, 25), io.in.bits.instr(11, 8), 0.U(1.W))
   val immB      = Cat(Fill(19, imm_B_Raw(12)), imm_B_Raw)
-  val imm_U_Raw = Cat(io.in.instr(31, 12), 0.U(12.W))
+  val imm_U_Raw = Cat(io.in.bits.instr(31, 12), 0.U(12.W))
   val immU      = imm_U_Raw
-  val imm_J_Raw = Cat(io.in.instr(31, 31), io.in.instr(19, 12), io.in.instr(20, 20), io.in.instr(30, 21), 0.U(1.W))
+  val imm_J_Raw = Cat(io.in.bits.instr(31, 31), io.in.bits.instr(19, 12), io.in.bits.instr(20, 20), io.in.bits.instr(30, 21), 0.U(1.W))
   val immJ      = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
 
-  // val opcode = io.in.instr(6, 0)
-  val rs1 = io.in.instr(19, 15)
-  val rs2 = io.in.instr(24, 20)
-  val rd  = io.in.instr(11, 7)
+  // val opcode = io.in.bits.instr(6, 0)
+  val rs1 = io.in.bits.instr(19, 15)
+  val rs2 = io.in.bits.instr(24, 20)
+  val rd  = io.in.bits.instr(11, 7)
 
   val decodedResults =
     new DecodeTable(
@@ -284,7 +285,7 @@ class Decoder extends Module {
         Is_Ecall
       )
     )
-      .decode(io.in.instr)
+      .decode(io.in.bits.instr)
   val Type = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(
