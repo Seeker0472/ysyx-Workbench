@@ -23,8 +23,8 @@ C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 
-CHISEL_SOURCES := $(shell find src -name '*.scala')
-ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
+# CHISEL_SOURCES := $(shell find src -name '*.scala')
+# ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
 
 
 # $(shell llvm-config --cxxflags)
@@ -44,7 +44,7 @@ test:
 	mill -i $(PRJ).test
 
 verilog: $(ABS_CHISEL_SOURCES)
-	echo $(ABS_CHISEL_SOURCES)
+
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
