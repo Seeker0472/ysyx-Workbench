@@ -236,11 +236,11 @@ class Decoder extends Module {
     // val pc =Input(UInt(CVAL.DLEN.W))
     val in = Flipped(Decoupled(new IFUO))
     val ebreak =Output(Bool())
-    val out   = Output(new DecoderO)
+    val out   = Decoupled(new DecoderO)
   })
   io.in.ready:=true.B
   //pass_through
-  io.out.pc := io.in.bits.pc
+  io.out.bits.pc := io.in.bits.pc
 
 
   val Patterns = decodePatterns.Patterns
@@ -298,35 +298,35 @@ class Decoder extends Module {
     )
   )
   //数据
-  io.out.rs1 := rs1
-  io.out.rs2 := rs2
-  io.out.rd  := rd
-  io.out.imm := imm
+  io.out.bits.rs1 := rs1
+  io.out.bits.rs2 := rs2
+  io.out.bits.rd  := rd
+  io.out.bits.imm := imm
 
   //控制逻辑
-  io.out.alu_use_Imm_2 := decodedResults(Use_IMM_2)
-  io.out.alu_use_pc    := decodedResults(Use_PC_1)
+  io.out.bits.alu_use_Imm_2 := decodedResults(Use_IMM_2)
+  io.out.bits.alu_use_pc    := decodedResults(Use_PC_1)
 
-  io.out.alu_op_type      := decodedResults(ALUOp_Gen)
-  io.out.pc_jump          := decodedResults(Is_Jump)
-  io.out.reg_write_enable := decodedResults(R_Write_Enable)
+  io.out.bits.alu_op_type      := decodedResults(ALUOp_Gen)
+  io.out.bits.pc_jump          := decodedResults(Is_Jump)
+  io.out.bits.reg_write_enable := decodedResults(R_Write_Enable)
 
   io.ebreak := decodedResults(Is_Ebreak)
 
-  io.out.mem_read_enable := decodedResults(Read_En)
+  io.out.bits.mem_read_enable := decodedResults(Read_En)
 
-  io.out.mem_write_enable := decodedResults(Write_En)
+  io.out.bits.mem_write_enable := decodedResults(Write_En)
 
-  io.out.mem_write_type := decodedResults(Mem_WriteType)
-  io.out.mem_read_type  := decodedResults(Mem_LoadType)
+  io.out.bits.mem_write_type := decodedResults(Mem_WriteType)
+  io.out.bits.mem_read_type  := decodedResults(Mem_LoadType)
 
-  io.out.is_branch   := decodedResults(Is_Branch)
-  io.out.branch_type := decodedResults(BranchType)
+  io.out.bits.is_branch   := decodedResults(Is_Branch)
+  io.out.bits.branch_type := decodedResults(BranchType)
 
-  io.out.csrrw        := decodedResults(CSRRW)
-  io.out.csr_alu_type := decodedResults(CSRR_ALU_Type)
+  io.out.bits.csrrw        := decodedResults(CSRRW)
+  io.out.bits.csr_alu_type := decodedResults(CSRR_ALU_Type)
 
-  io.out.ecall := decodedResults(Is_Ecall)
-  io.out.mret  := decodedResults(Is_Mret)
+  io.out.bits.ecall := decodedResults(Is_Ecall)
+  io.out.bits.mret  := decodedResults(Is_Mret)
 
 }
