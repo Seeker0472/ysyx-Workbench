@@ -82,7 +82,7 @@ unsigned int sim_time = 0;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
 {
-    if (nemu_state.state == NEMU_ABORT) // Prevent_Display_Twice!!!!!------TODO:Why called Twice????
+    if (nemu_state.state == NEMU_END) // Prevent_Display_Twice!!!!!------TODO:Why called Twice????
         return;
     Log("Ebreak Called!!");
     // tfp->
@@ -97,7 +97,7 @@ void call_ebreak()
 
     tfp->flush(); // not-关闭VCD文件
     // delete tfp;
-    nemu_state.state = NEMU_ABORT;
+    nemu_state.state = NEMU_END;
     nemu_state.halt_ret=regs_2_value;
     // exit(0);
 }
