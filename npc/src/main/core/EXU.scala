@@ -15,7 +15,7 @@ class EXU extends Module {
     val reg2 = (new RegReadIO)
     val csr  = (new CSRReadIO)
     // val csr_mstvec=Input(UInt(CVAL.DLEN.W))
-    val out = Output(Decoupled(new EXU_O))
+    val out = (Decoupled(new EXU_O))
   })
   io.in.ready := true.B
   io.out.valid:=true.B
