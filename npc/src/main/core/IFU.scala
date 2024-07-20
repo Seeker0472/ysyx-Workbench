@@ -21,15 +21,14 @@ class IFU extends Module {
   state := MuxLookup(state, s_idle)(List(
     s_idle       -> Mux(io.out.ready, s_ready, s_idle),
     s_ready -> Mux(true.B, s_idle, s_ready),//1cycle
-
     init -> Mux(io.out.ready, s_ready, init),
-
   ))
+  io.out.valid:=state===s_ready
+
   val sram_sim=Reg(UInt(CVAL.DLEN.W))
   sram_sim:=io.instr_i
-
   io.out.bits.instr:=sram_sim
-  io.out.valid:=state===s_ready
+
   // io.out.valid:=true.B
   io.in.ready:=true.B
 
