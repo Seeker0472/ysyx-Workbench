@@ -16,7 +16,7 @@ class IFU extends Module {
     val pc      = Output(UInt(CVAL.DLEN.W))
     val out     = Decoupled(new IFUO())
   })
-  val s_idle :: s_ready :: s_wait_ready :: Nil = Enum(2)
+  val s_idle :: s_ready :: s_wait_ready :: Nil = Enum(3)
   val state = RegInit(s_wait_ready)
   state := MuxLookup(state, s_idle)(List(
     s_idle       -> Mux(io.in.valid, s_ready, s_idle),
