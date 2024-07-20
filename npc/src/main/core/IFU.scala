@@ -20,7 +20,7 @@ class IFU extends Module {
   val state = RegInit(s_wait_ready)
   state := MuxLookup(state, s_idle)(List(
     s_idle       -> Mux(io.in.valid, s_ready, s_idle),
-    s_wait_ready -> Mux(io.out.ready, s_idle, s_wait_ready),
+    s_wait_ready -> Mux(io.out.ready, s_ready, s_wait_ready),
     s_ready -> Mux(io.out.ready, s_idle, s_ready),
   ))
   val sram_sim=Reg(UInt(CVAL.DLEN.W))
