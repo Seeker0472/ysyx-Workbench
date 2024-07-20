@@ -11,7 +11,7 @@ ARGS ?=
 IMG  ?=
 
 ROOT_DIR := $(shell pwd)
-# 写的一坨大便！
+# 这里是列举所有c/cpp/cc的绝对路径
 SRC_DIR := csrc
 C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' )
 ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -exec realpath {} \;)
@@ -40,15 +40,17 @@ HINCLUDE :=
 
 include $(NPC_HOME)/scripts/conf.mk
 
+# 仅仅当chisel代码发生变化的时候重新编译
 $(TARGET): $(ABS_CHISEL_SOURCES)
+	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/core.sv
 
-
 test:
 	mill -i $(PRJ).test
 
+# 强制重新编译
 verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
@@ -72,8 +74,6 @@ clean:
 
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	# @echo "Write this Makefile by yourself."
-	
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
