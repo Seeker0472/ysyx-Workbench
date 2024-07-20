@@ -75,7 +75,7 @@ class MEMAccess extends Module {
   mem.io.write_data := io.in.bits.src2
 
   // io.out.bits.mem_read_result:=mem_read_result
-  val sram_sim = Reg(UInt(CVAL.DLEN.W))
+  val sram_sim = Reg(UInt(CVAL.DLEN.W))//模拟延迟
   io.out.bits.mem_read_result:=sram_sim
   sram_sim:=mem_read_result
 
