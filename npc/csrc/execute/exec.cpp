@@ -27,7 +27,7 @@ void difftest_check_state();
 #define PRINT_INST_MIN 10
 
 int prev_state = 0;
-static bool state_valid()
+static bool state_valid()//检测下降沿
 {
     bool ret = false;
     if (prev_state == 1&&dut->rootp->core__DOT__ifu__DOT__state==0)

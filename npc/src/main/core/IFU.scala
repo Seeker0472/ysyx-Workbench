@@ -11,34 +11,35 @@ import Constants_Val.CVAL.DLEN
 class IFU extends Module {
   val io = IO(new Bundle {
     // val next_pc = Input(UInt(CVAL.DLEN.W))
-    val in = Flipped(Decoupled(new WBU_O))
+    val in      = Flipped(Decoupled(new WBU_O))
     val instr_i = Input(UInt(CVAL.ILEN.W))
     val pc      = Output(UInt(CVAL.DLEN.W))
     val out     = Decoupled(new IFUO())
   })
   val s_idle :: s_ready :: init :: Nil = Enum(3)
-  val state = RegInit(init)
-  state := MuxLookup(state, s_idle)(List(
-    s_idle       -> Mux(io.out.ready, s_ready, s_idle),
-    s_ready -> Mux(true.B, s_idle, s_ready),//1cycle
-    init -> Mux(io.out.ready, s_ready, init),
-  ))
-  io.out.valid:=state===s_ready
+  val state                            = RegInit(init)
+  state := MuxLookup(state, s_idle)(
+    List(
+      s_idle -> Mux(io.out.ready, s_ready, s_idle),
+      s_ready -> Mux(io.in.valid, s_idle, s_ready), //1cycle
+      init -> Mux(io.out.ready, s_ready, init)
+    )
+  )
+  io.out.valid := state === s_ready
 
-  val sram_sim=Reg(UInt(CVAL.DLEN.W))
-  sram_sim:=io.instr_i
-  io.out.bits.instr:=sram_sim
+  val sram_sim = Reg(UInt(CVAL.DLEN.W))
+  sram_sim          := io.instr_i
+  io.out.bits.instr := sram_sim
 
   // io.out.valid:=true.B
-  io.in.ready:=true.B
-
+  io.in.ready := true.B
 
   val pc = RegInit("h80000000".U(CVAL.DLEN.W))
   io.out.bits.pc := pc
-  io.pc     := pc
+  io.pc          := pc
 
-  when(io.in.valid){
-  pc           := io.in.bits.n_pc
+  when(io.in.valid) {
+    pc := io.in.bits.n_pc
   }
   // io.addr:=io.pc
 }

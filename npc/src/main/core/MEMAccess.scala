@@ -9,9 +9,9 @@ class MEMAccess extends Module {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
   })
-  io.in.ready:=true.B//TODO
-  // io.out.valid:=true.B
-  io.out.valid:=io.in.valid
+  // io.in.ready:=true.B//TODO
+  // // io.out.valid:=true.B
+  // io.out.valid:=io.in.valid
 
 
   //pass_throughs
@@ -29,6 +29,16 @@ class MEMAccess extends Module {
   io.out.bits.reg_w_enable    := io.in.bits.reg_w_enable
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
+
+
+  val s_idle :: s_busy ::Nil = Enum(2)
+  val state= RegInit(s_idle)
+  state:=MuxLookup(state,s_idle)(List(
+    s_busy-> Mux(io.out.ready,s_idle,s_busy),
+    s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,s_idle)
+  ))
+  io.in.ready:=state===s_idle
+  io.out.valid:=io.in.valid&&state===s_idle
 
   //TODO:不应该在这里实例化！！！
   val mem = Module(new MEM())
