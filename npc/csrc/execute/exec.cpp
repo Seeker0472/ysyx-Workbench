@@ -15,7 +15,6 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 #include <isa.h>
 
 uint64_t g_nr_guest_inst = 0;
-uint32_t last_pc = 0x80000000;
 
 uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
@@ -144,8 +143,7 @@ void update_reg_state()
 
 void single_cycle()
 {
-    last_pc = dut->io_pc;//模拟延迟
-    dut->io_instr = mem_read(last_pc); // 取指令
+    dut->io_instr = mem_read(dut->io_pc); // 取指令
     dut->clock = 0;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
