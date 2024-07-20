@@ -46,7 +46,13 @@ class MEMAccess extends Module {
   mem.io.clock :=clock
   //mem R/W
   mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
-  mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid
+
+  val sram_we_sim = Reg(Bool())//模拟延迟
+  sram_we_sim:=io.in.bits.mem_write_enable && io.in.valid
+  mem.io.write_enable:=sram_we_sim
+  // mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid
+  
+
   //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
   mem.io.read_addr  := io.in.bits.alu_result
   mem.io.write_addr := io.in.bits.alu_result
