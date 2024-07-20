@@ -25,8 +25,17 @@ void difftest_check_state();
 
 #define PRINT_INST_MIN 10
 
+static bool state_valid(){
+    if(dut->rootp->core__DOT__ifu__DOT__state==1)
+    return true;
+    else
+    return false;
+}
+
 static void trace_and_difftest(paddr_t pc, word_t inst_in)
 {
+    if(!state_valid())
+        return;
 #ifdef CONFIG_ITRACE
     char buf[200];
     char *p = buf;
