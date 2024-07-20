@@ -11,7 +11,7 @@ ARGS ?=
 IMG  ?=
 
 ROOT_DIR := $(shell pwd)
-# 写的一坨大便！
+# 这里是列举所有c/cpp/cc的绝对路径
 SRC_DIR := csrc
 C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' )
 ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -exec realpath {} \;)
@@ -23,9 +23,9 @@ C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 
-# CHISEL_SOURCES := $(shell find src -name '*.scala')
-# ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
-
+CHISEL_SOURCES := $(shell find src -name '*.scala')
+ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
+TARGET := build/core.sv
 
 # $(shell llvm-config --cxxflags)
 # deleted:::::   --CFLAGS -D__STDC_FORMAT_MACROS
@@ -40,11 +40,18 @@ HINCLUDE :=
 
 include $(NPC_HOME)/scripts/conf.mk
 
+# 仅仅当chisel代码发生变化的时候重新编译
+$(TARGET): $(ABS_CHISEL_SOURCES)
+	$(call git_commit, "generate verilog")
+	mkdir -p $(BUILD_DIR)
+	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
+	$(SED_CMD) ./build/core.sv
+
 test:
 	mill -i $(PRJ).test
 
-verilog: $(ABS_CHISEL_SOURCES)
-
+# 强制重新编译
+verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
@@ -67,8 +74,6 @@ clean:
 
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	# @echo "Write this Makefile by yourself."
-	
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	./obj_dir/Vcore $(ARGS) $(IMG)
@@ -77,7 +82,7 @@ gdb:
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	gdb   --args ./obj_dir/Vcore  $(ARGS) $(IMG)
-all: verilog sim
+all: $(TARGET) sim
 	# @echo "所有文件的绝对路径："
 	# @echo "$(C_CPP_ABS)"
 -include ../Makefile

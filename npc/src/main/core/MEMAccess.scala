@@ -3,15 +3,16 @@ package core
 import chisel3._
 import chisel3.util._
 import core.IO._
+import Constants_Val._
 
 class MEMAccess extends Module {
   val io = IO(new Bundle {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
   })
-  io.in.ready :=true.B
-  // io.out.valid:=true.B
-  io.out.valid:=io.in.valid
+  // io.in.ready:=true.B//TODO
+  // // io.out.valid:=true.B
+  // io.out.valid:=io.in.valid
 
 
   //pass_throughs
@@ -30,12 +31,22 @@ class MEMAccess extends Module {
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
 
+
+  val s_idle :: s_busy ::Nil = Enum(2)
+  val state= RegInit(s_idle)
+  state:=MuxLookup(state,s_idle)(List(
+    s_busy-> Mux(io.out.ready,s_idle,s_busy),
+    s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,s_idle)
+  ))
+  io.in.ready:=state===s_idle
+  io.out.valid:=io.in.valid&&(!((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid && state===s_idle ))
+
   //TODO:不应该在这里实例化！！！
   val mem = Module(new MEM())
   mem.io.clock :=clock
   //mem R/W
   mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
-  mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid
+  mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid&&state===s_busy//由于读写延迟
   //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
   mem.io.read_addr  := io.in.bits.alu_result
   mem.io.write_addr := io.in.bits.alu_result
@@ -63,6 +74,10 @@ class MEMAccess extends Module {
   mem.io.write_mask := mem_write_mask
   mem.io.write_data := io.in.bits.src2
 
-  io.out.bits.mem_read_result:=mem_read_result
+  // io.out.bits.mem_read_result:=mem_read_result
+  val sram_sim = Reg(UInt(CVAL.DLEN.W))//模拟延迟
+  io.out.bits.mem_read_result:=sram_sim
+  sram_sim:=mem_read_result
+
 
 }

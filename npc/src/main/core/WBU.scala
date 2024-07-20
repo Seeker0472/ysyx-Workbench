@@ -13,7 +13,7 @@ class WBU extends Module {
     val CSR_write  = (new CSRWriteIO)
     val out        = Decoupled(new WBU_O)
   })
-  io.in.ready:=true.B
+  io.in.ready:=io.out.ready
   // io.out.valid:=true.B
   io.out.valid:=io.in.valid
 

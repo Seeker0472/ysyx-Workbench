@@ -38,6 +38,7 @@ void print_csr_reg(){
   }
 }
 void isa_reg_display() {
+  #ifndef CONFIG_RVE
   printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
   printf(" | ");
@@ -52,6 +53,22 @@ void isa_reg_display() {
       printf("\n");
   }
   MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-20d\t%-10x\t\n","pc",cpu.pc,cpu.pc););
+  #else
+   printf("================================================regs================================================\n");
+  printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
+  printf(" | ");
+  printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
+  for(int i=0;i<8;i++){
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);,printf("%-4s \t%-20d\t%-10x\t",regs[i],cpu.gpr[i],cpu.gpr[i]););
+      
+      printf(" | ");
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i+8],cpu.gpr[i+8],cpu.gpr[i+8]);,printf("%-4s \t%-20d\t%-10x\t",regs[i+8],cpu.gpr[i+8],cpu.gpr[i+8]););
+
+      
+      printf("\n");
+  }
+  MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-20d\t%-10x\t\n","pc",cpu.pc,cpu.pc););
+  #endif
   print_csr_reg();
 }
 //获取寄存器的值，s应该传入$xx

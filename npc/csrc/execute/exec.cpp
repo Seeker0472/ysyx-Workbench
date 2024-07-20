@@ -5,17 +5,17 @@
 #include <verilated_vcd_c.h>
 #include <common.h>
 #include <utils.h>
-# include <diftest.h>
+#include <diftest.h>
 
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
+Vcore *dut;
 
 #include "svdpi.h"
 #include "Vcore__Dpi.h"
 #include <isa.h>
 
 uint64_t g_nr_guest_inst = 0;
-uint32_t last_pc = 0x80000000;
 
 uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
@@ -26,8 +26,21 @@ void difftest_check_state();
 
 #define PRINT_INST_MIN 10
 
+int prev_state = 0;
+static bool state_valid()//检测下降沿
+{
+    bool ret = false;
+    if (prev_state == 1&&dut->rootp->core__DOT__ifu__DOT__state==0)
+        ret = true;
+    prev_state = dut->rootp->core__DOT__ifu__DOT__state;
+    return ret;
+    
+}
+
 static void trace_and_difftest(paddr_t pc, word_t inst_in)
 {
+    if (!state_valid())
+        return;
 #ifdef CONFIG_ITRACE
     char buf[200];
     char *p = buf;
@@ -64,8 +77,8 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     ftrace_check_inst(pc, inst_in);
 #endif
 #ifdef CONFIG_DIFFTEST
-difftest_exec(1);
-difftest_check_state();
+    difftest_exec(1);
+    difftest_check_state();
 #endif
 }
 
@@ -78,7 +91,6 @@ void print_inst_asm(paddr_t pc, word_t inst)
     // printf("%s\n", buf);TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
 }
 
-Vcore *dut;
 unsigned int sim_time = 0;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
@@ -99,7 +111,7 @@ void call_ebreak()
     tfp->flush(); // not-关闭VCD文件
     // delete tfp;
     nemu_state.state = NEMU_END;
-    nemu_state.halt_ret=regs_2_value;
+    nemu_state.halt_ret = regs_2_value;
     // exit(0);
 }
 
@@ -144,15 +156,14 @@ void update_reg_state()
 
 void single_cycle()
 {
-    last_pc = dut->io_pc;//模拟延迟
-    dut->io_instr = mem_read(last_pc); // 取指令
+    dut->io_instr = mem_read(dut->io_pc); // 取指令
     dut->clock = 0;
     dut->eval();
-    IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
-         
+    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+
     dut->clock = 1;
     dut->eval();
-    IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
+    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
     // printf("%x\n",dut->io_pc);
     // dut->io_instr = mem_read(dut->io_pc); // 下一条指令
     update_reg_state();
@@ -169,7 +180,7 @@ void reset(int n)
 {
     dut->reset = 1;
     dut->clock = 0;
-    dut->eval();    
+    dut->eval();
     dut->clock = 1;
     dut->eval();
     while (n-- > 0)
@@ -181,9 +192,9 @@ void init_runtime()
     dut = new Vcore;              // Initialize the DUT instance
     Verilated::traceEverOn(true); // 启用波形追踪
     tfp = new VerilatedVcdC;
-    dut->trace(tfp, 99); // 跟踪99级信号
-    MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");,tfp->open("/dev/null");)// 打开VCD文件
-    reset(5);                  // 复位5个周期
+    dut->trace(tfp, 99);                                                                  // 跟踪99级信号
+    MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");, tfp->open("/dev/null");) // 打开VCD文件
+    reset(5);                                                                             // 复位5个周期
 }
 
 int run(int step)

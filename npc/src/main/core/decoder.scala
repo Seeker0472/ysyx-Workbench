@@ -238,7 +238,7 @@ class Decoder extends Module {
     val ebreak = Output(Bool())
     val out    = Decoupled(new DecoderO)
   })
-  io.in.ready  := true.B
+  io.in.ready:=io.out.ready
   // io.out.valid := true.B
   io.out.valid:=io.in.valid
 

@@ -17,7 +17,7 @@ class EXU extends Module {
     // val csr_mstvec=Input(UInt(CVAL.DLEN.W))
     val out = (Decoupled(new EXU_O))
   })
-  io.in.ready := true.B
+  io.in.ready:=io.out.ready
   io.out.valid:=io.in.valid
   //pass_throughs
   io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
