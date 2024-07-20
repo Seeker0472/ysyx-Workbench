@@ -39,7 +39,7 @@ class MEMAccess extends Module {
     s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,s_idle)
   ))
   io.in.ready:=state===s_idle
-  io.out.valid:= !(state===s_idle && ((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid))
+  io.out.valid:= (!(state===s_idle && ((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid)))||((state===s_idle && (!(io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid)))
 
   //TODO:不应该在这里实例化！！！
   val mem = Module(new MEM())
