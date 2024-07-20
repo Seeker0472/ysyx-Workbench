@@ -3,6 +3,7 @@ package core
 import chisel3._
 import chisel3.util._
 import core.IO._
+import Constants_Val._
 
 class MEMAccess extends Module {
   val io = IO(new Bundle {
@@ -73,6 +74,10 @@ class MEMAccess extends Module {
   mem.io.write_mask := mem_write_mask
   mem.io.write_data := io.in.bits.src2
 
-  io.out.bits.mem_read_result:=mem_read_result
+  // io.out.bits.mem_read_result:=mem_read_result
+  val sram_sim = Reg(UInt(CVAL.DLEN.W))
+  io.out.bits.mem_read_result:=sram_sim
+  sram_sim:=mem_read_result
+
 
 }
