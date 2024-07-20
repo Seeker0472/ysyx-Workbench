@@ -16,12 +16,14 @@ class IFU extends Module {
     val pc      = Output(UInt(CVAL.DLEN.W))
     val out     = Decoupled(new IFUO())
   })
-  val s_idle :: s_ready :: s_wait_ready :: Nil = Enum(3)
-  val state = RegInit(s_wait_ready)
+  val s_idle :: s_ready :: init :: Nil = Enum(3)
+  val state = RegInit(init)
   state := MuxLookup(state, s_idle)(List(
-    s_idle       -> Mux(io.in.ready, s_ready, s_idle),
-    s_wait_ready -> Mux(io.out.ready, s_ready, s_wait_ready),
-    s_ready -> Mux(io.out.ready, s_idle, s_ready),
+    s_idle       -> Mux(io.out.ready, s_ready, s_idle),
+    s_ready -> Mux(true.B, s_idle, s_ready),//1cycle
+
+    init -> Mux(io.out.ready, s_ready, init),
+
   ))
   val sram_sim=Reg(UInt(CVAL.DLEN.W))
   sram_sim:=io.instr_i
