@@ -9,6 +9,7 @@
 
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
+Vcore *dut;
 
 #include "svdpi.h"
 #include "Vcore__Dpi.h"
@@ -86,7 +87,6 @@ void print_inst_asm(paddr_t pc, word_t inst)
     // printf("%s\n", buf);TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
 }
 
-Vcore *dut;
 unsigned int sim_time = 0;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
