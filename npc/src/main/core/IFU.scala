@@ -27,7 +27,7 @@ class IFU extends Module {
   sram_sim:=io.instr_i
 
   io.out.bits.instr:=sram_sim
-  io.out.valid:=state===s_wait_ready
+  io.out.valid:=state===s_ready
   // io.out.valid:=true.B
   io.in.ready:=true.B
 
