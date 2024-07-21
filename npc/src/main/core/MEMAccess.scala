@@ -38,7 +38,6 @@ class MEMAccess extends Module {
   io.out.valid:=state===s_valid
 
   val axi= Module(new AXI)
-  axi.io.RA.ready:=true.B
   axi.io.RA.valid:=io.in.bits.mem_read_enable && io.in.valid
   axi.io.RA.bits.addr:=io.in.bits.alu_result
   axi.io.RD.ready:=true.B
