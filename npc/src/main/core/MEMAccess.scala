@@ -32,14 +32,15 @@ class MEMAccess extends Module {
   io.out.bits.imm             := io.in.bits.imm
 
 
-  val s_idle :: s_busy ::Nil = Enum(2)
+  val s_idle :: s_busy::s_valid ::Nil = Enum(3)
   val state= RegInit(s_idle)
   state:=MuxLookup(state,s_idle)(List(
-    s_busy-> Mux(io.out.ready,s_idle,s_busy),
-    s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,s_idle)
+    s_busy-> Mux(true.B,s_valid,s_busy),
+    s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,Mux(io.in.valid,s_valid,s_idle)),
+    s_valid->Mux(io.out.ready,s_idle,s_valid)
   ))
   io.in.ready:=true.B
-  io.out.valid:=io.in.valid&&(!((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid && state===s_idle ))
+  io.out.valid:=state===s_valid
 
   //TODO:不应该在这里实例化！！！
   val mem = Module(new MEM())
