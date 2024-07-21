@@ -15,7 +15,7 @@ class IFU extends Module {
     val inst_now=Output(UInt(CVAL.DLEN.W))
     val out     = Decoupled(new IFUO())
   })
-  val s_idle :: s_fetching ::s_wait_data:: s_valid :: Nil = Enum(3)
+  val s_idle :: s_fetching ::s_wait_data:: s_valid :: Nil = Enum(4)
   val state                            = RegInit(s_idle)
   val pc = RegInit("h80000000".U(CVAL.DLEN.W))
   val inst = Reg(UInt(CVAL.DLEN.W))
