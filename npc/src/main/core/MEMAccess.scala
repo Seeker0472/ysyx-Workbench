@@ -26,37 +26,37 @@ class MEMAccess extends Module {
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
 
-  //sigs and status
-  val s_idle :: s_busy::s_valid ::Nil = Enum(3)
-  val state= RegInit(s_idle)
-  state:=MuxLookup(state,s_idle)(List(
-    s_busy-> Mux(true.B,s_valid,s_busy),//depends on the mem delay
-    s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,Mux(io.in.valid,s_valid,s_idle)),
-    s_valid->Mux(io.out.ready,s_idle,s_valid)
-  ))
-  io.in.ready:=true.B
-  io.out.valid:=state===s_valid
+  val axi = Module(new AXI)
 
-  val axi= Module(new AXI)
-  axi.io.RA.valid:=io.in.bits.mem_read_enable && io.in.valid
-  axi.io.RA.bits.addr:=io.in.bits.alu_result
-  axi.io.RD.ready:=true.B
+  //sigs and status
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
+  val state                                            = RegInit(s_idle)
+  state := MuxLookup(state, s_idle)(
+    List(
+      s_idle -> Mux(
+        (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
+        Mux(io.in.bits.mem_read_enable,s_r_busy,s_w_busy),
+        Mux(io.in.valid, s_valid, s_idle)
+      ),
+      // s_r_busy -> Mux(true.B, s_valid, s_r_busy), //depends on the mem delay
+      s_r_busy -> Mux(axi.io.RD.valid, s_valid, s_r_busy), //depends on the mem delay
+      s_w_busy -> Mux(axi.io.WR.valid,s_valid,s_w_busy),
+      s_valid -> Mux(io.out.ready, s_idle, s_valid)
+    )
+  )
+  io.in.ready  := true.B
+  io.out.valid := state === s_valid
+
+  axi.io.RA.valid     := io.in.bits.mem_read_enable && io.in.valid
+  axi.io.RA.bits.addr := io.in.bits.alu_result
+  axi.io.RD.ready     := true.B
+
+
   val mrres = axi.io.RD.bits.data
 
-  //TODO:不应该在这里实例化！！！
-  val mem = Module(new MEM())
-  mem.io.clock :=clock
-  //mem R/W
-  // mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
-  mem.io.read_enable  := false.B
-  mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid&&state===s_busy//由于读写延迟
-  //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
-  // mem.io.read_addr  := io.in.bits.alu_result
-  mem.io.read_addr  := 0.U(32.W)
-  mem.io.write_addr := io.in.bits.alu_result
-  // val mrres = mem.io.read_data
-  // val mrres = 0.U(32.W)
-  val mrrm  = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
+  // mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid&&state===s_busy//由于读写延迟
+  // mem.io.write_addr := io.in.bits.alu_result
+  val mrrm = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.mem_read_type, 0.S)(
     Seq(
@@ -76,13 +76,19 @@ class MEMAccess extends Module {
       Store_Type.sw -> "b11111111".U(8.W)
     )
   )
-  mem.io.write_mask := mem_write_mask
-  mem.io.write_data := io.in.bits.src2
+  // mem.io.write_mask := mem_write_mask
+  // mem.io.write_data := io.in.bits.src2
+  axi.io.WA.valid:=io.in.bits.mem_write_enable && io.in.valid &&state=/=s_valid
+  axi.io.WA.bits.addr:=io.in.bits.alu_result
+  axi.io.WD.bits.data:=io.in.bits.src2
+  axi.io.WD.bits.wstrb:=mem_write_mask
+  axi.io.WD.valid:=true.B
+  axi.io.WR.ready:=true.B
+  //暂时忽略错误处理
 
   // io.out.bits.mem_read_result:=mem_read_result
-  val sram_sim = Reg(UInt(CVAL.DLEN.W))//模拟延迟
-  io.out.bits.mem_read_result:=sram_sim
-  sram_sim:=mem_read_result
-
+  val sram_sim = Reg(UInt(CVAL.DLEN.W)) //模拟延迟s
+  io.out.bits.mem_read_result := sram_sim
+  sram_sim                    := mem_read_result
 
 }
