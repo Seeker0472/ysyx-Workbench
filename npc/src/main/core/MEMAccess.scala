@@ -11,6 +11,7 @@ class MEMAccess extends Module {
     val out = Decoupled(new MEMA_O)
   })
   // val axi= Module(new AXI)
+
   // io.in.ready:=true.B//TODO
   // // io.out.valid:=true.B
   // io.out.valid:=io.in.valid
@@ -60,7 +61,7 @@ class MEMAccess extends Module {
   mem.io.read_addr  := 0.U
   mem.io.write_addr := io.in.bits.alu_result
   // val mrres = mem.io.read_data
-  val mrres = 0.U
+  val mrres = 0.U(32.W)
   val mrrm  = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.mem_read_type, 0.S)(
