@@ -45,9 +45,11 @@ class IFU extends Module {
 
   io.in.ready := true.B
 
-  io.out.bits.pc := pc
   // io.pc          := pc
   io.inst_now := inst
+
+  io.out.bits.pc    := pc
+  io.out.bits.instr := inst
 
   when(io.in.valid) {
     pc := io.in.bits.n_pc
