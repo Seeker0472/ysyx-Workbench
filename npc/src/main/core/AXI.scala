@@ -38,9 +38,10 @@ class AXI extends Module {
   DPI_C_MEM.io.write_addr   := 0.U
   DPI_C_MEM.io.write_enable := false.B
   DPI_C_MEM.io.write_mask   := 0.U
+  DPI_C_MEM.io.write_data:=0.U
 
   io.RD.bits.rresp:=false.B//异常-暂时不实现
-
+ io.RD.bits.data := 0.U//DEFAULT
   when(r_state === s_r_read_data) {
     io.RD.bits.data := r_data //取到的数据
   }
