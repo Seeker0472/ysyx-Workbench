@@ -5,38 +5,55 @@ import chisel3.util._
 import Constants_Val._
 import core.IO._
 import Constants_Val.CVAL.DLEN
-//目前取指需要从顶层模块(core)中取出，所以就直接连线了
-//也许应该重构
+import os.stat
+
 //存放PC，负责取出指令
 class IFU extends Module {
   val io = IO(new Bundle {
-    // val next_pc = Input(UInt(CVAL.DLEN.W))
-    val in      = Flipped(Decoupled(new WBU_O))
-    val instr_i = Input(UInt(CVAL.ILEN.W))
-    val pc      = Output(UInt(CVAL.DLEN.W))
-    val out     = Decoupled(new IFUO())
+    val in       = Flipped(Decoupled(new WBU_O))
+    val inst_now = Output(UInt(CVAL.DLEN.W))
+    val out      = Decoupled(new IFUO())
   })
-  val s_idle :: s_fetching :: s_valid :: Nil = Enum(3)
-  val state                            = RegInit(s_idle)
+  val s_idle :: s_fetching :: s_wait_data :: s_valid :: Nil = Enum(4)
+
+  val axi = Module(new AXI_Master())
+
+  val state = RegInit(s_idle)
+  val pc    = RegInit("h80000000".U(CVAL.DLEN.W))
+  val inst  = Reg(UInt(CVAL.DLEN.W))
+
   state := MuxLookup(state, s_idle)(
     List(
-      s_idle -> Mux(true.B, s_fetching, s_idle),
-      s_fetching -> Mux(true.B, s_valid, s_fetching), //1cycle,depends on memory
+      s_idle -> Mux(true.B, s_fetching, s_idle), //Initial
+      s_fetching -> Mux(axi.io.in.ready, s_wait_data, s_fetching), //1cycle,depends on memory
+      s_wait_data -> Mux(axi.io.out.valid, s_valid, s_wait_data),
       s_valid -> Mux(io.in.valid, s_fetching, s_valid)
     )
   )
   io.out.valid := state === s_valid
 
-  val sram_sim = Reg(UInt(CVAL.DLEN.W))
-  sram_sim          := io.instr_i
-  io.out.bits.instr := sram_sim
+  axi.io.in.bits.mem_write_enable := 0.B
+  axi.io.in.bits.mem_write_addr   := 0.U
+  axi.io.in.bits.mem_write_type   := Store_Type.inv
+  axi.io.in.bits.mem_write_data   := 0.U
+  axi.io.in.bits.mem_read_addr    := pc
+  axi.io.in.bits.mem_read_type    := Load_Type.lw
+  axi.io.in.bits.mem_read_enable  := state === s_fetching
+  axi.io.in.valid                 := state === s_fetching
+  axi.io.out.ready                := true.B
 
-  // io.out.valid:=true.B
+  when(axi.io.out.valid) {
+    inst := axi.io.out.bits.mem_read_result
+
+  }
+
   io.in.ready := true.B
 
-  val pc = RegInit("h80000000".U(CVAL.DLEN.W))
-  io.out.bits.pc := pc
-  io.pc          := pc
+  // io.pc          := pc
+  io.inst_now := inst
+
+  io.out.bits.pc    := pc
+  io.out.bits.instr := inst
 
   when(io.in.valid) {
     pc := io.in.bits.n_pc
