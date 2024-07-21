@@ -10,7 +10,7 @@ class MEMAccess extends Module {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
   })
-  val axi= Module(new AXI)
+  // val axi= Module(new AXI)
   // io.in.ready:=true.B//TODO
   // // io.out.valid:=true.B
   // io.out.valid:=io.in.valid
