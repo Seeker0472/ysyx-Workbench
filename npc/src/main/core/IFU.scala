@@ -38,7 +38,7 @@ class IFU extends Module {
   axi.io.in.bits.mem_write_data   := 0.U
   axi.io.in.bits.mem_read_addr    := pc
   axi.io.in.bits.mem_read_type    := Load_Type.lw
-  axi.io.in.bits.mem_read_enable  := state === s_wait_data
+  axi.io.in.bits.mem_read_enable  := state === s_fetching
   inst                            := axi.io.out.bits.mem_read_result
   axi.io.in.valid                 := state === s_fetching
   axi.io.out.ready                := true.B
