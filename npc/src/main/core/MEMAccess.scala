@@ -85,6 +85,9 @@ class MEMAccess extends Module {
   axi.io.WR.ready:=true.B
   //暂时忽略错误处理
 
-  io.out.bits.mem_read_result := mem_read_result
+  // io.out.bits.mem_read_result:=mem_read_result
+  val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值
+  io.out.bits.mem_read_result := read_res
+  read_res                    := mem_read_result
 
 }
