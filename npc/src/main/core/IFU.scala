@@ -30,7 +30,7 @@ class IFU extends Module {
   )
   io.out.valid := state === s_valid
 
-  val axi=Module(new AXI_Master)
+  val axi=Module(new AXI_Master())
   axi.io.in.bits.mem_write_enable:=0.B
   axi.io.in.bits.mem_write_addr:=0.U
   axi.io.in.bits.mem_write_type:=Store_Type.inv
@@ -39,6 +39,8 @@ class IFU extends Module {
   axi.io.in.bits.mem_read_type:=Load_Type.lw
   axi.io.in.bits.mem_read_enable:=state===s_wait_data
   inst:=axi.io.out.bits.mem_read_result
+  axi.io.in.valid:=state===s_fetching
+  axi.io.out.ready:=true.B
 
   
   io.in.ready := true.B
