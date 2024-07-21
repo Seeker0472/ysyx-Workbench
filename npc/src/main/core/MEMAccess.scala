@@ -35,7 +35,7 @@ class MEMAccess extends Module {
   val s_idle :: s_busy::s_valid ::Nil = Enum(3)
   val state= RegInit(s_idle)
   state:=MuxLookup(state,s_idle)(List(
-    s_busy-> Mux(true.B,s_valid,s_busy),
+    s_busy-> Mux(true.B,s_valid,s_busy),//depends on the mem delay
     s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,Mux(io.in.valid,s_valid,s_idle)),
     s_valid->Mux(io.out.ready,s_idle,s_valid)
   ))

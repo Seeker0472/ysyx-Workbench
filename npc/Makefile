@@ -83,9 +83,8 @@ gdb:
 	make -j -C obj_dir -f Vcore.mk Vcore
 	gdb   --args ./obj_dir/Vcore  $(ARGS) $(IMG)
 all: $(TARGET) sim
-
-
-
+	# @echo "所有文件的绝对路径："
+	# @echo "$(C_CPP_ABS)"
 -include ../Makefile
 
 # TODO:　Batch-Mode amd more inst!!!!
