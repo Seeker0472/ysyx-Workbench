@@ -5,7 +5,7 @@ import chisel3.util._
 import Constants_Val._
 
 class AXI extends Module {
-  val io    = IO((new AXIIO))
+  val io    = IO(Flipped(new AXIIO))
   val raddr = Reg(UInt(CVAL.ILEN.W))
   val waddr = Reg(UInt(CVAL.ILEN.W))
 
@@ -64,12 +64,12 @@ class AXIIO extends Bundle {
 //   })
   //Read address
   val RA = Decoupled(new Bundle {
-    val addr = Input(UInt(CVAL.DLEN.W))
+    val addr = Output(UInt(CVAL.DLEN.W))
     //arport-特权相关
   })
   //Read data
   val RD = Decoupled(new Bundle {
-    val data  = Output(UInt(CVAL.DLEN.W))
-    val rresp = Output(Bool())
+    val data  = Input(UInt(CVAL.DLEN.W))
+    val rresp = Input(Bool())
   })
 }
