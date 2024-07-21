@@ -10,8 +10,6 @@ class MEMAccess extends Module {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
   })
-  // val axi= Module(new AXI)
-
   // io.in.ready:=true.B//TODO
   // // io.out.valid:=true.B
   // io.out.valid:=io.in.valid
@@ -36,14 +34,8 @@ class MEMAccess extends Module {
 
   val s_idle :: s_busy ::Nil = Enum(2)
   val state= RegInit(s_idle)
-  // state:=MuxLookup(state,s_idle)(List(
-  //   s_busy-> Mux(io.out.ready,s_idle,s_busy),
-  //   //V|V 有Valid的RW指令
-  //   s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,s_idle)
-  // ))  
   state:=MuxLookup(state,s_idle)(List(
     s_busy-> Mux(io.out.ready,s_idle,s_busy),
-    //V|V 有Valid的RW指令
     s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,s_idle)
   ))
   io.in.ready:=state===s_idle
@@ -53,15 +45,12 @@ class MEMAccess extends Module {
   val mem = Module(new MEM())
   mem.io.clock :=clock
   //mem R/W
-  // mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
-  mem.io.read_enable  := false.B//read使用AXI
+  mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
   mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid&&state===s_busy//由于读写延迟
   //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
-  // mem.io.read_addr  := io.in.bits.alu_result
-  mem.io.read_addr  := 0.U
+  mem.io.read_addr  := io.in.bits.alu_result
   mem.io.write_addr := io.in.bits.alu_result
-  // val mrres = mem.io.read_data
-  val mrres = 0.U(32.W)
+  val mrres = mem.io.read_data
   val mrrm  = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.mem_read_type, 0.S)(
