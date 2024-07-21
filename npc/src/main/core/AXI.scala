@@ -64,12 +64,12 @@ class AXIIO extends Bundle {
 //   })
   //Read address
   val RA = (Decoupled(new Bundle {
-    val addr = Input(UInt(CVAL.DLEN.W))
+    val addr = (UInt(CVAL.DLEN.W))
     //arport-特权相关
   }))
   //Read data
   val RD = (Decoupled(new Bundle {
-    val data  = Output(UInt(CVAL.DLEN.W))
-    val rresp = Output(Bool())
+    val data  = (UInt(CVAL.DLEN.W))
+    val rresp = (Bool())
   }))
 }
