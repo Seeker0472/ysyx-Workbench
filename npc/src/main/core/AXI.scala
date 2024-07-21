@@ -71,15 +71,15 @@ class AXI extends Module {
 class AXIIO extends Bundle {
 
   //Write address
-  val WA = Decoupled(new Bundle {
+  val WA = Flipped(Decoupled(new Bundle {
     val addr = Input(UInt(CVAL.DLEN.W))
     //awport-特权相关
-  })
+  }))
   //Write data
-  val WD = Decoupled(new Bundle {
+  val WD = Flipped(Decoupled(new Bundle {
     val data  = Input(UInt(CVAL.DLEN.W))
     val wstrb = Input(UInt(8.W)) //掩码
-  })
+  }))
   //Write response
   val WR = Decoupled(new Bundle {
     val bresp = Output(Bool())
