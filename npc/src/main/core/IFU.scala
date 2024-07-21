@@ -16,19 +16,6 @@ class IFU extends Module {
     val pc      = Output(UInt(CVAL.DLEN.W))
     val out     = Decoupled(new IFUO())
   })
-  // val s_idle :: s_ready :: init :: Nil = Enum(3)
-  // val state                            = RegInit(init)
-  // state := MuxLookup(state, s_idle)(
-  //   List(
-  //     s_idle -> Mux(io.out.ready, s_ready, s_idle),
-  //     s_ready -> Mux(io.in.valid, s_idle, s_ready), //1cycle
-  //     init -> Mux(io.out.ready, s_ready, init)
-  //   )
-  // )
-  //TODO::::::::::::::::::发送端 的 valid 信号**不能依赖于**接收信息端的 ready 信号
-  //可以一旦检测到ready马上跳转7
-  // io.out.valid := state === s_ready
-
   val s_idle :: s_fetching :: s_valid :: Nil = Enum(3)
   val state                            = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(
