@@ -41,10 +41,7 @@ class AXI extends Module {
   DPI_C_MEM.io.write_data:=0.U
 
   io.RD.bits.rresp:=false.B//异常-暂时不实现
- io.RD.bits.data := 1.U//DEFAULT
-  when(r_state === s_r_read_data) {
-    io.RD.bits.data := r_data //取到的数据
-  }
+  io.RD.bits.data := r_data //取到的数据
 
 }
 
