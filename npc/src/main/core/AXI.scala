@@ -63,7 +63,7 @@ class AXIIO extends Bundle {
 //     val bresp = Output(Bool())
 //   })
   //Read address
-  val RA = (Decoupled(new Bundle {
+  val RA = Flipped(Decoupled(new Bundle {
     val addr = (UInt(CVAL.DLEN.W))
     //arport-特权相关
   }))
