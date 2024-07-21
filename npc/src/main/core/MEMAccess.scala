@@ -47,7 +47,7 @@ class MEMAccess extends Module {
   io.in.ready  := true.B
   io.out.valid := state === s_valid
 
-  axi.io.RA.valid     := io.in.bits.mem_read_enable && io.in.valid
+  axi.io.RA.valid     := io.in.bits.mem_read_enable && io.in.valid &&state=/=s_valid//避免多次访存
   axi.io.RA.bits.addr := io.in.bits.alu_result
   axi.io.RD.ready     := true.B
 
@@ -78,7 +78,7 @@ class MEMAccess extends Module {
   )
   // mem.io.write_mask := mem_write_mask
   // mem.io.write_data := io.in.bits.src2
-  axi.io.WA.valid:=io.in.bits.mem_write_enable && io.in.valid &&state=/=s_valid
+  axi.io.WA.valid:=io.in.bits.mem_write_enable && io.in.valid &&state=/=s_valid//避免多次访存
   axi.io.WA.bits.addr:=io.in.bits.alu_result
   axi.io.WD.bits.data:=io.in.bits.src2
   axi.io.WD.bits.wstrb:=mem_write_mask
