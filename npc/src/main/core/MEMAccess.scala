@@ -38,17 +38,25 @@ class MEMAccess extends Module {
   io.out.valid:=state===s_valid
 
   val axi= Module(new AXI)
+  axi.io.RA.ready:=true.B
+  axi.io.RA.valid:=io.in.bits.mem_read_enable && io.in.valid
+  axi.io.RA.bits.addr:=io.in.bits.alu_result
+  axi.io.RD.ready:=true.B
+  val mrres = axi.io.RD.bits.data
 
   //TODO:不应该在这里实例化！！！
   val mem = Module(new MEM())
   mem.io.clock :=clock
   //mem R/W
-  mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
+  // mem.io.read_enable  := io.in.bits.mem_read_enable && io.in.valid
+  mem.io.read_enable  := false.B
   mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid&&state===s_busy//由于读写延迟
   //TODO: 这里需要设计两个信号吗-感觉要的，每次读取内存都有开销
-  mem.io.read_addr  := io.in.bits.alu_result
+  // mem.io.read_addr  := io.in.bits.alu_result
+  mem.io.read_addr  := 0.U(32.W)
   mem.io.write_addr := io.in.bits.alu_result
-  val mrres = mem.io.read_data
+  // val mrres = mem.io.read_data
+  // val mrres = 0.U(32.W)
   val mrrm  = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.mem_read_type, 0.S)(
