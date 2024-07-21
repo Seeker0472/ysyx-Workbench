@@ -77,7 +77,7 @@ class MEMAccess extends Module {
   )
   // mem.io.write_mask := mem_write_mask
   // mem.io.write_data := io.in.bits.src2
-  axi.io.WA.valid:=io.in.bits.mem_write_enable && io.in.valid
+  axi.io.WA.valid:=io.in.bits.mem_write_enable && io.in.valid &&state===s_idle
   axi.io.WA.bits.addr:=io.in.bits.alu_result
   axi.io.WD.bits.data:=io.in.bits.src2
   axi.io.WD.bits.wstrb:=mem_write_mask
