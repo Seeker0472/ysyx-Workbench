@@ -156,7 +156,7 @@ void update_reg_state()
 
 void single_cycle()
 {
-    dut->io_instr = mem_read(dut->io_pc); // 取指令
+    // dut->io_instr = mem_read(dut->io_pc); // 取指令
     dut->clock = 0;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
