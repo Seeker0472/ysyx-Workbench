@@ -68,8 +68,8 @@ class AXIIO extends Bundle {
     //arport-特权相关
   }))
   //Read data
-  val RD = Output(Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
-    val rresp = (Bool())
+  val RD = (Decoupled(new Bundle {
+    val data  = Output(UInt(CVAL.DLEN.W))
+    val rresp = Output(Bool())
   }))
 }
