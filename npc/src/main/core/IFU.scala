@@ -42,8 +42,8 @@ class IFU extends Module {
   axi.io.in.valid                 := state === s_fetching
   axi.io.out.ready                := true.B
 
-  when(axi.io.out.valid){
-  inst                            := axi.io.out.bits.mem_read_result
+  when(axi.io.out.valid) {
+    inst := axi.io.out.bits.mem_read_result
 
   }
 
