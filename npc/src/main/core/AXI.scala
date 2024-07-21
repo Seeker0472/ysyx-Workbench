@@ -60,7 +60,7 @@ class AXI extends Module {
   DPI_C_MEM.io.read_addr   := r_addr
   DPI_C_MEM.io.read_enable := r_state === s_r_wait_data
   r_data                   := DPI_C_MEM.io.read_data
-  // io.RD.bits.data := DPI_C_MEM.io.read_data
+  // io.RD.bits.data := DPI_C_MEM.io.read_data//不使用reg_当前周期返回
 
   io.RD.bits.rresp := false.B //异常-暂时不实现
   io.RD.bits.data := r_data //取到的数据,如果这样写就是下一个周期返回了
