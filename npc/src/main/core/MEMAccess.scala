@@ -26,6 +26,8 @@ class MEMAccess extends Module {
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
 
+  val axi = Module(new AXI)
+
   //sigs and status
   val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
   val state                                            = RegInit(s_idle)
@@ -37,13 +39,13 @@ class MEMAccess extends Module {
         Mux(io.in.bits.mem_read_enable,s_r_busy,s_w_busy),
         Mux(io.in.valid, s_valid, s_idle)
       ),
+      s_w_busy -> Mux(axi.io.WR.valid,s_valid,s_w_busy),
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
   io.in.ready  := true.B
   io.out.valid := state === s_valid
 
-  val axi = Module(new AXI)
   axi.io.RA.valid     := io.in.bits.mem_read_enable && io.in.valid
   axi.io.RA.bits.addr := io.in.bits.alu_result
   axi.io.RD.ready     := true.B
