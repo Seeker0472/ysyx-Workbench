@@ -212,7 +212,7 @@ int run(int step)
         default:
             nemu_state.state = NEMU_RUNNING;
         }
-        uint32_t pc = dut->io_pc;
+        uint32_t pc = dut->rootp->core__DOT__ifu__DOT__pc;
         single_cycle();
         tfp->flush();
         g_nr_guest_inst++;
