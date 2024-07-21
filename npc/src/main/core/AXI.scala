@@ -18,10 +18,10 @@ class AXI extends Module {
   val r_data  = Reg(UInt(CVAL.DLEN.W))
 
   r_state := MuxLookup(r_state, s_r_idle)(
-    Seq(
-      s_r_idle -> Mux(io.RA.valid, s_r_read_data, s_r_idle), //等待地址
+    List(
+      s_r_idle -> Mux(io.RA.valid, s_r_wait_data, s_r_idle), //等待地址
       s_r_wait_data -> Mux(true.B, s_r_read_data, s_r_wait_data), //要模拟延迟
-      s_r_read_data -> Mux(io.RA.ready, s_r_idle, s_r_read_data) //返回数据
+      s_r_read_data -> Mux(io.RD.ready, s_r_idle, s_r_read_data) //返回数据
     )
   )
   io.RA.ready := r_state === s_r_idle
@@ -33,17 +33,17 @@ class AXI extends Module {
   DPI_C_MEM.io.clock       := clock
   DPI_C_MEM.io.read_addr   := r_addr
   DPI_C_MEM.io.read_enable := r_state === s_r_wait_data
-  r_data                   := DPI_C_MEM.io.read_data
+  // r_data                   := DPI_C_MEM.io.read_data
+  io.RD.bits.data := DPI_C_MEM.io.read_data
   //无关信号
   DPI_C_MEM.io.write_addr   := 0.U
   DPI_C_MEM.io.write_enable := false.B
   DPI_C_MEM.io.write_mask   := 0.U
+  DPI_C_MEM.io.write_data   := 0.U
 
-  io.RD.bits.rresp:=false.B//异常-暂时不实现
-
-  when(r_state === s_r_read_data) {
-    io.RD.bits.data := r_data //取到的数据
-  }
+  io.RD.bits.rresp := false.B //异常-暂时不实现
+  // io.RD.bits.data := r_data //取到的数据,如果这样写就是下一个周期返回了
+  //TODO：有效
 
 }
 
@@ -63,13 +63,13 @@ class AXIIO extends Bundle {
 //     val bresp = Output(Bool())
 //   })
   //Read address
-  val RA = Decoupled(new Bundle {
-    val addr = Input(UInt(CVAL.DLEN.W))
+  val RA = Flipped(Decoupled(new Bundle {
+    val addr = (UInt(CVAL.DLEN.W))
     //arport-特权相关
-  })
+  }))
   //Read data
-  val RD = Decoupled(new Bundle {
-    val data  = Output(UInt(CVAL.DLEN.W))
-    val rresp = Output(Bool())
-  })
+  val RD = (Decoupled(new Bundle {
+    val data  = (UInt(CVAL.DLEN.W))
+    val rresp = (Bool())
+  }))
 }
