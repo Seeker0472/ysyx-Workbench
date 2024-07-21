@@ -38,7 +38,6 @@ class MEMAccess extends Module {
         Mux(io.in.bits.mem_read_enable,s_r_busy,s_w_busy),
         Mux(io.in.valid, s_valid, s_idle)
       ),
-      // s_r_busy -> Mux(true.B, s_valid, s_r_busy), //depends on the mem delay
       s_r_busy -> Mux(axi.io.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       s_w_busy -> Mux(axi.io.WR.valid,s_valid,s_w_busy),
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
@@ -86,9 +85,6 @@ class MEMAccess extends Module {
   axi.io.WR.ready:=true.B
   //暂时忽略错误处理
 
-  // io.out.bits.mem_read_result:=mem_read_result
-  val sram_sim = Reg(UInt(CVAL.DLEN.W)) //模拟延迟s
-  io.out.bits.mem_read_result := sram_sim
-  sram_sim                    := mem_read_result
+  io.out.bits.mem_read_result := mem_read_result
 
 }
