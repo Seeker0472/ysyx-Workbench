@@ -33,7 +33,8 @@ class AXI extends Module {
   DPI_C_MEM.io.clock       := clock
   DPI_C_MEM.io.read_addr   := r_addr
   DPI_C_MEM.io.read_enable := r_state === s_r_wait_data
-  r_data                   := DPI_C_MEM.io.read_data
+  // r_data                   := DPI_C_MEM.io.read_data
+   io.RD.bits.data                  := DPI_C_MEM.io.read_data
   //无关信号
   DPI_C_MEM.io.write_addr   := 0.U
   DPI_C_MEM.io.write_enable := false.B
@@ -41,7 +42,7 @@ class AXI extends Module {
   DPI_C_MEM.io.write_data:=0.U
 
   io.RD.bits.rresp:=false.B//异常-暂时不实现
-  io.RD.bits.data := r_data //取到的数据
+  // io.RD.bits.data := r_data //取到的数据
 
 }
 
