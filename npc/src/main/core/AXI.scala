@@ -5,7 +5,7 @@ import chisel3.util._
 import Constants_Val._
 
 class AXI extends Module {
-  val io    = IO(Flipped(new AXIIO))
+  val io    = IO((new AXIIO))
   val raddr = Reg(UInt(CVAL.ILEN.W))
   val waddr = Reg(UInt(CVAL.ILEN.W))
 
