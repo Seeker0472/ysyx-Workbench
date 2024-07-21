@@ -16,5 +16,6 @@ class AXIMasterIO extends Bundle {
   }))
   val out = Decoupled(new Bundle {
     val mem_read_result = (UInt(CVAL.DLEN.W))
+    //TODO:异常信号！！！
   })
 }
