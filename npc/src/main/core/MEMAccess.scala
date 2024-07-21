@@ -38,7 +38,7 @@ class MEMAccess extends Module {
     s_busy-> Mux(io.out.ready,s_idle,s_busy),
     s_idle-> Mux((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid,s_busy,s_idle)
   ))
-  io.in.ready:=state===s_idle
+  io.in.ready:=true.B
   io.out.valid:=io.in.valid&&(!((io.in.bits.mem_write_enable||io.in.bits.mem_read_enable ) && io.in.valid && state===s_idle ))
 
   //TODO:不应该在这里实例化！！！
