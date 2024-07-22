@@ -12,7 +12,9 @@ class AXI_Lite_Arbiter extends Module {
   })
   val s_idle :: s_c1_busy :: s_c2_busy :: Nil = Enum(3)
   val state                                   = RegInit(s_idle)
-  val axi                                     = Module(new AXI)
+  // val axi                                     = Module(new AXI)
+  val xbar=Module(new XBAR)
+  val xb
 
   state := MuxLookup(state, s_idle)(
     List(
