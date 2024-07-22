@@ -13,10 +13,11 @@ class IFU extends Module {
     val in       = Flipped(Decoupled(new WBU_O))
     val inst_now = Output(UInt(CVAL.DLEN.W))
     val out      = Decoupled(new IFUO())
+    val axi = Flipped(new AXIReadIO())
   })
   val s_idle :: s_fetching :: s_wait_data :: s_valid :: Nil = Enum(4)
 
-  val axi = Module(new AXI_Master())
+  // val axi = Module(new AXI_Master())
 
   val state = RegInit(s_idle)
   val pc    = RegInit("h80000000".U(CVAL.DLEN.W))
@@ -25,27 +26,19 @@ class IFU extends Module {
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(true.B, s_fetching, s_idle), //Initial
-      s_fetching -> Mux(axi.io.in.ready, s_wait_data, s_fetching), //1cycle,depends on memory
-      s_wait_data -> Mux(axi.io.out.valid, s_valid, s_wait_data),
+      s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching), //1cycle,depends on memory
+      s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
       s_valid -> Mux(io.in.valid, s_fetching, s_valid)
     )
   )
   io.out.valid := state === s_valid
+  io.axi.RA.bits.addr:=pc
 
-  axi.io.in.bits.mem_write_enable := 0.B
-  axi.io.in.bits.mem_write_addr   := 0.U
-  axi.io.in.bits.mem_write_type   := Store_Type.inv
-  axi.io.in.bits.mem_write_data   := 0.U
-  axi.io.in.bits.mem_read_addr    := pc
-  axi.io.in.bits.mem_read_type    := Load_Type.lw
-  axi.io.in.bits.mem_read_enable  := state === s_fetching
-  axi.io.in.valid                 := state === s_fetching
-  axi.io.out.ready                := true.B
-
-  when(axi.io.out.valid) {
-    inst := axi.io.out.bits.mem_read_result
-
+  when(io.axi.RD.valid) {
+    inst := io.axi.RD.bits.data//next - inst
   }
+  io.axi.RA.valid:=state===s_fetching
+  io.axi.RD.ready:=true.B
 
   io.in.ready := true.B
 
