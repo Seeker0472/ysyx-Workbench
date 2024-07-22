@@ -2,8 +2,15 @@ package core
 
 import chisel3._
 import chisel3.util._
+
 import Constants_Val._
 import core.IO._
+import chisel3.util.experimental.decode.DecodeField
+import chisel3.util.experimental.decode._
+
+object MEM_Area extends ChiselEnum{
+  val INV,SRAM,URAT=Value
+}
 
 class AXI_Lite_Arbiter extends Module {
   val io = IO(new Bundle {
@@ -11,8 +18,18 @@ class AXI_Lite_Arbiter extends Module {
     val c2 = (new AXIIO)
   })
   val s_idle :: s_c1_busy :: s_c2_busy :: Nil = Enum(3)
+
   val state                                   = RegInit(s_idle)
   val axi                                     = Module(new AXI)
+
+  // val is_urat=io.c2.WA.bits.addr===BitPat("h10000???")
+  // val is_mem=io.c2.WA.bits.addr===BitPat("h80??????")
+  val Table=TruthTable(Map(
+    BitPat("h10000???")->BitPat(MEM_Area.URAT),
+  ),MEM_Area.INV)
+
+
+
 
   state := MuxLookup(state, s_idle)(
     List(
@@ -23,8 +40,12 @@ class AXI_Lite_Arbiter extends Module {
       // s_c2_valid -> Mux(io.c2.RD.ready, s_idle, s_c2_valid)
     )
   )
+
+
   //写通道全部分配给c2
-  axi.io.WA <> io.c2.WA
+  // axi.io.WA <> io.c2.WA
+  //实现XBAR
+  axi.io.WA.bits.addr:=io.c2.WA.bits.addr
   axi.io.WD <> io.c2.WD
   axi.io.WR <> io.c2.WR
   //读通道看状态
