@@ -34,8 +34,8 @@ class XBAR extends Module {
   )
   val mem_w_reg = RegInit(0.U(3.W))
   val mem_r_reg = RegInit(0.U(3.W))
-  val mem_r_b   = decoder(io.in.WA.bits.addr, Table) //r_XBar行为
-  val mem_w_b   = decoder(io.in.RA.bits.addr, Table) //w_XBar行为
+  val mem_r_b   = decoder(io.in.RA.bits.addr, Table) //r_XBar行为
+  val mem_w_b   = decoder(io.in.WA.bits.addr, Table) //w_XBar行为
   when(io.in.RA.valid) {
     mem_r_reg := mem_r_b
   }
