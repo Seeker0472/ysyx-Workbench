@@ -37,18 +37,19 @@ class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
   val io=IO(new Bundle{
     val w_char = Input(UInt(8.W))
     val enable = Bool()
-    val clock        = Input(Clock())
+    val clock  = Input(Clock())
   })
     setInline(
     "mem_access.v",
     """import "DPI-C" function int print_char(input char w_char);
-      |module MEM(
+      |module DPI_C_WriteChar(
       |  input [7:0] w_char,
+      |  input enable,
       |  input clock
       |);
       |always @(negedge clock) begin
       |  if (enable) begin // 有读写请求时
-      |    read_data = print_char(w_char);
+      |    print_char(w_char);
       |  end
       |end
       |endmodule
