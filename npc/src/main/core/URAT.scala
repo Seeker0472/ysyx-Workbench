@@ -8,6 +8,7 @@ import core.IO._
 class URAT extends Module {
   val io = IO(new AXIWriteIO)
   //TODO:DPI_C
+  val dpi_c_out=Module(new DPI_C_WriteChar)
   val w_addr = Reg(UInt(CVAL.DLEN.W))
   val w_data = Reg(UInt(CVAL.DLEN.W))
   val s_w_idle :: s_w_wait_data :: s_w_wait_result :: s_w_valid :: Nil = Enum(4)
@@ -25,9 +26,32 @@ class URAT extends Module {
   io.WA.ready:=true.B
   io.WD.ready:=true.B
   io.WR.valid:=true.B
-  val send=(w_state===s_w_wait_data)
+  dpi_c_out.io.enable:=(w_state===s_w_wait_data)
+  dpi_c_out.io.w_char:=w_data(7,0)
+  dpi_c_out.io.clock:=clock
   io.WR.bits.bresp:=true.B//TODO
 
-      
-  
+}
+
+class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
+  val io=IO(new Bundle{
+    val w_char = Input(UInt(8.W))
+    val enable = Bool()
+    val clock        = Input(Clock())
+  })
+    setInline(
+    "mem_access.v",
+    """import "DPI-C" function int print_char(input char w_char);
+      |module MEM(
+      |  input [7:0] w_char,
+      |  input clock
+      |);
+      |always @(negedge clock) begin
+      |  if (enable) begin // 有读写请求时
+      |    read_data = print_char(w_char);
+      |  end
+      |end
+      |endmodule
+    """.stripMargin
+  )
 }

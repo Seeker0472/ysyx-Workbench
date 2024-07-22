@@ -15,6 +15,12 @@ Vcore *dut;
 #include "Vcore__Dpi.h"
 #include <isa.h>
 
+//TODO:re
+extern "C" void print_char(char w_char){
+    printf("%c",w_char);
+    fflush(stdout);
+}
+
 uint64_t g_nr_guest_inst = 0;
 
 uint32_t mem_read(uint32_t pc);

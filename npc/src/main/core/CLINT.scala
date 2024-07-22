@@ -21,7 +21,6 @@ class CLINT extends Module {
     )
   )
   when(io.RA.valid){
-    //TODO:DPI-C->r_data
     r_data:=0.U
   }
   io.RD.bits.data:=r_data
