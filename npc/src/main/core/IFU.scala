@@ -32,6 +32,7 @@ class IFU extends Module {
     )
   )
   io.out.valid := state === s_valid
+  io.axi.RA.bits.addr:=pc
 
   when(io.axi.RD.valid) {
     inst := io.axi.RD.bits.data//next - inst
