@@ -25,8 +25,8 @@ class URAT extends Module {
   io.WA.ready:=true.B
   io.WD.ready:=true.B
   io.WR.valid:=true.B
-  val send=(state===s_w_wait_data)
-  io.WR.bits.bresp=true.B//TODO
+  val send=(w_state===s_w_wait_data)
+  // io.WR.bits.bresp=true.B//TODO
 
 
   
