@@ -41,7 +41,7 @@ class XBAR extends Module {
   urat.io.WA.valid:=Mux(mem_w_b===BitPat("b001"),io.in.WA.valid,false.B)
   axi.io.WA.bits.addr:=io.in.WA.bits.addr
   urat.io.WA.bits.addr:=io.in.WA.bits.addr
-  io.in.WA.ready:=Mux(mem_w_b===BitPat("b010")||mem_w_reg===BitPat("b010"),io.in.WA.ready,urat.io.WA.ready)//ready
+  io.in.WA.ready:=Mux(mem_w_b===BitPat("b010")||mem_w_reg===BitPat("b010"),axi.io.WA.ready,urat.io.WA.ready)//ready
 
   axi.io.WD.valid:=Mux(mem_w_reg===BitPat("b010"),io.in.WD.valid,false.B)//如果选择sram，就开
   urat.io.WD.valid:=Mux(mem_w_b===BitPat("b001"),io.in.WD.valid,false.B)
