@@ -13,7 +13,7 @@ class IFU extends Module {
     val in       = Flipped(Decoupled(new WBU_O))
     val inst_now = Output(UInt(CVAL.DLEN.W))
     val out      = Decoupled(new IFUO())
-    val axi = (new AXIReadIO())
+    val axi = Flipped(new AXIReadIO())
   })
   val s_idle :: s_fetching :: s_wait_data :: s_valid :: Nil = Enum(4)
 
