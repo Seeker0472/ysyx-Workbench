@@ -9,7 +9,7 @@ class MEMAccess extends Module {
   val io = IO(new Bundle {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
-    val axi = Flipped(new AXIIO())
+    val axi = (new AXIIO())
   })
   //pass_throughs
   io.out.bits.pc              := io.in.bits.pc
@@ -26,23 +26,7 @@ class MEMAccess extends Module {
   io.out.bits.reg_w_enable    := io.in.bits.reg_w_enable
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
-
-  // val axi=Module(new AXI_Master)
-  // io.axi.in.valid:=io.in.valid
-  // io.in.ready:=io.axi.in.ready//暂时全true
-  // io.axi.in.bits.mem_read_addr:=io.in.bits.alu_result
-  // io.axi.in.bits.mem_write_addr:=io.in.bits.alu_result 
-  // io.axi.in.bits.mem_read_enable:=io.in.bits.mem_read_enable
-  // io.axi.in.bits.mem_write_enable:=io.in.bits.mem_write_enable
-  // io.axi.in.bits.mem_write_data:=io.in.bits.src2
-  // io.axi.in.bits.mem_read_type:=io.in.bits.mem_read_type
-  // io.axi.in.bits.mem_write_type:=io.in.bits.mem_write_type
-
-  // io.out.bits.mem_read_result:=io.axi.out.bits.mem_read_result
-  // io.out.valid:=io.axi.out.valid
-  // io.axi.out.ready:=io.out.ready
-  // val axi = Module(new AXI)
-
+  
   //sigs and status
   val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
   val state                                            = RegInit(s_idle)
