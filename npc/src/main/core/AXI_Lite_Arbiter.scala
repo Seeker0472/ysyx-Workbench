@@ -16,8 +16,9 @@
 
 //     state:=MuxLookup(state,s_idle)(
 //         List(
-//             s_idle ->Mux(io.c2.RA.valid||io.c2.RA.valid,s_c2_busy,Mux(io.c1.RA.valid||io.c1.RA.valid,s_c2_busy,s_idle)),
-//             s_c1_busy ->Mux(axi.io.)
+//             s_idle -> Mux(io.c2.RA.valid,s_c2_busy,Mux(io.c1.RA.valid,s_c1_busy,s_idle)),
+//             s_c1_busy->Mux(io.c1.RD.valid,s_c1_valid),
+//             s_c
 //         )
 //     )
     
