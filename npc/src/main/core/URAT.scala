@@ -47,7 +47,7 @@ class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
       |  input enable,
       |  input clock
       |);
-      |always @(negedge clock) begin
+      |always @(*) begin
       |  if (enable) begin // 有读写请求时
       |    print_char(w_char);
       |  end
