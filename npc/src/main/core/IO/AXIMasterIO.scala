@@ -59,4 +59,20 @@ class AXIReadIO extends Bundle {
     val rresp = (Bool())
   }))
 }
+class AXIWriteIO extends Bundle {
+  //Write address
+  val WA = Flipped(Decoupled(new Bundle {
+    val addr = (UInt(CVAL.DLEN.W))
+    //awport-特权相关
+  }))
+  //Write data
+  val WD = Flipped(Decoupled(new Bundle {
+    val data  = (UInt(CVAL.DLEN.W))
+    val wstrb = (UInt(8.W)) //掩码
+  }))
+  //Write response
+  val WR = Decoupled(new Bundle {
+    val bresp = Output(Bool())
+  })
 
+}
