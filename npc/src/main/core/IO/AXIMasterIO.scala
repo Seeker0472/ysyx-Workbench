@@ -47,3 +47,16 @@ class AXIIO extends Bundle {
     val rresp = (Bool())
   }))
 }
+class AXIReadIO extends Bundle {
+  //Read address
+  val RA = Flipped(Decoupled(new Bundle {
+    val addr = (UInt(CVAL.DLEN.W))
+    //arport-特权相关
+  }))
+  //Read data
+  val RD = (Decoupled(new Bundle {
+    val data  = (UInt(CVAL.DLEN.W))
+    val rresp = (Bool())
+  }))
+}
+
