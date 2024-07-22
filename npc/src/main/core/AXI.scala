@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 import Constants_Val._
 
+import core.IO._
 
 //TODO:数据和地址应该可以在同一个周期发送！！！！
 class AXI extends Module {
@@ -75,31 +76,3 @@ class AXI extends Module {
 
 }
 
-class AXIIO extends Bundle {
-
-  //Write address
-  val WA = Flipped(Decoupled(new Bundle {
-    val addr = Input(UInt(CVAL.DLEN.W))
-    //awport-特权相关
-  }))
-  //Write data
-  val WD = Flipped(Decoupled(new Bundle {
-    val data  = Input(UInt(CVAL.DLEN.W))
-    val wstrb = Input(UInt(8.W)) //掩码
-  }))
-  //Write response
-  val WR = Decoupled(new Bundle {
-    val bresp = Output(Bool())
-  })
-
-  //Read address
-  val RA = Flipped(Decoupled(new Bundle {
-    val addr = (UInt(CVAL.DLEN.W))
-    //arport-特权相关
-  }))
-  //Read data
-  val RD = (Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
-    val rresp = (Bool())
-  }))
-}
