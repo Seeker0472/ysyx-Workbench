@@ -34,9 +34,11 @@ class AXI_Lite_Arbiter extends Module {
   axi.io.RA.bits.addr:=Mux(io.c1.RA.valid,io.c1.RA.bits.addr,io.c2.RA.bits.addr)
   axi.io.RD.ready:=Mux(state===s_c1_busy,io.c1.RD.ready,io.c2.RD.ready)
   io.c1.RD.bits.data:=axi.io.RD.bits.data
+  io.c2.RD.bits.data:=axi.io.RD.bits.data
+io.c1.RD.bits.rresp:=axi.io.RD.bits.rresp
+io.c2.RD.bits.rresp:=axi.io.RD.bits.rresp
   io.c1.RD.valid:=Mux(state===s_c1_busy,axi.io.RD.valid,false.B)
   io.c2.RD.valid:=Mux(state===s_c2_busy,axi.io.RD.valid,false.B)
-  io.c2.RD.bits.data:=axi.io.RD.bits.data
   // axi.io.RA <> Mux(state === s_c1_busy || state === s_c1_valid, io.c1.RA, io.c2.RA)
   // axi.io.RD <> Mux(state === s_c1_busy || state === s_c1_valid, io.c1.RD, io.c2.RD)
 }
