@@ -201,8 +201,9 @@ int run(int step)
 {
     int now = step;
 
-    while ((now--) != 0)
+    while ((now) != 0)
     {
+        now=now>=0?now-1:now;
         switch (nemu_state.state)
         {
         case NEMU_ABORT:

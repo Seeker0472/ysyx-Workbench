@@ -39,6 +39,5 @@ class AXI_Lite_Arbiter extends Module {
   io.c2.RD.bits.rresp := axi.io.RD.bits.rresp
   io.c1.RD.valid      := Mux(state === s_c1_busy, axi.io.RD.valid, false.B)
   io.c2.RD.valid      := Mux(state === s_c2_busy, axi.io.RD.valid, false.B)
-  // axi.io.RA <> Mux(state === s_c1_busy || state === s_c1_valid, io.c1.RA, io.c2.RA)
-  // axi.io.RD <> Mux(state === s_c1_busy || state === s_c1_valid, io.c1.RD, io.c2.RD)
+
 }
