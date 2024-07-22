@@ -11,50 +11,39 @@ import _root_.core.IO.StageConnect
 
 class core extends Module {
   val io = IO(new Bundle {
-    // val pc = Output(UInt(CVAL.DLEN.W))
-    // val value    = Output(UInt(CVAL.DLEN.W))
-    // val addr     = Input(UInt(CVAL.DLEN.W))
-    // val instr    = Input(UInt(CVAL.ILEN.W))
     val inst_now = Output(UInt(CVAL.DLEN.W))
   })
 
-
-  val decoder = Module(new Decoder())
-  val reg     = Module(new REG())
-  val br_han  = Module(new ebreak_handler())
-  val ifu     = Module(new IFU())
-  val exu     = Module(new EXU())
-  val memau   = Module(new MEMAccess())
-  val wbu     = Module(new WBU())
-  // val mem     = Module(new MEM())//TODO::::::::::::
+  val decoder     = Module(new Decoder())
+  val reg         = Module(new REG())
+  val br_han      = Module(new ebreak_handler())
+  val ifu         = Module(new IFU())
+  val exu         = Module(new EXU())
+  val memau       = Module(new MEMAccess())
+  val wbu         = Module(new WBU())
+  val axi_arbiter = Module(new AXI_Lite_Arbiter())
 
   io.inst_now := ifu.io.inst_now //输出当前指令到Debugger环境---可能以后需要Debug
 
-
-  // io.pc          := ifu.io.pc
-  // ifu.io.instr_i := io.instr
+  ifu.io.axi <> axi_arbiter.io.c1
 //decode_stage
-  // decoder.io.in <> ifu.io.out
-  StageConnect(ifu.io.out,decoder.io.in)
+  StageConnect(ifu.io.out, decoder.io.in)
   br_han.io.halt := decoder.io.ebreak
 //exc
-  // exu.io.in <> decoder.io.out
-  StageConnect(decoder.io.out,exu.io.in)
+  StageConnect(decoder.io.out, exu.io.in)
   exu.io.reg1 <> reg.io.Rread1
   exu.io.reg2 <> reg.io.Rread2
   exu.io.csr <> reg.io.CSRread
 //mem_access
-  // memau.io.in <> exu.io.out
-  StageConnect(exu.io.out,memau.io.in)
+  memau.io.axi <> axi_arbiter.io.c2
+  StageConnect(exu.io.out, memau.io.in)
 
 //wb
-  // wbu.io.in <> memau.io.out
-  StageConnect(memau.io.out,wbu.io.in)
+  StageConnect(memau.io.out, wbu.io.in)
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
 
-  // ifu.io.in <> wbu.io.out
-  StageConnect(wbu.io.out,ifu.io.in)
+  StageConnect(wbu.io.out, ifu.io.in)
 
 }
