@@ -36,7 +36,7 @@ class URAT extends Module {
 class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
   val io=IO(new Bundle{
     val w_char = Input(UInt(8.W))
-    val enable = Bool()
+    val enable = Input(Bool())
     val clock  = Input(Clock())
   })
     setInline(
