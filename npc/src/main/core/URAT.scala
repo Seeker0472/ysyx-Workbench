@@ -27,7 +27,7 @@ class URAT extends Module {
   io.WD.ready:=true.B
   io.WR.valid:=true.B
   dpi_c_out.io.enable:=(w_state===s_w_wait_data)
-  dpi_c_out.io.w_char:=w_data(7,0)
+  dpi_c_out.io.w_char:=io.WD.bits.data(7,0)
   dpi_c_out.io.clock:=clock
   io.WR.bits.bresp:=true.B//TODO
 
