@@ -45,7 +45,7 @@ class AXI extends Module {
   // when(io.WA.valid && w_state === s_w_idle) {
   //   w_addr := io.WA.bits.addr
   // }  
-  when(io.WA.valid && w_state === s_w_valid) {
+  when(io.WA.valid ) {
     w_addr := io.WA.bits.addr
   }
   DPI_C_MEM.io.write_addr   := w_addr
