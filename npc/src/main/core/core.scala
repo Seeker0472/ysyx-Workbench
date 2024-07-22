@@ -11,14 +11,13 @@ import _root_.core.IO.StageConnect
 
 class core extends Module {
   val io = IO(new Bundle {
-    val pc = Output(UInt(CVAL.DLEN.W))
+    // val pc = Output(UInt(CVAL.DLEN.W))
     // val value    = Output(UInt(CVAL.DLEN.W))
-    val addr     = Input(UInt(CVAL.DLEN.W))
-    val instr    = Input(UInt(CVAL.ILEN.W))
+    // val addr     = Input(UInt(CVAL.DLEN.W))
+    // val instr    = Input(UInt(CVAL.ILEN.W))
     val inst_now = Output(UInt(CVAL.DLEN.W))
   })
 
-  io.inst_now := io.instr //输出当前指令到Debugger环境---可能以后需要Debug
 
   val decoder = Module(new Decoder())
   val reg     = Module(new REG())
@@ -29,8 +28,11 @@ class core extends Module {
   val wbu     = Module(new WBU())
   // val mem     = Module(new MEM())//TODO::::::::::::
 
-  io.pc          := ifu.io.pc
-  ifu.io.instr_i := io.instr
+  io.inst_now := ifu.io.inst_now //输出当前指令到Debugger环境---可能以后需要Debug
+
+
+  // io.pc          := ifu.io.pc
+  // ifu.io.instr_i := io.instr
 //decode_stage
   // decoder.io.in <> ifu.io.out
   StageConnect(ifu.io.out,decoder.io.in)
