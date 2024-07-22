@@ -30,7 +30,7 @@ class XBAR extends Module {
     ),
     BitPat("b000")
   )
-  val mem_w_reg = RegInit(("b000".asUInt))
+  val mem_w_reg = RegInit(0.U(3.W))
   val mem_r_t    = decoder(io.in.WA.bits.addr, Table) //XBar行为
   val mem_w_b    = decoder(io.in.RA.bits.addr, Table) //w_XBar行为
   mem_w_reg:=mem_w_b
