@@ -40,7 +40,7 @@ class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
     val clock  = Input(Clock())
   })
     setInline(
-    "mem_access.v",
+    "dpi_c_wc.v",
     """import "DPI-C" function int print_char(input char w_char);
       |module DPI_C_WriteChar(
       |  input [7:0] w_char,
