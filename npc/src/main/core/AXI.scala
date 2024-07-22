@@ -22,10 +22,14 @@ class AXI extends Module {
   val w_addr = Reg(UInt(CVAL.DLEN.W))
   val w_data = Reg(UInt(CVAL.DLEN.W))
 
+  val read_latency = RegInit(1.U(10.W))
+  read_latency := read_latency <<1|Cat(0.U(9.W),read_latency(9,9))
+
   r_state := MuxLookup(r_state, s_r_idle)(
     List(
       s_r_idle -> Mux(io.RA.valid, s_r_wait_data, s_r_idle), //等待地址
-      s_r_wait_data -> Mux(true.B, s_r_read_data, s_r_wait_data), //访问存储器
+      // s_r_wait_data -> Mux(true.B, s_r_read_data, s_r_wait_data), //访问存储器
+      s_r_wait_data -> Mux(read_latency===1.U, s_r_read_data, s_r_wait_data), //访问存储器
       s_r_read_data -> Mux(io.RD.ready, s_r_idle, s_r_read_data) //返回数据
     )
   )
@@ -38,7 +42,8 @@ class AXI extends Module {
     List(
       s_w_idle -> Mux(io.WA.valid, s_w_wait_data, s_w_idle), //等待地址
       s_w_wait_data -> Mux(io.WD.valid, s_w_wait_result, s_w_wait_data), //等待数据(在这一周期直接调用DPI-C获取)
-      s_w_wait_result -> Mux(true.B, s_w_valid, s_w_wait_data), //访问存储器，其实是为了模拟延迟
+      s_w_wait_result -> Mux(read_latency===1.U, s_w_valid, s_w_wait_data), //访问存储器，其实是为了模拟延迟
+      // s_w_wait_result -> Mux(true.B, s_w_valid, s_w_wait_data), //访问存储器，其实是为了模拟延迟
       s_w_valid -> Mux(io.WR.ready, s_w_idle, s_w_valid) //返回结果
     )
   )
