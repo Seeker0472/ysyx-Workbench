@@ -9,7 +9,7 @@ class MEMAccess extends Module {
   val io = IO(new Bundle {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
-    val axi = (new AXIIO())
+    val axi = Flipped(new AXIIO())
   })
   //pass_throughs
   io.out.bits.pc              := io.in.bits.pc
