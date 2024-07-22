@@ -24,8 +24,8 @@ class AXI extends Module {
   val w_addr = Reg(UInt(CVAL.DLEN.W))
   val w_data = Reg(UInt(CVAL.DLEN.W))
 
-  val read_latency = RegInit(1.U(2.W))
-  read_latency := read_latency <<1|Cat(0.U(9.W),read_latency(9,9))
+  val read_latency = RegInit(1.U(30.W))
+  read_latency := read_latency <<1|Cat(0.U(9.W),read_latency(29,29))
 
   r_state := MuxLookup(r_state, s_r_idle)(
     List(
