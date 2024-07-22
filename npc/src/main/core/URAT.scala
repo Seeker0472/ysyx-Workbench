@@ -41,7 +41,7 @@ class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
   })
     setInline(
     "dpi_c_wc.v",
-    """import "DPI-C" function void print_char(input char w_char);
+    """import "DPI-C" function void print_char(input byte w_char);
       |module DPI_C_WriteChar(
       |  input [7:0] w_char,
       |  input enable,
