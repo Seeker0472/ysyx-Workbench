@@ -38,6 +38,8 @@ FLAGS += ${CXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK
 
 HINCLUDE := 
 
+WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd
+
 include $(NPC_HOME)/scripts/conf.mk
 
 # 仅仅当chisel代码发生变化的时候重新编译
@@ -82,6 +84,9 @@ gdb:
 	verilator -cc --top core  ./build/core.sv --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS}
 	make -j -C obj_dir -f Vcore.mk Vcore
 	gdb   --args ./obj_dir/Vcore  $(ARGS) $(IMG)
+
+wave:
+	nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
 all: $(TARGET) sim
 	# @echo "所有文件的绝对路径："
 	# @echo "$(C_CPP_ABS)"
