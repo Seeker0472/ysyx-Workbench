@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-# define DEVICE_BASE 0xa0000000
+# define DEVICE_BASE 0x10000000   //TODO
 # define RTC_ADDR        (DEVICE_BASE + 0x0000048)
 # define SERIAL_PORT     (DEVICE_BASE + 0x00003f8)
 
