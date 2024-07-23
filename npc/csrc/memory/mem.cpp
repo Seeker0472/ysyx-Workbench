@@ -6,6 +6,38 @@
 uint64_t get_time();
 uint64_t time_now = 114514;
 
+
+
+
+void record_pread(paddr_t addr, int len);
+void record_pwrite(paddr_t addr, char wmask, word_t data);
+uint32_t mem_read(uint32_t pc);
+
+uint32_t mem[0x8000000] = {
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00100073,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+};
+word_t mem_size = 84;
+
 //DPI-C Funcs
 extern "C" int get_time(int raddr){
   if(raddr==0x10000048){
@@ -66,34 +98,6 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   // printf("addr=%x current_data=%x new_data=%x off=%x\n",aligned_addr,current_data,new_data,offset);
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
-
-
-void record_pread(paddr_t addr, int len);
-void record_pwrite(paddr_t addr, char wmask, word_t data);
-uint32_t mem[0x8000000] = {
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00100073,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-    0x00448493,
-};
-word_t mem_size = 84;
 
 uint32_t mem_read(uint32_t pc)
 {
