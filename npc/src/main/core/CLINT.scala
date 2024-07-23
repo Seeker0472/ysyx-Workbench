@@ -40,7 +40,7 @@ class DPI_C_ReadAddr extends BlackBox with HasBlackBoxInline {
     val clock     = Input(Clock())
   })
   setInline(
-    "dpi_c_wc.v",
+    "dpi_c_ra.v",
     """import "DPI-C" function int pmem_read(input int read_addr);
       |module DPI_C_ReadAddr(
       |  input [31:0] read_addr,
