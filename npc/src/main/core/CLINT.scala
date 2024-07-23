@@ -32,28 +32,38 @@ class CLINT extends Module {
 
 }
 
-class DPI_C_ReadAddr extends BlackBox with HasBlackBoxInline {
+// class DPI_C_ReadAddr extends BlackBox with HasBlackBoxInline {
+//   val io = IO(new Bundle {
+//     val read_data = Output(UInt(CVAL.DLEN.W))
+//     val read_addr = Input(UInt(CVAL.DLEN.W))
+//     val enable    = Input(Bool())
+//     val clock     = Input(Clock())
+//   })
+//   setInline(
+//     "dpi_c_ra.v",
+//     """import "DPI-C" function int get_time(input int read_addr);
+//       |module DPI_C_ReadAddr(
+//       |  input [31:0] read_addr,
+//       |  output reg [31:0] read_data,
+//       |  input enable,
+//       |  input clock
+//       |);
+//       |always @(negedge clock) begin
+//       |  if (enable) begin // 有读写请求时
+//       |    read_data = get_time(read_addr);
+//       |  end
+//       |end
+//       |endmodule
+//     """.stripMargin
+//   )
+// }
+class DPI_C_ReadAddr extends Module {
   val io = IO(new Bundle {
     val read_data = Output(UInt(CVAL.DLEN.W))
     val read_addr = Input(UInt(CVAL.DLEN.W))
     val enable    = Input(Bool())
     val clock     = Input(Clock())
   })
-  setInline(
-    "dpi_c_ra.v",
-    """import "DPI-C" function int get_time(input int read_addr);
-      |module DPI_C_ReadAddr(
-      |  input [31:0] read_addr,
-      |  output reg [31:0] read_data,
-      |  input enable,
-      |  input clock
-      |);
-      |always @(negedge clock) begin
-      |  if (enable) begin // 有读写请求时
-      |    read_data = get_time(read_addr);
-      |  end
-      |end
-      |endmodule
-    """.stripMargin
-  )
+  io.read_data:=1.U
+
 }
