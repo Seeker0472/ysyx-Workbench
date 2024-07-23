@@ -22,3 +22,10 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
+
+
+// class ebreak_handler extends Module {
+//   val io = IO(new Bundle {
+//     val halt = Input(Bool())
+//   })
+// }

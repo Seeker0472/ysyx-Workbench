@@ -1,4 +1,4 @@
-package core
+package bus
 
 import chisel3._
 import chisel3.util._
@@ -57,3 +57,13 @@ class DPI_C_ReadAddr extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
+// class DPI_C_ReadAddr extends Module {
+//   val io = IO(new Bundle {
+//     val read_data = Output(UInt(CVAL.DLEN.W))
+//     val read_addr = Input(UInt(CVAL.DLEN.W))
+//     val enable    = Input(Bool())
+//     val clock     = Input(Clock())
+//   })
+//   io.read_data:=1.U
+
+// }
