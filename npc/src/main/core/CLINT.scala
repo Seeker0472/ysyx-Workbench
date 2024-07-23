@@ -48,7 +48,7 @@ class DPI_C_ReadAddr extends BlackBox with HasBlackBoxInline {
       |  input enable,
       |  input clock
       |);
-      |always @(*) begin
+      |always @(negedge clock) begin
       |  if (enable) begin // 有读写请求时
       |    read_data = pmem_read(read_addr);
       |  end
