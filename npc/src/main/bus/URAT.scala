@@ -1,4 +1,4 @@
-package core
+package bus
 
 import chisel3._
 import chisel3.util._
@@ -42,35 +42,35 @@ class URAT extends Module {
 
 }
 
-// class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
-//   val io=IO(new Bundle{
-//     val w_char = Input(UInt(8.W))
-//     val enable = Input(Bool())
-//     val clock  = Input(Clock())
-//   })
-//     setInline(
-//     "dpi_c_wc.v",
-//     """import "DPI-C" function void print_char(input byte w_char);
-//       |module DPI_C_WriteChar(
-//       |  input [7:0] w_char,
-//       |  input enable,
-//       |  input clock
-//       |);
-//       |always @(*) begin
-//       |  if (enable) begin // 有读写请求时
-//       |    print_char(w_char);
-//       |  end
-//       |end
-//       |endmodule
-//     """.stripMargin
-//   )
-// }
-
-class DPI_C_WriteChar  extends Module {
+class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
   val io=IO(new Bundle{
     val w_char = Input(UInt(8.W))
     val enable = Input(Bool())
     val clock  = Input(Clock())
   })
-
+    setInline(
+    "dpi_c_wc.v",
+    """import "DPI-C" function void print_char(input byte w_char);
+      |module DPI_C_WriteChar(
+      |  input [7:0] w_char,
+      |  input enable,
+      |  input clock
+      |);
+      |always @(*) begin
+      |  if (enable) begin // 有读写请求时
+      |    print_char(w_char);
+      |  end
+      |end
+      |endmodule
+    """.stripMargin
+  )
 }
+
+// class DPI_C_WriteChar  extends Module {
+//   val io=IO(new Bundle{
+//     val w_char = Input(UInt(8.W))
+//     val enable = Input(Bool())
+//     val clock  = Input(Clock())
+//   })
+
+// }
