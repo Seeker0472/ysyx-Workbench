@@ -41,7 +41,7 @@ class DPI_C_ReadAddr extends BlackBox with HasBlackBoxInline {
   })
   setInline(
     "dpi_c_ra.v",
-    """import "DPI-C" function int pmem_read(input int read_addr);
+    """
       |module DPI_C_ReadAddr(
       |  input [31:0] read_addr,
       |  output reg [31:0] read_data,
