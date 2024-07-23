@@ -60,6 +60,8 @@ class MEM extends Module{
     val write_addr   = Input(UInt(CVAL.DLEN.W))
     val write_data   = Input(UInt(CVAL.DLEN.W))
     val write_mask   = Input(UInt(8.W))
+    val clock        = Input(Clock())
+
   })
     // 创建一个256x32位的同步读写内存
   val mem = SyncReadMem(256, UInt(32.W))
