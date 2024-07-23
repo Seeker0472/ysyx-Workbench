@@ -7,7 +7,7 @@ import Constants_Val._
 import core.IO._
 //这个是slave
 //TODO:数据和地址应该可以在同一个周期发送！！！！
-class AXI extends Module {
+class AXI_Slave extends Module {
   val io    = IO((new AXIIO))
   // val raddr = Reg(UInt(CVAL.ILEN.W))
   // val waddr = Reg(UInt(CVAL.ILEN.W))
