@@ -46,7 +46,7 @@ class AXI_Slave extends Module {
     List(
       s_w_idle -> Mux(io.WA.valid, s_w_wait_data, s_w_idle), //等待地址
       s_w_wait_data -> Mux(io.WD.valid, s_w_wait_result, s_w_wait_data), //等待数据(在这一周期直接调用DPI-C获取)
-      s_w_wait_result -> Mux(true.B, s_w_valid, s_w_wait_result), //访问存储器，其实是为了模拟延迟
+      s_w_wait_result -> Mux(true.B, Mux(io.WR.ready,s_w_idle,s_w_valid), s_w_wait_result), //访问存储器，其实是为了模拟延迟
       // s_w_wait_result -> Mux(read_latency===1.U, s_w_valid, s_w_wait_result), //访问存储器，其实是为了模拟延迟
       // s_w_wait_result -> Mux(true.B, s_w_valid, s_w_wait_result), //访问存储器，其实是为了模拟延迟
       s_w_valid -> Mux(io.WR.ready, s_w_idle, s_w_valid) //返回结果
@@ -64,7 +64,7 @@ class AXI_Slave extends Module {
 
   io.WA.ready := w_state === s_w_idle
   io.WD.ready := w_state === s_w_wait_data
-  io.WR.valid := w_state === s_w_valid
+  io.WR.valid := w_state === s_w_valid||w_state===s_w_wait_result
   //取数据
   DPI_C_MEM.io.clock       := clock
   DPI_C_MEM.io.read_addr   := r_addr
@@ -73,7 +73,8 @@ class AXI_Slave extends Module {
   // io.RD.bits.data := DPI_C_MEM.io.read_data//不使用reg_当前周期返回
 
   io.RD.bits.rresp := false.B //异常-暂时不实现
-  io.RD.bits.data := r_data //取到的数据,如果这样写就是下一个周期返回了
+  // io.RD.bits.data := r_data //取到的数据,如果这样写就是下一个周期返回了
+  io.RD.bits.data:=Mux(r_state===s_w_wait_result,DPI_C_MEM.io.read_data,r_data)
   //TODO：有效
 
 }
