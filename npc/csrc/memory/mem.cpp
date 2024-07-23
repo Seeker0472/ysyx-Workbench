@@ -38,7 +38,7 @@ uint32_t mem_read(uint32_t pc)
   // //mtrace
   // //TODO: Write  Enable-------------------------------------------------
 
-  if (pc == 0xa0000048)
+  if (pc == 0xa0000048||pc==0x10000048)
   {
     time_now = get_time();
     // printf("%lx\n", time);
