@@ -9,8 +9,8 @@ import core.IO._
 //TODO:数据和地址应该可以在同一个周期发送！！！！
 class AXI extends Module {
   val io    = IO((new AXIIO))
-  val raddr = Reg(UInt(CVAL.ILEN.W))
-  val waddr = Reg(UInt(CVAL.ILEN.W))
+  // val raddr = Reg(UInt(CVAL.ILEN.W))
+  // val waddr = Reg(UInt(CVAL.ILEN.W))
 
   val DPI_C_MEM = Module(new MEM)
 

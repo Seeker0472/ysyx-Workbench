@@ -50,6 +50,17 @@ uint32_t mem_read(uint32_t pc)
   }
   return mem[(pc - 0x80000000) / 4];
 }
+extern "C" int get_time(int raddr){
+  if(raddr==0x10000048){
+    time_now = get_time();
+    return (uint32_t)time_now;
+  }
+  if (raddr == 0x1000004c)
+  {
+    return (uint32_t)(time_now >> 32);
+  }
+  return -1;
+}
 
 extern "C" int pmem_read(int raddr)
 {
