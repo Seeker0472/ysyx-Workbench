@@ -55,11 +55,11 @@ extern "C" int get_time(int raddr){
     time_now = get_time();
     return (uint32_t)time_now;
   }
-  if (pc == 0xa000004c)
+  if (raddr == 0xa000004c)
   {
     return (uint32_t)(time_now >> 32);
   }
-
+  return -1;
 }
 
 extern "C" int pmem_read(int raddr)
