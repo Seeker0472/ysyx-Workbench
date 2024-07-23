@@ -33,12 +33,13 @@ class AXI_Slave extends Module {
       s_r_idle -> Mux(io.RA.valid, s_r_wait_data, s_r_idle), //等待地址
       // s_r_wait_data -> Mux(true.B, s_r_read_data, s_r_wait_data), //访问存储器
       // s_r_wait_data -> Mux(read_latency===1.U, s_r_read_data, s_r_wait_data), //访问存储器
-      s_r_wait_data -> Mux(true.B, s_r_read_data, s_r_wait_data), //访问存储器
+      s_r_wait_data -> Mux(true.B, Mux(io.RD.ready,s_r_idle,s_r_read_data), s_r_wait_data), //访问存储器
       s_r_read_data -> Mux(io.RD.ready, s_r_idle, s_r_read_data) //返回数据
     )
   )
   io.RA.ready := r_state === s_r_idle
   io.RD.valid := r_state === s_r_read_data||r_state ===s_r_wait_data//单周期获取
+
   when(io.RA.valid && r_state === s_r_idle) {
     r_addr := io.RA.bits.addr
   }
