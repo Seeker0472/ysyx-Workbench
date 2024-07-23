@@ -44,7 +44,7 @@ class DPI_C_ReadAddr extends BlackBox with HasBlackBoxInline {
     """
       |module DPI_C_ReadAddr(
       |  input [31:0] read_addr,
-      |  output reg [31:0] read_data,
+      |  output [31:0] read_data,
       |  input enable,
       |  input clock
       |);
