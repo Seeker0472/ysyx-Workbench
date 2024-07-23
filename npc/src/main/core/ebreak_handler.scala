@@ -22,3 +22,10 @@ import chisel3.util._
 //     """.stripMargin
 //   )
 // }
+
+
+class ebreak_handler extends Module {
+  val io = IO(new Bundle {
+    val halt = Input(Bool())
+  })
+}
