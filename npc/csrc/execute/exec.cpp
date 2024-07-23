@@ -17,8 +17,6 @@ Vcore *dut;
 
 //TODO:re
 extern "C" void print_char(char w_char){
-    assert(0);
-    printf("---------------------------------\n");
     printf("%c",w_char);
     fflush(stdout);
 }
