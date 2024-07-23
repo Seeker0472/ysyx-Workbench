@@ -38,7 +38,7 @@ class AXI_Slave extends Module {
     )
   )
   io.RA.ready := r_state === s_r_idle
-  io.RD.valid := r_state === s_r_read_data
+  io.RD.valid := r_state === s_r_read_data||r_state ===s_r_wait_data//单周期获取
   when(io.RA.valid && r_state === s_r_idle) {
     r_addr := io.RA.bits.addr
   }
