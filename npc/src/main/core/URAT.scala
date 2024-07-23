@@ -1,4 +1,4 @@
-package bus
+package core
 
 import chisel3._
 import chisel3.util._
@@ -65,12 +65,3 @@ class DPI_C_WriteChar  extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
-
-// class DPI_C_WriteChar  extends Module {
-//   val io=IO(new Bundle{
-//     val w_char = Input(UInt(8.W))
-//     val enable = Input(Bool())
-//     val clock  = Input(Clock())
-//   })
-
-// }

@@ -1,4 +1,4 @@
-package bus
+package core
 
 import chisel3._
 import chisel3.util._
@@ -16,7 +16,7 @@ class XBAR extends Module {
     val in = (new AXIIO)
     // val out = (new AXIIO)
   })
-  val axi  = Module(new AXI_Slave)
+  val axi  = Module(new AXI)
   val urat = Module(new URAT)
   // val urat=Module(new urat)
 

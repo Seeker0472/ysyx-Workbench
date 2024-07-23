@@ -6,13 +6,8 @@
 uint64_t get_time();
 uint64_t time_now = 114514;
 
-
-
-
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
-uint32_t mem_read(uint32_t pc);
-
 uint32_t mem[0x8000000] = {
     0x00448493,
     0x00448493,
@@ -38,7 +33,23 @@ uint32_t mem[0x8000000] = {
 };
 word_t mem_size = 84;
 
-//DPI-C Funcs
+uint32_t mem_read(uint32_t pc)
+{
+  // //mtrace
+  // //TODO: Write  Enable-------------------------------------------------
+
+  if (pc == 0xa0000048)
+  {
+    time_now = get_time();
+    // printf("%lx\n", time);
+    return (uint32_t)time_now;
+  }
+  if (pc == 0xa000004c)
+  {
+    return (uint32_t)(time_now >> 32);
+  }
+  return mem[(pc - 0x80000000) / 4];
+}
 extern "C" int get_time(int raddr){
   if(raddr==0x10000048){
     time_now = get_time();
@@ -97,21 +108,6 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   }
   // printf("addr=%x current_data=%x new_data=%x off=%x\n",aligned_addr,current_data,new_data,offset);
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
-}
-
-uint32_t mem_read(uint32_t pc)
-{
-  if (pc == 0xa0000048)
-  {
-    time_now = get_time();
-    // printf("%lx\n", time);
-    return (uint32_t)time_now;
-  }
-  if (pc == 0xa000004c)
-  {
-    return (uint32_t)(time_now >> 32);
-  }
-  return mem[(pc - 0x80000000) / 4];
 }
 
 uint32_t warp_pmem_read(uint32_t addr)
