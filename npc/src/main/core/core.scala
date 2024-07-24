@@ -10,7 +10,7 @@ import bus.AXI_Lite_Arbiter
 // import os.write
 // import chisel3.Output
 
-class core extends Module {
+class ypc extends Module {
   val io = IO(new Bundle {
     // val inst_now = Output(UInt(CVAL.DLEN.W))
     val master    = (new master_io)
