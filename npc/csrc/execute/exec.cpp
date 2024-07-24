@@ -9,7 +9,7 @@
 
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
-Vcore *dut;
+VysyxSoCFull *dut;
 
 #include "svdpi.h"
 #include "VysyxSoCFull__Dpi.h"
