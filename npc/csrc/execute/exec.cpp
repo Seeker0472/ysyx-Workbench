@@ -110,7 +110,7 @@ void call_ebreak()
     Log("Ebreak Called!!");
     // tfp->
     uint32_t regs_2_value = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10;
-    uint32_t pc = dut->rootp->core__DOT__ifu__DOT__pc;
+    uint32_t pc = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
 
     Log("YDB: %s at pc = " FMT_WORD,
         (
