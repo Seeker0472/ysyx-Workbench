@@ -15,7 +15,7 @@ class core extends Module {
     // val inst_now = Output(UInt(CVAL.DLEN.W))
     val master    = (new master_io)
     val slave     = Flipped(new master_io)
-    val interrupt = Input(Bool())
+    val interrupt = Input(Bool())//TODO
   })
 
   val decoder     = Module(new Decoder())
@@ -61,7 +61,7 @@ class core extends Module {
 
   axi_arbiter.io.out.WD.ready := io.master.wready
   io.master.wvalid            := axi_arbiter.io.out.WD.valid
-  io.master.wdata             := axi_arbiter.io.out.WD.bits.data
+  io.master.wdata(31,0)             := axi_arbiter.io.out.WD.bits.data
   io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
   io.master.wlast             := true.B
 
@@ -79,7 +79,7 @@ class core extends Module {
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready
   axi_arbiter.io.out.RD.valid      := io.master.rvalid
-  axi_arbiter.io.out.RD.bits.data  := io.master.rdata
+  axi_arbiter.io.out.RD.bits.data  := io.master.rdata(31,0)
   axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
 
   //slave
