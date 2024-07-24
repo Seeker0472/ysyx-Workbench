@@ -12,7 +12,7 @@ static VerilatedVcdC *tfp; // 用于生成波形的指针
 Vcore *dut;
 
 #include "svdpi.h"
-#include "Vcore__Dpi.h"
+#include "VysyxSoCFull__Dpi.h"
 #include <isa.h>
 
 //TODO:re
