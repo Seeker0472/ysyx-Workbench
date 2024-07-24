@@ -54,7 +54,7 @@ $(TARGET): $(ABS_CHISEL_SOURCES)
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
-	$(SED_CMD) ./build/core.sv
+	$(SED_CMD) ./build/ypc.sv
 
 test:
 	mill -i $(PRJ).test
@@ -64,7 +64,7 @@ verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
-	$(SED_CMD) ./build/core.sv
+	$(SED_CMD) ./build/ypc.sv
 
 help:
 	mill -i $(PRJ).runMain Elaborate --help
@@ -83,14 +83,14 @@ clean:
 
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator -cc --top core $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
-	make -j -C obj_dir -f Vcore.mk Vcore
-	./obj_dir/Vcore $(ARGS) $(IMG)
+	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
+	make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 gdb:
-	verilator -cc --top core $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS} 
-	make -j -C obj_dir -f Vcore.mk Vcore
-	gdb   --args ./obj_dir/Vcore  $(ARGS) $(IMG)
+	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS} 
+	make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	gdb   --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 wave:
 	nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
