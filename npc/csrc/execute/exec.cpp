@@ -40,9 +40,9 @@ int prev_state = 0;
 static bool state_valid()//检测下降沿
 {
     bool ret = false;
-    if (prev_state == 1&&dut->rootp->core__DOT__ifu__DOT__state==0)
+    if (prev_state == 1&&dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state==0)
         ret = true;
-    prev_state = dut->rootp->core__DOT__ifu__DOT__state;
+    prev_state = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state;
     return ret;
     
 }
@@ -199,7 +199,7 @@ void reset(int n)
 }
 void init_runtime()
 {
-    dut = new Vcore;              // Initialize the DUT instance
+    dut = new VysyxSoCFull;              // Initialize the DUT instance
     Verilated::traceEverOn(true); // 启用波形追踪
     tfp = new VerilatedVcdC;
     dut->trace(tfp, 99);                                                                  // 跟踪99级信号
@@ -223,7 +223,7 @@ int run(int step)
         default:
             nemu_state.state = NEMU_RUNNING;
         }
-        uint32_t pc = dut->rootp->core__DOT__ifu__DOT__pc;
+        uint32_t pc = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
         single_cycle();
         tfp->flush();
         g_nr_guest_inst++;
