@@ -14,7 +14,7 @@ object MEM_Area extends ChiselEnum {
 class XBAR extends Module {
   val io = IO(new Bundle {
     val in  = (new AXIIO)
-    val axi = (new AXIIO)
+    val axi = Flipped(new AXIIO)
   })
   // val axi  = Module(new AXI_Slave)
   val urat = Module(new URAT)
