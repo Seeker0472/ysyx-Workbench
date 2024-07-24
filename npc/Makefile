@@ -23,13 +23,13 @@ C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 PERIP_V_ABS:=$(shell find $(YSYXSOC_HOME)/perip  -type f -name '*.v' -exec realpath {} \;)
 
-ALL_V_ABS:=$(PERIP_V_ABS) ./build/core.sv
+ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv
 
 LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 
 CHISEL_SOURCES := $(shell find src -name '*.scala')
 ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
-TARGET := build/core.sv
+TARGET := build/ypc.sv
 
 # $(shell llvm-config --cxxflags)
 # deleted:::::   --CFLAGS -D__STDC_FORMAT_MACROS
