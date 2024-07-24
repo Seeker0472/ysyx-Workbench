@@ -61,7 +61,7 @@ class core extends Module {
 
   axi_arbiter.io.out.WD.ready := io.master.wready
   io.master.wvalid            := axi_arbiter.io.out.WD.valid
-  io.master.wdata(31,0)             := axi_arbiter.io.out.WD.bits.data
+  io.master.wdata             := axi_arbiter.io.out.WD.bits.data
   io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
   io.master.wlast             := true.B
 
