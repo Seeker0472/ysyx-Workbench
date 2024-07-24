@@ -13,17 +13,17 @@ object MEM_Area extends ChiselEnum {
 
 class XBAR extends Module {
   val io = IO(new Bundle {
-    val in = (new AXIIO)
-    // val out = (new AXIIO)
+    val in  = (new AXIIO)
+    val axi = (new AXIIO)
   })
-  val axi  = Module(new AXI_Slave)
+  // val axi  = Module(new AXI_Slave)
   val urat = Module(new URAT)
   // val urat=Module(new urat)
 
   val Table = TruthTable(
     Map(
       BitPat("b00010000000000000000????????????") -> BitPat("b001"),
-      BitPat("b1000????????????????????????????") -> BitPat("b010"),
+      BitPat("b10000000????????????????????????") -> BitPat("b010")
       // BitPat("b00100000000010??????????????????") -> BitPat("b100"),
       // BitPat("b0010000000000???????????????????") -> BitPat("b100"),
       //TODO
@@ -44,52 +44,52 @@ class XBAR extends Module {
   }
 
   //选择设备(out)
-  axi.io.WA.valid      := Mux(mem_w_b === BitPat("b010"), io.in.WA.valid, false.B) //如果选择sram，就开
+  io.axi.WA.valid      := Mux(mem_w_b === BitPat("b010"), io.in.WA.valid, false.B) //如果选择sram，就开
   urat.io.WA.valid     := Mux(mem_w_b === BitPat("b001"), io.in.WA.valid, false.B)
-  axi.io.WA.bits.addr  := io.in.WA.bits.addr
+  io.axi.WA.bits.addr  := io.in.WA.bits.addr
   urat.io.WA.bits.addr := io.in.WA.bits.addr
   io.in.WA.ready := Mux(
     mem_w_b === BitPat("b010") || mem_w_reg === BitPat("b010"),
-    axi.io.WA.ready,
+    io.axi.WA.ready,
     urat.io.WA.ready
   ) //ready
 
-  axi.io.WD.valid  := Mux(mem_w_reg === BitPat("b010"), io.in.WD.valid, false.B) //如果选择sram，就开
+  io.axi.WD.valid  := Mux(mem_w_reg === BitPat("b010"), io.in.WD.valid, false.B) //如果选择sram，就开
   urat.io.WD.valid := Mux(mem_w_b === BitPat("b001"), io.in.WD.valid, false.B)
-  axi.io.WD.bits   := io.in.WD.bits
+  io.axi.WD.bits   := io.in.WD.bits
   urat.io.WD.bits  := io.in.WD.bits
   io.in.WD.ready := Mux(
     mem_w_b === BitPat("b010") || mem_w_reg === BitPat("b010"),
-    axi.io.WD.ready,
+    io.axi.WD.ready,
     urat.io.WD.ready
   ) //ready
 
-  axi.io.WR.ready     := Mux(mem_w_reg === BitPat("b010"), io.in.WR.ready, false.B) //如果选择sram，就开
+  io.axi.WR.ready     := Mux(mem_w_reg === BitPat("b010"), io.in.WR.ready, false.B) //如果选择sram，就开
   urat.io.WR.ready    := Mux(mem_w_b === BitPat("b001"), io.in.WR.ready, false.B)
-  io.in.WR.bits.bresp := Mux(mem_w_reg === BitPat("b010"), axi.io.WR.bits.bresp, urat.io.WR.bits.bresp)
+  io.in.WR.bits.bresp := Mux(mem_w_reg === BitPat("b010"), io.axi.WR.bits.bresp, urat.io.WR.bits.bresp)
   io.in.WR.valid := Mux(
     mem_w_b === BitPat("b010") || mem_w_reg === BitPat("b010"),
-    axi.io.WR.valid,
+    io.axi.WR.valid,
     urat.io.WR.valid
   ) //valid
-  
+
   //选择设备(in)
-  // axi.io.RA <> io.in.RA
-  axi.io.RA.valid:=Mux(mem_r_b === BitPat("b010"), io.in.RA.valid, false.B) //如果选择sram，就开
-  urat.io.RA.valid:=Mux(mem_r_b===BitPat("b001"),io.in.RA.valid,false.B) //b100
-  axi.io.RA.bits.addr:=io.in.RA.bits.addr
-  urat.io.RA.bits.addr:=io.in.RA.bits.addr
-    io.in.RA.ready := Mux(
+  // io.axi.RA <> io.in.RA
+  io.axi.RA.valid      := Mux(mem_r_b === BitPat("b010"), io.in.RA.valid, false.B) //如果选择sram，就开
+  urat.io.RA.valid     := Mux(mem_r_b === BitPat("b001"), io.in.RA.valid, false.B) //b100
+  io.axi.RA.bits.addr  := io.in.RA.bits.addr
+  urat.io.RA.bits.addr := io.in.RA.bits.addr
+  io.in.RA.ready := Mux(
     mem_r_b === BitPat("b010") || mem_r_reg === BitPat("b010"),
-    axi.io.RA.ready,
+    io.axi.RA.ready,
     urat.io.RA.ready
   ) //ready
-  // axi.io.RD <> io.in.RD
+  // io.axi.RD <> io.in.RD
 
-  axi.io.RD.ready:=Mux(mem_r_reg=== BitPat("b010"), io.in.RD.ready, false.B)
-  urat.io.RD.ready:=Mux(mem_r_reg=== BitPat("b010"), io.in.RD.ready, false.B)
-  io.in.RD.bits.data:=Mux(mem_r_reg=== BitPat("b010"), axi.io.RD.bits.data,urat.io.RD.bits.data)
-  io.in.RD.bits.rresp:=Mux(mem_r_reg=== BitPat("b010"), axi.io.RD.bits.rresp,urat.io.RD.bits.rresp)
-  io.in.RD.valid:=Mux(mem_r_reg===BitPat("b010"),axi.io.RD.valid,urat.io.RD.valid)
+  io.axi.RD.ready     := Mux(mem_r_reg === BitPat("b010"), io.in.RD.ready, false.B)
+  urat.io.RD.ready    := Mux(mem_r_reg === BitPat("b010"), io.in.RD.ready, false.B)
+  io.in.RD.bits.data  := Mux(mem_r_reg === BitPat("b010"), io.axi.RD.bits.data, urat.io.RD.bits.data)
+  io.in.RD.bits.rresp := Mux(mem_r_reg === BitPat("b010"), io.axi.RD.bits.rresp, urat.io.RD.bits.rresp)
+  io.in.RD.valid      := Mux(mem_r_reg === BitPat("b010"), io.axi.RD.valid, urat.io.RD.valid)
 
 }
