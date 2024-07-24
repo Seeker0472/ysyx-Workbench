@@ -20,6 +20,10 @@ extern "C" void print_char(char w_char){
     printf("%c",w_char);
     fflush(stdout);
 }
+void init_verilator(int argc, char *argv[]){
+    Verilated::commandArgs(argc, argv);
+
+}
 
 uint64_t g_nr_guest_inst = 0;
 

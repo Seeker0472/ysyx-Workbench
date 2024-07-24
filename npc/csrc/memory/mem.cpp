@@ -39,6 +39,9 @@ uint32_t mem[0x8000000] = {
 word_t mem_size = 84;
 
 //DPI-C Funcs
+extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void mrom_read(int32_t addr, int32_t *data) { assert(0); }
+
 extern "C" int get_time(int raddr){
   if(raddr==0x10000048){
     time_now = get_time();
