@@ -1,5 +1,5 @@
-#include "Vcore.h"
-#include "Vcore___024root.h"
+#include "VysyxSoCFull.h"
+#include "VysyxSoCFull___024root.h"
 #include <iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
