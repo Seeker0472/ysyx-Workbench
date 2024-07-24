@@ -12,7 +12,10 @@ import bus.AXI_Lite_Arbiter
 
 class core extends Module {
   val io = IO(new Bundle {
-    val inst_now = Output(UInt(CVAL.DLEN.W))
+    // val inst_now = Output(UInt(CVAL.DLEN.W))
+    val master    = (new master_io)
+    val slave     = Flipped(new master_io)
+    val interrupt = Input(Bool())//TODO
   })
 
   val decoder     = Module(new Decoder())
@@ -24,7 +27,7 @@ class core extends Module {
   val wbu         = Module(new WBU())
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
 
-  io.inst_now := ifu.io.inst_now //输出当前指令到Debugger环境---可能以后需要Debug
+  // io.inst_now := ifu.io.inst_now //输出当前指令到Debugger环境---可能以后需要Debug
 
   ifu.io.axi <> axi_arbiter.io.c1
 //decode_stage
@@ -47,4 +50,87 @@ class core extends Module {
 
   StageConnect(wbu.io.out, ifu.io.in)
 
+  //axi_connection_master
+  axi_arbiter.io.out.WA.ready := io.master.awready
+  io.master.awvalid           := axi_arbiter.io.out.WA.valid
+  io.master.awaddr            := axi_arbiter.io.out.WA.bits.addr
+  io.master.awid              := 0.U
+  io.master.awlen             := 1.U
+  io.master.awsize            := "b101".U
+  io.master.awburst           := 0.U
+
+  axi_arbiter.io.out.WD.ready := io.master.wready
+  io.master.wvalid            := axi_arbiter.io.out.WD.valid
+  io.master.wdata             := axi_arbiter.io.out.WD.bits.data
+  io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
+  io.master.wlast             := true.B
+
+  io.master.bready                 := axi_arbiter.io.out.WR.ready
+  axi_arbiter.io.out.WR.valid      := io.master.bvalid
+  axi_arbiter.io.out.WR.bits.bresp := io.master.bresp
+
+  axi_arbiter.io.out.RA.ready := io.master.arready
+  io.master.arvalid           := axi_arbiter.io.out.RA.valid
+  io.master.araddr            := axi_arbiter.io.out.RA.bits.addr
+  io.master.arid              := 1.U
+  io.master.arlen             := 1.U
+  io.master.arsize            := "b101".U
+  io.master.arburst           := 0.U
+
+  io.master.rready                 := axi_arbiter.io.out.RD.ready
+  axi_arbiter.io.out.RD.valid      := io.master.rvalid
+  axi_arbiter.io.out.RD.bits.data  := io.master.rdata(31,0)
+  axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
+
+  //slave
+  io.slave.awready:=0.U
+  io.slave.wready:=0.U
+  io.slave.bvalid:=0.U
+  io.slave.bresp:=0.U
+  io.slave.bid:=0.U
+  io.slave.arready:=0.U
+  io.slave.rvalid:=0.U
+  io.slave.rresp:=0.U
+  io.slave.rdata:=0.U
+  io.slave.rlast:=0.U
+  io.slave.rid:=0.U
+
+  // axi_arbiter.out<>
+
+}
+
+class master_io extends Bundle {
+  val awready = Input(Bool())
+  val awvalid = Output(Bool())
+  val awaddr  = Output(UInt(32.W))
+  val awid    = Output(UInt(4.W)) //Write ID- Set to 0？
+  val awlen   = Output(UInt(8.W)) //Burst length--set to 1?
+  val awsize  = Output(UInt(3.W)) //Burst size---0b101---32
+  val awburst = Output(UInt(2.W)) //Burst type-----0b00----FIXED
+
+  val wready = Input(Bool())
+  val wvalid = Output(Bool())
+  val wdata  = Output(UInt(64.W))
+  val wstrb  = Output(UInt(8.W)) //Write strobes
+  val wlast  = Output(Bool()) //the last transfer in a write burst---set to 1
+
+  val bready = Output(Bool())
+  val bvalid = Input(Bool())
+  val bresp  = Input(UInt(2.W)) //Write response
+  val bid    = Input(UInt(4.W)) //Write ID- Set to 0？--IGNORE
+
+  val arready = Input(Bool())
+  val arvalid = Output(Bool())
+  val araddr  = Output(UInt(32.W))
+  val arid    = Output(UInt(4.W))
+  val arlen   = Output(UInt(8.W))
+  val arsize  = Output(UInt(3.W))
+  val arburst = Output(UInt(2.W))
+
+  val rready = Output(Bool())
+  val rvalid = Input(Bool())
+  val rresp  = Input(UInt(2.W))
+  val rdata  = Input(UInt(64.W))
+  val rlast  = Input(Bool()) //ignore
+  val rid    = Input(UInt(4.W)) //ignore
 }
