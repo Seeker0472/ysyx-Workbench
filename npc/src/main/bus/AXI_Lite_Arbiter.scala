@@ -9,7 +9,7 @@ class AXI_Lite_Arbiter extends Module {
   val io = IO(new Bundle {
     val c1  = (new AXIReadIO)
     val c2  = (new AXIIO)
-    val out = (new AXIIO)
+    val out = Flipped(new AXIIO)
   })
   val s_idle :: s_c1_busy :: s_c2_busy :: Nil = Enum(3)
   val state                                   = RegInit(s_idle)
