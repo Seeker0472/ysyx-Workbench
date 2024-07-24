@@ -127,7 +127,7 @@ void call_ebreak()
 
 void update_reg_state()
 {
-    cpu->pc = dut->rootp->core__DOT__ifu__DOT__pc;
+    cpu->pc = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
     cpu->gpr[0] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_0;
     cpu->gpr[1] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_1;
     cpu->gpr[2] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_2;
