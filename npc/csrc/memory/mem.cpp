@@ -63,7 +63,7 @@ word_t mem_size = 84;
 // DPI-C Funcs
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) { 
-  Log("addr=%x",addr);
+  // Log("addr=%x",addr);
   *data= mrom[(addr - 0x10000000) / 4];
 }
 
