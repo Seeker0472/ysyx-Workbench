@@ -26,7 +26,7 @@ class CLINT extends Module {
   r_data           := raddr.io.read_data
 
   io.RD.bits.data  := r_data
-  io.RD.bits.rresp := true.B
+  io.RD.bits.rresp := 0.U
   io.RD.valid      := r_state === s_r_read_data
   io.RA.ready      := true.B
 

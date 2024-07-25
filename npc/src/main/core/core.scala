@@ -97,6 +97,8 @@ class ypc extends Module {
 
   // axi_arbiter.out<>
 
+  ifu.io.rwerr:=(io.master.bresp=/=0.U&&io.master.bvalid)||(io.master.rresp=/=0.U&&io.master.rvalid)  //出错跳转到0=
+
 }
 
 class master_io extends Bundle {
