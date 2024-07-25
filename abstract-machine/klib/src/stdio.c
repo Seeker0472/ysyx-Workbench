@@ -13,13 +13,14 @@ int vsprintf(char *out, const char *fmt, va_list args);
 int print_num_hex(char *out,size_t out_offset,int val);
 
 int printf(const char *fmt, ...){
-  char out[150];
-  va_list args;
-  va_start(args,fmt);
-  int len=vsprintf(out,fmt,args);
-  va_end(args);
-  putstr(out);
-  return len;
+  // char out[150];
+  // va_list args;
+  // va_start(args,fmt);
+  // int len=vsprintf(out,fmt,args);
+  // va_end(args);
+  // putstr(out);
+  // return len;
+  return 0;
 }
 
 int vsprintf(char *out, const char *fmt, va_list args) {
