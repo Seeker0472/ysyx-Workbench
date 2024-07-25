@@ -20,7 +20,7 @@ int printf(const char *fmt, ...){
   // va_end(args);
   // putstr(out);
   // return len;
-  return 0;
+  panic("1223");
 }
 
 int vsprintf(char *out, const char *fmt, va_list args) {
