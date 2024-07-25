@@ -40,9 +40,9 @@ uint8_t *guest_to_host(paddr_t paddr)
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
-  if (paddr >= 0x20000000 && paddr <= 0x20000fff) // mrom
+  if (haddr - mrom + CONFIG_MBASE >= 0x20000000 && haddr - mrom + CONFIG_MBASE <= 0x20000fff) // mrom
     return haddr - mrom + CONFIG_MBASE;
-  if (paddr >= 0x0f000000 && paddr <= 0x0fffffff) // sram
+  if (haddr - sram + CONFIG_MBASE >= 0x0f000000 && haddr - sram + CONFIG_MBASE <= 0x0fffffff) // sram
     return haddr - sram + CONFIG_MBASE;
   return haddr - pmem + CONFIG_MBASE;
 }
