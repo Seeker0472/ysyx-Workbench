@@ -51,11 +51,8 @@ static bool state_valid()//检测从状态valid->fetching
 
 static void trace_and_difftest(paddr_t pc, word_t inst_in)
 {
-    printf("aasdfasdf\n");
     if (!state_valid())
         return;
-    printf("aasdfasdf\n");
-
 #ifdef CONFIG_ITRACE
     char buf[200];
     char *p = buf;
