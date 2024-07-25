@@ -16,7 +16,7 @@ class IFU extends Module {
     val axi = Flipped(new AXIReadIO())
     val rwerr = Input(Bool())
   })
-  val s_idle :: s_fetching :: s_wait_data :: s_valid ::s_error:: Nil = Enum(4)
+  val s_idle :: s_fetching :: s_wait_data :: s_valid ::s_error:: Nil = Enum(5)
 
   // val axi = Module(new AXI_Master())
 
