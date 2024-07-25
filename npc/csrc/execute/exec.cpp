@@ -228,11 +228,11 @@ int run(int step)
         tfp->flush();
         g_nr_guest_inst++;
         //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // word_t inst = dut->io_inst_now;
+        word_t inst = dut->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst;
         // if (step < PRINT_INST_MIN)
-            // print_inst_asm(pc, inst);
+            print_inst_asm(pc, inst);
         // // TODO::在某一些条件下打印指令！！！！
-        // trace_and_difftest(pc, inst);
+        trace_and_difftest(pc, inst);
 
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常
