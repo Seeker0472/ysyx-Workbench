@@ -3,7 +3,7 @@ import chisel3._
 import Constants_Val._
 
 object ALU_Op extends ChiselEnum {
-  val inv, add, sub, xor, or, and, sll, srl, sra, slt, sltu,pass_imm = Value
+  val inv, add, sub, xor, or, and, sll, srl, sra, slt, sltu, pass_imm = Value
 }
 
 object Load_Type extends ChiselEnum {
@@ -17,25 +17,37 @@ object Branch_Type extends ChiselEnum {
   val inv, beq, bne, blt, bge, bltu, bgeu = Value
 }
 
-class DecoderO extends Bundle {
-  val rs1 = UInt(5.W)
-  val rs2 = UInt(5.W)
-  val rd  = UInt(5.W)
-  val imm = UInt(CVAL.DLEN.W)
-  //选择alu的输入/输出
-  val alu_use_Imm_2    = Bool()
-  val alu_use_pc       = Bool()
-  val alu_op_type      = ALU_Op()
-  val pc_jump          = Bool()
-  val reg_write_enable = Bool()
-  val ebreak           = Bool()
-  
-  val mem_read_enable  = Bool()
-  val mem_read_type    = Load_Type()
-  val mem_write_enable = Bool()
-  val mem_write_type   = Store_Type()
+object CSRALU_Type extends ChiselEnum {
+  val passreg, or = Value
+}
 
-  val is_branch        = Bool()
-  val branch_type      = Branch_Type()
+class DecoderO extends Bundle {
+  val pc = Output(UInt(CVAL.DLEN.W))
+
+  val rs1 = Output(UInt(5.W))
+  val rs2 = Output(UInt(5.W))
+  val rd  = Output(UInt(5.W))
+  val imm = Output(UInt(CVAL.DLEN.W))
+  //选择alu的输入/输出
+  val alu_use_Imm_2    = Output(Bool())
+  val alu_use_pc       = Output(Bool())
+  val alu_op_type      = Output(ALU_Op())
+  val pc_jump          = Output(Bool())
+  val reg_write_enable = Output(Bool())
+  // val ebreak           = Bool()
+
+  val mem_read_enable  = Output(Bool())
+  val mem_read_type    = Output(Load_Type())
+  val mem_write_enable = Output(Bool())
+  val mem_write_type   = Output(Store_Type())
+
+  val is_branch   = Output(Bool())
+  val branch_type = Output(Branch_Type())
+
+  val csrrw        = Output(Bool())
+  val csr_alu_type = Output(CSRALU_Type())
+
+  val ecall = Output(Bool())
+  val mret  = Output(Bool())
 
 }

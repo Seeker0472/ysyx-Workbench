@@ -1,18 +1,29 @@
-#include "Vcore.h"
-#include "Vcore___024root.h"
+#include "VysyxSoCFull.h"
+#include "VysyxSoCFull___024root.h"
 #include <iostream>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include <common.h>
 #include <utils.h>
-# include <diftest.h>
+#include <diftest.h>
 
 // #include <bits/getopt_ext.h>
 static VerilatedVcdC *tfp; // 用于生成波形的指针
+VysyxSoCFull *dut;
 
 #include "svdpi.h"
-#include "Vcore__Dpi.h"
+#include "VysyxSoCFull__Dpi.h"
 #include <isa.h>
+
+//TODO:re
+extern "C" void print_char(char w_char){
+    printf("%c",w_char);
+    fflush(stdout);
+}
+void init_verilator(int argc, char *argv[]){
+    Verilated::commandArgs(argc, argv);
+
+}
 
 uint64_t g_nr_guest_inst = 0;
 
@@ -25,8 +36,21 @@ void difftest_check_state();
 
 #define PRINT_INST_MIN 10
 
+int prev_state = 0;
+static bool state_valid()//检测下降沿
+{
+    bool ret = false;
+    if (prev_state == 1&&dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state==0)
+        ret = true;
+    prev_state = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state;
+    return ret;
+    
+}
+
 static void trace_and_difftest(paddr_t pc, word_t inst_in)
 {
+    if (!state_valid())
+        return;
 #ifdef CONFIG_ITRACE
     char buf[200];
     char *p = buf;
@@ -63,8 +87,8 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
     ftrace_check_inst(pc, inst_in);
 #endif
 #ifdef CONFIG_DIFFTEST
-difftest_exec(1);
-difftest_check_state();
+    difftest_exec(1);
+    difftest_check_state();
 #endif
 }
 
@@ -77,17 +101,16 @@ void print_inst_asm(paddr_t pc, word_t inst)
     // printf("%s\n", buf);TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
 }
 
-Vcore *dut;
 unsigned int sim_time = 0;
 // 使用DPI-C机制实现ebreak
 void call_ebreak()
 {
-    if (nemu_state.state == NEMU_ABORT) // Prevent_Display_Twice!!!!!------TODO:Why called Twice????
+    if (nemu_state.state == NEMU_END) // Prevent_Display_Twice!!!!!------TODO:Why called Twice????
         return;
     Log("Ebreak Called!!");
     // tfp->
-    uint32_t regs_2_value = dut->rootp->core__DOT__reg_0__DOT__regs_10;
-    uint32_t pc = dut->rootp->core__DOT__ifu__DOT__pc;
+    uint32_t regs_2_value = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10;
+    uint32_t pc = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
 
     Log("YDB: %s at pc = " FMT_WORD,
         (
@@ -97,59 +120,60 @@ void call_ebreak()
 
     tfp->flush(); // not-关闭VCD文件
     // delete tfp;
-    nemu_state.state = NEMU_ABORT;
+    nemu_state.state = NEMU_END;
+    nemu_state.halt_ret = regs_2_value;
     // exit(0);
 }
 
 void update_reg_state()
 {
-    cpu->pc = dut->rootp->core__DOT__ifu__DOT__pc;
-    cpu->gpr[0] = dut->rootp->core__DOT__reg_0__DOT__regs_0;
-    cpu->gpr[1] = dut->rootp->core__DOT__reg_0__DOT__regs_1;
-    cpu->gpr[2] = dut->rootp->core__DOT__reg_0__DOT__regs_2;
-    cpu->gpr[3] = dut->rootp->core__DOT__reg_0__DOT__regs_3;
-    cpu->gpr[4] = dut->rootp->core__DOT__reg_0__DOT__regs_4;
-    cpu->gpr[5] = dut->rootp->core__DOT__reg_0__DOT__regs_5;
-    cpu->gpr[6] = dut->rootp->core__DOT__reg_0__DOT__regs_6;
-    cpu->gpr[7] = dut->rootp->core__DOT__reg_0__DOT__regs_7;
-    cpu->gpr[8] = dut->rootp->core__DOT__reg_0__DOT__regs_8;
-    cpu->gpr[9] = dut->rootp->core__DOT__reg_0__DOT__regs_9;
-    cpu->gpr[10] = dut->rootp->core__DOT__reg_0__DOT__regs_10;
-    cpu->gpr[11] = dut->rootp->core__DOT__reg_0__DOT__regs_11;
-    cpu->gpr[12] = dut->rootp->core__DOT__reg_0__DOT__regs_12;
-    cpu->gpr[13] = dut->rootp->core__DOT__reg_0__DOT__regs_13;
-    cpu->gpr[14] = dut->rootp->core__DOT__reg_0__DOT__regs_14;
-    cpu->gpr[15] = dut->rootp->core__DOT__reg_0__DOT__regs_15;
+    cpu->pc = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+    cpu->gpr[0] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_0;
+    cpu->gpr[1] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_1;
+    cpu->gpr[2] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_2;
+    cpu->gpr[3] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_3;
+    cpu->gpr[4] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_4;
+    cpu->gpr[5] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_5;
+    cpu->gpr[6] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_6;
+    cpu->gpr[7] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_7;
+    cpu->gpr[8] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_8;
+    cpu->gpr[9] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_9;
+    cpu->gpr[10] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10;
+    cpu->gpr[11] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_11;
+    cpu->gpr[12] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_12;
+    cpu->gpr[13] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_13;
+    cpu->gpr[14] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_14;
+    cpu->gpr[15] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_15;
 #ifndef CONFIG_RVE
-    cpu->gpr[16] = dut->rootp->core__DOT__reg_0__DOT__regs_16;
-    cpu->gpr[17] = dut->rootp->core__DOT__reg_0__DOT__regs_17;
-    cpu->gpr[18] = dut->rootp->core__DOT__reg_0__DOT__regs_18;
-    cpu->gpr[19] = dut->rootp->core__DOT__reg_0__DOT__regs_19;
-    cpu->gpr[20] = dut->rootp->core__DOT__reg_0__DOT__regs_20;
-    cpu->gpr[21] = dut->rootp->core__DOT__reg_0__DOT__regs_21;
-    cpu->gpr[22] = dut->rootp->core__DOT__reg_0__DOT__regs_22;
-    cpu->gpr[23] = dut->rootp->core__DOT__reg_0__DOT__regs_23;
-    cpu->gpr[24] = dut->rootp->core__DOT__reg_0__DOT__regs_24;
-    cpu->gpr[25] = dut->rootp->core__DOT__reg_0__DOT__regs_25;
-    cpu->gpr[26] = dut->rootp->core__DOT__reg_0__DOT__regs_26;
-    cpu->gpr[27] = dut->rootp->core__DOT__reg_0__DOT__regs_27;
-    cpu->gpr[28] = dut->rootp->core__DOT__reg_0__DOT__regs_28;
-    cpu->gpr[29] = dut->rootp->core__DOT__reg_0__DOT__regs_29;
-    cpu->gpr[30] = dut->rootp->core__DOT__reg_0__DOT__regs_30;
-    cpu->gpr[31] = dut->rootp->core__DOT__reg_0__DOT__regs_31;
+    cpu->gpr[16] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_16;
+    cpu->gpr[17] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_17;
+    cpu->gpr[18] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_18;
+    cpu->gpr[19] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_19;
+    cpu->gpr[20] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_20;
+    cpu->gpr[21] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_21;
+    cpu->gpr[22] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_22;
+    cpu->gpr[23] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_23;
+    cpu->gpr[24] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_24;
+    cpu->gpr[25] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_25;
+    cpu->gpr[26] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_26;
+    cpu->gpr[27] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_27;
+    cpu->gpr[28] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_28;
+    cpu->gpr[29] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_29;
+    cpu->gpr[30] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_30;
+    cpu->gpr[31] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_31;
 #endif
 }
 
 void single_cycle()
 {
-    dut->io_instr = mem_read(dut->io_pc); // 取指令
+    // dut->io_instr = mem_read(dut->io_pc); // 取指令
     dut->clock = 0;
     dut->eval();
-    IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
-         
+    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+
     dut->clock = 1;
     dut->eval();
-    IFDEF(CONFIG_WAVE_FORM,tfp->dump(sim_time++);)// Dump波形信息
+    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
     // printf("%x\n",dut->io_pc);
     // dut->io_instr = mem_read(dut->io_pc); // 下一条指令
     update_reg_state();
@@ -166,7 +190,7 @@ void reset(int n)
 {
     dut->reset = 1;
     dut->clock = 0;
-    dut->eval();    
+    dut->eval();
     dut->clock = 1;
     dut->eval();
     while (n-- > 0)
@@ -175,20 +199,21 @@ void reset(int n)
 }
 void init_runtime()
 {
-    dut = new Vcore;              // Initialize the DUT instance
+    dut = new VysyxSoCFull;              // Initialize the DUT instance
     Verilated::traceEverOn(true); // 启用波形追踪
     tfp = new VerilatedVcdC;
-    dut->trace(tfp, 99); // 跟踪99级信号
-    MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");,tfp->open("/dev/null");)// 打开VCD文件
-    reset(5);                  // 复位5个周期
+    dut->trace(tfp, 99);                                                                  // 跟踪99级信号
+    MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");, tfp->open("/dev/null");) // 打开VCD文件
+    reset(5);                                                                             // 复位5个周期
 }
 
 int run(int step)
 {
     int now = step;
 
-    while ((now--) != 0)
+    while ((now) != 0)
     {
+        now=now>=0?now-1:now;
         switch (nemu_state.state)
         {
         case NEMU_ABORT:
@@ -198,15 +223,16 @@ int run(int step)
         default:
             nemu_state.state = NEMU_RUNNING;
         }
-        uint32_t pc = dut->io_pc;
+        uint32_t pc = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
         single_cycle();
         tfp->flush();
         g_nr_guest_inst++;
-        word_t inst = dut->io_inst_now;
-        if (step < PRINT_INST_MIN)
-            print_inst_asm(pc, inst);
-        // TODO::在某一些条件下打印指令！！！！
-        trace_and_difftest(pc, inst);
+        //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // word_t inst = dut->io_inst_now;
+        // if (step < PRINT_INST_MIN)
+        //     print_inst_asm(pc, inst);
+        // // TODO::在某一些条件下打印指令！！！！
+        // trace_and_difftest(pc, inst);
 
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常

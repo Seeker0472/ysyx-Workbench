@@ -4,73 +4,133 @@ import chisel3._
 import chisel3.util._
 import os.stat
 import Constants_Val.CVAL
+import core.IO.StageConnect
+import bus.AXI_Lite_Arbiter
 
 // import os.write
 // import chisel3.Output
-//*******************************************************#
-// TODO:重构这个模块，最好只包含实例化+连线
-//*******************************************************#
 
-class core extends Module {
+class ypc extends Module {
   val io = IO(new Bundle {
-    val pc       = Output(UInt(CVAL.DLEN.W))
-    val value    = Output(UInt(CVAL.DLEN.W))
-    val addr     = Input(UInt(CVAL.DLEN.W))
-    val instr    = Input(UInt(CVAL.ILEN.W))
-    val inst_now = Output(UInt(CVAL.DLEN.W))
+    // val inst_now = Output(UInt(CVAL.DLEN.W))
+    val master    = (new master_io)
+    val slave     = Flipped(new master_io)
+    val interrupt = Input(Bool())//TODO
   })
 
-  io.inst_now := io.instr //输出当前指令到Debugger环境---可能以后需要Debug
+  val decoder     = Module(new Decoder())
+  val reg         = Module(new REG())
+  val br_han      = Module(new ebreak_handler())
+  val ifu         = Module(new IFU())
+  val exu         = Module(new EXU())
+  val memau       = Module(new MEMAccess())
+  val wbu         = Module(new WBU())
+  val axi_arbiter = Module(new AXI_Lite_Arbiter())
 
-  val decoder = Module(new Decoder())
-  val reg     = Module(new REG())
-  val br_han  = Module(new ebreak_handler())
-  val ifu     = Module(new IFU())
-  val exu     = Module(new EXU())
-  // val mem     = Module(new MEM())
+  // io.inst_now := ifu.io.inst_now //输出当前指令到Debugger环境---可能以后需要Debug
 
-  //fetch_inst
-  io.pc          := ifu.io.pc
-  ifu.io.instr_i := io.instr
+  ifu.io.axi <> axi_arbiter.io.c1
+//decode_stage
+  StageConnect(ifu.io.out, decoder.io.in)
+  br_han.io.halt := decoder.io.ebreak
+//exc
+  StageConnect(decoder.io.out, exu.io.in)
+  exu.io.reg1 <> reg.io.Rread1
+  exu.io.reg2 <> reg.io.Rread2
+  exu.io.csr <> reg.io.CSRread
+//mem_access
+  memau.io.axi <> axi_arbiter.io.c2
+  StageConnect(exu.io.out, memau.io.in)
 
-  //decode
-  decoder.io.instr := ifu.io.instr
+//wb
+  StageConnect(memau.io.out, wbu.io.in)
+  wbu.io.csr_mstvec := reg.io.csr_mstvec
+  reg.io.Rwrite <> wbu.io.Rwrite
+  reg.io.CSRwrite <> wbu.io.CSR_write
 
-  //r/w_reg
-  reg.io.read_No_1 := decoder.io.out.rs1
-  exu.io.in.src1   := reg.io.read_1
-  reg.io.read_No_2 := decoder.io.out.rs2
-  exu.io.in.src2   := reg.io.read_2
-  reg.io.write_No  := decoder.io.out.rd
+  StageConnect(wbu.io.out, ifu.io.in)
 
-  exu.io.in.imm := decoder.io.out.imm
-  exu.io.in.pc  := ifu.io.pc
+  //axi_connection_master
+  axi_arbiter.io.out.WA.ready := io.master.awready
+  io.master.awvalid           := axi_arbiter.io.out.WA.valid
+  io.master.awaddr            := axi_arbiter.io.out.WA.bits.addr
+  io.master.awid              := 0.U
+  io.master.awlen             := 1.U
+  io.master.awsize            := "b010".U
+  io.master.awburst           := 0.U
 
-  //pass_cont_sig to EXU
-  exu.io.in.alu_use_Imm_2 := decoder.io.out.alu_use_Imm_2
-  exu.io.in.alu_use_pc    := decoder.io.out.alu_use_pc
-  exu.io.in.alu_op_type   := decoder.io.out.alu_op_type
-  exu.io.in.pc_jump       := decoder.io.out.pc_jump
+  axi_arbiter.io.out.WD.ready := io.master.wready
+  io.master.wvalid            := axi_arbiter.io.out.WD.valid
+  io.master.wdata             := axi_arbiter.io.out.WD.bits.data
+  io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
+  io.master.wlast             := true.B
 
-  //pass_mem__sig to exu
-  exu.io.in.mem_read_enable  := decoder.io.out.mem_read_enable
-  exu.io.in.mem_read_type    := decoder.io.out.mem_read_type
-  exu.io.in.mem_write_enable := decoder.io.out.mem_write_enable
-  exu.io.in.mem_write_type   := decoder.io.out.mem_write_type
+  io.master.bready                 := axi_arbiter.io.out.WR.ready
+  axi_arbiter.io.out.WR.valid      := io.master.bvalid
+  axi_arbiter.io.out.WR.bits.bresp := io.master.bresp
 
-  //pass branch_sig to exu
-  exu.io.in.is_branch   := decoder.io.out.is_branch
-  exu.io.in.branch_type := decoder.io.out.branch_type
+  axi_arbiter.io.out.RA.ready := io.master.arready
+  io.master.arvalid           := axi_arbiter.io.out.RA.valid
+  io.master.araddr            := axi_arbiter.io.out.RA.bits.addr
+  io.master.arid              := 1.U
+  io.master.arlen             := 1.U
+  io.master.arsize            := "b010".U
+  io.master.arburst           := 0.U
 
-  //Write_ENABLE!!
-  reg.io.write_en := decoder.io.out.reg_write_enable
-//ebreak
-  br_han.io.halt := decoder.io.out.ebreak
+  io.master.rready                 := axi_arbiter.io.out.RD.ready
+  axi_arbiter.io.out.RD.valid      := io.master.rvalid
+  axi_arbiter.io.out.RD.bits.data  := io.master.rdata(31,0)
+  axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
 
-  io.value := exu.io.out.reg_out
+  //slave
+  io.slave.awready:=0.U
+  io.slave.wready:=0.U
+  io.slave.bvalid:=0.U
+  io.slave.bresp:=0.U
+  io.slave.bid:=0.U
+  io.slave.arready:=0.U
+  io.slave.rvalid:=0.U
+  io.slave.rresp:=0.U
+  io.slave.rdata:=0.U
+  io.slave.rlast:=0.U
+  io.slave.rid:=0.U
 
-  //exu
-  ifu.io.next_pc        := exu.io.out.n_pc
-  reg.io.reg_write_data := exu.io.out.reg_out
+  // axi_arbiter.out<>
 
+}
+
+class master_io extends Bundle {
+  val awready = Input(Bool())
+  val awvalid = Output(Bool())
+  val awaddr  = Output(UInt(32.W))
+  val awid    = Output(UInt(4.W)) //Write ID- Set to 0？
+  val awlen   = Output(UInt(8.W)) //Burst length--set to 1?
+  val awsize  = Output(UInt(3.W)) //Burst size---0b101---32
+  val awburst = Output(UInt(2.W)) //Burst type-----0b00----FIXED
+
+  val wready = Input(Bool())
+  val wvalid = Output(Bool())
+  val wdata  = Output(UInt(64.W))
+  val wstrb  = Output(UInt(8.W)) //Write strobes
+  val wlast  = Output(Bool()) //the last transfer in a write burst---set to 1
+
+  val bready = Output(Bool())
+  val bvalid = Input(Bool())
+  val bresp  = Input(UInt(2.W)) //Write response
+  val bid    = Input(UInt(4.W)) //Write ID- Set to 0？--IGNORE
+
+  val arready = Input(Bool())
+  val arvalid = Output(Bool())
+  val araddr  = Output(UInt(32.W))
+  val arid    = Output(UInt(4.W))
+  val arlen   = Output(UInt(8.W))
+  val arsize  = Output(UInt(3.W))
+  val arburst = Output(UInt(2.W))
+
+  val rready = Output(Bool())
+  val rvalid = Input(Bool())
+  val rresp  = Input(UInt(2.W))
+  val rdata  = Input(UInt(64.W))
+  val rlast  = Input(Bool()) //ignore
+  val rid    = Input(UInt(4.W)) //ignore
 }
