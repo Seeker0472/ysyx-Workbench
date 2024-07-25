@@ -230,7 +230,7 @@ int run(int step)
         //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // word_t inst = dut->io_inst_now;
         // if (step < PRINT_INST_MIN)
-        //     print_inst_asm(pc, inst);
+            // print_inst_asm(pc, inst);
         // // TODO::在某一些条件下打印指令！！！！
         // trace_and_difftest(pc, inst);
 
