@@ -2,12 +2,11 @@
 #include <cstdint>
 #include <debug.h>
 #include <common.h>
+#include <isa.h>
+#include <macro.h>
 
 uint64_t get_time();
 uint64_t time_now = 114514;
-
-
-
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
@@ -36,14 +35,41 @@ uint32_t mem[0x8000000] = {
     0x00448493,
     0x00448493,
 };
+uint32_t mrom[0x800] = {
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00100073,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+};
 word_t mem_size = 84;
 
-//DPI-C Funcs
+// DPI-C Funcs
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
-extern "C" void mrom_read(int32_t addr, int32_t *data) { *data= 0x00100073;}
+extern "C" void mrom_read(int32_t addr, int32_t *data) { 
+  *data= mrom[(addr - 0x10000000) / 4];
+}
 
-extern "C" int get_time(int raddr){
-  if(raddr==0x10000048){
+extern "C" int get_time(int raddr)
+{
+  if (raddr == 0x10000048)
+  {
     time_now = get_time();
     return (uint32_t)time_now;
   }
@@ -121,9 +147,20 @@ uint32_t warp_pmem_read(uint32_t addr)
 {
   return mem_read(addr);
 }
+void init_mrom()
+{
+  int size = 0;
+  FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin", "rb");
+  fseek(fp, 0, SEEK_END);
+  size = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+  fread(mrom, size, 1, fp);
+  fclose(fp);
+}
 
 void init_img(char *img_file)
 {
+  init_mrom();
   // size_t size = 0;
   if (img_file != NULL)
   {
