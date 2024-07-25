@@ -26,7 +26,7 @@ SECTIONS {
   . = _sram_start;
   _stack_top = ALIGN(0x1000);
   /* _stack_top = .; */
-  . = _stack_top + 0x4000;
+  . = _stack_top + 0x2000;
   _stack_pointer = .;
   end = .;
   _end = .;
