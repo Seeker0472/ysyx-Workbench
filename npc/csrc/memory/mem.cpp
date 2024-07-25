@@ -35,7 +35,7 @@ uint32_t mem[0x8000000] = {
     0x00448493,
     0x00448493,
 };
-uint32_t mrom[0x300] = {
+uint32_t mrom[0x800] = {
     0x00448493,
     0x00448493,
     0x00448493,
@@ -147,10 +147,10 @@ uint32_t warp_pmem_read(uint32_t addr)
 {
   return mem_read(addr);
 }
-void init_mrom(char *img_file)
+void init_mrom()
 {
   int size = 0;
-  FILE *fp = fopen(img_file, "rb");
+  FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin", "rb");
   fseek(fp, 0, SEEK_END);
   size = ftell(fp);
   fseek(fp, 0, SEEK_SET);
@@ -160,7 +160,7 @@ void init_mrom(char *img_file)
 
 void init_img(char *img_file)
 {
-  init_mrom(img_file);
+  init_mrom();
   // size_t size = 0;
   if (img_file != NULL)
   {
