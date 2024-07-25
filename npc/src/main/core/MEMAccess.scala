@@ -79,7 +79,8 @@ class MEMAccess extends Module {
   io.axi.WA.bits.addr  := io.in.bits.alu_result 
   io.axi.WD.bits.data  := io.in.bits.src2
   io.axi.WD.bits.wstrb := mem_write_mask
-  io.axi.WD.valid      := true.B
+  // io.axi.WD.valid      := true.B
+  io.axi.WD.valid      := state===s_w_busy
   io.axi.WR.ready      := true.B
   //暂时忽略错误处理
 
