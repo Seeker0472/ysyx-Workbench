@@ -2,12 +2,11 @@
 #include <cstdint>
 #include <debug.h>
 #include <common.h>
+#include <isa.h>
+#include <macro.h>
 
 uint64_t get_time();
 uint64_t time_now = 114514;
-
-
-
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
@@ -39,6 +38,9 @@ uint32_t mem[0x8000000] = {
 word_t mem_size = 84;
 
 //DPI-C Funcs
+extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void mrom_read(int32_t addr, int32_t *data) { *data= 0x00100073;}
+
 extern "C" int get_time(int raddr){
   if(raddr==0x10000048){
     time_now = get_time();

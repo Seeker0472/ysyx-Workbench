@@ -10,7 +10,7 @@ import bus.AXI_Lite_Arbiter
 // import os.write
 // import chisel3.Output
 
-class core extends Module {
+class ypc extends Module {
   val io = IO(new Bundle {
     // val inst_now = Output(UInt(CVAL.DLEN.W))
     val master    = (new master_io)
@@ -56,7 +56,7 @@ class core extends Module {
   io.master.awaddr            := axi_arbiter.io.out.WA.bits.addr
   io.master.awid              := 0.U
   io.master.awlen             := 1.U
-  io.master.awsize            := "b101".U
+  io.master.awsize            := "b010".U
   io.master.awburst           := 0.U
 
   axi_arbiter.io.out.WD.ready := io.master.wready
@@ -74,7 +74,7 @@ class core extends Module {
   io.master.araddr            := axi_arbiter.io.out.RA.bits.addr
   io.master.arid              := 1.U
   io.master.arlen             := 1.U
-  io.master.arsize            := "b101".U
+  io.master.arsize            := "b010".U
   io.master.arburst           := 0.U
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready
