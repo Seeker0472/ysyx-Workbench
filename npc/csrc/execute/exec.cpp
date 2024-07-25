@@ -33,6 +33,7 @@ bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 void ftrace_check_inst(paddr_t pc_now, word_t inst);
 void difftest_check_state();
+void print_inst_asm(paddr_t pc, word_t inst);
 
 #define PRINT_INST_MIN 10
 
@@ -234,7 +235,7 @@ int run(int step)
         //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         word_t inst = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst;
         // if (step < PRINT_INST_MIN)
-            print_inst_asm(pc, inst);
+            // print_inst_asm(pc, inst);
         // // TODO::在某一些条件下打印指令！！！！
         trace_and_difftest(pc, inst);
 
