@@ -30,8 +30,8 @@ class AXI_Lite_Arbiter extends Module {
   xbar.io.in.WD <> io.c2.WD
   xbar.io.in.WR <> io.c2.WR
   //读通道看状态
-  io.c1.RA.ready          := state === s_idle
-  io.c2.RA.ready          := state === s_idle
+  io.c1.RA.ready          := state === s_idle&&io.out.RA.ready
+  io.c2.RA.ready          := state === s_idle&&io.out.RA.ready
   xbar.io.in.RA.valid     := io.c1.RA.valid || io.c2.RA.valid
   xbar.io.in.RA.bits.addr := Mux(io.c1.RA.valid, io.c1.RA.bits.addr, io.c2.RA.bits.addr)
   xbar.io.in.RD.ready     := Mux(state === s_c1_busy, io.c1.RD.ready, io.c2.RD.ready)
