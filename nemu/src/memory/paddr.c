@@ -33,17 +33,17 @@ static uint8_t mrom[0x2000] PG_ALIGN = {};
 uint8_t *guest_to_host(paddr_t paddr)
 {
   if (paddr >= 0x20000000 && paddr <= 0x20000fff) // mrom
-    return mrom + paddr - CONFIG_MBASE;
+    return mrom + paddr - 0x20000000;
   if (paddr >= 0x0f000000 && paddr <= 0x0fffffff) // sram
-    return sram + paddr - CONFIG_MBASE;
+    return sram + paddr - 0x0f000000;
   return pmem + paddr - CONFIG_MBASE;
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
-  if (haddr - mrom + CONFIG_MBASE >= 0x20000000 && haddr - mrom + CONFIG_MBASE <= 0x20000fff) // mrom
-    return haddr - mrom + CONFIG_MBASE;
-  if (haddr - sram + CONFIG_MBASE >= 0x0f000000 && haddr - sram + CONFIG_MBASE <= 0x0fffffff) // sram
-    return haddr - sram + CONFIG_MBASE;
+  if (haddr - mrom + 0x20000000 >= 0x20000000 && haddr - mrom + 0x20000000 <= 0x20000fff) // mrom
+    return haddr - mrom + 0x20000000;
+  if (haddr - sram + 0x0f000000 >= 0x0f000000 && haddr - sram + 0x0f000000 <= 0x0fffffff) // sram
+    return haddr - sram + 0x0f000000;
   return haddr - pmem + CONFIG_MBASE;
 }
 
