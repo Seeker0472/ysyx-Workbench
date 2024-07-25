@@ -64,7 +64,7 @@ word_t mem_size = 84;
 extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
 extern "C" void mrom_read(int32_t addr, int32_t *data) { 
   printf("addr=%x\n",addr);
-  *data= mrom[(addr - 0x10000000) / 4];
+  *data= mrom[(addr - 0x20000000) / 4];
 }
 
 extern "C" int get_time(int raddr)
