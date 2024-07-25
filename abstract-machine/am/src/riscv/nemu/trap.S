@@ -52,13 +52,13 @@ f(30) f(31)
 __am_asm_trap:
   addi sp, sp, -CONTEXT_SIZE
 
-# 似乎是在复制寄存器？(保存上下文),!!不是为了保护上下文,是把他们当成Content结构体传递给了_am_irq_handle
+# 似乎是在复制寄存器？(保存上下文)
   MAP(REGS, PUSH)
 
   csrr t0, mcause
   csrr t1, mstatus
   csrr t2, mepc
-# 这里应该是把数据(封装成Context结构体)传递给_am_irq_handle
+
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)

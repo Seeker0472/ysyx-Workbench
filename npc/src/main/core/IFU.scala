@@ -1,54 +1,20 @@
 package core
 
 import chisel3._
-import chisel3.util._
 import Constants_Val._
-import core.IO._
-import Constants_Val.CVAL.DLEN
-import os.stat
-
+//目前取指需要从顶层模块(core)中取出，所以就直接连线了
+//也许应该重构
 //存放PC，负责取出指令
 class IFU extends Module {
   val io = IO(new Bundle {
-    val in       = Flipped(Decoupled(new WBU_O))
-    val inst_now = Output(UInt(CVAL.DLEN.W))
-    val out      = Decoupled(new IFUO())
-    val axi = Flipped(new AXIReadIO())
+    val next_pc = Input(UInt(CVAL.DLEN.W))
+    val pc      = Output(UInt(CVAL.DLEN.W))
+    val instr_i = Input(UInt(CVAL.ILEN.W))
+    val instr   = Output(UInt(CVAL.ILEN.W))
   })
-  val s_idle :: s_fetching :: s_wait_data :: s_valid :: Nil = Enum(4)
-
-  // val axi = Module(new AXI_Master())
-
-  val state = RegInit(s_idle)
-  val pc    = RegInit("h20000000".U(CVAL.DLEN.W))
-  val inst  = Reg(UInt(CVAL.DLEN.W))
-
-  state := MuxLookup(state, s_idle)(
-    List(
-      s_idle -> Mux(true.B, s_fetching, s_idle), //Initial
-      s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching), //1cycle,depends on memory
-      s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
-      s_valid -> Mux(io.in.valid, s_fetching, s_valid)
-    )
-  )
-  io.out.valid := state === s_valid
-  io.axi.RA.bits.addr:=pc
-
-  when(io.axi.RD.valid) {
-    inst := io.axi.RD.bits.data//next - inst
-  }
-  io.axi.RA.valid:=state===s_fetching
-  io.axi.RD.ready:=true.B
-
-  io.in.ready := true.B
-
-  // io.pc          := pc
-  io.inst_now := inst
-
-  io.out.bits.pc    := pc
-  io.out.bits.instr := inst
-
-  when(io.in.valid) {
-    pc := io.in.bits.n_pc
-  }
+  val pc = RegInit("h80000000".U(CVAL.DLEN.W))
+  io.pc    := pc
+  io.instr := io.instr_i
+  pc       := io.next_pc
+  // io.addr:=io.pc
 }

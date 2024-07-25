@@ -1,8 +1,6 @@
 package core
 
 import chisel3._
-import chisel3.util._
-
 import Constants_Val._
 import core.IO._
 import chisel3.util.Mux1H
@@ -10,65 +8,66 @@ import chisel3.util.MuxLookup
 
 class EXU extends Module {
   val io = IO(new Bundle {
-    val in   = Flipped(Decoupled(new DecoderO))
-    val reg1 = (new RegReadIO)
-    val reg2 = (new RegReadIO)
-    val csr  = (new CSRReadIO)
-    // val csr_mstvec=Input(UInt(CVAL.DLEN.W))
-    val out = (Decoupled(new EXU_O))
+    val in  = Input(new EXU_I)
+    val out = Output(new EXU_O)
   })
-  io.in.ready:=io.out.ready
-  io.out.valid:=io.in.valid
-  //pass_throughs
-  io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
-  io.out.bits.mem_read_type    := io.in.bits.mem_read_type
-  io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
-  io.out.bits.mem_write_type   := io.in.bits.mem_write_type
-  io.out.bits.pc               := io.in.bits.pc //using!
-  io.out.bits.ecall            := io.in.bits.ecall
-  io.out.bits.pc_jump          := io.in.bits.pc_jump
-  io.out.bits.is_branch        := io.in.bits.is_branch
-  io.out.bits.reg_w_addr       := io.in.bits.rd
-  io.out.bits.reg_w_enable     := io.in.bits.reg_write_enable
-  io.out.bits.mret             := io.in.bits.mret
-  io.out.bits.imm              := io.in.bits.imm
-  io.out.bits.csrrw            := io.in.bits.csrrw
+  val alu_val1 = Mux(io.in.alu_use_pc, io.in.pc, io.in.src1)
+  val alu_val2 = Mux(io.in.alu_use_Imm_2, io.in.imm, io.in.src2)
 
-  io.reg1.addr := io.in.bits.rs1
-  io.reg2.addr := io.in.bits.rs2
-  io.csr.addr  := io.in.bits.imm
-  val src1 = io.reg1.data
-  val src2 = io.reg2.data
-
-  val alu_val1 = Mux(io.in.bits.alu_use_pc, io.in.bits.pc, src1)
-  val alu_val2 = Mux(io.in.bits.alu_use_Imm_2, io.in.bits.imm, src2)
-
+  val mem = Module(new MEM()) //TODO::::::把Mem模块放在执行单元是否科学？？？
+  mem.io.clock := clock  // 连接时钟信号
   val alu = Module(new ALU())
 
   val comp = Module(new Branch_comp())
-//比较单元的输入
-  comp.io.src1      := src1
-  comp.io.src2      := src2
-  comp.io.comp_type := io.in.bits.branch_type
+
+  comp.io.src1      := io.in.src1
+  comp.io.src2      := io.in.src2
+  comp.io.comp_type := io.in.branch_type
   val go_branch = comp.io.result
-//alu的输入
+
   alu.io.in.src1        := alu_val1
   alu.io.in.src2        := alu_val2
-  alu.io.in.alu_op_type := io.in.bits.alu_op_type
+  alu.io.in.alu_op_type := io.in.alu_op_type
 
-  //csrr_alu
-  val or = io.csr.data | src1
-  val csr_alu_res = MuxLookup(io.in.bits.csr_alu_type, or)(
+  //mem R/W
+  mem.io.read_enable  := io.in.mem_read_enable
+  mem.io.write_enable := io.in.mem_write_enable
+  //TODO: 这里需要设计两个信号吗
+  mem.io.read_addr  := alu.io.result
+  mem.io.write_addr := alu.io.result
+  val mrres = mem.io.read_data
+  val mrrm = mrres >>( (alu.io.result &(0x3.U))<<3)// 读取内存,不对齐访问!!
+  //注意符号拓展！！！
+  val mem_read_result_sint = MuxLookup(io.in.mem_read_type, 0.S)(
     Seq(
-      CSRALU_Type.or -> or,
-      CSRALU_Type.passreg -> src1
+      Load_Type.lb -> mrrm(7, 0).asSInt,
+      Load_Type.lh -> mrrm(15, 0).asSInt,
+      Load_Type.lw -> mrrm(31, 0).asSInt,
+      Load_Type.lbu -> mrrm(7, 0).zext,
+      Load_Type.lhu -> mrrm(15, 0).zext
     )
   )
-  io.out.bits.alu_result  := alu.io.result //alu的运算结果
-  io.out.bits.src2        := src2 //TODO:哪里需要？？
-  io.out.bits.csr_alu_res := csr_alu_res
-  io.out.bits.csr_val     := io.csr.data
-  io.out.bits.go_branch   := go_branch
+  val mem_read_result = mem_read_result_sint.asUInt
+
+
+  val mem_write_mask = MuxLookup(io.in.mem_write_type, 0.U)(
+    Seq(
+      Store_Type.sb -> "b00000011".U(8.W),
+      Store_Type.sh -> "b00001111".U(8.W),
+      Store_Type.sw -> "b11111111".U(8.W)
+    )
+  )
+  mem.io.write_mask := mem_write_mask
+  mem.io.write_data := io.in.src2
+
+  //如果是store，Reg_Write_Enable应该是False
+  // val result   = alu.io.result
+  val result   = Mux(io.in.mem_read_enable, mem_read_result, alu.io.result)
+  val pc_plus4 = io.in.pc + 4.U
+
+  val next_pc = Mux(io.in.pc_jump || (io.in.is_branch && go_branch), result, pc_plus4)
+  io.out.reg_out := Mux(io.in.pc_jump, pc_plus4, result)
+  io.out.n_pc    := next_pc
 }
 
 class Branch_comp extends Module {

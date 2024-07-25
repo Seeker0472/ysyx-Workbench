@@ -41,9 +41,10 @@ char *strcat(char *dst, const char *src) {
 
 int strcmp(const char *s1, const char *s2) {
   size_t i;
-  size_t len=(strlen(s1)>strlen(s2)?strlen(s1):strlen(s2));
-
-  for(i=0;i<=len;i++){
+  size_t len=strlen(s1)>strlen(s2)?strlen(s1):strlen(s2);
+  //Example: 1="12" 2="123" len=3
+  //  <  or <= ？？？？
+  for(i=0;i<len;i++){
     if(s1[i]!=s2[i])
       return s1[i]-s2[i];
   }
@@ -54,8 +55,8 @@ int strncmp(const char *s1, const char *s2, size_t n) {
   size_t i;
   size_t len=strlen(s1)>strlen(s2)?strlen(s1):strlen(s2);
   //  <  or <= ？？？？
-  for(i=0;i<=len&&i<n;i++)
-   if(s1[i]!=s2[i])
+  for(i=0;i<len&&i<n;i++)
+    if(s1!=s2)
       return s1[i]-s2[i];
   return 0;
 }
