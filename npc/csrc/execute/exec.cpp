@@ -49,10 +49,10 @@ static bool state_valid()//检测下降沿
 
 static void trace_and_difftest(paddr_t pc, word_t inst_in)
 {
-    pirntf("aasdfasdf\n");
+    printf("aasdfasdf\n");
     if (!state_valid())
         return;
-    pirntf("aasdfasdf\n");
+    printf("aasdfasdf\n");
 
 #ifdef CONFIG_ITRACE
     char buf[200];
