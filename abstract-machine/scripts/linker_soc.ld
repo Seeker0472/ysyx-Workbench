@@ -20,7 +20,6 @@ SECTIONS {
   .data : AT(ORIGIN(sram)){
     *(.data)
   } : data
-  /*todo:如何让程序中的全局变量指向复制后的sram地址？*/
   edata = .;
   _data = .;
   .bss : {
