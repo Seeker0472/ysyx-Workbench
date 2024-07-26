@@ -77,7 +77,7 @@ val shift_amount = (io.in.bits.alu_result & 0x7.U) << 3
 val wd_move = Cat(0.U(32.W), io.in.bits.src2) << shift_amount(5, 0)
 
 
-  val mask_move = mem_write_mask <<(io.in.bits.alu_result & (0x7.U)) 
+  val mask_move = mem_write_mask <<((io.in.bits.alu_result & (0x7.U))(4,0)) 
   
 
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
