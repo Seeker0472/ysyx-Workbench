@@ -1,6 +1,6 @@
 #include "trap.h"
 
-void set(uint8_t* test) {
+void __attribute__((optimize("O0"))) set(uint8_t* test) {
     for (volatile int i = 0; i < 8; i++) {
         test[i] = (uint8_t)((uint32_t)(&(test[i])) & 0xff);
     }
