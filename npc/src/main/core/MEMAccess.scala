@@ -73,8 +73,9 @@ class MEMAccess extends Module {
       Store_Type.sw -> "b00001111".U(8.W)
     )
   )
-  val wider = Cat(0.U(32.W),io.in.bits.src2)
-  val wd_move = wider  << ((io.in.bits.alu_result & (0x7.U)) << 3) // 写入内存,不对齐访问!!
+val shift_amount = (io.in.bits.alu_result & 0x7.U) << 3
+val wd_move = Cat(0.U(32.W), io.in.bits.src2) << shift_amount
+
   val mask_move = mem_write_mask <<(io.in.bits.alu_result & (0x7.U)) 
   
 
