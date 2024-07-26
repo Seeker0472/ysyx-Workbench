@@ -74,7 +74,8 @@ class MEMAccess extends Module {
     )
   )
 val shift_amount = (io.in.bits.alu_result & 0x7.U) << 3
-val wd_move = Cat(0.U(32.W), io.in.bits.src2) << shift_amount
+val wd_move = Cat(0.U(32.W), io.in.bits.src2) << shift_amount(5, 0)
+
 
   val mask_move = mem_write_mask <<(io.in.bits.alu_result & (0x7.U)) 
   
