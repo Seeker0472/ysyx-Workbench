@@ -79,7 +79,7 @@ class ypc extends Module {
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready
   axi_arbiter.io.out.RD.valid      := io.master.rvalid
-  axi_arbiter.io.out.RD.bits.data  := io.master.rdata(31,0)
+  axi_arbiter.io.out.RD.bits.data  := io.master.rdata
   axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
 
   //slave
