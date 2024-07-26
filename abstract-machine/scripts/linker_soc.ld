@@ -10,12 +10,12 @@ SECTIONS {
   .text : {
     *(entry)
     *(.text*)
-  } : text
+  } > mrom : text
   etext = .;
   _etext = .;
   .rodata : {
     *(.rodata*)
-  }
+  }> mrom
   .data : {
     _data_section_start = .;
     *(.data)
@@ -29,7 +29,7 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
 
-  }
+  }> mrom
   . = ORIGIN(sram);
   _data_section_dest = .;
   . +=  _data_section_end - _data_section_start;
