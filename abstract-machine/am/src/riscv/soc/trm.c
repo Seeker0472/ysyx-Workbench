@@ -34,12 +34,17 @@ void halt(int code) {
   while (1);
 }
 
-extern void* _data_section_start,_data_section_end,_data_section_dest;
+extern void * _data_section_start,*_data_section_end,*_data_section_dest;
 void bootloader(){
-
+  char * src=_data_section_start;
+  char*dest=_data_section_dest;
+  while(src<(char*)_data_section_end){
+    *(dest++)=*(src++);
+  }
 }
 
 void _trm_init() {
+  bootloader();
   int ret = main(mainargs);
   halt(ret);
 }
