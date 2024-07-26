@@ -34,6 +34,11 @@ void halt(int code) {
   while (1);
 }
 
+extern void* _data_section_start,_data_section_end,_data_section_dest;
+void bootloader(){
+
+}
+
 void _trm_init() {
   int ret = main(mainargs);
   halt(ret);

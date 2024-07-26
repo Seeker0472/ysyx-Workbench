@@ -17,9 +17,10 @@ SECTIONS {
     *(.rodata*)
   }
   _data_section_start = .;
-  .data : {
+  .data :  AT(ORIGIN(sram)){
     *(.data)
   } : data
+  /*todo:如何让程序中的全局变量指向复制后的sram地址？*/
   _data_section_end = .;
   edata = .;
   _data = .;
@@ -34,7 +35,7 @@ SECTIONS {
   . +=  _data_section_end - _data_section_start;
   _stack_top = ALIGN(0x10);
   /* _stack_top = .; */
-  . = _stack_top + 0x2000;
+  . = _stack_top + 0x1000;
   _stack_pointer = .;
   end = .;
   _end = .;
