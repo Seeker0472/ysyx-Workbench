@@ -65,6 +65,7 @@ class MEMAccess extends Module {
     )
   )
   val mem_read_result = mem_read_result_sint.asUInt
+  
 //TODO:::::::::::::::::::::应该是没对齐
   val mem_write_mask = MuxLookup(io.in.bits.mem_write_type, 0.U)(
     Seq(
@@ -74,7 +75,7 @@ class MEMAccess extends Module {
     )
   )
 val shift_amount = (io.in.bits.alu_result & 0x7.U) << 3
-val wd_move = Cat(0.U(32.W), io.in.bits.src2) << shift_amount(5, 0)
+val wd_move = Cat(0.U(32.W), io.in.bits.src2) << shift_amount
 
 
   val mask_move = mem_write_mask <<((io.in.bits.alu_result & (0x7.U))(4,0)) 
