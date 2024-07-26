@@ -6,7 +6,7 @@ void set(uint8_t* test) {
     }
 }
 
-void check_values(uint8_t* test) {
+void __attribute__((optimize("O0"))) check_values(uint8_t* test) {
     for (volatile int i = 0; i < 8; i++) {
         check(test[i] == (uint8_t)((uint32_t)(&(test[i])) & 0xff));
     }
