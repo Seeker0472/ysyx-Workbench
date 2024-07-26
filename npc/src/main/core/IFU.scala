@@ -54,6 +54,6 @@ class IFU extends Module {
     pc := Mux(state===s_error,0.U,io.in.bits.n_pc)
   }
   when(io.rwerr){
-    state:=s_error
+    // state:=s_error
   }
 }
