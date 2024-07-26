@@ -30,7 +30,7 @@ class IFU extends Module {
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching), //1cycle,depends on memory
       s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
       s_valid -> Mux(io.in.valid, s_fetching, s_valid),
-      s_error->s_fetching
+      s_error->s_error
     )
   )
   io.out.valid := state === s_valid
