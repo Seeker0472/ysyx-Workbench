@@ -19,7 +19,6 @@ SECTIONS {
   .data . : AT(ORIGIN(sram)){
   _data_section_start = .;
     *(.data)
-  _data_section_end = .;
   } : data
   edata = .;
   _data = .;
@@ -28,6 +27,8 @@ SECTIONS {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
+  _data_section_end = .;
+
   }
   . = ORIGIN(sram);
   _data_section_dest = .;
