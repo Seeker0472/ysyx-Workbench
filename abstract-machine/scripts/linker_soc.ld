@@ -19,7 +19,7 @@ SECTIONS {
   .data . : AT(ORIGIN(sram)){
   _data_section_start = .;
     *(.data)
-  } : data
+  } 
   edata = .;
   _data = .;
   .bss : {
