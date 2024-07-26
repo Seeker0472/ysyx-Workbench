@@ -17,11 +17,10 @@ SECTIONS {
     *(.rodata*)
   }
   _data_section_start = .;
-  .data :  AT(ORIGIN(sram)){
+  .data : AT(ORIGIN(sram)){
     *(.data)
   } : data
   /*todo:如何让程序中的全局变量指向复制后的sram地址？*/
-  _data_section_end = .;
   edata = .;
   _data = .;
   .bss : {
@@ -30,6 +29,7 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   }
+  _data_section_end = .;
   . = ORIGIN(sram);
   _data_section_dest = .;
   . +=  _data_section_end - _data_section_start;
