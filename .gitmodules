@@ -4,5 +4,3 @@
 [submodule "ysyxSoC"]
 	path = ysyxSoC
 	url = git@github.com:OSCPU/ysyxSoC.git
-
-
