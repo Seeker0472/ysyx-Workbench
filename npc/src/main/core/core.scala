@@ -61,7 +61,7 @@ class ypc extends Module {
 
   axi_arbiter.io.out.WD.ready := io.master.wready
   io.master.wvalid            := axi_arbiter.io.out.WD.valid
-  io.master.wdata             := axi_arbiter.io.out.WD.bits.data
+  io.master.wdata             := Cat(0.U(32.W),axi_arbiter.io.out.WD.bits.data)
   io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
   io.master.wlast             := true.B
 
