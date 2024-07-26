@@ -1,15 +1,13 @@
 #include "trap.h"
 
 int main() {
-	int i, j, ans_idx = 0;
-	for(i = 0; i < NR_DATA; i ++) {
-		for(j = 0; j < NR_DATA; j ++) {
-			check(add(test_data[i], test_data[j]) == ans[ans_idx ++]);
-		}
-		check(j == NR_DATA);
+	uint8_t test[8];
+	for(volatile int i=0;i<8;i++){
+		test[i]=(uint8_t)((uint32_t)(&test)&0xff);
 	}
-
-	check(i == NR_DATA);
+	for(volatile int i=0;i<8;i++){
+		check(test[i]==(uint8_t)((uint32_t)(&test)&0xff));
+	}
 
 	return 0;
 }
