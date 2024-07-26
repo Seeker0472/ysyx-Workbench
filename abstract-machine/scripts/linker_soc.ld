@@ -20,7 +20,7 @@ SECTIONS {
     _data_section_start = .;
     *(.data)
     _data_section_end = .;
-  }> mrom AT> sram
+  }> sram AT> mrom
   edata = .;
   _data = .;
   .bss : {
