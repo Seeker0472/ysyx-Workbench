@@ -28,7 +28,7 @@ class AXIIO extends Bundle {
   }))
   //Write data
   val WD = Flipped(Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
+    val data  = (UInt(64.W))
     val wstrb = (UInt(8.W)) //掩码
   }))
   //Write response
@@ -43,7 +43,7 @@ class AXIIO extends Bundle {
   }))
   //Read data
   val RD = (Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
+    val data  = (UInt(64.W))
     val rresp = (UInt(2.W))
   }))
 }
@@ -55,7 +55,7 @@ class AXIReadIO extends Bundle {
   }))
   //Read data
   val RD = (Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
+    val data  = (UInt(64.W))
     val rresp = (UInt(2.W))
   }))
 }
@@ -67,7 +67,7 @@ class AXIWriteIO extends Bundle {
   }))
   //Write data
   val WD = Flipped(Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
+    val data  = (UInt(64.W))
     val wstrb = (UInt(8.W)) //掩码
   }))
   //Write response
