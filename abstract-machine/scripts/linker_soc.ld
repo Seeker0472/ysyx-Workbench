@@ -16,12 +16,11 @@ SECTIONS {
   .rodata : {
     *(.rodata*)
   }
-  _nowwwww = . ;
-  .data : AT(ORIGIN(sram)){
+.data : AT(ORIGIN(sram)) {
   _data_section_start = .;
-    *(.data)
+  *(.data)
   _data_section_end = .;
-  } > _nowwwww
+} >sram
   edata = .;
   _data = .;
   .bss : {
