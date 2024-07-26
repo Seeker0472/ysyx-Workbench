@@ -16,11 +16,11 @@ SECTIONS {
   .rodata : {
     *(.rodata*)
   }
-  .data : AT(ORIGIN(sram)){
+  _now_data = . ;
+  .data : AT(_now_data){
   _data_section_start = .;
     *(.data)
   _data_section_end = .;
-  
   } > sram
   edata = .;
   _data = .;
