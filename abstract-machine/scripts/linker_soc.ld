@@ -31,9 +31,9 @@ SECTIONS {
   }
   . = ORIGIN(sram);
   _data_section_dest = .;
-  . = . +   _data_section_end - _data_section_start;
+  . +=  _data_section_end - _data_section_start;
   _stack_top = ALIGN(0x1000);
-  . = _stack_top + 0x2000;
+  . = _stack_top + 0x1000;
   _stack_pointer = .;
   end = .;
   _end = .;
