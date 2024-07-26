@@ -53,7 +53,7 @@ class MEMAccess extends Module {
 
   // mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid&&state===s_busy//由于读写延迟
   // mem.io.write_addr := io.in.bits.alu_result
-  val mrrm = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
+  val mrrm = mrres >> ((io.in.bits.alu_result & (0x7.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.mem_read_type, 0.S)(
     Seq(
