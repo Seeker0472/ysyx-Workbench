@@ -68,9 +68,9 @@ class MEMAccess extends Module {
 
   val mem_write_mask = MuxLookup(io.in.bits.mem_write_type, 0.U)(
     Seq(
-      Store_Type.sb -> "b00000011".U(8.W),
-      Store_Type.sh -> "b00001111".U(8.W),
-      Store_Type.sw -> "b11111111".U(8.W)
+      Store_Type.sb -> "b00000001".U(8.W),
+      Store_Type.sh -> "b00000011".U(8.W),
+      Store_Type.sw -> "b00001111".U(8.W)
     )
   )
   // mem.io.write_mask := mem_write_mask
@@ -79,7 +79,8 @@ class MEMAccess extends Module {
   io.axi.WA.bits.addr  := io.in.bits.alu_result 
   io.axi.WD.bits.data  := io.in.bits.src2
   io.axi.WD.bits.wstrb := mem_write_mask
-  io.axi.WD.valid      := true.B
+  // io.axi.WD.valid      := true.B
+  io.axi.WD.valid      := state===s_w_busy
   io.axi.WR.ready      := true.B
   //暂时忽略错误处理
 

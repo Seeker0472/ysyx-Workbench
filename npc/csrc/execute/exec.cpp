@@ -33,17 +33,20 @@ bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 void ftrace_check_inst(paddr_t pc_now, word_t inst);
 void difftest_check_state();
+void print_inst_asm(paddr_t pc, word_t inst);
 
 #define PRINT_INST_MIN 10
 
 int prev_state = 0;
-static bool state_valid()//检测下降沿
+static bool state_valid()//检测从状态valid->fetching
 {
     bool ret = false;
-    if (prev_state == 1&&dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state==0)
+    if (prev_state == 3&&dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state==1)
         ret = true;
     prev_state = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state;
     return ret;
+    // if(dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state==2)
+    //     return true;
     
 }
 
@@ -51,6 +54,8 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
 {
     if (!state_valid())
         return;
+            print_inst_asm(pc, inst_in);
+
 #ifdef CONFIG_ITRACE
     char buf[200];
     char *p = buf;
@@ -98,7 +103,7 @@ void print_inst_asm(paddr_t pc, word_t inst)
     char *pbuf = buf;
     pbuf += snprintf(buf, 14, "0x%08x : ", pc);
     disassemble(pbuf, pbuf - buf + sizeof(buf), pc, (uint8_t *)(&inst), 8); // 反编译？
-    // printf("%s\n", buf);TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
+    printf("%s\n", buf);//TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
 }
 
 unsigned int sim_time = 0;
@@ -228,11 +233,11 @@ int run(int step)
         tfp->flush();
         g_nr_guest_inst++;
         //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // word_t inst = dut->io_inst_now;
+        word_t inst = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst;
         // if (step < PRINT_INST_MIN)
-        //     print_inst_asm(pc, inst);
+            // print_inst_asm(pc, inst);
         // // TODO::在某一些条件下打印指令！！！！
-        // trace_and_difftest(pc, inst);
+        trace_and_difftest(pc, inst);
 
         if (nemu_state.state != NEMU_RUNNING)
             break; // 出现异常

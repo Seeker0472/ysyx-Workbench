@@ -14,8 +14,9 @@ class IFU extends Module {
     val inst_now = Output(UInt(CVAL.DLEN.W))
     val out      = Decoupled(new IFUO())
     val axi = Flipped(new AXIReadIO())
+    val rwerr = Input(Bool())
   })
-  val s_idle :: s_fetching :: s_wait_data :: s_valid :: Nil = Enum(4)
+  val s_idle :: s_fetching :: s_wait_data :: s_valid ::s_error:: Nil = Enum(5)
 
   // val axi = Module(new AXI_Master())
 
@@ -28,7 +29,8 @@ class IFU extends Module {
       s_idle -> Mux(true.B, s_fetching, s_idle), //Initial
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching), //1cycle,depends on memory
       s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
-      s_valid -> Mux(io.in.valid, s_fetching, s_valid)
+      s_valid -> Mux(io.in.valid, s_fetching, s_valid),
+      s_error->s_error
     )
   )
   io.out.valid := state === s_valid
@@ -49,6 +51,9 @@ class IFU extends Module {
   io.out.bits.instr := inst
 
   when(io.in.valid) {
-    pc := io.in.bits.n_pc
+    pc := Mux(state===s_error,0.U,io.in.bits.n_pc)
+  }
+  when(io.rwerr){
+    state:=s_error
   }
 }

@@ -33,7 +33,7 @@ class AXIIO extends Bundle {
   }))
   //Write response
   val WR = Decoupled(new Bundle {
-    val bresp = Output(Bool())
+    val bresp = Output(UInt(2.W))
   })
 
   //Read address
@@ -44,7 +44,7 @@ class AXIIO extends Bundle {
   //Read data
   val RD = (Decoupled(new Bundle {
     val data  = (UInt(CVAL.DLEN.W))
-    val rresp = (Bool())
+    val rresp = (UInt(2.W))
   }))
 }
 class AXIReadIO extends Bundle {
@@ -56,7 +56,7 @@ class AXIReadIO extends Bundle {
   //Read data
   val RD = (Decoupled(new Bundle {
     val data  = (UInt(CVAL.DLEN.W))
-    val rresp = (Bool())
+    val rresp = (UInt(2.W))
   }))
 }
 class AXIWriteIO extends Bundle {
@@ -72,7 +72,7 @@ class AXIWriteIO extends Bundle {
   }))
   //Write response
   val WR = Decoupled(new Bundle {
-    val bresp = Output(Bool())
+    val bresp = Output(UInt(2.W))
   })
 
 }

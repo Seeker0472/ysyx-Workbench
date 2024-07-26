@@ -23,12 +23,13 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
   }
-  /* _pmem_start and _entry_offset are defined in LDFLAGS */
-  . = _pmem_start + _entry_offset;
+  . = _sram_start;
   _stack_top = ALIGN(0x1000);
-  . = _stack_top + 0x8000;
+  /* _stack_top = .; */
+  . = _stack_top + 0x1000;
   _stack_pointer = .;
   end = .;
   _end = .;
   _heap_start = ALIGN(0x1000);
+  /* _heap_start = .; */
 }

@@ -55,13 +55,13 @@ class ypc extends Module {
   io.master.awvalid           := axi_arbiter.io.out.WA.valid
   io.master.awaddr            := axi_arbiter.io.out.WA.bits.addr
   io.master.awid              := 0.U
-  io.master.awlen             := 1.U
-  io.master.awsize            := "b010".U
+  io.master.awlen             := 0.U
+  io.master.awsize            := "b010".U(3.W)//TODO!!!!!!
   io.master.awburst           := 0.U
 
   axi_arbiter.io.out.WD.ready := io.master.wready
   io.master.wvalid            := axi_arbiter.io.out.WD.valid
-  io.master.wdata             := axi_arbiter.io.out.WD.bits.data
+  io.master.wdata             := Cat(0.U(32.W),axi_arbiter.io.out.WD.bits.data)
   io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
   io.master.wlast             := true.B
 
@@ -72,9 +72,9 @@ class ypc extends Module {
   axi_arbiter.io.out.RA.ready := io.master.arready
   io.master.arvalid           := axi_arbiter.io.out.RA.valid
   io.master.araddr            := axi_arbiter.io.out.RA.bits.addr
-  io.master.arid              := 1.U
-  io.master.arlen             := 1.U
-  io.master.arsize            := "b010".U
+  io.master.arid              := 0.U
+  io.master.arlen             := 0.U
+  io.master.arsize            := "b010".U(3.W)
   io.master.arburst           := 0.U
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready
@@ -96,6 +96,8 @@ class ypc extends Module {
   io.slave.rid:=0.U
 
   // axi_arbiter.out<>
+
+  ifu.io.rwerr:=(io.master.bresp=/=0.U&&io.master.bvalid)||(io.master.rresp=/=0.U&&io.master.rvalid)  //出错跳转到0=
 
 }
 
