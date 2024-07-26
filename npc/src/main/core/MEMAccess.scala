@@ -65,7 +65,7 @@ class MEMAccess extends Module {
     )
   )
   val mem_read_result = mem_read_result_sint.asUInt
-
+//TODO:::::::::::::::::::::应该是没对齐
   val mem_write_mask = MuxLookup(io.in.bits.mem_write_type, 0.U)(
     Seq(
       Store_Type.sb -> "b00000001".U(8.W),
@@ -73,12 +73,14 @@ class MEMAccess extends Module {
       Store_Type.sw -> "b00001111".U(8.W)
     )
   )
-  // mem.io.write_mask := mem_write_mask
-  // mem.io.write_data := io.in.bits.src2
+  val wd_move = Cat(0.U(32.W),io.in.bits.src2) << ((io.in.bits.alu_result & (0x7.U)) << 3) // 写入内存,不对齐访问!!
+  val mask_move = mem_write_mask <<(io.in.bits.alu_result & (0x7.U)) 
+  
+
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result 
-  io.axi.WD.bits.data  := io.in.bits.src2
-  io.axi.WD.bits.wstrb := mem_write_mask
+  io.axi.WD.bits.data  := wd_move//移动
+  io.axi.WD.bits.wstrb := mask_move//移动
   // io.axi.WD.valid      := true.B
   io.axi.WD.valid      := state===s_w_busy
   io.axi.WR.ready      := true.B
