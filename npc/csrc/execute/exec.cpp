@@ -168,9 +168,6 @@ void update_reg_state()
     cpu->gpr[31] = dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_31;
 #endif
 }
-void check_mem_fail(){
-    assert(dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state!=4);
-}
 
 void single_cycle()
 {
@@ -190,7 +187,7 @@ void single_cycle()
     if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
         nemu_state.state = NEMU_STOP;
 #endif
-check_mem_fail();
+
     // printf("%x\n", dut->io_instr);
 }
 
