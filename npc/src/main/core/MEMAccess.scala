@@ -74,6 +74,13 @@ class MEMAccess extends Module {
       Store_Type.sw -> "b1111".U(4.W)
     )
   )
+  val mem_write_size = MuxLookup(io.in.bits.mem_write_type, 0.U(3.W))(
+    Seq(
+      Store_Type.sb -> "b000".U(3.W),
+      Store_Type.sh -> "b001".U(3.W),
+      Store_Type.sw -> "b010".U(3.W)
+    )
+  )
 val wd_move = io.in.bits.src2 << ((io.in.bits.alu_result(1,0)) << 3)
 
 
@@ -83,9 +90,8 @@ val wd_move = io.in.bits.src2 << ((io.in.bits.alu_result(1,0)) << 3)
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result 
   io.axi.WD.bits.data  := wd_move//移动
-  // io.axi.WD.bits.data  := Mux(io.in.bits.alu_result(28,28)===1.U,io.in.bits.src2,wd_move)//TODO!!!!!!!!!!!!!!!!!!!!!!!!!
   io.axi.WD.bits.wstrb := mask_move//移动
-  // io.axi.WD.bits.wstrb := Mux(io.in.bits.alu_result(28,28)===1.U,mem_write_mask,mask_move)//移动
+  io.axi.WA.bits.size  := mem_write_size
   // io.axi.WD.valid      := true.B
   io.axi.WD.valid      := state===s_w_busy
   io.axi.WR.ready      := true.B

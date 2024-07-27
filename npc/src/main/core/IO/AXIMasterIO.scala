@@ -24,6 +24,7 @@ class AXIIO extends Bundle {
   //Write address
   val WA = Flipped(Decoupled(new Bundle {
     val addr = (UInt(CVAL.DLEN.W))
+    val size = (UInt(3.W))
     //awport-特权相关
   }))
   //Write data
@@ -63,6 +64,7 @@ class AXIWriteIO extends Bundle {
   //Write address
   val WA = Flipped(Decoupled(new Bundle {
     val addr = (UInt(CVAL.DLEN.W))
+    val size = (UInt(3.W))
     //awport-特权相关
   }))
   //Write data
