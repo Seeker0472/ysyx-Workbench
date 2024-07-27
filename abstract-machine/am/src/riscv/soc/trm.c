@@ -54,7 +54,7 @@ void  bootloader() {
     }
 }
 void init_uart(){
-  outb(SERIAL_PORT+3,0x80);
+  outb(SERIAL_PORT+3,0x51);
   outb(SERIAL_PORT,0x11);   //写入Divisor Latch
   outb(SERIAL_PORT+1,0x00); 
   outb(SERIAL_PORT+3,0x03);
