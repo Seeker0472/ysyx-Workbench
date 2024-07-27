@@ -45,16 +45,23 @@ void  bootloader() {
         dest++;
         src++;
     }
+    //初始化bss段
     unsigned char *bss_src = &_bss_start;
     unsigned char *bss_end = &_bss_end;
     while (bss_src <= bss_end) {
         *(bss_src++ )= 0;
     }
 }
+void init_urat(){
+  outb(0x10000003L,0x83);
+  outb(0x10000000L,0x83);
+  outb(0x10000003L,0x03);
+}
 
 
 void _trm_init() {
   bootloader();
+  init_urat();
   int ret = main(mainargs);
   halt(ret);
 }
