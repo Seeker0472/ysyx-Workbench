@@ -112,8 +112,8 @@ class master_io extends Bundle {
 
   val wready = Input(Bool())
   val wvalid = Output(Bool())
-  val wdata  = Output(UInt(64.W))
-  val wstrb  = Output(UInt(8.W)) //Write strobes
+  val wdata  = Output(UInt(CVAL.DLEN.W))
+  val wstrb  = Output(UInt(4.W)) //Write strobes
   val wlast  = Output(Bool()) //the last transfer in a write burst---set to 1
 
   val bready = Output(Bool())
@@ -132,7 +132,7 @@ class master_io extends Bundle {
   val rready = Output(Bool())
   val rvalid = Input(Bool())
   val rresp  = Input(UInt(2.W))
-  val rdata  = Input(UInt(64.W))
+  val rdata  = Input(UInt(CVAL.DLEN.W))
   val rlast  = Input(Bool()) //ignore
   val rid    = Input(UInt(4.W)) //ignore
 }

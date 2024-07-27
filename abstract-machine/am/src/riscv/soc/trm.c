@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib-macros.h>
 #include "../riscv.h"
+#include <klib.h>
 
 extern char _heap_start;
 int main(const char *args);
@@ -34,14 +35,23 @@ void halt(int code) {
   while (1);
 }
 
-extern void * _data_section_start,*_data_section_end,*_data_section_dest;
-void bootloader(){
-  char * src=_data_section_start;
-  char*dest=_data_section_dest;
-  while(src<(char*)_data_section_end){
-    *(dest++)=*(src++);
-  }
+extern unsigned char  _data_section_start,_data_section_end,_data_section_src,_bss_start,_bss_end;
+void  bootloader() {
+    unsigned char *src = &_data_section_src;
+    unsigned char *dest = &_data_section_start;
+    unsigned char *end = &_data_section_end;
+    while (dest <= end) {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+    unsigned char *bss_src = &_bss_start;
+    unsigned char *bss_end = &_bss_end;
+    while (bss_src <= bss_end) {
+        *(bss_src++ )= 0;
+    }
 }
+
 
 void _trm_init() {
   bootloader();
