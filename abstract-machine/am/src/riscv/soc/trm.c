@@ -16,10 +16,10 @@ Area heap = RANGE(&_heap_start, PMEM_END);
 #endif
 static const char mainargs[] = MAINARGS;
 
-// #define SERIAL_PORT 0xa00003f8
+// #define SERIAL_PORT 0x10000000L
 
 void putch(char ch) {//实现putch
-  outb(0x10000000L, ch);
+  outb(SERIAL_PORT, ch);
 }
 
 void halt(int code) {
@@ -53,11 +53,10 @@ void  bootloader() {
     }
 }
 void init_uart(){
-  outb(0x10000003L,0x80);
-  outb(0x10000000L,0x01);
-  outb(0x10000001L,0x00);
-  outb(0x10000003L,0x00);
-  outb(0x10000003L,0x03);
+  outb(SERIAL_PORT+3,0x80);
+  outb(SERIAL_PORT,0x01);
+  outb(SERIAL_PORT+1,0x00);
+  outb(SERIAL_PORT+3,0x03);
   putch('a');
   putch('a');
   putch('a');
