@@ -74,7 +74,8 @@ class ypc extends Module {
   io.master.araddr            := axi_arbiter.io.out.RA.bits.addr
   io.master.arid              := 0.U
   io.master.arlen             := 0.U
-  io.master.arsize            := "b010".U(3.W)
+  // io.master.arsize            := "b010".U(3.W)
+  io.master.arsize            := axi_arbiter.io.out.RA.bits.size
   io.master.arburst           := 0.U
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready

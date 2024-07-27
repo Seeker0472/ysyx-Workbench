@@ -40,6 +40,7 @@ class IFU extends Module {
     inst := io.axi.RD.bits.data//next - inst
   }
   io.axi.RA.valid:=state===s_fetching
+  io.axi.RA.bits.size:="b010".U
   io.axi.RD.ready:=true.B
 
   io.in.ready := true.B

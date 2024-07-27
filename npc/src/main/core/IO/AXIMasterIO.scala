@@ -40,6 +40,7 @@ class AXIIO extends Bundle {
   //Read address
   val RA = Flipped(Decoupled(new Bundle {
     val addr = (UInt(CVAL.DLEN.W))
+    val size = (UInt(3.W))
     //arport-特权相关
   }))
   //Read data
@@ -52,6 +53,8 @@ class AXIReadIO extends Bundle {
   //Read address
   val RA = Flipped(Decoupled(new Bundle {
     val addr = (UInt(CVAL.DLEN.W))
+    val size = (UInt(3.W))
+  
     //arport-特权相关
   }))
   //Read data

@@ -44,6 +44,16 @@ class MEMAccess extends Module {
   )
   io.in.ready  := true.B
   io.out.valid := state === s_valid
+  val mem_read_size = MuxLookup(io.in.bits.mem_read_type, 0.U(3.W))(
+    Seq(
+      Load_Type.lb -> "b000".U(3.W),
+      Load_Type.lh -> "b001".U(3.W),
+      Load_Type.lw -> "b010".U(3.W),
+      Load_Type.lbu -> "b000".U(3.W),
+      Load_Type.lhu -> "b001".U(3.W),
+    )
+  )
+  io.axi.RA.bits.size :=mem_read_size
 
   io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && state =/= s_valid //避免多次访存
   io.axi.RA.bits.addr := io.in.bits.alu_result
@@ -64,6 +74,7 @@ class MEMAccess extends Module {
       Load_Type.lhu -> mrrm(15, 0).zext
     )
   )
+
   val mem_read_result = mem_read_result_sint.asUInt
   
 //TODO:::::::::::::::::::::应该是没对齐
@@ -91,7 +102,7 @@ val wd_move = io.in.bits.src2 << ((io.in.bits.alu_result(1,0)) << 3)
   io.axi.WA.bits.addr  := io.in.bits.alu_result 
   io.axi.WD.bits.data  := wd_move//移动
   io.axi.WD.bits.wstrb := mask_move//移动
-  io.axi.WA.bits.size  := mem_write_size
+  io.axi.WA.bits.size  := mem_write_size//写入数据的大小
   // io.axi.WD.valid      := true.B
   io.axi.WD.valid      := state===s_w_busy
   io.axi.WR.ready      := true.B

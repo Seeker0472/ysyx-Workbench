@@ -47,7 +47,9 @@ class XBAR extends Module {
   io.axi.RA.valid      := Mux(mem_r_b === BitPat("b010"), io.in.RA.valid, false.B) //如果选择sram，就开
   clint.io.RA.valid     := Mux(mem_r_b === BitPat("b001"), io.in.RA.valid, false.B) //b100
   io.axi.RA.bits.addr  := io.in.RA.bits.addr
+  io.axi.RA.bits.size  := io.in.RA.bits.size
   clint.io.RA.bits.addr := io.in.RA.bits.addr
+  clint.io.RA.bits.size := io.in.RA.bits.size
   io.in.RA.ready := Mux(
     mem_r_b === BitPat("b010") || mem_r_reg === BitPat("b010"),
     io.axi.RA.ready,
