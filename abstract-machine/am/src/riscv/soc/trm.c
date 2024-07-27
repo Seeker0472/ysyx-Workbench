@@ -19,6 +19,9 @@ static const char mainargs[] = MAINARGS;
 // #define SERIAL_PORT 0x10000000L
 
 void putch(char ch) {//实现putch
+  while((inb(SERIAL_PORT+5)&0x20) == 0){
+    
+  }
   outb(SERIAL_PORT, ch);
 }
 
