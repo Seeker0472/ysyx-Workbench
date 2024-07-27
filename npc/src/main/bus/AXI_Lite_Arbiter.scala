@@ -18,7 +18,11 @@ class AXI_Lite_Arbiter extends Module {
 
   state := MuxLookup(state, s_idle)(
     List(
-      s_idle -> Mux(io.c2.RA.valid&&xbar.io.in.RA.ready, s_c2_busy, Mux(io.c1.RA.valid&&xbar.io.in.RA.ready, s_c1_busy, s_idle)),
+      s_idle -> Mux(
+        io.c2.RA.valid && xbar.io.in.RA.ready,
+        s_c2_busy,
+        Mux(io.c1.RA.valid && xbar.io.in.RA.ready, s_c1_busy, s_idle)
+      ),
       s_c1_busy -> Mux(xbar.io.in.RD.valid, s_idle, s_c1_busy),
       s_c2_busy -> Mux(xbar.io.in.RD.valid, s_idle, s_c2_busy)
       // s_c1_valid -> Mux(io.c1.RD.ready, s_idle, s_c1_valid),
@@ -30,10 +34,11 @@ class AXI_Lite_Arbiter extends Module {
   xbar.io.in.WD <> io.c2.WD
   xbar.io.in.WR <> io.c2.WR
   //读通道看状态
-  io.c1.RA.ready          := state === s_idle&&xbar.io.in.RA.ready
-  io.c2.RA.ready          := state === s_idle&&xbar.io.in.RA.ready
+  io.c1.RA.ready          := state === s_idle && xbar.io.in.RA.ready
+  io.c2.RA.ready          := state === s_idle && xbar.io.in.RA.ready
   xbar.io.in.RA.valid     := io.c1.RA.valid || io.c2.RA.valid
   xbar.io.in.RA.bits.addr := Mux(io.c1.RA.valid, io.c1.RA.bits.addr, io.c2.RA.bits.addr)
+  xbar.io.in.RA.bits.size := Mux(io.c1.RA.valid, io.c1.RA.bits.size, io.c2.RA.bits.size)
   xbar.io.in.RD.ready     := Mux(state === s_c1_busy, io.c1.RD.ready, io.c2.RD.ready)
   io.c1.RD.bits.data      := xbar.io.in.RD.bits.data
   io.c2.RD.bits.data      := xbar.io.in.RD.bits.data
