@@ -25,7 +25,7 @@ class XBAR extends Module {
       BitPat("b0000001000000000????????????????") -> BitPat("b001"),//CLINT
 
     ),
-    BitPat("b010")//TODO:暂时把
+    BitPat("b010")//TODO:暂时把所有地址打进总线
   )
   // val mem_w_reg = RegInit(0.U(3.W))
   val mem_r_reg = RegInit(0.U(3.W))
