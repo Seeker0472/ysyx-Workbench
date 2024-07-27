@@ -69,8 +69,8 @@ void init_uart(){
 
 
 void _trm_init() {
-  bootloader();
   init_uart();
+  bootloader();
   int ret = main(mainargs);
   halt(ret);
 }
