@@ -3,4 +3,4 @@
 	url = https://github.com/NJU-ProjectN/riscv-arch-test-am.git
 [submodule "ysyxSoC"]
 	path = ysyxSoC
-	url = git@github.com:OSCPU/ysyxSoC.git
+	url = https://github.com/OSCPU/ysyxSoC.git
