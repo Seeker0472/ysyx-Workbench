@@ -53,9 +53,9 @@ void  bootloader() {
     }
 }
 void init_urat(){
-  outb(0x10000003L,0x83);
+  outb(0x10000003L,0x80);
   outb(0x10000000L,0x83);
-  outb(0x10000003L,0x03);
+  outb(0x10000003L,0x00);
 }
 
 
