@@ -52,16 +52,17 @@ void  bootloader() {
         *(bss_src++ )= 0;
     }
 }
-void init_urat(){
+void init_uart(){
   outb(0x10000003L,0x80);
-  outb(0x10000000L,0x83);
+  outb(0x10000000L,0x50);
+  outb(0x10000001L,0x50);
   outb(0x10000003L,0x00);
 }
 
 
 void _trm_init() {
   bootloader();
-  init_urat();
+  init_uart();
   int ret = main(mainargs);
   halt(ret);
 }
