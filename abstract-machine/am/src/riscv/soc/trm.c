@@ -59,6 +59,8 @@ void init_uart(){
   outb(0x10000003L,0x00);
   outb(0x10000003L,0x03);
   putch('a');
+  putch('a');
+  putch('a');
   putch('\n');
 
 }
