@@ -82,7 +82,8 @@ val wd_move = io.in.bits.src2 << ((io.in.bits.alu_result(1,0)) << 3)
 
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result 
-  io.axi.WD.bits.data  := wd_move//移动
+  // io.axi.WD.bits.data  := wd_move//移动
+  io.axi.WD.bits.data  := Mux(io.in.bits.alu_result(28,28)===1.U,io.in.bits.src2,wd_move)
   io.axi.WD.bits.wstrb := mask_move//移动
   // io.axi.WD.valid      := true.B
   io.axi.WD.valid      := state===s_w_busy
