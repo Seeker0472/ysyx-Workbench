@@ -19,7 +19,7 @@ static const char mainargs[] = MAINARGS;
 // #define SERIAL_PORT 0xa00003f8
 
 void putch(char ch) {//实现putch
-  outb(SERIAL_PORT, ch);
+  outb(0x10000000L, ch);
 }
 
 void halt(int code) {

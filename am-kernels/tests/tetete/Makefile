@@ -1,3 +1,3 @@
-NAME = gen_alu_test
-SRCS = gen_alu_test.c
+NAME = hello
+SRCS = hello.c
 include $(AM_HOME)/Makefile
