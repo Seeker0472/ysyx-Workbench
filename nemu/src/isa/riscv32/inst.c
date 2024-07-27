@@ -184,6 +184,7 @@ static int decode_exec(Decode *s) {
 }
 
 int isa_exec_once(Decode *s) {
+  // for(volatile int i=0;i<1000;i++);//故意拖慢速度
   //取指 物理机大端小端问题？
   //TODO:内存非对齐访问！
   s->isa.inst.val = inst_fetch(&s->snpc, 4);

@@ -17,6 +17,7 @@ extern "C" void init_disasm(const char *triple);
 void sdb_set_batch_mode();
 void init_ftrace(char *filepath);
 void difftest_init_all();
+void init_verilator(int argc, char *argv[]);
 
 
 
@@ -70,6 +71,7 @@ void welcome(){
 
 void init_monitor(int argc, char *argv[]){
     // printf("\n");
+    init_verilator(argc, argv);
     parse_args(argc, argv);
     init_log(log_file);//OKEY????
     init_sdb();

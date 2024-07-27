@@ -29,11 +29,11 @@ class AXIIO extends Bundle {
   //Write data
   val WD = Flipped(Decoupled(new Bundle {
     val data  = (UInt(CVAL.DLEN.W))
-    val wstrb = (UInt(8.W)) //掩码
+    val wstrb = (UInt(4.W)) //掩码
   }))
   //Write response
   val WR = Decoupled(new Bundle {
-    val bresp = Output(Bool())
+    val bresp = Output(UInt(2.W))
   })
 
   //Read address
@@ -44,7 +44,7 @@ class AXIIO extends Bundle {
   //Read data
   val RD = (Decoupled(new Bundle {
     val data  = (UInt(CVAL.DLEN.W))
-    val rresp = (Bool())
+    val rresp = (UInt(2.W))
   }))
 }
 class AXIReadIO extends Bundle {
@@ -56,7 +56,23 @@ class AXIReadIO extends Bundle {
   //Read data
   val RD = (Decoupled(new Bundle {
     val data  = (UInt(CVAL.DLEN.W))
-    val rresp = (Bool())
+    val rresp = (UInt(2.W))
   }))
 }
+class AXIWriteIO extends Bundle {
+  //Write address
+  val WA = Flipped(Decoupled(new Bundle {
+    val addr = (UInt(CVAL.DLEN.W))
+    //awport-特权相关
+  }))
+  //Write data
+  val WD = Flipped(Decoupled(new Bundle {
+    val data  = (UInt(CVAL.DLEN.W))
+    val wstrb = (UInt(4.W)) //掩码
+  }))
+  //Write response
+  val WR = Decoupled(new Bundle {
+    val bresp = Output(UInt(2.W))
+  })
 
+}

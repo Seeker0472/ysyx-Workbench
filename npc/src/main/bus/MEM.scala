@@ -1,4 +1,4 @@
-package core
+package bus
 
 import chisel3._
 import chisel3.util._
@@ -60,16 +60,18 @@ class MEM extends BlackBox with HasBlackBoxInline {
 //     val write_addr   = Input(UInt(CVAL.DLEN.W))
 //     val write_data   = Input(UInt(CVAL.DLEN.W))
 //     val write_mask   = Input(UInt(8.W))
+//     val clock        = Input(Clock())
+
 //   })
-//     // 创建一个256x32位的同步读写内存
-//   val mem = SyncReadMem(256, UInt(32.W))
+//   //   // 创建一个256x32位的同步读写内存
+//   // val mem = SyncReadMem(256, UInt(32.W))
 
-//   // 写操作
-//   when(io.write_enable) {
-//     mem.write(io.write_addr, io.write_data&io.write_mask)
-//   }
+//   // // 写操作
+//   // when(io.write_enable) {
+//   //   mem.write(io.write_addr, io.write_data&io.write_mask)
+//   // }
 
-//   // 读操作
-//   io.read_data := mem.read(io.read_addr, (!io.write_enable)&&io.read_enable)
+//   // // 读操作
+//   // io.read_data := mem.read(io.read_addr, (!io.write_enable)&&io.read_enable)
 
 // }

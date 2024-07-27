@@ -7,6 +7,7 @@
 extern CPU_state *cpu;
 CPU_state *ref_cpu;
 extern uint32_t mem[10000000];
+extern uint32_t mrom[0x300];
 extern word_t mem_size;
 void reg_display_diff(CPU_state* nemu);
 
@@ -37,4 +38,5 @@ void difftest_init_all(){
     ref_cpu=(CPU_state*)malloc(sizeof(CPU_state));
     difftest_regcpy(cpu,DIFFTEST_TO_REF);
     difftest_memcpy(0x80000000,mem,mem_size,DIFFTEST_TO_REF);
+    difftest_memcpy(0x20000000,mrom,0x300*sizeof(uint32_t),DIFFTEST_TO_REF);
 }

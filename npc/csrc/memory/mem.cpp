@@ -2,13 +2,40 @@
 #include <cstdint>
 #include <debug.h>
 #include <common.h>
+#include <isa.h>
+#include <macro.h>
 
 uint64_t get_time();
 uint64_t time_now = 114514;
 
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
+uint32_t mem_read(uint32_t pc);
+
 uint32_t mem[0x8000000] = {
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00100073,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+    0x00448493,
+};
+uint32_t mrom[0x300] = {
     0x00448493,
     0x00448493,
     0x00448493,
@@ -33,22 +60,24 @@ uint32_t mem[0x8000000] = {
 };
 word_t mem_size = 84;
 
-uint32_t mem_read(uint32_t pc)
-{
-  // //mtrace
-  // //TODO: Write  Enable-------------------------------------------------
+// DPI-C Funcs
+extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void mrom_read(int32_t addr, int32_t *data) { 
+  *data= mrom[(addr - 0x20000000) / 4];
+}
 
-  if (pc == 0xa0000048)
+extern "C" int get_time(int raddr)
+{
+  if (raddr == 0x10000048)
   {
     time_now = get_time();
-    // printf("%lx\n", time);
     return (uint32_t)time_now;
   }
-  if (pc == 0xa000004c)
+  if (raddr == 0x1000004c)
   {
     return (uint32_t)(time_now >> 32);
   }
-  return mem[(pc - 0x80000000) / 4];
+  return -1;
 }
 
 extern "C" int pmem_read(int raddr)
@@ -99,13 +128,39 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask)
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
 
+uint32_t mem_read(uint32_t pc)
+{
+  if (pc == 0xa0000048)
+  {
+    time_now = get_time();
+    // printf("%lx\n", time);
+    return (uint32_t)time_now;
+  }
+  if (pc == 0xa000004c)
+  {
+    return (uint32_t)(time_now >> 32);
+  }
+  return mem[(pc - 0x80000000) / 4];
+}
+
 uint32_t warp_pmem_read(uint32_t addr)
 {
   return mem_read(addr);
 }
+void init_mrom(char *img_file)
+{
+  int size = 0;
+  FILE *fp = fopen(img_file, "rb");
+  fseek(fp, 0, SEEK_END);
+  size = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+  fread(mrom, size, 1, fp);
+  fclose(fp);
+}
 
 void init_img(char *img_file)
 {
+  init_mrom(img_file);
   // size_t size = 0;
   if (img_file != NULL)
   {
