@@ -1,6 +1,4 @@
-[submodule "am-kernels/tests/riscv-arch-test-am"]
-	path = am-kernels/tests/riscv-arch-test-am
-	url = https://github.com/NJU-ProjectN/riscv-arch-test-am.git
+
 [submodule "ysyxSoC"]
 	path = ysyxSoC
 	url = https://github.com/OSCPU/ysyxSoC.git
