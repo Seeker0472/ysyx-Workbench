@@ -19,9 +19,6 @@ static const char mainargs[] = MAINARGS;
 // #define SERIAL_PORT 0x10000000L
 
 void putch(char ch) {//实现putch
-  // if((inb(SERIAL_PORT+5)&0x10) == 0){
-  //   outb(SERIAL_PORT+2,0x03);
-  // }
   outb(SERIAL_PORT, ch);
 }
 
@@ -57,14 +54,9 @@ void  bootloader() {
 }
 void init_uart(){
   outb(SERIAL_PORT+3,0x80);
-  outb(SERIAL_PORT,0x01);
+  outb(SERIAL_PORT,0x11);
   outb(SERIAL_PORT+1,0x00);
   outb(SERIAL_PORT+3,0x03);
-  outb(SERIAL_PORT+2,0x01);
-  outb(SERIAL_PORT+1,0x01);
-
-  putch('\n');
-
 }
 
 
