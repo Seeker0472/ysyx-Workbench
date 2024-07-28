@@ -36,14 +36,14 @@ void wait_data(){
 
     // The Following Copy runs(With O0 Optim)
 
-    int i = inl(SPI_MASTER)>>8;
-    printf("%x\n",i);
+    // int i = inl(SPI_MASTER)>>8;
+    // printf("%x\n",i);
 
     // Runs But Result is NOT Correct
 
-    // int i = inl(SPI_MASTER);
-    // for(volatile int x=0;x<1;x++);
-    // printf("%x\n",i);
+    int i = inl(SPI_MASTER);
+    for(volatile int x=0;x<1;x++);
+    printf("%x\n",i);
 
 }
 int main(){
