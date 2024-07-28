@@ -15,6 +15,9 @@ int print_num_long(char *out, size_t out_offset, long val);
 
 int printf(const char *fmt, ...)
 {
+  putch('\n');
+  putch('\n');
+  putch('\n');
   char out[50];
   va_list args;
   va_start(args, fmt);
