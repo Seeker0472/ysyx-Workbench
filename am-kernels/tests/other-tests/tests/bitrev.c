@@ -21,6 +21,7 @@ void send_data(){
     // outl(SPI_MASTER + 0x10,0x140f);//ctrl reg
     outl(SPI_MASTER + 0x10,0x148f);//start
     outl(SPI_MASTER,0x7);
+    outl(SPI_MASTER + 0x10,0x140f);//ctrl reg
 
 }
 void wait_data(){
