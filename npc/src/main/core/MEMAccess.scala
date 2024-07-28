@@ -39,7 +39,7 @@ class MEMAccess extends Module {
       ),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
-      s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy),
+      s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
@@ -103,7 +103,8 @@ class MEMAccess extends Module {
   io.axi.WD.bits.wstrb := mask_move //移动
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
-  io.axi.WD.valid := state === s_w_busy
+  // io.axi.WD.valid := state === s_w_busy
+  io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
   io.axi.WR.ready := true.B
   //暂时忽略错误处理
 
