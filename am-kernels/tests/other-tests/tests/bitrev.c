@@ -24,7 +24,7 @@ void send_data(){
 }
 void wait_data(){
     while ((inb(SPI_MASTER + 0x10) & 0x100) == 0x100)
-    printf("aa-%x\n", inl(SPI_MASTER+ 0x10));
+        printf("bb-%x\n", inl(SPI_MASTER+ 0x10));
 
     volatile int i = inl(SPI_MASTER);
     // for(volatile int i=0;i<100;i++);
