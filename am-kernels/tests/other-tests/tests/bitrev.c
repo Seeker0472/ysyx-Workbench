@@ -19,13 +19,13 @@ void init_bit_rev(){
 void send_data(){
     outl(SPI_MASTER + 0x18,0x80);//ss reg
     outl(SPI_MASTER + 0x10,0xC10);//start
-    outl(SPI_MASTER,0x7);
+    outl(SPI_MASTER,0xf);
     outl(SPI_MASTER + 0x10,0xD10);//start
 }
 void wait_data(){
     while((inb(SPI_MASTER+0x10)&0x100)==0x100);
         // for(volatile int i=0;i<100;i++);
-    inl(SPI_MASTER);
+    assert(inl(SPI_MASTER)==0xf);
 }
 int main(){
     init_bit_rev();
