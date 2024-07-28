@@ -23,8 +23,8 @@ void send_data(){
     outl(SPI_MASTER + 0x10,0x910);//start
 }
 void wait_data(){
-    int x=inl(SPI_MASTER + 0x10);
-    while ((x == 0x910))
+    uint32_t x=inl(SPI_MASTER + 0x10);
+    while ((x == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
 
     int i = inl(SPI_MASTER);
