@@ -14,11 +14,12 @@ static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)a
 #define SPI_MASTER 0x10001000L
 
 void init_bit_rev(){
-    outl(SPI_MASTER,0x7);
     outl(SPI_MASTER +0x14,0x01);//OKEY
 }
 void send_data(){
     outl(SPI_MASTER + 0x18,0x80);//ss reg
+    outl(SPI_MASTER + 0x10,0xC10);//start
+    outl(SPI_MASTER,0x7);
     outl(SPI_MASTER + 0x10,0xD10);//start
 }
 void wait_data(){
