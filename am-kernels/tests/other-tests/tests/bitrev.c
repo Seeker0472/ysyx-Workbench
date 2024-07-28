@@ -23,8 +23,9 @@ void send_data(){
     outl(SPI_MASTER + 0x10,0x910);//start
 }
 void wait_data(){
-    while ((inb(SPI_MASTER + 0x10) & 0x100) == 0x100)
-        ;
+    int x=inb(SPI_MASTER + 0x10);
+    while ((x & 0x100) == 0x100)
+        x=inb(SPI_MASTER + 0x10);
 
     volatile int i = inl(SPI_MASTER);
     // for(volatile int i=0;i<100;i++);
