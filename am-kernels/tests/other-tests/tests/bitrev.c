@@ -42,7 +42,7 @@ void wait_data(){
     putch('\n');
     putch('\n');
     putch('\n');
-    printf("aaa%d\n",i);
+    printf("%d\n",i);
     putch('\n');
     putch('\n');
     putch('\n');
