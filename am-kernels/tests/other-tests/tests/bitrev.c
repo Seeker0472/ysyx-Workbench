@@ -29,7 +29,7 @@ void send_data(){
 // __attribute__((optimize("O0"))) 
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
-    while (((x&0x00000fff) == (uint32_t)0x910))
+    while (((x&0x00000fff) == (uint32_t)0x00000910))
         x=inl(SPI_MASTER + 0x10);
     // int i = inl(SPI_MASTER);
     // printf("%x\n",i);    
