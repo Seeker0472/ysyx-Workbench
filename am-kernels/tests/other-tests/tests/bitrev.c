@@ -28,6 +28,8 @@ void wait_data(){
         x=inl(SPI_MASTER + 0x10);
     // int i = inl(SPI_MASTER);
     // printf("%x\n",i);    
+    
+    // The Following Copies runs
     int i = inl(SPI_MASTER)>>8;
     printf("%x\n",i);
 
