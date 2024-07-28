@@ -26,7 +26,7 @@ void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
     while ((x == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
-
+    for(volatile int i=0 ;i<10000;i++);
     int i = inl(SPI_MASTER);
     // for(volatile int i=0;i<100;i++);
     printf("aa-%x\n", i);
