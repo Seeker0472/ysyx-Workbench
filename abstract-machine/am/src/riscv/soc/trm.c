@@ -16,9 +16,10 @@ Area heap = RANGE(&_heap_start, PMEM_END);
 #endif
 static const char mainargs[] = MAINARGS;
 
-// #define SERIAL_PORT 0xa00003f8
+// #define SERIAL_PORT 0x10000000L
 
 void putch(char ch) {//实现putch
+  while((inb(SERIAL_PORT+5)&0x20) == 0);
   outb(SERIAL_PORT, ch);
 }
 
@@ -45,15 +46,23 @@ void  bootloader() {
         dest++;
         src++;
     }
+    //初始化bss段
     unsigned char *bss_src = &_bss_start;
     unsigned char *bss_end = &_bss_end;
     while (bss_src <= bss_end) {
         *(bss_src++ )= 0;
     }
 }
+void init_uart(){
+  outb(SERIAL_PORT+3,0x80);
+  outb(SERIAL_PORT,0x10);   //写入Divisor Latch
+  outb(SERIAL_PORT+1,0x00); 
+  outb(SERIAL_PORT+3,0x03);
+}
 
 
 void _trm_init() {
+  init_uart();
   bootloader();
   int ret = main(mainargs);
   halt(ret);

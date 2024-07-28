@@ -15,7 +15,7 @@ class ypc extends Module {
     // val inst_now = Output(UInt(CVAL.DLEN.W))
     val master    = (new master_io)
     val slave     = Flipped(new master_io)
-    val interrupt = Input(Bool())//TODO
+    val interrupt = Input(Bool()) //TODO
   })
 
   val decoder     = Module(new Decoder())
@@ -56,8 +56,8 @@ class ypc extends Module {
   io.master.awaddr            := axi_arbiter.io.out.WA.bits.addr
   io.master.awid              := 0.U
   io.master.awlen             := 0.U
-  io.master.awsize            := "b010".U(3.W)//TODO!!!!!!
-  io.master.awburst           := 0.U
+  io.master.awsize            := axi_arbiter.io.out.WA.bits.size
+  io.master.awburst           := 2.U
 
   axi_arbiter.io.out.WD.ready := io.master.wready
   io.master.wvalid            := axi_arbiter.io.out.WD.valid
@@ -74,8 +74,9 @@ class ypc extends Module {
   io.master.araddr            := axi_arbiter.io.out.RA.bits.addr
   io.master.arid              := 0.U
   io.master.arlen             := 0.U
-  io.master.arsize            := "b010".U(3.W)
-  io.master.arburst           := 0.U
+  // io.master.arsize            := "b010".U(3.W)
+  io.master.arsize  := axi_arbiter.io.out.RA.bits.size
+  io.master.arburst := 0.U
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready
   axi_arbiter.io.out.RD.valid      := io.master.rvalid
@@ -83,21 +84,21 @@ class ypc extends Module {
   axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
 
   //slave
-  io.slave.awready:=0.U
-  io.slave.wready:=0.U
-  io.slave.bvalid:=0.U
-  io.slave.bresp:=0.U
-  io.slave.bid:=0.U
-  io.slave.arready:=0.U
-  io.slave.rvalid:=0.U
-  io.slave.rresp:=0.U
-  io.slave.rdata:=0.U
-  io.slave.rlast:=0.U
-  io.slave.rid:=0.U
+  io.slave.awready := 0.U
+  io.slave.wready  := 0.U
+  io.slave.bvalid  := 0.U
+  io.slave.bresp   := 0.U
+  io.slave.bid     := 0.U
+  io.slave.arready := 0.U
+  io.slave.rvalid  := 0.U
+  io.slave.rresp   := 0.U
+  io.slave.rdata   := 0.U
+  io.slave.rlast   := 0.U
+  io.slave.rid     := 0.U
 
   // axi_arbiter.out<>
 
-  ifu.io.rwerr:=(io.master.bresp=/=0.U&&io.master.bvalid)||(io.master.rresp=/=0.U&&io.master.rvalid)  //出错跳转到0=
+  ifu.io.rwerr := (io.master.bresp =/= 0.U && io.master.bvalid) || (io.master.rresp =/= 0.U && io.master.rvalid) //出错跳转到0=
 
 }
 

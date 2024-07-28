@@ -103,7 +103,7 @@ void print_inst_asm(paddr_t pc, word_t inst)
     char *pbuf = buf;
     pbuf += snprintf(buf, 14, "0x%08x : ", pc);
     disassemble(pbuf, pbuf - buf + sizeof(buf), pc, (uint8_t *)(&inst), 8); // 反编译？
-    printf("%s\n", buf);//TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
+    // printf("%s\n", buf);//TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
 }
 
 unsigned int sim_time = 0;

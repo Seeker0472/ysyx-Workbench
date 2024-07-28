@@ -26,7 +26,7 @@ class MEMAccess extends Module {
   io.out.bits.reg_w_enable    := io.in.bits.reg_w_enable
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
-  
+
   //sigs and status
   val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
   val state                                            = RegInit(s_idle)
@@ -38,12 +38,23 @@ class MEMAccess extends Module {
         Mux(io.in.valid, s_valid, s_idle)
       ),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
-      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
+      // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
+      s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
   io.in.ready  := true.B
   io.out.valid := state === s_valid
+  val mem_read_size = MuxLookup(io.in.bits.mem_read_type, 0.U(3.W))(
+    Seq(
+      Load_Type.lb -> "b000".U(3.W),
+      Load_Type.lh -> "b001".U(3.W),
+      Load_Type.lw -> "b010".U(3.W),
+      Load_Type.lbu -> "b000".U(3.W),
+      Load_Type.lhu -> "b001".U(3.W)
+    )
+  )
+  io.axi.RA.bits.size := mem_read_size
 
   io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && state =/= s_valid //避免多次访存
   io.axi.RA.bits.addr := io.in.bits.alu_result
@@ -64,8 +75,9 @@ class MEMAccess extends Module {
       Load_Type.lhu -> mrrm(15, 0).zext
     )
   )
+
   val mem_read_result = mem_read_result_sint.asUInt
-  
+
 //TODO:::::::::::::::::::::应该是没对齐
   val mem_write_mask = MuxLookup(io.in.bits.mem_write_type, 0.U(4.W))(
     Seq(
@@ -74,25 +86,31 @@ class MEMAccess extends Module {
       Store_Type.sw -> "b1111".U(4.W)
     )
   )
-val wd_move = io.in.bits.src2 << ((io.in.bits.alu_result(1,0)) << 3)
+  val mem_write_size = MuxLookup(io.in.bits.mem_write_type, 0.U(3.W))(
+    Seq(
+      Store_Type.sb -> "b000".U(3.W),
+      Store_Type.sh -> "b001".U(3.W),
+      Store_Type.sw -> "b010".U(3.W)
+    )
+  )
+  val wd_move = io.in.bits.src2 << ((io.in.bits.alu_result(1, 0)) << 3)
 
-
-  val mask_move = mem_write_mask <<((io.in.bits.alu_result)(1,0)) 
-  
+  val mask_move = mem_write_mask << ((io.in.bits.alu_result)(1, 0))
 
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
-  io.axi.WA.bits.addr  := io.in.bits.alu_result 
-  io.axi.WD.bits.data  := wd_move//移动
-  io.axi.WD.bits.wstrb := mask_move//移动
+  io.axi.WA.bits.addr  := io.in.bits.alu_result
+  io.axi.WD.bits.data  := wd_move //移动
+  io.axi.WD.bits.wstrb := mask_move //移动
+  io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
-  io.axi.WD.valid      := state===s_w_busy
-  io.axi.WR.ready      := true.B
+  io.axi.WD.valid := state === s_w_busy
+  // io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
+  io.axi.WR.ready := true.B
   //暂时忽略错误处理
 
   // io.out.bits.mem_read_result:=mem_read_result
   val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值
   io.out.bits.mem_read_result := read_res
   read_res                    := mem_read_result
-
 
 }
