@@ -20,7 +20,7 @@ void init_bit_rev(){
 void send_data(){
     outl(SPI_MASTER + 0x18,0x80);//ss reg
     outl(SPI_MASTER + 0x10,0x810);//start
-    outl(SPI_MASTER,0x1);
+    outl(SPI_MASTER,0x71);
     outl(SPI_MASTER + 0x10,0x910);//start
 }
 
@@ -29,7 +29,7 @@ void send_data(){
 // __attribute__((optimize("O0"))) 
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
-    while (((x&0xf00) == (uint32_t)0x900))
+    while (((x&0xfff) == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
     // int i = inl(SPI_MASTER);
     // printf("%x\n",i);    
@@ -41,13 +41,8 @@ void wait_data(){
     putch('\n');
     putch('\n');
     putch('\n');
-    putch('\n');
-    printf("%d\n",i);
-    putch('\n');
-    putch('\n');
-    putch('\n');
-    putch('\n');
-    putch('\n');
+    printf("aaa%d\n",i);
+
     // Runs But Result is NOT Correct
 
     // int i = inl(SPI_MASTER);
