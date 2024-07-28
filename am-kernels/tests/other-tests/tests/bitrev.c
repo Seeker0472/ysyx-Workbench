@@ -12,11 +12,11 @@ static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)a
 
 
 #define SPI_MASTER 0x10001000L
-__attribute__((optimize("O0"))) 
+// __attribute__((optimize("O0"))) 
 void init_bit_rev(){
     outl(SPI_MASTER +0x14,0x01);//OKEY
 }
-__attribute__((optimize("O0"))) 
+// __attribute__((optimize("O0"))) 
 void send_data(){
     outl(SPI_MASTER + 0x18,0x80);//ss reg
     outl(SPI_MASTER + 0x10,0x810);//start
@@ -26,24 +26,24 @@ void send_data(){
 
 //TODO!!!!!!!!!!!!!!
 
-__attribute__((optimize("O0"))) 
+// __attribute__((optimize("O0"))) 
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
-    while (((x&0xfff) == (uint32_t)0x910))
+    while (((x%0xfff) == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
     // int i = inl(SPI_MASTER);
     // printf("%x\n",i);    
 
     // The Following Copy runs(With O0 Optim)
 
-    // int i = inl(SPI_MASTER)>>8;
-    // printf("%x\n",i);
+    int i = inl(SPI_MASTER)>>8;
+    printf("%x\n",i);
 
     // Runs But Result is NOT Correct
 
-    int i = inl(SPI_MASTER);
-    for(volatile int x=0;x<1;x++);
-    printf("%x\n",i);
+    // int i = inl(SPI_MASTER);
+    // for(volatile int x=0;x<1;x++);
+    // printf("%x\n",i);
 
 }
 int main(){
