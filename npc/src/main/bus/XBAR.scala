@@ -19,13 +19,13 @@ class XBAR extends Module {
   })
   val Table = TruthTable(
     Map(
-      BitPat("b10000000????????????????????????") -> BitPat("b010"),//OLD
-      BitPat("b00001111????????????????????????") -> BitPat("b010"),//SRAM
-      BitPat("b00100000000000000000????????????") -> BitPat("b010"),//MROM
-      BitPat("b0000001000000000????????????????") -> BitPat("b001"),//CLINT
-      BitPat("b00010000000000000000????????????") -> BitPat("b010"),//URAT
+      BitPat("b10000000????????????????????????") -> BitPat("b010"), //OLD
+      BitPat("b00001111????????????????????????") -> BitPat("b010"), //SRAM
+      BitPat("b00100000000000000000????????????") -> BitPat("b010"), //MROM
+      BitPat("b0000001000000000????????????????") -> BitPat("b001"), //CLINT
+      BitPat("b00010000000000000000????????????") -> BitPat("b010") //URAT
     ),
-    BitPat("b000")//TODO:暂时把所有地址打进总线
+    BitPat("b000") //TODO:暂时把所有地址打进总线
   )
   // val mem_w_reg = RegInit(0.U(3.W))
   val mem_r_reg = RegInit(0.U(3.W))
@@ -34,20 +34,20 @@ class XBAR extends Module {
   when(io.in.RA.valid) {
     mem_r_reg := mem_r_b
   }
-  val clint=Module(new CLINT)
+  val clint = Module(new CLINT)
   // when(io.in.WA.valid) {
   //   mem_w_reg := mem_w_b
   // }
-  io.axi.WA<>io.in.WA
-  io.axi.WD<>io.in.WD
-  io.axi.WR<>io.in.WR
+  io.axi.WA <> io.in.WA
+  io.axi.WD <> io.in.WD
+  io.axi.WR <> io.in.WR
 
-      //选择设备(in)
+  //选择设备(in)
   // io.axi.RA <> io.in.RA
-  io.axi.RA.valid      := Mux(mem_r_b === BitPat("b010"), io.in.RA.valid, false.B) //如果选择sram，就开
+  io.axi.RA.valid       := Mux(mem_r_b === BitPat("b010"), io.in.RA.valid, false.B) //如果选择sram，就开
   clint.io.RA.valid     := Mux(mem_r_b === BitPat("b001"), io.in.RA.valid, false.B) //b100
-  io.axi.RA.bits.addr  := io.in.RA.bits.addr
-  io.axi.RA.bits.size  := io.in.RA.bits.size
+  io.axi.RA.bits.addr   := io.in.RA.bits.addr
+  io.axi.RA.bits.size   := io.in.RA.bits.size
   clint.io.RA.bits.addr := io.in.RA.bits.addr
   clint.io.RA.bits.size := io.in.RA.bits.size
   io.in.RA.ready := Mux(
@@ -57,9 +57,13 @@ class XBAR extends Module {
   ) //ready
 
   io.axi.RD.ready     := Mux(mem_r_reg === BitPat("b010"), io.in.RD.ready, false.B)
-  clint.io.RD.ready    := Mux(mem_r_reg === BitPat("b010"), io.in.RD.ready, false.B)
+  clint.io.RD.ready   := Mux(mem_r_reg === BitPat("b010"), io.in.RD.ready, false.B)
   io.in.RD.bits.data  := Mux(mem_r_reg === BitPat("b010"), io.axi.RD.bits.data, clint.io.RD.bits.data)
   io.in.RD.bits.rresp := Mux(mem_r_reg === BitPat("b010"), io.axi.RD.bits.rresp, clint.io.RD.bits.rresp)
 
-  io.in.RD.valid      := Mux(mem_r_reg === BitPat("b010"), io.axi.RD.valid, Mux(mem_r_reg===BitPat("b001"),clint.io.RD.valid,false.B))
+  io.in.RD.valid := Mux(
+    mem_r_reg === BitPat("b010"),
+    io.axi.RD.valid,
+    Mux(mem_r_reg === BitPat("b001"), clint.io.RD.valid, false.B)
+  )
 }

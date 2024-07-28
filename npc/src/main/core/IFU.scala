@@ -13,10 +13,10 @@ class IFU extends Module {
     val in       = Flipped(Decoupled(new WBU_O))
     val inst_now = Output(UInt(CVAL.DLEN.W))
     val out      = Decoupled(new IFUO())
-    val axi = Flipped(new AXIReadIO())
-    val rwerr = Input(Bool())
+    val axi      = Flipped(new AXIReadIO())
+    val rwerr    = Input(Bool())
   })
-  val s_idle :: s_fetching :: s_wait_data :: s_valid ::s_error:: Nil = Enum(5)
+  val s_idle :: s_fetching :: s_wait_data :: s_valid :: s_error :: Nil = Enum(5)
 
   // val axi = Module(new AXI_Master())
 
@@ -30,18 +30,18 @@ class IFU extends Module {
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching), //1cycle,depends on memory
       s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
       s_valid -> Mux(io.in.valid, s_fetching, s_valid),
-      s_error->s_error
+      s_error -> s_error
     )
   )
-  io.out.valid := state === s_valid
-  io.axi.RA.bits.addr:=pc
+  io.out.valid        := state === s_valid
+  io.axi.RA.bits.addr := pc
 
   when(io.axi.RD.valid) {
-    inst := io.axi.RD.bits.data//next - inst
+    inst := io.axi.RD.bits.data //next - inst
   }
-  io.axi.RA.valid:=state===s_fetching
-  io.axi.RA.bits.size:="b010".U
-  io.axi.RD.ready:=true.B
+  io.axi.RA.valid     := state === s_fetching
+  io.axi.RA.bits.size := "b010".U
+  io.axi.RD.ready     := true.B
 
   io.in.ready := true.B
 
@@ -52,9 +52,9 @@ class IFU extends Module {
   io.out.bits.instr := inst
 
   when(io.in.valid) {
-    pc := Mux(state===s_error,0.U,io.in.bits.n_pc)
+    pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
   }
-  when(io.rwerr){
-    state:=s_error
+  when(io.rwerr) {
+    state := s_error
   }
 }
