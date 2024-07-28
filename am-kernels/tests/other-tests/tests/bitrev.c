@@ -13,18 +13,18 @@ static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)a
 
 #define SPI_MASTER 0x10001000L
 
-void init_bit_rev(){
+volatile void init_bit_rev(){
     outl(SPI_MASTER,0x7);
     outl(SPI_MASTER +0x14,0x10);//OKEY
 }
-void send_data(){
+volatile void send_data(){
     outb(SPI_MASTER + 0x18,0x80);//ss reg
     outl(SPI_MASTER + 0x10,0x110);//start
 }
 volatile void wait_data(){
-    while((inl(SPI_MASTER+0x10)&0x80)==0x80)
-        for(volatile int i=0;i<100;i++);
-    // inl(SPI_MASTER);
+    // while((inl(SPI_MASTER+0x10)&0x80)==0x80)
+    //     for(volatile int i=0;i<100;i++);
+    // // inl(SPI_MASTER);
 }
 int main(){
     init_bit_rev();
