@@ -21,10 +21,10 @@ void send_data(){
     outb(SPI_MASTER + 0x18,0x80);//ss reg
     outl(SPI_MASTER + 0x10,0x110);//start
 }
-void wait_data(){
+volatile void wait_data(){
     while((inl(SPI_MASTER+0x10)&0x80)==0x80)
         for(volatile int i=0;i<100;i++);
-    inl(SPI_MASTER);
+    // inl(SPI_MASTER);
 }
 int main(){
     init_bit_rev();
