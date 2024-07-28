@@ -24,13 +24,14 @@ void send_data(){
 }
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
-    while ((x == (uint32_t)0x910))
+    while (((x%0xfff) == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
     int i = inl(SPI_MASTER);
-    // for(volatile int i=0;i<100;i++);
-    printf("aa-%x\n", i);
-    // for(volatile int i=0;i<100000;i++);
-    // putch(inl(SPI_MASTER)==0xf);
+    putch('a');
+    putch('0'+(i&10));
+    putch('a');
+    putch('a');
+    putch('a');
 }
 int main(){
     init_bit_rev();
