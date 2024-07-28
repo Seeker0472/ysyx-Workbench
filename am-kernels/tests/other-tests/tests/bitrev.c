@@ -26,7 +26,7 @@ void send_data(){
 
 //TODO!!!!!!!!!!!!!!
 
-// __attribute__((optimize("O0"))) 
+__attribute__((optimize("O0"))) 
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
     while (((x&0x00000fff) == (uint32_t)0x00000910))
