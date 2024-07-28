@@ -23,9 +23,10 @@ void send_data(){
     outl(SPI_MASTER + 0x10,0x910);//start
 }
 void wait_data(){
-    while((inb(SPI_MASTER+0x10)&0x100)==0x100);
+    volatile int i =0;
+    while((inb(SPI_MASTER+0x10)&0x100)==0x100)
+        i = inl(SPI_MASTER);
         // for(volatile int i=0;i<100;i++);
-    volatile int i = inl(SPI_MASTER);
     printf("aa-%x\n",i);
     // for(volatile int i=0;i<100000;i++);
     // putch(inl(SPI_MASTER)==0xf);
