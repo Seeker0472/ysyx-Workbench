@@ -28,6 +28,9 @@ void wait_data(){
     volatile int i = inl(SPI_MASTER);
      i = inl(SPI_MASTER);
      i = inl(SPI_MASTER);
+     i = inl(SPI_MASTER);
+     i = inl(SPI_MASTER);
+     i = inl(SPI_MASTER);
     printf("aa-%x\n%x",inl(SPI_MASTER),i);
     // for(volatile int i=0;i<100000;i++);
     // putch(inl(SPI_MASTER)==0xf);
