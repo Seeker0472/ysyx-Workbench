@@ -23,11 +23,11 @@ void send_data(){
     outl(SPI_MASTER + 0x10,0x910);//start
 }
 void wait_data(){
-    int x=inb(SPI_MASTER + 0x10);
+    int x=inl(SPI_MASTER + 0x10);
     while ((x & 0x100) == 0x100)
-        x=inb(SPI_MASTER + 0x10);
+        x=inl(SPI_MASTER + 0x10);
 
-    volatile int i = inl(SPI_MASTER);
+    int i = inl(SPI_MASTER);
     // for(volatile int i=0;i<100;i++);
     printf("aa-%x\n", i);
     // for(volatile int i=0;i<100000;i++);
