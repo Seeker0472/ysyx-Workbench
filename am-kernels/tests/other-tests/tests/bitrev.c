@@ -31,12 +31,12 @@ __attribute__((optimize("O0"))) void wait_data(){
 
     // The Following Copies runs
 
-    // int i = inl(SPI_MASTER)>>8;
-    // printf("%x\n",i);
-
-    int i = inl(SPI_MASTER);
-    for(volatile int x=0;x<1;x++);
+    int i = inl(SPI_MASTER)>>8;
     printf("%x\n",i);
+
+    // int i = inl(SPI_MASTER);
+    // for(volatile int x=0;x<1;x++);
+    // printf("%x\n",i);
 
 }
 int main(){
