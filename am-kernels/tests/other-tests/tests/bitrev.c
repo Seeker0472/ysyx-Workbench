@@ -27,7 +27,7 @@ void wait_data(){
         // for(volatile int i=0;i<100;i++);
     outl(SPI_MASTER + 0x18,0x00);//ss reg
     printf("aa-%x\n",inl(SPI_MASTER));
-    for(volatile int i=0;i<100000;i++);
+    // for(volatile int i=0;i<100000;i++);
     // putch(inl(SPI_MASTER)==0xf);
 }
 int main(){
