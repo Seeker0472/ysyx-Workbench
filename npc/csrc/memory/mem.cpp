@@ -58,10 +58,14 @@ uint32_t mrom[0x300] = {
     0x00448493,
     0x00448493,
 };
+uint32_t flash[0x2000]={};
+
 word_t mem_size = 84;
 
 // DPI-C Funcs
-extern "C" void flash_read(int32_t addr, int32_t *data) { assert(0); }
+extern "C" void flash_read(int32_t addr, int32_t *data) {
+  *data=flash[addr/4];
+ }
 extern "C" void mrom_read(int32_t addr, int32_t *data) { 
   *data= mrom[(addr - 0x20000000) / 4];
 }
@@ -158,9 +162,16 @@ void init_mrom(char *img_file)
   fclose(fp);
 }
 
+void init_flash(){
+  for(int i=0;i<1000;i++){
+    flash[i]=i;
+  }
+}
+
 void init_img(char *img_file)
 {
   init_mrom(img_file);
+  init_flash();
   // size_t size = 0;
   if (img_file != NULL)
   {
