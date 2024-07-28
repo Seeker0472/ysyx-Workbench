@@ -39,8 +39,8 @@ void wait_data(){
     int i = inl(SPI_MASTER)>>8;
     // putch('\n');
     putch('0'+(i&0xf));
-    putch('0'+((i>>4)&0xf));
-    putch('0'+((i>>8)&0xf));
+    // putch('0'+((i>>4)&0xf));
+    // putch('0'+((i>>8)&0xf));
     putch('\n');
     putch('\n');
     putch('\n');
