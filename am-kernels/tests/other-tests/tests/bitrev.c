@@ -26,7 +26,7 @@ void wait_data(){
     while ((inb(SPI_MASTER + 0x10) & 0x100) == 0x100)
         ;
 
-    volatile int i = inw(SPI_MASTER);
+    volatile int i = inb(SPI_MASTER);
     // for(volatile int i=0;i<100;i++);
     printf("aa-%x\n", i);
     // for(volatile int i=0;i<100000;i++);
