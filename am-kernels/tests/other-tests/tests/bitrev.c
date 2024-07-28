@@ -28,7 +28,7 @@ void wait_data(){
         x=inl(SPI_MASTER + 0x10);
     int i = inl(SPI_MASTER)>>8;
     // putch('\n');
-    printf("0x%x\n",i);
+    printf("%x\n",i);
 
 }
 int main(){
