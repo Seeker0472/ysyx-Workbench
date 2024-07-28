@@ -1,6 +1,6 @@
 #include "am.h"
 #include "trap.h"
-#include "soc.h"
+// #include "soc.h"
 
 #define SPI_MASTER 0x10001000L
 
