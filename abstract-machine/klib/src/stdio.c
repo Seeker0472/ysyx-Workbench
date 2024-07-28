@@ -27,9 +27,6 @@ int printf(const char *fmt, ...)
 
 int vsprintf(char *out, const char *fmt, va_list args)
 {
-    putch('\n');
-  putch('\n');
-  putch('\n');
   size_t out_offset = 0;
   const char *p = fmt;
   while (*p != '\0')
@@ -76,6 +73,9 @@ int vsprintf(char *out, const char *fmt, va_list args)
 // 递归打印val
 int print_num(char *out, size_t out_offset, int val)
 {
+      putch('\n');
+  putch('\n');
+  putch('\n');
   if (val < 0)
   {
     out[out_offset++] = '-';
