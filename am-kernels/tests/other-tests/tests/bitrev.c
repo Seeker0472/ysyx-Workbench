@@ -24,7 +24,6 @@ void send_data(){
 }
 void wait_data(){
     while((inb(SPI_MASTER+0x10)&0x100)==0x100);
-    printf("%x\n",inb(SPI_MASTER+0x10));
         // for(volatile int i=0;i<100;i++);
     inl(SPI_MASTER);
 }
