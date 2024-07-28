@@ -25,7 +25,8 @@ void send_data(){
 void wait_data(){
     while((inb(SPI_MASTER+0x10)&0x100)==0x100);
         // for(volatile int i=0;i<100;i++);
-    putch(inl(SPI_MASTER)==0xf);
+    printf("%x\n",inl(SPI_MASTER));
+    // putch(inl(SPI_MASTER)==0xf);
 }
 int main(){
     init_bit_rev();
