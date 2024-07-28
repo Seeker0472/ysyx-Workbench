@@ -22,18 +22,23 @@ void send_data(){
     outl(SPI_MASTER,0x71);
     outl(SPI_MASTER + 0x10,0x910);//start
 }
+
+//TODO!!!!!!!!!!!!!!
+
 // __attribute__((optimize("O0"))) 
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
-    while (((x%0xfff) == (uint32_t)0x910))
+    while (((x&0xfff) == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
-    int i = inl(SPI_MASTER);
-    printf("%x\n",i);    
+    // int i = inl(SPI_MASTER);
+    // printf("%x\n",i);    
 
-    // The Following Copies runs
+    // The Following Copy runs(With O0 Optim)
 
-    // int i = inl(SPI_MASTER)>>8;
-    // printf("%x\n",i);
+    int i = inl(SPI_MASTER)>>8;
+    printf("%x\n",i);
+
+    // Runs But Result is NOT Correct
 
     // int i = inl(SPI_MASTER);
     // for(volatile int x=0;x<1;x++);
