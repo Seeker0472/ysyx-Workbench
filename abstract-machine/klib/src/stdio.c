@@ -16,7 +16,7 @@ int print_num_long(char *out, size_t out_offset, long val);
 int printf(const char *fmt, ...)
 {
 
-  char out[50];
+  char out[10];
   va_list args;
   va_start(args, fmt);
   int len = vsprintf(out, fmt, args);
@@ -73,9 +73,6 @@ int vsprintf(char *out, const char *fmt, va_list args)
 // 递归打印val
 int print_num(char *out, size_t out_offset, int val)
 {
-      putch('\n');
-  putch('\n');
-  putch('\n');
   if (val < 0)
   {
     out[out_offset++] = '-';
