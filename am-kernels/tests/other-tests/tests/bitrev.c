@@ -36,15 +36,17 @@ void wait_data(){
 
     // The Following Copy runs(With O0 Optim)
 
-    int i = inl(SPI_MASTER)>>4;
-    putch('\n');
-    putch('\n');
+    int i = inl(SPI_MASTER)>>8;
+    // putch('\n');
+    putch('0'+(i&0xf));
+    putch('0'+((i>>4)&0xf));
+    putch('0'+((i>>8)&0xf));
     putch('\n');
     putch('\n');
     putch('\n');
     putch('\n');
     // putch('\n');
-    printf("%x\n",i);
+    // printf("%x\n",i);
     // putch('\n');
     // putch('\n');
     // putch('\n');
