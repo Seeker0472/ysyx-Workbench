@@ -26,7 +26,7 @@ void send_data(){
 
 //TODO!!!!!!!!!!!!!!
 
-// __attribute__((optimize("O0"))) 
+__attribute__((optimize("O0"))) 
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
     while (((x&0x00000fff) == (uint32_t)0x00000910))
@@ -42,16 +42,16 @@ void wait_data(){
     // putch('\n');
     // putch('\n');
     // putch('\n');
-    // putch('\n');
+    putch('\n');
     // putch('\n');
     printf("%x\n",i);
-    putch('\n');
-    putch('\n');
-    putch('\n');
-    putch('\n');
-    putch('\n');
-    putch('\n');
-    putch('\n');
+    // putch('\n');
+    // putch('\n');
+    // putch('\n');
+    // putch('\n');
+    // putch('\n');
+    // putch('\n');
+    // putch('\n');
     // Runs But Result is NOT Correct
 
     // int i = inl(SPI_MASTER);
