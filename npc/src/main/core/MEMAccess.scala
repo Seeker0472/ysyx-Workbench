@@ -103,8 +103,8 @@ class MEMAccess extends Module {
   io.axi.WD.bits.wstrb := mask_move //移动
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
-  // io.axi.WD.valid := state === s_w_busy
-  io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
+  io.axi.WD.valid := state === s_w_busy
+  // io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
   io.axi.WR.ready := true.B
   //暂时忽略错误处理
 
