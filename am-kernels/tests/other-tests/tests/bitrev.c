@@ -27,7 +27,7 @@ void wait_data(){
     while (((x%0xfff) == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
     int i = inl(SPI_MASTER);
-    // putch('\n');
+    putch('\n');
     printf("%x\n",i);
 
 }
