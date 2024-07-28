@@ -29,7 +29,7 @@ void send_data(){
 // __attribute__((optimize("O0"))) 
 void wait_data(){
     uint32_t x=inl(SPI_MASTER + 0x10);
-    while (((x&0xfff) == (uint32_t)0x910))
+    while (((x%0xfff) == (uint32_t)0x910))
         x=inl(SPI_MASTER + 0x10);
     // int i = inl(SPI_MASTER);
     // printf("%x\n",i);    
@@ -41,7 +41,7 @@ void wait_data(){
     putch('\n');
     putch('\n');
     putch('\n');
-    printf("aaa%d\n",i);
+    printf("%d\n",i);
 
     // Runs But Result is NOT Correct
 
