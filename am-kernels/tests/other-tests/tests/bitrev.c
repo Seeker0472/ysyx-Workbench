@@ -28,9 +28,14 @@ void wait_data(){
         x=inl(SPI_MASTER + 0x10);
     // int i = inl(SPI_MASTER);
     // printf("%x\n",i);    
-    
+
     // The Following Copies runs
-    int i = inl(SPI_MASTER)>>8;
+
+    // int i = inl(SPI_MASTER)>>8;
+    // printf("%x\n",i);
+
+    int i = inl(SPI_MASTER);
+    for(volatile int i=0;i<100;i++);
     printf("%x\n",i);
 
 }
