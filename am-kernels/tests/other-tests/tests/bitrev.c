@@ -37,8 +37,8 @@ void wait_data(){
     // The Following Copy runs(With O0 Optim)
 
     int i = inl(SPI_MASTER)>>8;
-    printf("%d\n",i);
     putch('\n');
+    printf("%d\n",i);
 
     // Runs But Result is NOT Correct
 
