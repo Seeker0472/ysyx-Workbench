@@ -44,7 +44,7 @@ void wait_data(){
     // putch('\n');
     // putch('\n');
     // putch('\n');
-    // putch('\n');
+    putch('\n');
     // putch('\n');
     printf("%x\n",i);
     // putch('\n');
