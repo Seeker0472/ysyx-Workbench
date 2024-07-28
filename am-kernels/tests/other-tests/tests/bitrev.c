@@ -35,7 +35,7 @@ void wait_data(){
     // printf("%x\n",i);
 
     int i = inl(SPI_MASTER);
-    for(volatile int i=0;i<100;i++);
+    for(volatile int x=0;x<100;x++);
     printf("%x\n",i);
 
 }
