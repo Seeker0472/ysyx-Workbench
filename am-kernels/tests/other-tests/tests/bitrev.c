@@ -24,7 +24,7 @@ void send_data(){
 }
 void wait_data(){
     int x=inl(SPI_MASTER + 0x10);
-    while ((x == 0x810))
+    while ((x == 0x910))
         x=inl(SPI_MASTER + 0x10);
 
     int i = inl(SPI_MASTER);
