@@ -38,7 +38,13 @@ void wait_data(){
 
     int i = inl(SPI_MASTER)>>8;
     putch('\n');
-    printf("%d\n",i);
+    putch('\n');
+    putch('\n');
+    putch('\n');
+    putch('\n');
+    putch('\n');
+    putch('\n');
+    printf("%x\n",i);
 
     // Runs But Result is NOT Correct
 
