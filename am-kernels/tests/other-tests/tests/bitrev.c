@@ -17,7 +17,7 @@ void init_bit_rev(){
     outb(SPI_MASTER +0x14,0x02);
 }
 void send_data(){
-    outb(SPI_MASTER + 0x18,0x00);//ss reg
+    outb(SPI_MASTER + 0x18,0x7f);//ss reg
     // outl(SPI_MASTER + 0x10,0x140f);//ctrl reg
     outw(SPI_MASTER + 0x10,0x148f);//start
     outb(SPI_MASTER,0x7);
