@@ -14,21 +14,21 @@ static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)a
 #define SPI_MASTER 0x10001000L
 
 void init_bit_rev(){
-    outb(SPI_MASTER +0x14,0x02);
+    outl(SPI_MASTER +0x14,0x02);
 }
 void send_data(){
     outb(SPI_MASTER + 0x18,0x7f);//ss reg
     outb(SPI_MASTER + 0x18,0x80);//ss reg
     // outl(SPI_MASTER + 0x10,0x140f);//ctrl reg
-    outw(SPI_MASTER + 0x10,0x148f);//start
-    outb(SPI_MASTER,0x7);
-    // outw(SPI_MASTER + 0x10,0x140f);//ctrl reg
+    outl(SPI_MASTER + 0x10,0x148f);//start
+    outl(SPI_MASTER,0x7);
+    outl(SPI_MASTER + 0x10,0x140f);//ctrl reg
 
 }
 void wait_data(){
-    while((inb(SPI_MASTER+0x10)&0x80)==0x80)
+    while((inl(SPI_MASTER+0x10)&0x80)==0x80)
         continue;
-    inb(SPI_MASTER);
+    inl(SPI_MASTER);
 }
 int main(){
     init_bit_rev();
