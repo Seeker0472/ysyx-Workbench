@@ -18,19 +18,12 @@ void init_bit_rev(){
     outl(SPI_MASTER +0x14,0x10);//OKEY
 }
 void send_data(){
-    // outb(SPI_MASTER + 0x18,0x7f);//ss reg
     outb(SPI_MASTER + 0x18,0x80);//ss reg
-    // outl(SPI_MASTER + 0x10,0x140f);//ctrl reg
-    // outl(SPI_MASTER + 0x10,0x48f);//start
     outl(SPI_MASTER + 0x10,0x110);//start
-    // outl(SPI_MASTER + 0x10,0x87);//start
-
-    // outl(SPI_MASTER + 0x10,0x140f);//ctrl reg
-
 }
 void wait_data(){
     while((inl(SPI_MASTER+0x10)&0x80)==0x80)
-        continue;
+        for(volatile int i=0;i<100;i++);
     inl(SPI_MASTER);
 }
 int main(){
