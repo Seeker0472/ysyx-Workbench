@@ -25,7 +25,7 @@ void send_data(){
 
 }
 void wait_data(){
-    while((inl(SPI_MASTER+0x10)&0x80)==1)
+    while((inl(SPI_MASTER+0x10)&0x80)==0x80)
         continue;
     inl(SPI_MASTER);
 }
