@@ -23,8 +23,8 @@ void send_data(){
     outl(SPI_MASTER + 0x10,0xD10);//start
 }
 void wait_data(){
-    while((inb(SPI_MASTER+0x10)&0x80)==0x80)
-        for(volatile int i=0;i<100;i++);
+    while((inb(SPI_MASTER+0x10)&0x80)==0x80);
+        // for(volatile int i=0;i<100;i++);
     inl(SPI_MASTER);
 }
 int main(){
