@@ -13,7 +13,7 @@ static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)a
 
 #define SPI_MASTER 0x10001000L
 void init_bit_rev(){
-    outl(SPI_MASTER +0x14,0x01);//OKEY
+    outl(SPI_MASTER +0x14,0x01);//divider
 }
 void send_data(){
     outl(SPI_MASTER + 0x18,0x80);//ss reg
@@ -23,9 +23,7 @@ void send_data(){
 }
 
 void wait_data(){
-    uint32_t x=inl(SPI_MASTER + 0x10);
-    while ((((uint32_t)x) == 0x000000910))
-        x=inl(SPI_MASTER + 0x10);
+    while (((inl(SPI_MASTER + 0x10)&0x100) == 0x100));
     int i = inl(SPI_MASTER)>>8;
     assert(i==0x88);
 }
