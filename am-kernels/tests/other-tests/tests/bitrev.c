@@ -36,7 +36,7 @@ void wait_data(){
 
     // The Following Copy runs(With O0 Optim)
 
-    int i = inl(SPI_MASTER)>>4;
+    int i = inl(SPI_MASTER)>>8;
 
     // putch('\n');
     // // putch('\n');
