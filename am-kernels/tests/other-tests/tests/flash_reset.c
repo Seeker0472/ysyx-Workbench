@@ -23,7 +23,7 @@ uint32_t flash_read(uint32_t addr){
     while (((inl(SPI_MASTER + 0x10)&0x100) == 0x100));//等待
     outl(SPI_MASTER + 0x10,0x240);//start'
     outl(SPI_MASTER + 4 ,addr);//send_addr
-    outl(SPI_MASTER + 0x10,0x340);//start'
+    outl(SPI_MASTER + 0x10,0x34f);//start'
 
     while (((inl(SPI_MASTER + 0x10)&0x100) == 0x100));//等待
     uint32_t result = inl(SPI_MASTER);
