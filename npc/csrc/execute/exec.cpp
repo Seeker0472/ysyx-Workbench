@@ -54,7 +54,7 @@ static void trace_and_difftest(paddr_t pc, word_t inst_in)
 {
     if (!state_valid())
         return;
-    // print_inst_asm(pc, inst_in);
+    print_inst_asm(pc, inst_in);
 
 #ifdef CONFIG_ITRACE
     char buf[200];
