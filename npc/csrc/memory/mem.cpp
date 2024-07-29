@@ -153,16 +153,16 @@ uint32_t warp_pmem_read(uint32_t addr)
 {
   return mem_read(addr);
 }
-// void init_mrom(char *img_file)
-// {
-//   int size = 0;
-//   FILE *fp = fopen(img_file, "rb");
-//   fseek(fp, 0, SEEK_END);
-//   size = ftell(fp);
-//   fseek(fp, 0, SEEK_SET);
-//   fread(mrom, size, 1, fp);
-//   fclose(fp);
-// }
+void init_mrom(char *img_file)
+{
+  int size = 0;
+  FILE *fp = fopen(img_file, "rb");
+  fseek(fp, 0, SEEK_END);
+  size = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+  fread(mrom, size, 1, fp);
+  fclose(fp);
+}
 
 // void init_flash(){
 //   for(int i=0;i<1000;i++){
@@ -182,9 +182,8 @@ void init_flash(char *img_file)
 
 void init_img(char *img_file)
 {
-  init_flash(img_file);
-
-  // init_mrom(img_file);
+  init_flash("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
+  init_mrom(img_file);
   // init_flash();
   // size_t size = 0;
   if (img_file != NULL)
