@@ -54,10 +54,10 @@ class ypc extends Module {
   axi_arbiter.io.out.WA.ready := io.master.awready
   io.master.awvalid           := axi_arbiter.io.out.WA.valid
   io.master.awaddr            := axi_arbiter.io.out.WA.bits.addr
-  io.master.awid              := 1.U
+  io.master.awid              := 0.U
   io.master.awlen             := 0.U
   io.master.awsize            := axi_arbiter.io.out.WA.bits.size
-  io.master.awburst           := 2.U
+  io.master.awburst           := 1.U
 
   axi_arbiter.io.out.WD.ready := io.master.wready
   io.master.wvalid            := axi_arbiter.io.out.WD.valid
@@ -76,7 +76,7 @@ class ypc extends Module {
   io.master.arlen             := 0.U
   // io.master.arsize            := "b010".U(3.W)
   io.master.arsize  := axi_arbiter.io.out.RA.bits.size
-  io.master.arburst := 0.U
+  io.master.arburst := 1.U
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready
   axi_arbiter.io.out.RD.valid      := io.master.rvalid
