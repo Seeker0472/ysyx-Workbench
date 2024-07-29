@@ -24,8 +24,10 @@ uint32_t flash_read(uint32_t addr){
     return result;
 }
 void check_flash(){
-    for(int i=0;i<1;i++)
-        putch('0'+flash_read((uint32_t)(data+i)));
+    for(int i=0;i<100;i++)
+        assert(flash_read((uint32_t)(data+i))==i);
+
+        // putch('0'+flash_read((uint32_t)(data+i)));
 }
 
 int main(){
