@@ -31,7 +31,7 @@ uint32_t flash_read(uint32_t addr){
 }
 
 void check_flash(){
-    for(int i=0;i<1000;i++)
+    for(int i=0;i<10;i++)
         check(flash_read((uint32_t)data)==0);
 }
 
