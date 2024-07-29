@@ -56,7 +56,7 @@ class MEMAccess extends Module {
   )
   io.axi.RA.bits.size := mem_read_size
 
-  io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && state =/= s_valid //避免多次访存
+  io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && state === s_r_busy //避免多次访存
   io.axi.RA.bits.addr := io.in.bits.alu_result
   io.axi.RD.ready     := true.B
 
