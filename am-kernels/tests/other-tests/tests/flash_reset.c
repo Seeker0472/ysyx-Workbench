@@ -29,8 +29,6 @@ void check_flash(){
     for(int i=0;i<1000;i++)
         check(flash_read((uint32_t)(data+i))==i);
 
-        // putch(flash_read((uint32_t)(data+i)));
-
 }
 
 int main(){
