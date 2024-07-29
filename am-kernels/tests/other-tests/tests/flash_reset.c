@@ -26,7 +26,7 @@ uint32_t flash_read(uint32_t addr){
     return val;
 }
 void check_flash(){
-    for(int i=0;i<100;i++)
+    for(int i=0;i<1000;i++)
         check(flash_read((uint32_t)(data+i))==i);
 
 }
