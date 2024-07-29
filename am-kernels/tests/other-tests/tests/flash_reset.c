@@ -21,11 +21,12 @@ uint32_t flash_read(uint32_t addr){
 
     while (((inl(SPI_MASTER + 0x10)&0x100) == 0x100));//等待
     uint32_t result = inl(SPI_MASTER);
+    outl(SPI_MASTER + 0x18,0x00);
     return result;
 }
 void check_flash(){
     for(int i=0;i<100;i++)
-        putch('0'+flash_read((uint32_t)(data+i)));
+        check(flash_read((uint32_t)(data+i))==i);
 
 }
 
