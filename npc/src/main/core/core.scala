@@ -65,7 +65,8 @@ class ypc extends Module {
   io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
   io.master.wlast             := true.B
 
-  io.master.bready                 := axi_arbiter.io.out.WR.ready
+  // io.master.bready                 := axi_arbiter.io.out.WR.ready
+  io.master.bready                 := true.B
   axi_arbiter.io.out.WR.valid      := io.master.bvalid
   axi_arbiter.io.out.WR.bits.bresp := io.master.bresp
 
