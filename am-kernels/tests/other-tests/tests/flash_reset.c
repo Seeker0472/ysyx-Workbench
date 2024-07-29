@@ -11,12 +11,12 @@ uint32_t * data = (uint32_t *)0x30000000L;
 
 #define SPI_MASTER 0x10001000L
 void init_bit_rev(){
-    outl(SPI_MASTER +0x14,0x01);//divider
+    outl(SPI_MASTER +0x14,0x11);//divider
 }
 
 uint32_t flash_read(uint32_t addr){
     outl(SPI_MASTER + 0x18,0x01);//ss reg
-    outl(SPI_MASTER,addr);//send_addr
+    outl(SPI_MASTER + 4,addr);//send_addr
     outl(SPI_MASTER + 0x10,0x910);//start
     while (((inl(SPI_MASTER + 0x10)&0x100) == 0x100));//等待
     uint32_t result = inl(SPI_MASTER);
