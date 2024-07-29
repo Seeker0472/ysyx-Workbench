@@ -28,7 +28,7 @@ class MEMAccess extends Module {
   io.out.bits.imm             := io.in.bits.imm
 
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid  ::s_r_wd:: Nil = Enum(5)
   val state                                            = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(
     List(
@@ -37,8 +37,8 @@ class MEMAccess extends Module {
         Mux(io.in.bits.mem_read_enable, s_r_busy, s_w_busy),
         Mux(io.in.valid, s_valid, s_idle)
       ),
-      s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
-      // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
+      s_r_busy -> Mux(io.axi.RA.ready, s_r_wd, s_r_busy), //depends on the mem delay
+      s_r_wd -> Mux(io.axi.RA.valid, s_valid, s_r_wd), 
       s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
