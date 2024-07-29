@@ -38,7 +38,7 @@ void wait_data(){
 
     int i = inl(SPI_MASTER)>>8;
 
-    assert(i==0x88);
+    assert(i!=0x88);
     // putch('\n');
     // // putch('\n');
     // printf("%x\n",i);
