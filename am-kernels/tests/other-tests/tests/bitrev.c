@@ -23,7 +23,7 @@ void send_data(){
 }
 
 void wait_data(){
-    while (((inl(SPI_MASTER + 0x10)&0x100) == 0x100));
+    while ((inl(SPI_MASTER + 0x10)&0x100 == 0x100));
     int i = inl(SPI_MASTER)>>8;
     assert(i==0x88);
 }
