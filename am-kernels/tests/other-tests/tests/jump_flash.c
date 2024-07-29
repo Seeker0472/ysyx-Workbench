@@ -20,7 +20,6 @@ uint32_t flash_read(uint32_t addr){
 }
 
 int main(){
-    printf("aa");
     uint32_t data[50];
     for(int i=0;i<10;i++)
         data[i]=flash_read((uint32_t)(flash_addr+i));
