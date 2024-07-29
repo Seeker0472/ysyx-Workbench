@@ -19,7 +19,7 @@ uint32_t flash_read(uint32_t addr){
 
     outl(SPI_MASTER + 0x10,0xb40);//start'
 
-    outl(SPI_MASTER ,0x3);
+    outl(SPI_MASTER +4 ,0x3);
 
     outl(SPI_MASTER +4 ,addr);//send_addr
 
