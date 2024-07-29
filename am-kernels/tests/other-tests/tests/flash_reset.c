@@ -14,8 +14,8 @@ void init_bit_rev(){
     outl(SPI_MASTER +0x14,0x11);//divider
 }
 uint32_t flash_read(uint32_t addr){
-    outl(SPI_MASTER + 0x18,0x01);//ss reg
     outl(SPI_MASTER + 0x10,0x240);//start'
+    outl(SPI_MASTER + 0x18,0x01);//ss reg
     outl(SPI_MASTER + 4 ,(addr&0x00ffffff)|0x03000000);//send_addr
     outl(SPI_MASTER + 0x10,0x340);//start'
 
@@ -23,10 +23,9 @@ uint32_t flash_read(uint32_t addr){
     uint32_t result = inl(SPI_MASTER);
     return result;
 }
- __attribute__((optimize("O0")))
 void check_flash(){
     for(int i=0;i<100;i++)
-        printf("%x",flash_read((uint32_t)(data+i)));
+        putch('0'+flash_read((uint32_t)(data+i)));
 }
 
 int main(){
