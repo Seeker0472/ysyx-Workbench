@@ -26,7 +26,7 @@ uint32_t flash_read(uint32_t addr){
 }
 void check_flash(){
     for(int i=0;i<1;i++)
-        printf("%lx\n",flash_read((uint32_t)(data+i)));
+        putch(flash_read((uint32_t)(data+i)));
         // check(flash_read((uint32_t)(data+i))==i);
 
 }
