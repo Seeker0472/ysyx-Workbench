@@ -12,7 +12,7 @@ int main(void)
   printf("Hello!!!!!!!!!!!!!!!!!!!!!!!!\n");
   // for(volatile int i=0;i<1000;i++);
 
-  printf("Hello!!!!!!!!!!!!!!!!!!!!!!!!%d-%x\n",0xffffffff,0xffffffff);
+  printf("Hello!!!!!!!!!!!!!!!!!!!!!!!!%d-%x\n",0xfffffff,0xfffffff);
   // // for(volatile int i=0;i<1000;i++);
 
 
