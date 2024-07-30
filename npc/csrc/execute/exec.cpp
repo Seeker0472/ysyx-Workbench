@@ -3,20 +3,21 @@
 #include <common.h>
 #include <diftest.h>
 #include <iostream>
+#include <stdint.h>
 #include <utils.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-#include <stdint.h>
 
 VerilatedVcdC *tfp; // 用于生成波形的指针
 VysyxSoCFull *dut;
 
-uint64_t sim_time =0;
+uint64_t sim_time = 0;
 
 #include <isa.h>
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
 void update_reg_state();
+void print_inst_asm(paddr_t pc, word_t inst);
 
 // TODO:re
 
