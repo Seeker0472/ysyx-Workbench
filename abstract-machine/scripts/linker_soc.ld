@@ -47,5 +47,8 @@ SECTIONS {
   /* end = .; */
   /* _end = .; */
   _heap_start = ALIGN(0x10);
+  _pmem_start = .;
+  _entry_offset = 0;
+
   /* _heap_start = .; */
 }
