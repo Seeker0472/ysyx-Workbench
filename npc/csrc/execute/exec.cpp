@@ -7,7 +7,7 @@
 #include <utils.h>
 #include <diftest.h>
 
-static VerilatedVcdC *tfp; // 用于生成波形的指针
+VerilatedVcdC *tfp; // 用于生成波形的指针
 VysyxSoCFull *dut;
 
 
