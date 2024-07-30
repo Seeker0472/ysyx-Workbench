@@ -77,7 +77,7 @@ void print_welcome(){
       : "x0"             // 被修改的寄存器
   );
 
-  printf("Hello from %c%c%c%c_%d! \nHave a good day!(^-^)\n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
+  printf("Hello from %c%c%c%c_%d! \nHave a good day!  ( =ω= )\n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
 }
 
 
