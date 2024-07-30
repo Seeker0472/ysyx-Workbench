@@ -209,7 +209,7 @@ void init_runtime()
     tfp = new VerilatedVcdC;
     dut->trace(tfp, 99);                                                                  // 跟踪99级信号
     MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");, tfp->open("/dev/null");) // 打开VCD文件
-    reset(5);                                                                             // 复位5个周期
+    reset(20);                                                                             // 复位5个周期
 }
 
 int run(int step)
