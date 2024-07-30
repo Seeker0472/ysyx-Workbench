@@ -30,9 +30,7 @@ uint32_t mem_read(uint32_t pc);
 extern CPU_state *cpu;
 bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-void ftrace_check_inst(paddr_t pc_now, word_t inst);
-void difftest_check_state();
-void print_inst_asm(paddr_t pc, word_t inst);
+// void print_inst_asm(paddr_t pc, word_t inst);
 
 #define PRINT_INST_MIN 10
 
@@ -40,7 +38,6 @@ void print_inst_asm(paddr_t pc, word_t inst);
 
 void single_cycle()
 {
-    // dut->io_instr = mem_read(dut->io_pc); // 取指令
     dut->clock = 0;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
@@ -48,8 +45,6 @@ void single_cycle()
     dut->clock = 1;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
-    // printf("%x\n",dut->io_pc);
-    // dut->io_instr = mem_read(dut->io_pc); // 下一条指令
     update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT

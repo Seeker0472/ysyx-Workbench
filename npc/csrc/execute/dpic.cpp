@@ -10,6 +10,7 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
+extern VerilatedVcdC *tfp;
 
 extern VysyxSoCFull *dut;
 
