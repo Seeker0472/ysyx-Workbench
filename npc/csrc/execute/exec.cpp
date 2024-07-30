@@ -11,7 +11,7 @@
 VerilatedVcdC *tfp; // 用于生成波形的指针
 VysyxSoCFull *dut;
 
-uint128_t sim_time =0;
+uint64_t sim_time =0;
 
 #include <isa.h>
 
