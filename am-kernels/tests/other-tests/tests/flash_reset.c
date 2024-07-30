@@ -29,7 +29,7 @@ void check_flash(){
     // for(int i=0;i<1000;i++)
     //     check(flash_read((uint32_t)(data+i))==i);
     for(int i=1;i<100;i++)
-        printf("%x\n",data[i]);
+        printf("%x\n",flash_read((uint32_t)(data+i)));
 }
 
 int main(){
