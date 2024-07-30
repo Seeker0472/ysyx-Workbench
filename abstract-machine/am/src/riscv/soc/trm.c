@@ -62,11 +62,6 @@ void init_uart(){
 
 
 void print_welcome(){
-  putch('\n');
-  putch('\n');
-  putch('\n');
-  putch('\n');
-  putch('\n');
   uint32_t ysyx, id;
   // csrrs a0, mvendorid, x0
   __asm__(
