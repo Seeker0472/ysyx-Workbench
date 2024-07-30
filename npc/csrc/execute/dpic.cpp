@@ -20,7 +20,7 @@ extern "C" void print_char(char w_char) {
 }
 
 // 使用DPI-C机制实现ebreak
-extern "C" void call_ebreak() {
+void call_ebreak() {
   if (nemu_state.state ==
       NEMU_END) // Prevent_Display_Twice!!!!!------TODO:Why called Twice????
     return;
