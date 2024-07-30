@@ -61,9 +61,30 @@ void init_uart(){
 }
 
 
+void print_welcome(){
+  uint32_t ysyx, id;
+  // csrrs a0, mvendorid, x0
+  __asm__(
+      "csrrs %0, mvendorid, x0"     // 复制ysyx
+      : "=r"(ysyx)       
+      :
+      : "x0"             // 被修改的寄存器
+  );
+    __asm__(
+      "csrrs %0, marchid, x0"     // 复制学号
+      : "=r"(id)       
+      :
+      : "x0"             // 被修改的寄存器
+  );
+
+  printf("Hello from %c%c%c%c_%d! \nHave a good day! =ω= \n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
+}
+
+
 void _trm_init() {
   init_uart();
   bootloader();
+  print_welcome();
   int ret = main(mainargs);
   halt(ret);
 }
