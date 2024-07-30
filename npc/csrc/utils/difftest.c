@@ -4,6 +4,7 @@
 #include "../include/diftest.h"
 #include "../include/ydb_all.h"
 
+
 extern CPU_state *cpu;
 CPU_state *ref_cpu;
 extern uint32_t mem[10000000];
