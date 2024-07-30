@@ -181,7 +181,7 @@ void init_flash_img(char *img_file)
 
 void init_img(char *img_file)
 {
-  init_flash();
+  // init_flash();
   init_flash_img("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
   init_mrom(img_file);
   init_flash();
