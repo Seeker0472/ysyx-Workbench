@@ -22,14 +22,14 @@ uint32_t flash_read(uint32_t addr){
     while (((inl(SPI_MASTER + 0x10)&0x100) == 0x100));//等待
     uint32_t result = inl(SPI_MASTER);
     uint32_t val = ((result&0xff)<<24)|((result&0xff00)<<8)|((result&0xff0000)>>8)|((result&0xff000000)>>24);
-    // outl(SPI_MASTER + 0x18,0x00);
+    outl(SPI_MASTER + 0x18,0x00);
     return val;
 }
 void check_flash(){
-    // for(int i=0;i<1000;i++)
-    //     check(flash_read((uint32_t)(data+i))==i);
-    for(int i=1;i<100;i++)
-        printf("%x\n",flash_read((uint32_t)(data+i)));
+    for(int i=0;i<1000;i++)
+        check(flash_read((uint32_t)(data+i))==i);
+    // for(int i=1;i<100;i++)
+    //     printf("%x\n",flash_read((uint32_t)(data+i)));
 }
 
 int main(){
