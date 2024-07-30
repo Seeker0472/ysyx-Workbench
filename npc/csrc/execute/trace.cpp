@@ -8,7 +8,7 @@
 #include <utils.h>
 #include <diftest.h>
 #include <common.h>
-
+extern CPU_state *cpu;
 extern VysyxSoCFull *dut;
 
 int prev_state = 0;

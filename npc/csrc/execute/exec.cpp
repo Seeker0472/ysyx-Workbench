@@ -27,7 +27,6 @@ void init_verilator(int argc, char *argv[]){
 uint64_t g_nr_guest_inst = 0;
 
 uint32_t mem_read(uint32_t pc);
-extern CPU_state *cpu;
 bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 // void print_inst_asm(paddr_t pc, word_t inst);
