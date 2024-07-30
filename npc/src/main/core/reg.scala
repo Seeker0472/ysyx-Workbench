@@ -20,7 +20,7 @@ class REG extends Module {
   val regs = RegInit(VecInit(Seq.fill(CVAL.REG_NUM)(0.U(CVAL.DLEN.W))))
   val csrs = RegInit(VecInit(Seq.fill(6)(0.U(CVAL.DLEN.W))))
 
-  csrs(4.U):=0x7924737978.U//ysyx
+  csrs(4.U):=0x79737978.U//ysyx
   csrs(5.U):=0x15fdf65.U//学号
 
 
