@@ -15,7 +15,7 @@ void init_bit_rev(){
 }
 uint32_t flash_read(uint32_t addr){
     // outl(SPI_MASTER + 0x10,0x240);//start'
-    outl(SPI_MASTER + 0x18,0x01);//ss reg
+    outl(SPI_MASTER ,0x01);//ss reg
     outl(SPI_MASTER + 0x18,0x01);//ss reg
     outl(SPI_MASTER + 4 ,(addr&0x00ffffff)|0x03000000);//send_addr
     outl(SPI_MASTER + 0x10,0x540);//start'
