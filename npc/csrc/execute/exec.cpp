@@ -1,7 +1,7 @@
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull___024root.h"
 #include <common.h>
-#include <.h>
+#include <diftest.h>
 #include <iostream>
 #include <utils.h>
 #include <verilated.h>
@@ -9,6 +9,7 @@
 
 VerilatedVcdC *tfp; // 用于生成波形的指针
 VysyxSoCFull *dut;
+
 
 // 使用DPI-C机制实现ebreak
 void call_ebreak() {
@@ -35,7 +36,6 @@ void call_ebreak() {
   nemu_state.halt_ret = regs_2_value;
   // exit(0);
 }
-
 #include <isa.h>
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
