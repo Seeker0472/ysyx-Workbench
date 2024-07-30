@@ -1,8 +1,8 @@
-# include <diftest.h>
-#include <common.h>
-#include <isa.h>
-// #include <diftest.h>
-
+// # include <diftest.h>
+// #include <common.h>
+// #include <isa.h>
+#include "../include/diftest.h"
+#include "../include/ydb_all.h"
 
 extern CPU_state *cpu;
 CPU_state *ref_cpu;
