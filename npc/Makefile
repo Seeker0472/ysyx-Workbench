@@ -82,6 +82,8 @@ clean:
 .PHONY: test verilog help reformat checkformat clean
 
 sim:
+	@echo "所有文件的绝对路径："
+	@echo "$(C_CPP_ABS)"
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
 	make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
@@ -95,8 +97,7 @@ gdb:
 wave:
 	nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
 all: $(TARGET) sim
-	# @echo "所有文件的绝对路径："
-	# @echo "$(C_CPP_ABS)"
+
 -include ../Makefile
 
 # TODO:　Batch-Mode amd more inst!!!!
