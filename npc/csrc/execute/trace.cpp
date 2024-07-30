@@ -13,8 +13,9 @@
 
 extern CPU_state *cpu;
 extern VysyxSoCFull *dut;
+void ftrace_check_inst(paddr_t pc_now, word_t inst);
 
-int prev_state = 0;
+    int prev_state = 0;
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
 
