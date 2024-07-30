@@ -66,7 +66,7 @@ word_t mem_size = 84;
 extern "C" void flash_read(int32_t addr, int32_t *data) {
   printf("%x---%x\n",addr,flash[addr/4]); 
   // *data=flash[addr/4];
-  *data=0x1;
+  *data=0x10;
  }
 extern "C" void mrom_read(int32_t addr, int32_t *data) { 
   *data= mrom[(addr - 0x20000000) / 4];
