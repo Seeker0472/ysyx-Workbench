@@ -1,4 +1,15 @@
 #include<stdio.h>
+#include <isa.h>
+#include <utils.h>
+#include <diftest.h>
+#include <common.h>
+
+#include "VysyxSoCFull__Dpi.h"
+#include "VysyxSoCFull.h"
+#include "VysyxSoCFull___024root.h"
+#include <verilated.h>
+#include <verilated_vcd_c.h>
+
 
 extern VysyxSoCFull *dut;
 
