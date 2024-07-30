@@ -4,3 +4,4 @@
 #include "common.h"
 #include "macro.h"
 #include "generated/autoconf.h"
+#include <stdio.h>
