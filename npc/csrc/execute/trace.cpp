@@ -1,15 +1,15 @@
-#include "../include/diftest.h"
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
 #include "svdpi.h"
 #include <common.h>
+#include <stdint.h>
 #include <diftest.h>
 #include <isa.h>
-#include <stdint.h>
 #include <utils.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
+#include "../include/diftest.h"
 
 extern CPU_state *cpu;
 extern VysyxSoCFull *dut;
