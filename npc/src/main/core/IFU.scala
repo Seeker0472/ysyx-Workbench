@@ -21,7 +21,7 @@ class IFU extends Module {
   // val axi = Module(new AXI_Master())
 
   val state = RegInit(s_idle)
-  val pc    = RegInit("h20000000".U(CVAL.DLEN.W))
+  val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
   val inst  = Reg(UInt(CVAL.DLEN.W))
 
   state := MuxLookup(state, s_idle)(

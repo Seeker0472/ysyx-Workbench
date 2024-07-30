@@ -18,7 +18,11 @@ class REG extends Module {
   })
 
   val regs = RegInit(VecInit(Seq.fill(CVAL.REG_NUM)(0.U(CVAL.DLEN.W))))
-  val csrs = RegInit(VecInit(Seq.fill(4)(0.U(CVAL.DLEN.W))))
+  val csrs = RegInit(VecInit(Seq.fill(6)(0.U(CVAL.DLEN.W))))
+
+  csrs(4.U):=0x79737978.U//ysyx
+  csrs(5.U):=0x15fdf65.U//学号
+
 
   //TODO:暂时简化实现，这两个寄存器的值保持不动
   csrs(1.U) := 0xb.U; //mcause
@@ -33,7 +37,9 @@ class REG extends Module {
       0x305.U -> 0.U,
       0x342.U -> 1.U,
       0x300.U -> 2.U,
-      0x341.U -> 3.U
+      0x341.U -> 3.U,
+      0xF11.U -> 4.U,//mvendorid
+      0xF12.U -> 5.U,//marchid
     )
   )
   //默认写入mepc

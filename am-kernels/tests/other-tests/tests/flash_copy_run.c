@@ -1,19 +1,11 @@
-#include "am.h"
 #include "trap.h"
-// #include "soc.h"
+#define SPI_MASTER 0x10001000L
+uint32_t * flash_addr = (uint32_t *)0x30000000L;
 
 
 static inline uint32_t inl(uintptr_t addr) { return *(volatile uint32_t *)addr; }
 static inline void outl(uintptr_t addr, uint32_t data) { *(volatile uint32_t *)addr = data; }
 
-
-uint32_t * data = (uint32_t *)0x30000000L;
-
-#define SPI_MASTER 0x10001000L
-void init_bit_rev(){
-    outl(SPI_MASTER ,0x01);//test
-    outl(SPI_MASTER +0x14,0x11);//divider
-}
 uint32_t flash_read(uint32_t addr){
     // outl(SPI_MASTER + 0x10,0x240);//start'
     outl(SPI_MASTER + 0x18,0x01);//ss reg
@@ -26,15 +18,12 @@ uint32_t flash_read(uint32_t addr){
     outl(SPI_MASTER + 0x18,0x00);
     return val;
 }
-void check_flash(){
-    for(int i=0;i<1000;i++)
-        check(flash_read((uint32_t)(data+i))==i);
-    // for(int i=1;i<100;i++)
-    //     printf("%x\n",flash_read((uint32_t)(data+i)));
-}
 
 int main(){
-    init_bit_rev();
-     check_flash();
+    // uint32_t data[50];
+    // for(int i=0;i<10;i++)
+    //     data[i]=flash_read((uint32_t)(flash_addr+i));
+    // void (*flash)(void) = (void (*)(void))data;
+    // flash();
     return 0;
 }

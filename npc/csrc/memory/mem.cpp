@@ -64,9 +64,8 @@ word_t mem_size = 84;
 
 // DPI-C Funcs
 extern "C" void flash_read(int32_t addr, int32_t *data) {
-  // printf("%x---%x\n",addr,flash[addr/4]);
+  // printf("%x---%x\n",addr,flash[addr/4]); 
   *data=flash[addr/4];
-  // *data=0x12345678;
  }
 extern "C" void mrom_read(int32_t addr, int32_t *data) { 
   *data= mrom[(addr - 0x20000000) / 4];
@@ -169,11 +168,23 @@ void init_flash(){
     flash[i]=i;
   }
 }
+void init_flash_img(char *img_file)
+{
+  int size = 0;
+  FILE *fp = fopen(img_file, "rb");
+  fseek(fp, 0, SEEK_END);
+  size = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+  fread(flash, size, 1, fp);
+  fclose(fp);
+}
 
 void init_img(char *img_file)
 {
-  init_mrom(img_file);
-  init_flash();
+  // init_flash();
+  // init_flash_img("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
+  init_flash_img(img_file);
+  // init_mrom(img_file);
   // size_t size = 0;
   if (img_file != NULL)
   {
