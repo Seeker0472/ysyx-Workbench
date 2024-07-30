@@ -13,11 +13,10 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 //sdb.c-主要处理与用户的交互
-#include <isa.h>
+
 // #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <utils.h>
 #include "sdb.h"
 // #include <memory/host.h>
 word_t expr(char *e, bool *success);
