@@ -27,18 +27,25 @@ uint32_t mem_read(uint32_t pc);
 bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
-// void print_inst_asm(paddr_t pc, word_t inst);
 
 #define PRINT_INST_MIN 10
 
 void single_cycle() {
-  dut->clock = 0;
-  dut->eval();
-  IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
-
-  dut->clock = 1;
-  dut->eval();
-  IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+  uint32_t prev_pc =
+      dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+  uint32_t now_pc =
+      dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+  while (prev_pc == now_pc) {
+    dut->clock = 0;
+    dut->eval();
+    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+    dut->clock = 1;
+    dut->eval();
+    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+    now_pc =
+        dut->rootp
+            ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+  }
   update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
@@ -59,6 +66,7 @@ void reset(int n) {
     single_cycle();
   dut->reset = 0;
 }
+
 void init_runtime() {
   dut = new VysyxSoCFull;       // Initialize the DUT instance
   Verilated::traceEverOn(true); // 启用波形追踪
@@ -93,8 +101,8 @@ int run(int step) {
     word_t inst =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst;
-    // if (step < PRINT_INST_MIN)
-    // print_inst_asm(pc, inst);
+    if (step < PRINT_INST_MIN)
+      print_inst_asm(pc, inst);
     // // TODO::在某一些条件下打印指令！！！！
     trace_and_difftest(pc, inst);
 

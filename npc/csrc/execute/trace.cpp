@@ -3,6 +3,7 @@
 #include "VysyxSoCFull___024root.h"
 #include "svdpi.h"
 #include <common.h>
+#include <stdint.h>
 #include <diftest.h>
 #include <isa.h>
 #include <utils.h>

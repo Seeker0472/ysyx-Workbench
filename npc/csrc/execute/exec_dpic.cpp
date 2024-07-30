@@ -1,8 +1,8 @@
-#include <common.h>
-#include <diftest.h>
-#include <isa.h>
+#include "../include/common.h"
+#include "../include/diftest.h"
+#include "../include/isa.h"
 #include <stdio.h>
-#include <utils.h>
+#include "../include/utils.h"
 
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"

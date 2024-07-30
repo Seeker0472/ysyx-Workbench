@@ -1,8 +1,8 @@
-#include <common.h>
-#include <cstdint>
-#include <debug.h>
-#include <isa.h>
-#include <macro.h>
+#include "../include/common.h"
+#include <stdint.h>
+#include "../include/debug.h"
+#include "../include/isa.h"
+#include "../include/macro.h"
 #include <stdio.h>
 
 uint64_t get_time();
@@ -31,8 +31,6 @@ uint32_t flash[0x2000] = {
 };
 
 word_t mem_size = 84;
-
-
 
 uint32_t mem_read(uint32_t pc) {
   if (pc == 0xa0000048) {

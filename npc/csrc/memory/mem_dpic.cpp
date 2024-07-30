@@ -1,8 +1,8 @@
-#include <common.h>
-#include <cstdint>
-#include <debug.h>
-#include <isa.h>
-#include <macro.h>
+#include "../include/common.h"
+#include <stdint.h>
+#include "../include/debug.h"
+#include "../include/isa.h"
+#include "../include/macro.h"
 #include <stdio.h>
 
 void record_pread(paddr_t addr, int len);
