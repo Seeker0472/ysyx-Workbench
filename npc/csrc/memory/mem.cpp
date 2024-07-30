@@ -168,20 +168,21 @@ void init_flash(){
     flash[i]=i;
   }
 }
-// void init_flash(char *img_file)
-// {
-//   int size = 0;
-//   FILE *fp = fopen(img_file, "rb");
-//   fseek(fp, 0, SEEK_END);
-//   size = ftell(fp);
-//   fseek(fp, 0, SEEK_SET);
-//   fread(flash, size, 1, fp);
-//   fclose(fp);
-// }
+void init_flash_img(char *img_file)
+{
+  int size = 0;
+  FILE *fp = fopen(img_file, "rb");
+  fseek(fp, 0, SEEK_END);
+  size = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+  fread(flash, size, 1, fp);
+  fclose(fp);
+}
 
 void init_img(char *img_file)
 {
-  // init_flash("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
+  init_flash();
+  init_flash_img("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
   init_mrom(img_file);
   init_flash();
   // size_t size = 0;
