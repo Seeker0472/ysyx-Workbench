@@ -14,7 +14,7 @@ VysyxSoCFull *dut;
 #include <isa.h>
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
-
+void update_reg_state();
 
 
 
