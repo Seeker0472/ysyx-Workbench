@@ -5,6 +5,9 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 #include <isa.h>
+#include <utils.h>
+#include <diftest.h>
+#include <common.h>
 
 extern VysyxSoCFull *dut;
 
