@@ -8,7 +8,10 @@
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
 uint32_t mem_read(uint32_t pc);
-
+extern uint32_t mrom[];
+extern uint32_t flash[];
+uint32_t mem[]; 
+extern uint64_t time_now;
 // DPI-C Funcs
 extern "C" void flash_read(int32_t addr, int32_t *data) {
   // printf("%x---%x\n",addr,flash[addr/4]);
