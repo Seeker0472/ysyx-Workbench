@@ -1,5 +1,5 @@
-#include <common.h>
-#include <debug.h>
+#include "../include/ydb_all.h"
+
 #include <elf.h>
 
 typedef struct node

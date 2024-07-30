@@ -13,15 +13,14 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 //sdb.c-主要处理与用户的交互
-#include <isa.h>
+
 // #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <utils.h>
 #include "sdb.h"
 // #include <memory/host.h>
 word_t expr(char *e, bool *success);
-word_t warp_pmem_read(paddr_t addr) ;
+word_t mem_read(paddr_t addr) ;
 
 
 static int is_batch_mode = false;
@@ -117,11 +116,11 @@ static int cmd_scan_mem(char *args){
   for(;n>0;n--){
     //这个似乎有问题！！
     // 进制问题（^-^）
-    // printf("readMem %lu %lu %lu %lu" ,warp_pmem_read(addr,1),warp_pmem_read(addr+1,1),warp_pmem_read(addr+2,1),warp_pmem_read(addr+3,1));
+    // printf("readMem %lu %lu %lu %lu" ,mem_read(addr,1),mem_read(addr+1,1),mem_read(addr+2,1),mem_read(addr+3,1));
     #ifdef RV64
-    printf("<0x%010x>    0x%08lx\n",addr,warp_pmem_read(addr));
+    printf("<0x%010x>    0x%08lx\n",addr,mem_read(addr));
     #else
-    printf("<0x%010x>    0x%08x\n",addr,warp_pmem_read(addr));
+    printf("<0x%010x>    0x%08x\n",addr,mem_read(addr));
     #endif
     addr+=4;
   }

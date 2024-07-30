@@ -21,8 +21,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <generated/autoconf.h>
-#include <macro.h>
+#include "generated/autoconf.h"
+#include "macro.h"
 
 #ifdef CONFIG_TARGET_AM
 #include <klib.h>
@@ -45,6 +45,6 @@ typedef MUXDEF(PMEM64, uint64_t, uint32_t) paddr_t;
 #define FMT_PADDR MUXDEF(PMEM64, "0x%016" PRIx64, "0x%08" PRIx32)
 typedef uint16_t ioaddr_t;
 
-#include <debug.h>
+// #include "debug.h"
 
 #endif
