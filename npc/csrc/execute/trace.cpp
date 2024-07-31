@@ -147,7 +147,7 @@ void update_reg_state() {
           ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_31;
 #endif
 }
-
+//TODO: Log and iringbuf!!!!!!!!!!
 void trace_and_difftest(paddr_t pc, word_t inst_in) {
   //   if (!state_valid())
   //     return;
@@ -193,6 +193,5 @@ void trace_and_difftest(paddr_t pc, word_t inst_in) {
     difftest_exec(1);
     difftest_check_state();
   }
-
 #endif
 }
