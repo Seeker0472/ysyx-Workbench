@@ -36,9 +36,13 @@ static inline int get_csr_reg(int idx) {
     case 0x300://mstatus
     idx=2;
     break;
-    case 0x341://mepc
-    idx=3;
-    break;
+    case 0x341: // mepc
+      idx = 3;
+    case 0xF11: // mvendorid
+      idx = 4;
+    case 0xF12: // marchid
+      idx = 5;
+      break;
   }
   return idx;
 }
