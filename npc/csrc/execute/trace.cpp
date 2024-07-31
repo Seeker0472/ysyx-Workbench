@@ -1,20 +1,21 @@
 #include "../../obj_dir/VysyxSoCFull.h"
+#include "../include/diftest.h"
+#include "../include/ydb_all.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
 #include "svdpi.h"
-#include <stdint.h>
 #include <diftest.h>
+#include <stdint.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-#include "../include/diftest.h"
-#include "../include/ydb_all.h"
 
 extern CPU_state *cpu;
 extern VysyxSoCFull *dut;
+bool difftest_step = false;
 void ftrace_check_inst(paddr_t pc_now, word_t inst);
 void difftest_check_state();
+void difftest_copy_regs();
 
-    int prev_state = 0;
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
 
@@ -27,7 +28,7 @@ void print_inst_asm(paddr_t pc, word_t inst) {
   printf("%s\n",
          buf); // TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
 }
-
+int prev_state = 0;
 static bool state_valid() //检测从状态valid->fetching
 {
   bool ret = false;
@@ -148,9 +149,9 @@ void update_reg_state() {
 }
 
 void trace_and_difftest(paddr_t pc, word_t inst_in) {
-  if (!state_valid())
-    return;
-    // print_inst_asm(pc, inst_in);
+  //   if (!state_valid())
+  //     return;
+  // print_inst_asm(pc, inst_in);
 
 #ifdef CONFIG_ITRACE
   char buf[200];
@@ -185,7 +186,13 @@ void trace_and_difftest(paddr_t pc, word_t inst_in) {
   ftrace_check_inst(pc, inst_in);
 #endif
 #ifdef CONFIG_DIFFTEST
-  difftest_exec(1);
-  difftest_check_state();
+  if (difftest_step) {
+    difftest_copy_regs();
+    difftest_step = false;
+  } else {
+    difftest_exec(1);
+    difftest_check_state();
+  }
+
 #endif
 }

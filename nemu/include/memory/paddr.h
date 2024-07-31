@@ -27,10 +27,19 @@ uint8_t* guest_to_host(paddr_t paddr);
 /* convert the host virtual address in NEMU to guest physical address in the guest program */
 paddr_t host_to_guest(uint8_t *haddr);
 
+#define MROM_BASE 0x20000000
+#define MROM_TOP 0x20000fff
+#define SRAM_BASE 0x0f000000
+#define SRAM_TOP 0x0fffffff
+#define FLASH_BASE 0x30000000
+#define FLASH_TOP 0x3fffffff
+
 static inline bool in_pmem(paddr_t addr) {
-  if (addr >= 0x20000000 && addr <= 0x20000fff) // mrom
+  if (addr >= MROM_BASE && addr <= MROM_TOP) // mrom
     return true;
-  if (addr >= 0x0f000000 && addr <= 0x0fffffff) // sram
+  if (addr >= SRAM_BASE && addr <= SRAM_TOP) // sram
+    return true;
+  if (addr >= FLASH_BASE && addr <= FLASH_TOP) // sram
     return true;
 
   return addr - CONFIG_MBASE < CONFIG_MSIZE;

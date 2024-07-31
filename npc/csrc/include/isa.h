@@ -2,6 +2,10 @@
 #include "macro.h"
 #include "debug.h"
 
+#ifndef ISA_H
+#define ISA_H
+
+
 #define word_t uint32_t 
 #define paddr_t uint32_t 
 #define vaddr_t uint32_t
@@ -16,3 +20,5 @@ word_t isa_reg_str2val(const char *s, bool *success);
 int run(int step);
 void isa_reg_display();
 uint32_t mem_read(uint32_t addr);
+
+#endif
