@@ -129,7 +129,7 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val addr  = Input(UInt(CVAL.DLEN.W))
     val wdata  = Input(UInt(CVAL.DLEN.W))
-    val wmask  = Input(UInt(4.W))
+    val wmask  = Input(UInt(CVAL.DLEN.W))
     val wen = Input(Bool())
     val ren = Input(Bool())
   })
