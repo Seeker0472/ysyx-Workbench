@@ -123,6 +123,7 @@ class LSU extends Module {
   check_mem.io.wdata:=wd_move
   check_mem.io.wmask:=mask_move
   check_mem.io.wen:=io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid 
+  check_mem.io.len:=mem_read_size
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
@@ -130,22 +131,24 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
     val addr  = Input(UInt(CVAL.DLEN.W))
     val wdata  = Input(UInt(CVAL.DLEN.W))
     val wmask  = Input(UInt(CVAL.DLEN.W))
+    val len  = Input(UInt(CVAL.DLEN.W))
     val wen = Input(Bool())
     val ren = Input(Bool())
   })
     setInline(
     "check_addr.v",
-    """import "DPI-C" function void check_addr(int unsigned addr,bit access_type, int unsigned wmask,int unsigned wdata);
+    """import "DPI-C" function void check_addr(int unsigned addr,bit access_type, int unsigned wmask,int unsigned wdata,int unsigned len);
       |module DPI_C_CHECK(
       |  input wen,
       |  input ren,
       |  input [31:0] addr,
       |  input [31:0] wmask,
-      |  input [31:0] wdata
+      |  input [31:0] wdata,
+      |  input [31:0] len,
       |);
       |always @(*) begin
       |   if (wen||ren) begin
-      |      check_addr(addr,ren,wmask,wdata);
+      |      check_addr(addr,ren,wmask,wdata,len);
       |  end
       | end
       |endmodule
