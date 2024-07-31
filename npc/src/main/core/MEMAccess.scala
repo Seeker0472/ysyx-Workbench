@@ -118,22 +118,15 @@ class LSU extends Module {
 
 
   val check_mem=Module(new DPI_C_CHECK)
-  check_mem.io.raddr:=io.in.bits.alu_result
-  check_mem.io.waddr:=io.in.bits.alu_result
-  check_mem.io.rvalid:=io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
-  check_mem.io.wvalid:=io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
+  check_mem.io.addr:=io.in.bits.alu_result
+  check_mem.io.valid:=(io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready)) ||(io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid)
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
-    val waddr  = Input(UInt(CVAL.DLEN.W))
-    val raddr  = Input(UInt(CVAL.DLEN.W))
-    val wvalid = Input(Bool())
-    val rvalid = Input(Bool())
+    val addr  = Input(UInt(CVAL.DLEN.W))
+    val valid = Input(Bool())
   })
-  val addr=Mux(io.rvalid,io.raddr,io.waddr)
-  val valid= io.wvalid||io.rvalid
-
     setInline(
     "check_addr.v",
     """import "DPI-C" function void check_addr(unit32_t addr);
