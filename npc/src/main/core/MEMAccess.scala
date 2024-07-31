@@ -149,7 +149,7 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
       |  input [31:0] len,
       |  input clock
       |);
-      |always @(negedge clock) begin
+      |always @(posedge clock) begin
       |   if (wen||ren) begin
       |      check_addr(addr,ren,wmask,wdata,len);
       |  end
