@@ -100,7 +100,7 @@ int run(int step) {
     word_t inst =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst;
-    if (step < PRINT_INST_MIN&&step>0)
+    if (step < PRINT_INST_MIN&&step>=0)
       print_inst_asm(pc, inst);
     // // TODO::在某一些条件下打印指令！！！！
     trace_and_difftest(pc, inst);
