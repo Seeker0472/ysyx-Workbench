@@ -81,7 +81,6 @@ class LSU extends Module {
 
   val mem_read_result = mem_read_result_sint.asUInt
 
-//TODO:::::::::::::::::::::应该是没对齐
   val mem_write_mask = MuxLookup(io.in.bits.mem_write_type, 0.U(4.W))(
     Seq(
       Store_Type.sb -> "b0001".U(4.W),
@@ -119,10 +118,10 @@ class LSU extends Module {
 
   val check_mem=Module(new DPI_C_CHECK)
   check_mem.io.addr:=io.in.bits.alu_result
-  check_mem.io.ren:=io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready)
+  check_mem.io.ren:=io.in.bits.mem_read_enable && io.in.valid  && state === s_idle
   check_mem.io.wdata:=wd_move
   check_mem.io.wmask:=mask_move
-  check_mem.io.wen:=io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid 
+  check_mem.io.wen:=io.in.bits.mem_write_enable && io.in.valid && state === s_idle 
   check_mem.io.len:=mem_read_size
   check_mem.io.clock:=clock
 }
@@ -149,7 +148,7 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
       |  input [31:0] len,
       |  input clock
       |);
-      |always @(posedge clock) begin
+      |always @(negedge clock) begin
       |   if (wen||ren) begin
       |      check_addr(addr,ren,wmask,wdata,len);
       |  end
