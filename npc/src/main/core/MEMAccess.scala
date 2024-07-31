@@ -147,7 +147,7 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
       |  input [31:0] wmask,
       |  input [31:0] wdata,
       |  input [31:0] len,
-      |  input clock,
+      |  input clock
       |);
       |always @(negedge clock) begin
       |   if (wen||ren) begin
