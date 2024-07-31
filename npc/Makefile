@@ -83,8 +83,8 @@ clean:
 
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
-	make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
+	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 gdb:
