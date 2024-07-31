@@ -130,7 +130,7 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
     setInline(
     "check_addr.v",
     """import "DPI-C" function void check_addr(int unsigned addr);
-      |module ebreak_handler(
+      |module DPI_C_CHECK(
       |  input valid,
       |  input [31:0] addr
       |);
