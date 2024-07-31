@@ -42,6 +42,7 @@ void reg_display(CPU_state* cpu) {
 void isa_reg_display(){
   reg_display(cpu);
 }
+
 void reg_display_diff(CPU_state* nemu){
   printf("YPC Regs::\n");
   reg_display(cpu);

@@ -40,14 +40,15 @@ SECTIONS {
 
   . = ORIGIN(sram);
   . +=  _data_section_end - _bss_end;
-  _stack_top = ALIGN(0x10);
-  . = _stack_top + 0x500;
+  _stack_top = ALIGN(0x4);
+  . = ORIGIN(sram) + LENGTH(sram);
+  /* . = _stack_top + 0x1500; */
   _stack_pointer = .;
   /* end = .; */
   /* _end = .; */
-  _heap_start = ALIGN(0x10);
+  /* _heap_start = ALIGN(0x10);
   _pmem_start = .;
-  _entry_offset = 0;
+  _entry_offset = 0; */
 
   /* _heap_start = .; */
 }

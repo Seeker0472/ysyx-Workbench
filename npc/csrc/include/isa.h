@@ -1,6 +1,10 @@
 #include <stdint.h>
-#include <macro.h>
-#include <debug.h>
+#include "macro.h"
+#include "debug.h"
+
+#ifndef ISA_H
+#define ISA_H
+
 
 #define word_t uint32_t 
 #define paddr_t uint32_t 
@@ -15,4 +19,6 @@ typedef struct {
 word_t isa_reg_str2val(const char *s, bool *success);
 int run(int step);
 void isa_reg_display();
-uint32_t warp_pmem_read(uint32_t addr);
+uint32_t mem_read(uint32_t addr);
+
+#endif

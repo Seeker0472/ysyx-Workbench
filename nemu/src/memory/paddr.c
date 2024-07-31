@@ -25,25 +25,34 @@ void record_pwrite(paddr_t addr, int len, word_t data);
 #if defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;
 #else // CONFIG_PMEM_GARRAY
+
+
+
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
+static uint8_t flash[0x10000000] PG_ALIGN = {};
 static uint8_t sram[0x10000000] PG_ALIGN = {};
 static uint8_t mrom[0x2000] PG_ALIGN = {};
 #endif
 
 uint8_t *guest_to_host(paddr_t paddr)
 {
-  if (paddr >= 0x20000000 && paddr <= 0x20000fff) // mrom
-    return mrom + paddr - 0x20000000;
-  if (paddr >= 0x0f000000 && paddr <= 0x0fffffff) // sram
-    return sram + paddr - 0x0f000000;
-  return pmem + paddr - CONFIG_MBASE;
+  if (paddr >= MROM_BASE && paddr <= MROM_TOP) // mrom
+    return mrom + paddr - MROM_BASE;
+  if (paddr >= SRAM_BASE && paddr <= SRAM_TOP) // sram
+    return sram + paddr - SRAM_BASE;
+  if (paddr >= FLASH_BASE && paddr <= FLASH_TOP) // FLASH
+    return flash + paddr - FLASH_BASE;
+
+    return pmem + paddr - CONFIG_MBASE;
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
-  if (haddr - mrom + 0x20000000 >= 0x20000000 && haddr - mrom + 0x20000000 <= 0x20000fff) // mrom
-    return haddr - mrom + 0x20000000;
-  if (haddr - sram + 0x0f000000 >= 0x0f000000 && haddr - sram + 0x0f000000 <= 0x0fffffff) // sram
-    return haddr - sram + 0x0f000000;
+  if (haddr - mrom + MROM_BASE >= MROM_BASE && haddr - mrom + MROM_BASE <= MROM_TOP) // mrom
+    return haddr - mrom + MROM_BASE;
+  if (haddr - sram + SRAM_BASE >= SRAM_BASE && haddr - sram + SRAM_BASE <= SRAM_TOP) // sram
+    return haddr - sram + SRAM_BASE;
+    if (haddr - flash + FLASH_BASE >= FLASH_BASE && haddr - sram + FLASH_BASE <= FLASH_TOP) // sram
+      return haddr - flash + FLASH_BASE;
   return haddr - pmem + CONFIG_MBASE;
 }
 

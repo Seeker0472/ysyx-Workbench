@@ -13,7 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 //expr.c 解析表达式
-#include <isa.h>
+#include "../../include/isa.h"
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -27,7 +27,7 @@
 long eval(int p,int q);
 int get_main_op(int p,int q);
 bool check_parentheses(int p,int q);
-// word_t warp_pmem_read(paddr_t addr);
+// word_t mem_read(paddr_t addr);
 
 enum {
   TK_NOTYPE = 256, TK_EQ,
@@ -240,7 +240,7 @@ long eval(int p,int q) {
       case TK_EQ :return val1==val2;
       case TK_NOTEQ :return val1!=val2;
       case TK_AND: return val1&&val2;
-      case TK_DEREFENCE: return warp_pmem_read(val2);//TODO!-读出一个整数
+      case TK_DEREFENCE: return mem_read(val2);//TODO!-读出一个整数
       // case 
       default: assert(0);
     }

@@ -13,7 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
-#include <common.h>
+#include "../include/ydb_all.h"
 
 extern uint64_t g_nr_guest_inst;
 

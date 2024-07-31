@@ -23,7 +23,7 @@ class ypc extends Module {
   val br_han      = Module(new ebreak_handler())
   val ifu         = Module(new IFU())
   val exu         = Module(new EXU())
-  val memau       = Module(new MEMAccess())
+  val memau       = Module(new LSU())
   val wbu         = Module(new WBU())
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
 
