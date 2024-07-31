@@ -81,7 +81,6 @@ class LSU extends Module {
 
   val mem_read_result = mem_read_result_sint.asUInt
 
-//TODO:::::::::::::::::::::应该是没对齐
   val mem_write_mask = MuxLookup(io.in.bits.mem_write_type, 0.U(4.W))(
     Seq(
       Store_Type.sb -> "b0001".U(4.W),
@@ -119,31 +118,42 @@ class LSU extends Module {
 
   val check_mem=Module(new DPI_C_CHECK)
   check_mem.io.addr:=io.in.bits.alu_result
-  check_mem.io.ren:=io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready)
-  check_mem.io.wen:=io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid 
+  check_mem.io.ren:=io.in.bits.mem_read_enable && io.in.valid  && state === s_idle
+  check_mem.io.wdata:=wd_move
+  check_mem.io.wmask:=mask_move
+  check_mem.io.wen:=io.in.bits.mem_write_enable && io.in.valid && state === s_idle 
+  check_mem.io.len:=mem_read_size
+  check_mem.io.clock:=clock
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val addr  = Input(UInt(CVAL.DLEN.W))
+    val wdata  = Input(UInt(CVAL.DLEN.W))
+    val wmask  = Input(UInt(CVAL.DLEN.W))
+    val len  = Input(UInt(CVAL.DLEN.W))
     val wen = Input(Bool())
     val ren = Input(Bool())
+    val clock = Input(Clock())
   })
     setInline(
     "check_addr.v",
-    """import "DPI-C" function void check_addr(int unsigned addr,bit access_type);
+    """import "DPI-C" function void check_addr(int unsigned addr,bit access_type, int unsigned wmask,int unsigned wdata,int unsigned len);
       |module DPI_C_CHECK(
       |  input wen,
       |  input ren,
-      |  input [31:0] addr
+      |  input [31:0] addr,
+      |  input [31:0] wmask,
+      |  input [31:0] wdata,
+      |  input [31:0] len,
+      |  input clock
       |);
-      |always @(*) begin
+      |always @(negedge clock) begin
       |   if (wen||ren) begin
-      |      check_addr(addr,ren);
+      |      check_addr(addr,ren,wmask,wdata,len);
       |  end
       | end
       |endmodule
     """.stripMargin
   )
-
 }

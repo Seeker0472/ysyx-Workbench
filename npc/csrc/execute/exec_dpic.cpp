@@ -4,6 +4,7 @@
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
 #include "svdpi.h"
+#include <cstdint>
 #include <cstdio>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
@@ -16,6 +17,8 @@ extern "C" void print_char(char w_char) {
   printf("%c", w_char);
   fflush(stdout);
 }
+void record_axi_write(const char *type, paddr_t addr, char wmask, word_t data);
+void record_axi_read(const char *type, paddr_t addr, int len);
 
 // 使用DPI-C机制实现ebreak
 extern "C" void call_ebreak() {
@@ -52,17 +55,40 @@ extern "C" void call_ebreak() {
 #define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
 
 // TODO:DIFFTEST/OUTPUT
-extern "C" void check_addr(uint32_t addr, svBit access_type) {
+extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
+                           uint32_t wdata, uint32_t len) {
+
   if (MEM_IN(addr, MROM_BASE, MROM_TOP)) { // mrom
+    if (access_type) {
+      record_axi_read("MROM", addr, len);
+    } else {
+      record_axi_write("MROM", addr, wmask, wdata);
+    }
     return;
   }
   if (MEM_IN(addr, SRAM_BASE, SRAM_TOP)) { // sram
+    if (access_type) {
+      record_axi_read("SRAM", addr, len);
+    } else {
+      record_axi_write("SRAM", addr, wmask, wdata);
+    }
     return;
   }
   if (MEM_IN(addr, FLASH_BASE, FLASH_TOP)) { // flash
+    if (access_type) {
+      record_axi_read("FLASH", addr, len);
+    } else {
+      record_axi_write("FLASH", addr, wmask, wdata);
+    }
     return;
   }
   // putchar('\n');
   // printf("\n%x\n",addr);
-  difftest_step=true;
+  if (access_type) {
+    record_axi_read("Other", addr, len);
+  } else {
+    //TODO:Mask not correct?
+    record_axi_write("Other", addr, wmask, wdata);
+  }
+  difftest_step = true;
 }
