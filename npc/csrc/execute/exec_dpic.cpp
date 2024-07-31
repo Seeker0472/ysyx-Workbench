@@ -7,6 +7,7 @@
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
+#include "svdpi.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
@@ -45,6 +46,6 @@ extern "C" void call_ebreak() {
   // exit(0);
 }
 //TODO:
-extern "C" void check_addr(uint32_t addr,bool access_type) {
+extern "C" void check_addr(uint32_t addr, svBit access_type) {
   printf("AAAAAAAAAAAAA-%x\n", addr);
 }
