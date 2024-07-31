@@ -39,6 +39,8 @@ static inline bool in_pmem(paddr_t addr) {
     return true;
   if (addr >= SRAM_BASE && addr <= SRAM_TOP) // sram
     return true;
+  if (addr >= FLASH_BASE && addr <= FLASH_TOP) // sram
+    return true;
 
   return addr - CONFIG_MBASE < CONFIG_MSIZE;
 }
