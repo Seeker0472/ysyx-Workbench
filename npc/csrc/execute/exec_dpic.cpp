@@ -11,7 +11,7 @@
 extern VerilatedVcdC *tfp;
 
 extern VysyxSoCFull *dut;
-
+extern bool difftest_step;
 extern "C" void print_char(char w_char) {
   printf("%c", w_char);
   fflush(stdout);
@@ -63,5 +63,6 @@ extern "C" void check_addr(uint32_t addr, svBit access_type) {
     return;
   }
   // putchar('\n');
-  printf("\n%x\n",addr);
+  // printf("\n%x\n",addr);
+  difftest_step=true;
 }

@@ -11,7 +11,6 @@ VysyxSoCFull *dut;
 
 uint64_t sim_time = 0;
 
-bool difftest_step= false;
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
 void update_reg_state();
