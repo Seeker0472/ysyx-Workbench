@@ -21,7 +21,7 @@ void add_symbol(paddr_t start_addr, size_t len, char *name)
     while (tail->next != NULL)
         tail = tail->next;
 
-    tail->next = (node *)malloc(sizeof(trace_node));
+    tail->next = (trace_node *)malloc(sizeof(trace_node));
 
     Assert(tail->next, "malloc fail"); // 检查是否为空
 

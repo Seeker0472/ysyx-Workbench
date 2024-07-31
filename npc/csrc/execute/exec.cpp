@@ -1,10 +1,8 @@
+#include "../include/ydb_all.h"
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull___024root.h"
-#include <common.h>
 #include <diftest.h>
 #include <iostream>
-#include <stdint.h>
-#include <utils.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
@@ -13,7 +11,6 @@ VysyxSoCFull *dut;
 
 uint64_t sim_time = 0;
 
-#include <isa.h>
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
 void update_reg_state();
