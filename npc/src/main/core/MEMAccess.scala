@@ -156,5 +156,4 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
       |endmodule
     """.stripMargin
   )
-
 }

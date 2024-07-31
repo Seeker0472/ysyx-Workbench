@@ -97,5 +97,3 @@ wave:
 all: $(TARGET) sim
 
 -include ../Makefile
-
-# TODO:　Batch-Mode amd more inst!!!!
