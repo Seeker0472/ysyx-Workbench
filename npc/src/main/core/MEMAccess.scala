@@ -116,6 +116,12 @@ class LSU extends Module {
   io.out.bits.mem_read_result := read_res
   read_res                    := mem_read_result
 
+
+  val check_mem=Module(new DPI_C_CHECK)
+  check_mem.io.raddr:=io.in.bits.alu_result
+  check_mem.io.waddr:=io.in.bits.alu_result
+  check_mem.io.rvalid:=io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
+  check_mem.io.wvalid:=io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
