@@ -1,13 +1,10 @@
-#include "../include/common.h"
 #include "../include/diftest.h"
-#include "../include/isa.h"
-#include <stdio.h>
-#include "../include/utils.h"
-
+#include "../include/ydb_all.h"
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
 #include "svdpi.h"
+#include <cstdio>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
@@ -45,7 +42,25 @@ extern "C" void call_ebreak() {
   nemu_state.halt_ret = regs_2_value;
   // exit(0);
 }
-//TODO:
+
+#define MROM_BASE 0x20000000
+#define MROM_TOP 0x20000fff
+#define SRAM_BASE 0x0f000000
+#define SRAM_TOP 0x0fffffff
+#define FLASH_BASE 0x30000000
+#define FLASH_TOP 0x3fffffff
+#define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
+
+// TODO:DIFFTEST/OUTPUT
 extern "C" void check_addr(uint32_t addr, svBit access_type) {
-  printf("AAAAAAAAAAAAA-%x\n", addr);
+  if (MEM_IN(addr, MROM_BASE, MROM_TOP)) { // mrom
+    return;
+  }
+  if (MEM_IN(addr, SRAM_BASE, SRAM_TOP)) { // sram
+    return;
+  }
+  if (MEM_IN(addr, FLASH_BASE, FLASH_TOP)) { // flash
+    return;
+  }
+  putchar('\n');
 }
