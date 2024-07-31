@@ -139,7 +139,9 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
       |module DPI_C_CHECK(
       |  input wen,
       |  input ren,
-      |  input [31:0] addr
+      |  input [31:0] addr,
+      |  input [31:0] wmask,
+      |  input [31:0] wdata,
       |);
       |always @(*) begin
       |   if (wen||ren) begin
