@@ -56,7 +56,8 @@ extern "C" void call_ebreak() {
 
 // TODO:DIFFTEST/OUTPUT
 extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
-                           uint32_t wdata,uint32_t len) {
+                           uint32_t wdata, uint32_t len) {
+
   if (MEM_IN(addr, MROM_BASE, MROM_TOP)) { // mrom
     if (access_type) {
       record_axi_read("MROM", addr, len);
@@ -86,6 +87,7 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
   if (access_type) {
     record_axi_read("Other", addr, len);
   } else {
+    //TODO:Mask not correct?
     record_axi_write("Other", addr, wmask, wdata);
   }
   difftest_step = true;
