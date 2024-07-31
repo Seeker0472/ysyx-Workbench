@@ -88,8 +88,8 @@ sim:
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 gdb:
-	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS} 
-	make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS} 
+	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	gdb   --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 wave:
