@@ -45,4 +45,6 @@ extern "C" void call_ebreak() {
   // exit(0);
 }
 
-extern "C" void check_addr(uint32_t addr) { printf("AAAAAAAAAAAAA-%x\n", addr); }
+extern "C" void check_addr(uint32_t addr,bool type) {
+  printf("AAAAAAAAAAAAA-%x\n", addr);
+}
