@@ -46,5 +46,6 @@ extern "C" void call_ebreak() {
 }
 
 extern "C" void check_addr(unit32_t addr) {
-  
+  printf("%x",addr);
+
 }
