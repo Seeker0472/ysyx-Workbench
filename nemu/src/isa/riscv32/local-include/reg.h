@@ -24,7 +24,6 @@ static inline int check_reg_idx(int idx) {
 }
 
 static inline int get_csr_reg(int idx) {
-  printf("%x\n",idx);
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 4096));
   switch(idx){
     case 0x305://mtvec
