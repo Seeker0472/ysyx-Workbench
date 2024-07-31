@@ -44,3 +44,7 @@ extern "C" void call_ebreak() {
   nemu_state.halt_ret = regs_2_value;
   // exit(0);
 }
+
+extern "C" void check_addr(unit32_t addr) {
+  
+}

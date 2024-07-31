@@ -43,6 +43,7 @@ static bool state_valid() //检测从状态valid->fetching
   //     return true;
 }
 
+
 void update_reg_state() {
   cpu->pc =
       dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;

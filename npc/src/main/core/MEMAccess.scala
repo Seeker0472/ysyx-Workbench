@@ -5,7 +5,7 @@ import chisel3.util._
 import core.IO._
 import Constants_Val._
 
-class MEMAccess extends Module {
+class LSU extends Module {
   val io = IO(new Bundle {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
@@ -28,17 +28,17 @@ class MEMAccess extends Module {
   io.out.bits.imm             := io.in.bits.imm
 
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid ::s_r_wait_ready:: Nil = Enum(5)
-  val state                                            = RegInit(s_idle)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready :: Nil = Enum(5)
+  val state                                                              = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
         (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
         // Mux(io.in.bits.mem_read_enable, s_r_busy, s_w_busy),
-        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready,s_r_busy,s_r_wait_ready), s_w_busy),
+        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), s_w_busy),
         Mux(io.in.valid, s_valid, s_idle)
       ),
-      s_r_wait_ready -> Mux(io.axi.RA.ready,s_r_busy,s_r_wait_ready),
+      s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
       s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
@@ -59,7 +59,7 @@ class MEMAccess extends Module {
   io.axi.RA.bits.size := mem_read_size
 
   //TODO: OKEY?
-  io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid &&( state === s_idle||state === s_r_wait_ready) //避免多次访存
+  io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
   io.axi.RA.bits.addr := io.in.bits.alu_result
   io.axi.RD.ready     := true.B
 
@@ -115,5 +115,33 @@ class MEMAccess extends Module {
   val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值
   io.out.bits.mem_read_result := read_res
   read_res                    := mem_read_result
+
+}
+
+class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val waddr  = Input(UInt(CVAL.DLEN.W))
+    val raddr  = Input(UInt(CVAL.DLEN.W))
+    val wvalid = Input(Bool())
+    val rvalid = Input(Bool())
+  })
+  val addr=Mux(io.rvalid,io.raddr,io.waddr)
+  val valid= io.wvalid||io.rvalid
+
+    setInline(
+    "check_addr.v",
+    """import "DPI-C" function void check_addr(unit32_t addr);
+      |module ebreak_handler(
+      |  input valid,
+      |  input addr[31:0],
+      |);
+      |always @(*) begin
+      |   if (valid) begin
+      |      check_addr(addr);
+      |  end
+      | end
+      |endmodule
+    """.stripMargin
+  )
 
 }
