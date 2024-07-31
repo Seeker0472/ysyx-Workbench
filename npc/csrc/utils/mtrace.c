@@ -42,6 +42,8 @@ void record_axi_write(const char *type, paddr_t addr, char wmask, word_t data) {
   //        Info_R("WriteAddr(%s) at: 0x%x wmask:%s 0x%lx\n",type, addr,
   //        binaryStr, data); , Info_R("WriteAddr(%s) at: 0x%x wmask:%s
   //        0x%x\n",type, addr, binaryStr, data);)
-  Info_R("WriteAddr(%s) at: 0x%x wmask:%x 0x%x\n", type, addr, wmask,
-         data);
+#ifdef CONFIG_MTRACE
+
+  Info_R("WriteAddr(%s) at: 0x%x wmask:%x 0x%x\n", type, addr, wmask, data);
+#endif
 }
