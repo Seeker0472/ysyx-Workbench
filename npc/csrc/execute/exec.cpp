@@ -1,10 +1,8 @@
+#include "../include/ydb_all.h"
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull___024root.h"
-#include <common.h>
 #include <diftest.h>
 #include <iostream>
-#include <stdint.h>
-#include <utils.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
@@ -13,7 +11,6 @@ VysyxSoCFull *dut;
 
 uint64_t sim_time = 0;
 
-#include <isa.h>
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
 void update_reg_state();
@@ -34,12 +31,12 @@ extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
 
 #define PRINT_INST_MIN 10
 
-void single_cycle() {
+void single_cycle(bool check_pc) {
   uint32_t prev_pc =
       dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
   uint32_t now_pc =
       dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-  while (prev_pc == now_pc) {
+  do {
     dut->clock = 0;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
@@ -49,7 +46,7 @@ void single_cycle() {
     now_pc =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-  }
+  } while (prev_pc == now_pc && check_pc);
   update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
@@ -67,7 +64,7 @@ void reset(int n) {
   dut->clock = 1;
   dut->eval();
   while (n-- > 0)
-    single_cycle();
+    single_cycle(false);
   dut->reset = 0;
 }
 
@@ -98,7 +95,7 @@ int run(int step) {
     uint32_t pc =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-    single_cycle();
+    single_cycle(true);
     tfp->flush();
     g_nr_guest_inst++;
     // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
