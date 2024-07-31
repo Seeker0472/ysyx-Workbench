@@ -62,5 +62,6 @@ extern "C" void check_addr(uint32_t addr, svBit access_type) {
   if (MEM_IN(addr, FLASH_BASE, FLASH_TOP)) { // flash
     return;
   }
-  putchar('\n');
+  // putchar('\n');
+  printf("\n%x\n",addr);
 }
