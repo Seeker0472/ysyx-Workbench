@@ -52,7 +52,7 @@ extern "C" void call_ebreak() {
 #define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
 
 // TODO:DIFFTEST/OUTPUT
-extern "C" void check_addr(uint32_t addr, svBit access_type, uint8_t wmask,uint32_t wdata) {
+extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,uint32_t wdata) {
   if (MEM_IN(addr, MROM_BASE, MROM_TOP)) { // mrom
     return;
   }
