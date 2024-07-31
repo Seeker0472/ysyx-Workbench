@@ -44,7 +44,7 @@ extern "C" void call_ebreak() {
   nemu_state.halt_ret = regs_2_value;
   // exit(0);
 }
-
+//TODO:
 extern "C" void check_addr(uint32_t addr,bool type) {
   printf("AAAAAAAAAAAAA-%x\n", addr);
 }
