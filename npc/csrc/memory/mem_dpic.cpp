@@ -11,6 +11,7 @@ extern uint32_t *mem;
 extern uint32_t *psram;
 extern uint64_t time_now;
 // DPI-C Funcs
+//TODO:修mtrace
 extern "C" void flash_read(int32_t addr, int32_t *data) {
   // printf("%x---%x\n",addr,flash[addr/4]);
   *data = flash[addr / 4];
