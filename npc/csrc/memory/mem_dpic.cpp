@@ -20,6 +20,7 @@ extern "C" void mrom_read(int32_t addr, int32_t *data) {
 }
 
 extern "C" void psram_read(int32_t addr, int32_t *data) {
+  assert(0);
   *data = psram[(addr - 0x80000000) / 4];
 }
 extern "C" void psram_write(int32_t addr, int32_t data) {
