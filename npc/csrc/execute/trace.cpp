@@ -198,3 +198,4 @@ void trace_and_difftest(paddr_t pc, word_t inst_in) {
   }
 #endif
 }
+

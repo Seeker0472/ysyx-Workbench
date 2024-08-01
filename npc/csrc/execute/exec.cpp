@@ -10,17 +10,18 @@ VerilatedVcdC *tfp; // 用于生成波形的指针
 VysyxSoCFull *dut;
 
 uint64_t sim_time = 0;
-
+uint64_t g_nr_guest_inst = 0;
+uint64_t g_timer = 0; // unit: us
+void print_iringbuf();
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
 void update_reg_state();
 void print_inst_asm(paddr_t pc, word_t inst);
+void statistic();
 
 void init_verilator(int argc, char *argv[]) {
   Verilated::commandArgs(argc, argv);
 }
-
-uint64_t g_nr_guest_inst = 0;
 
 uint32_t mem_read(uint32_t pc);
 bool check_watch_point();
@@ -28,6 +29,18 @@ extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
 
 #define PRINT_INST_MIN 10
+
+void statistic() {
+#define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
+  Log("host time spent = " NUMBERIC_FMT " us", g_timer);
+  Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
+  if (g_timer > 0)
+    Log("simulation frequency = " NUMBERIC_FMT " inst/s",
+        g_nr_guest_inst * 1000000 / g_timer);
+  else
+    Log("Finish running in less than 1 us and can not calculate the simulation "
+        "frequency");
+}
 
 void single_cycle(bool check_pc) {
   uint32_t prev_pc =
@@ -78,7 +91,7 @@ void init_runtime() {
 
 int run(int step) {
   int now = step;
-
+  uint64_t timer_start = get_time();
   while ((now) != 0) {
     now = now >= 0 ? now - 1 : now;
     switch (nemu_state.state) {
@@ -96,11 +109,10 @@ int run(int step) {
     single_cycle(true);
     tfp->flush();
     g_nr_guest_inst++;
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     word_t inst =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst;
-    if (step < PRINT_INST_MIN&&step>=0)
+    if (step < PRINT_INST_MIN && step >= 0)
       print_inst_asm(pc, inst);
     // // TODO::在某一些条件下打印指令！！！！
     trace_and_difftest(pc, inst);
@@ -108,13 +120,13 @@ int run(int step) {
     if (nemu_state.state != NEMU_RUNNING)
       break; // 出现异常
   }
+  uint64_t timer_end = get_time();
+  g_timer += timer_end - timer_start;
   return 0;
 }
 
 void assert_fail_msg() {
   isa_reg_display();
-  // 打印iringbuf！TODO:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;
-  // IFDEF(CONFIG_ITRACE, print_iringbuf());
-  //   statistic();
-  //   TODO:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::;;
+  IFDEF(CONFIG_ITRACE, print_iringbuf());
+  statistic();
 }

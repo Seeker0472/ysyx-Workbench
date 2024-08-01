@@ -253,6 +253,7 @@ void sdb_set_batch_mode() {
 }
 
 void sdb_mainloop() {
+  //如果是batch_mode,直接执行结束后返回
   if (is_batch_mode) {
     cmd_c(NULL);
     return;
