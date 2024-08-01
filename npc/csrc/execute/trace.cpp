@@ -15,6 +15,7 @@ bool difftest_step = false;
 void ftrace_check_inst(paddr_t pc_now, word_t inst);
 void difftest_check_state();
 void difftest_copy_regs();
+void write_iringbuf(paddr_t pc, word_t inst);
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
@@ -176,10 +177,12 @@ void trace_and_difftest(paddr_t pc, word_t inst_in) {
   disassemble(p, buf + sizeof(buf) - p, pc, (uint8_t *)&inst_in, ilen);
 #ifdef CONFIG_ITRACE_COND // 在condition为true的时候记录！
   if (CONFIG_ITRACE_COND) {
-    // printf("BUF++%s\n",buf);
     log_write("%s\n", buf);
   } // 把缓冲区数据打印出来
 #endif
+#endif
+#ifdef CONFIG_IRINGBUF
+  write_iringbuf(pc, inst_in);
 #endif
 #ifdef CONFIG_FTRACE
   // ftrace--------------------
@@ -193,6 +196,5 @@ void trace_and_difftest(paddr_t pc, word_t inst_in) {
     difftest_exec(1);
     difftest_check_state();
   }
-
 #endif
 }
