@@ -19,5 +19,5 @@ void __attribute__((optimize("O0"))) check_values() {
 
 int main() {
   set();
-  // check_values();
+  check_values();
 }
