@@ -22,8 +22,9 @@ extern "C" void mrom_read(int32_t addr, int32_t *data) {
 extern "C" void psram_read(int32_t addr, int32_t *data) {
   *data = mrom[(addr - 0x20000000) / 4];
 }
-extern "C" void psram_write(int32_t addr, int32_t *data) {
-  mrom[(addr - 0x20000000) / 4] = *data;
+extern "C" void psram_write(int32_t addr, int32_t data) {
+  printf("addr=%x,data=%x\n",addr,data);
+  mrom[(addr - 0x20000000) / 4] = data;
 }
 
 extern "C" int get_time(int raddr) {
