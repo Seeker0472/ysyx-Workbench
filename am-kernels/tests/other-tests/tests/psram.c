@@ -4,7 +4,8 @@ uint32_t * data = (uint32_t *)0x80000000L;
 
 void __attribute__((optimize("O0"))) set() {
   for (volatile int i = 0; i < 100; i++) {
-    data[i] = (uint8_t)((uint32_t)(&(data[i])) & 0xff);
+    // data[i] = (uint8_t)((uint32_t)(&(data[i])) & 0xff);
+    data[i] = 0xffffffff;
   }
 }
 
