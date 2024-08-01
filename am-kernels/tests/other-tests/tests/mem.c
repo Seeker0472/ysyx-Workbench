@@ -1,4 +1,4 @@
-#include "trap.h"
+#include "../include/trap.h"
 
 void __attribute__((optimize("O0"))) set(uint8_t* test) {
     for (volatile int i = 0; i < 100; i++) {

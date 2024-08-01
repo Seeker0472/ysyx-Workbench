@@ -6,9 +6,8 @@
 uint64_t get_time();
 uint64_t time_now = 114514;
 
-
 uint32_t mem_read(uint32_t pc);
-//unused
+// unused
 uint32_t mem[0x80] = {
     0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493,
     0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493,
@@ -21,6 +20,7 @@ uint32_t *mrom;
 uint32_t *flash;
 // 4MB
 uint32_t *psram;
+// TODO:SDRAM
 
 word_t mem_size = 84;
 
@@ -37,7 +37,7 @@ uint32_t mem_read(uint32_t pc) {
 }
 
 void init_mrom(char *img_file) {
-  if(!img_file)
+  if (!img_file)
     return;
   int size = 0;
   FILE *fp = fopen(img_file, "rb");
@@ -56,7 +56,7 @@ void init_flash() {
 void init_flash_img(char *img_file) {
   if (!img_file) {
     for (int i = 0; i < 20; i++)
-      flash[i]=mem[i];
+      flash[i] = mem[i];
     return;
   }
   int size = 0;
@@ -72,12 +72,17 @@ void init_mem() {
   flash = (uint32_t *)malloc(16 * 1024 * 1024 * sizeof(uint8_t));
   psram = (uint32_t *)malloc(4 * 1024 * 1024 * sizeof(uint8_t));
 }
+void free_mem() {
+  free(mrom);
+  free(flash);
+  free(psram);
+}
 
 void init_img(char *img_file) {
   init_mem();
-      // init_flash();
-      // init_flash_img("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
-      init_flash_img(img_file);
+  // init_flash();
+  // init_flash_img("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
+  init_flash_img(img_file);
   // init_mrom(img_file);
   if (img_file != NULL) {
     //原本是把镜像加载进pmem中
@@ -85,10 +90,10 @@ void init_img(char *img_file) {
     fseek(fp, 0, SEEK_END);
     mem_size = ftell(fp);
     Log("The image is %s, size = %d", img_file, mem_size);
-    #ifdef CONFIG_USE_PMEM
+#ifdef CONFIG_USE_PMEM
     fseek(fp, 0, SEEK_SET);
     int ret = fread(mem, mem_size, 1, fp);
-    #endif
+#endif
     fclose(fp);
   } else {
     Log("No Img file Loaded,Using Default IMG");

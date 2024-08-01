@@ -5,9 +5,10 @@
 void record_pread(paddr_t addr, int len);
 void record_pwrite(paddr_t addr, char wmask, word_t data);
 uint32_t mem_read(uint32_t pc);
-extern uint32_t* mrom;
-extern uint32_t* flash;
-extern uint32_t* mem; 
+extern uint32_t *mrom;
+extern uint32_t *flash;
+extern uint32_t *mem;
+extern uint32_t *psram;
 extern uint64_t time_now;
 // DPI-C Funcs
 extern "C" void flash_read(int32_t addr, int32_t *data) {
@@ -16,6 +17,13 @@ extern "C" void flash_read(int32_t addr, int32_t *data) {
 }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
   *data = mrom[(addr - 0x20000000) / 4];
+}
+
+extern "C" void psram_read(int32_t addr, int32_t *data) {
+  *data = mrom[(addr - 0x20000000) / 4];
+}
+extern "C" void psram_write(int32_t addr, int32_t *data) {
+  mrom[(addr - 0x20000000) / 4] = *data;
 }
 
 extern "C" int get_time(int raddr) {
