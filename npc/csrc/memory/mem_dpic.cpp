@@ -21,7 +21,8 @@ extern "C" void mrom_read(int32_t addr, int32_t *data) {
 
 extern "C" void psram_read(int32_t addr, int32_t *data) {
   printf("addr=%x,data=%x\n", addr, psram[(addr - 0x80000000) / 4]);
-  *data = psram[(addr - 0x80000000) / 4];
+  // *data = psram[(addr - 0x80000000) / 4];
+  *data = 0x12345678;
 }
 extern "C" void psram_write(int32_t addr, int32_t data) {
   // printf("addr=%x,data=%x\n",addr,data);
