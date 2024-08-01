@@ -78,17 +78,19 @@ void init_img(char *img_file) {
   // size_t size = 0;
   if (img_file != NULL) {
     //原本是把镜像加载进pmem中
-    // FILE *fp = fopen(img_file, "rb");
-    // // Assert(fp, "Can not open '%s'", img_file);
-    // fseek(fp, 0, SEEK_END);
-    // mem_size = ftell(fp);
-    // // Log("The image is %s, size = %ld", img_file, size);
-    // Log("The image is %s, size = %d", img_file, mem_size);
-    // fseek(fp, 0, SEEK_SET);
-    // int ret = fread(mem, mem_size, 1, fp);
-    // // assert(ret == 1);
-    // fclose(fp);
-    // // return size;
+    FILE *fp = fopen(img_file, "rb");
+    // Assert(fp, "Can not open '%s'", img_file);
+    fseek(fp, 0, SEEK_END);
+    mem_size = ftell(fp);
+    // Log("The image is %s, size = %ld", img_file, size);
+    Log("The image is %s, size = %d", img_file, mem_size);
+    #ifdef CONFIG_USE_PMEM
+    fseek(fp, 0, SEEK_SET);
+    int ret = fread(mem, mem_size, 1, fp);
+    // assert(ret == 1);
+    #endif
+    fclose(fp);
+    // return size;
   } else {
     Log("No Img file Loaded,Using Default IMG");
   }
