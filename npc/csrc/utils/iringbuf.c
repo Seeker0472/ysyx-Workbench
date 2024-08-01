@@ -1,5 +1,5 @@
 #include "../include/ydb_all.h"
-# ifdef CONFIG_ITRACE
+#ifdef CONFIG_IRINGBUF
 typedef struct
 {
     paddr_t pc;
