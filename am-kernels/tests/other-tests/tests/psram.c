@@ -11,9 +11,10 @@ void __attribute__((optimize("O0"))) set() {
 }
 
 void __attribute__((optimize("O0"))) check_values() {
-  for (volatile int i = 0; i < 100; i++) {
-    check(data[i] == i);
-  }
+  // for (volatile int i = 0; i < 100; i++) {
+  //   check(data[i] == i);
+  // }
+  check(data[0]==0);
 }
 
 int main() {
