@@ -1,5 +1,5 @@
 #include "../include/ydb_all.h"
-# ifdef CONFIG_ITRACE
+#ifdef CONFIG_IRINGBUF
 typedef struct
 {
     paddr_t pc;
@@ -11,7 +11,8 @@ typedef struct
 inst_Node ibuf[BUF_SIZE];
 int pbuf=0;
 bool full=false;
-
+extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
+                            int nbyte);
 void write_iringbuf(paddr_t pc, word_t inst){
     ibuf[pbuf].pc=pc;
     ibuf[pbuf].inst=inst;
@@ -38,7 +39,7 @@ void print_inst(paddr_t pc, word_t inst,bool wrong){
     int ilen=4;//TODO:HOW?
     //打印接下的东西
     #ifndef CONFIG_ISA_loongarch32r
-    void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+    // void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
     disassemble(p, logbuf + sizeof(logbuf) - p-3,
         pc, (uint8_t *)&inst, ilen);//反
     #else
