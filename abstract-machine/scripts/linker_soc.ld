@@ -9,7 +9,7 @@ MEMORY {
 }
 SECTIONS {
   . = ORIGIN(flash);
-  _text_section_src = ORIGIN(flash);
+  _text_section_src = LOADADDR(.text);
   .text : {
   _text_section_start = .;
     *(entry)

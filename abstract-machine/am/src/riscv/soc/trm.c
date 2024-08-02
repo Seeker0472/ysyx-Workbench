@@ -36,13 +36,13 @@ void halt(int code) {
   while (1);
 }
 
-extern unsigned char _text_section_start, _data_section_end, _text_section_src,
-    _bss_start, _bss_end;
+extern unsigned char _text_section_start, _data_section_end, _bss_start,
+    _bss_end;
+extern int _text_section_src;
 void bootloader() {
-  unsigned char *src = &_text_section_src;
+  unsigned char *src = (unsigned char *)_text_section_src;
   unsigned char *dest = &_text_section_start;
   unsigned char *end = &_data_section_end;
-  printf("%x\n", src);
   while (dest <= end) {
     *dest = *src;
     dest++;
