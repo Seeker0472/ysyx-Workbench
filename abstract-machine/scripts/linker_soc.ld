@@ -5,7 +5,7 @@ MEMORY {
   mrom : ORIGIN = 0x20000000, LENGTH = 4K
   sram : ORIGIN = 0x0f000000, LENGTH = 8K
   flash : ORIGIN = 0x30000000, LENGTH = 16M
-  /* psram : ORIGIN = 0x80000000, LENGTH = 4M */
+  psram : ORIGIN = 0x80000000, LENGTH = 4M
 }
 SECTIONS {
   . = ORIGIN(flash);
@@ -28,7 +28,7 @@ SECTIONS {
     *(.sdata)
     *(.sdata.*)
     _data_section_end = .;
-  }> sram AT> flash : data
+  }> psram AT> flash : data
   /* edata = .; */
   /* _data = .; */
   .bss : {
@@ -37,9 +37,9 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
 	_bss_end = .;
-  }> sram AT> flash : bss
+  }> psram AT> flash : bss
   
-  . = ORIGIN(sram);
+  . = ORIGIN(psram);
   /* _pmem_start = . ; */
   . +=  _bss_end - _data_section_start;
   _stack_top = ALIGN(0x4);
