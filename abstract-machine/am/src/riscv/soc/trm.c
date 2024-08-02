@@ -36,11 +36,12 @@ void halt(int code) {
   while (1);
 }
 
-extern unsigned char _text_section_start, _data_section_end, _bss_start,
-    _bss_end;
-extern int _text_section_src;
+extern unsigned char _text_section_start, _data_section_end, _text_section_src,
+    _bss_start, _bss_end;
 void bootloader() {
-  unsigned char *src = (unsigned char *)_text_section_src;
+  if (&_text_section_src != (unsigned char *)0x30000000L)
+    halt(1);
+  unsigned char *src = &_text_section_src;
   unsigned char *dest = &_text_section_start;
   unsigned char *end = &_data_section_end;
   while (dest <= end) {
