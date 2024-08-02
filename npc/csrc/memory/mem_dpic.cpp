@@ -14,7 +14,7 @@ extern uint64_t time_now;
 // DPI-C Funcs
 //mtrace 使用dpi-c实现
 extern "C" void flash_read(int32_t addr, int32_t *data) {
-  printf("%x---%x\n",addr,flash[addr/4]);
+  // printf("%x---%x\n",addr,flash[addr/4]);
   *data = flash[addr / 4];
 }
 extern "C" void mrom_read(int32_t addr, int32_t *data) {
@@ -27,7 +27,7 @@ extern "C" void psram_read(int32_t addr, int32_t *data) {
   // *data = 0x12345678;
 }
 extern "C" void psram_write(int32_t addr, int32_t data) {
-  // printf("waddr=%x,data=%x\n",addr,data);
+  printf("waddr=%x,data=%x\n",addr,data);
   // psram[(addr - 0x80000000) / 4] = data;
   ((uint8_t *)psram)[addr - 0x80000000]=data;
 }
