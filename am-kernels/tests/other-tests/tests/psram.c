@@ -1,11 +1,11 @@
 #include "trap.h"
 
-uint8_t *data = (uint8_t *)0x80000000L;
+uint16_t *data = (uint16_t *)0x80000000L;
 
 void __attribute__((optimize("O0"))) set() {
   for (volatile int i = 0; i < 10; i++) {
     // data[i] = (uint8_t)((uint32_t)(&(data[i])) & 0xff);
-    data[i] = 0xfe;
+    data[i] = 0x1234;
     // data[i] = 0x12345678;
   }
 }
