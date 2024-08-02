@@ -38,10 +38,10 @@ SECTIONS {
     *(.scommon)
 	_bss_end = .;
   }> psram AT> flash : bss
-
+  
   . = ORIGIN(psram);
   _pmem_start = . ;
-  . +=  _data_section_start - _bss_end;
+  . +=  _bss_end - _data_section_start;
   _stack_top = ALIGN(0x4);
   . = _stack_top + 0x1000;
   _stack_pointer = .;
