@@ -11,7 +11,7 @@ extern uint32_t *mem;
 extern uint32_t *psram;
 extern uint64_t time_now;
 // DPI-C Funcs
-//TODO:修mtrace
+//mtrace 使用dpi-c实现
 extern "C" void flash_read(int32_t addr, int32_t *data) {
   // printf("%x---%x\n",addr,flash[addr/4]);
   *data = flash[addr / 4];
@@ -38,6 +38,7 @@ extern "C" int get_time(int raddr) {
   if (raddr == 0x1000004c) {
     return (uint32_t)(time_now >> 32);
   }
+  Assert(0,"get_time func recived addr : %x",raddr);
   return -1;
 }
 
