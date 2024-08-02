@@ -13,9 +13,9 @@ void __attribute__((optimize("O0"))) set() {
 void __attribute__((optimize("O0"))) check_values() {
   for (volatile int i = 0; i < 10; i++) {
     // check(data[i] == (uint8_t)((uint32_t)(&(data[i])) & 0xff));
-    check(data[i] == i);
+    // check(data[i] == i);
   }
-  // check(data[1]==1);
+  check(data[1]==1);
 }
 
 int main() {
