@@ -64,16 +64,6 @@ void print_welcome(){
   // printf("Hello from %c%c%c%c_%d! \nHave a good day! =ω= \n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
 }
 
-
-void _trm_init() {
-  init_uart();
-  // bootloader();
-  print_welcome();
-  // int ret = main(mainargs);
-  int ret = main(mainargs);
-  halt(ret);
-}
-
 extern unsigned char _text_section_start, _data_section_end, _text_section_src,
     _bss_start, _bss_end;
 void __attribute__((section(".bl"))) _bootloader() {
@@ -94,5 +84,14 @@ void __attribute__((section(".bl"))) _bootloader() {
   while (bss_src <= bss_end) {
     *(bss_src++) = 0;
   }
-  _trm_init();
+  // _trm_init();
 }
+void _trm_init() {
+  init_uart();
+  _bootloader();
+  print_welcome();
+  // int ret = main(mainargs);
+  int ret = main(mainargs);
+  halt(ret);
+}
+
