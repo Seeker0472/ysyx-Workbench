@@ -15,7 +15,7 @@ void __attribute__((optimize("O0"))) check_values() {
     // check(data[i] == (uint8_t)((uint32_t)(&(data[i])) & 0xff));
     // check(data[i] == i);
   }
-  check(data[2]==1);
+  check(data[5]==1);
 }
 
 int main() {
