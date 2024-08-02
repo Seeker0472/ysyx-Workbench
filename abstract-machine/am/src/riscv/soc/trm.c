@@ -83,7 +83,7 @@ void print_welcome(){
 
 void _trm_init() {
   init_uart();
-  // bootloader();
+  bootloader();
   print_welcome();
   int ret = main(mainargs);
   halt(ret);
