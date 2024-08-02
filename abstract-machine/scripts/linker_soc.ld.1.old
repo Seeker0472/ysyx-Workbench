@@ -5,7 +5,6 @@ MEMORY {
   mrom : ORIGIN = 0x20000000, LENGTH = 4K
   sram : ORIGIN = 0x0f000000, LENGTH = 8K
   flash : ORIGIN = 0x30000000, LENGTH = 16M
-  psram : ORIGIN = 0x80000000, LENGTH = 4M
 }
 SECTIONS {
   . = ORIGIN(flash);
@@ -28,7 +27,7 @@ SECTIONS {
     *(.sdata)
     *(.sdata.*)
     _data_section_end = .;
-  }> psram AT> flash : data
+  }> sram AT> flash : data
   /* edata = .; */
   /* _data = .; */
   .bss : {
@@ -37,14 +36,18 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
 	_bss_end = .;
-  }> psram AT> flash : bss
-  
-  . = ORIGIN(psram);
-  _pmem_start = . ;
-  . +=  _bss_end - _data_section_start;
+  }> sram AT> flash : bss
+  . = ORIGIN(sram);
+  . +=  _data_section_end - _bss_end;
   _stack_top = ALIGN(0x4);
-  . = _stack_top + 0x1000;
+  . = ORIGIN(sram) + LENGTH(sram);
+  /* . = _stack_top + 0x1500; */
   _stack_pointer = .;
-  _heap_start = ALIGN(0x10);
+  /* end = .; */
+  /* _end = .; */
+  /* _heap_start = ALIGN(0x10);
+  _pmem_start = .;
+  _entry_offset = 0; */
 
+  /* _heap_start = .; */
 }
