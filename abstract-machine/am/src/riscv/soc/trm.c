@@ -38,15 +38,16 @@ void halt(int code) {
 
 extern unsigned char _text_section_start, _data_section_end, _text_section_src,
     _bss_start, _bss_end;
-void  bootloader() {
+void bootloader() {
   unsigned char *src = &_text_section_src;
   unsigned char *dest = &_text_section_start;
   unsigned char *end = &_data_section_end;
+  printf("%x\n", src);
   while (dest <= end) {
     *dest = *src;
     dest++;
     src++;
-    }
+  }
     //初始化bss段
     unsigned char *bss_src = &_bss_start;
     unsigned char *bss_end = &_bss_end;
@@ -81,8 +82,7 @@ void print_welcome(){
   printf("Hello from %c%c%c%c_%d! \nHave a good day! =ω= \n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
 }
 
-int (*main_sram)(const char *) = (int (*)(const char *))(0x0f000000L + &main -
-                                                         0x30000000L);
+int (*main_sram)(const char *) = (int (*)(const char *))(0x0f000000L);
 
     void _trm_init() {
   init_uart();
