@@ -1,4 +1,5 @@
 #include "../include/ydb_all.h"
+#include <cassert>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -38,7 +39,8 @@ extern "C" int get_time(int raddr) {
   if (raddr == 0x1000004c) {
     return (uint32_t)(time_now >> 32);
   }
-  Assert(0,"get_time func recived addr : %x",raddr);
+  printf("get_time func recived addr : %x", raddr);
+  assert(0);
   return -1;
 }
 
