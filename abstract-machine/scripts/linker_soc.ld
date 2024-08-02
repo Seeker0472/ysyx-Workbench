@@ -10,6 +10,10 @@ MEMORY {
 SECTIONS {
   . = ORIGIN(flash);
   _text_section_src = .;
+  .bl : {
+    *(.bl.*)
+    *(.bl)
+  } > flash
   .text : {
   _text_section_start = .;
     *(entry)
