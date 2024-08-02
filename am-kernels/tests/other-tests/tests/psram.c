@@ -19,6 +19,7 @@ void __attribute__((optimize("O0"))) check_values() {
 }
 
 int main() {
+  check_values();
   set();
   check_values();
 }
