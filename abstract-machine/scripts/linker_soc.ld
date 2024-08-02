@@ -28,7 +28,7 @@ SECTIONS {
     *(.sdata)
     *(.sdata.*)
     _data_section_end = .;
-  }> psram AT> flash : data
+  }> sram AT> flash : data
   /* edata = .; */
   /* _data = .; */
   .bss : {
@@ -37,9 +37,9 @@ SECTIONS {
     *(.sbss*)
     *(.scommon)
 	_bss_end = .;
-  }> psram AT> flash : bss
+  }> sram AT> flash : bss
   
-  . = ORIGIN(psram);
+  . = ORIGIN(sram);
   /* _pmem_start = . ; */
   . +=  _bss_end - _data_section_start;
   _stack_top = ALIGN(0x4);
