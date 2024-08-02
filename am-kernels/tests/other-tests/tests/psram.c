@@ -3,8 +3,8 @@
 
 uint8_t *data = (uint8_t *)0x80000000L;
 
-// #define SIZE 4*1024
-#define SIZE 4
+#define SIZE 4*1024
+// #define SIZE 4
 
 void __attribute__((optimize("O0"))) set_u8() {
   // for (volatile int i = 0; i < 4*1024; i++) {
