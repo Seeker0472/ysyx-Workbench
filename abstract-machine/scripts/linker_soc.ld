@@ -1,9 +1,9 @@
 ENTRY(_start)
 /*ENTRY*/
-PHDRS { data PT_LOAD;bss PT_LOAD;rodata PT_LOAD; text PT_LOAD; }
+PHDRS { text PT_LOAD;rodata PT_LOAD;data PT_LOAD;bss PT_LOAD;  }
 MEMORY {
   mrom (rx) : ORIGIN = 0x20000000, LENGTH = 4K
-  sram (rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
+  sram (rwx) : ORIGIN = 0x0f000000, LENGTH = 8000000K
   flash (rx) : ORIGIN = 0x30000000, LENGTH = 16M
   psram (rwx) : ORIGIN = 0x80000000, LENGTH = 4M
 }
@@ -20,6 +20,7 @@ SECTIONS {
   . = ALIGN(4);
   _text_section_start = .;
     *(.text*)
+    *(.text.*)
   . = ALIGN(4);
   } > psram AT> flash : text
     /* . = ALIGN(0x10); */
@@ -27,6 +28,7 @@ SECTIONS {
   .rodata : {
   . = ALIGN(4);
     *(.rodata*)
+    *(.rodata.*)
     *(.srodata.*)
   . = ALIGN(4);
   }> psram AT> flash : rodata
@@ -45,14 +47,14 @@ SECTIONS {
   . = ALIGN(4);
 	_bss_start = .;
     *(.bss*)
+    *(.bss.*)
     *(.sbss*)
     *(.scommon)
   . = ALIGN(4);
 	_bss_end = .;
   }> psram AT> flash : bss
   
-  . = ORIGIN(sram);
-  _stack_top = ALIGN(0x4);
+  _stack_top = ORIGIN(sram);
   _stack_pointer = _stack_top + LENGTH(sram);
 
   . = ORIGIN(psram);
