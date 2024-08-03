@@ -1,5 +1,4 @@
 #include "trap.h"
-// #include <cstdint>
 
 uint8_t *data = (uint8_t *)0x80000000L;
 
@@ -9,8 +8,6 @@ uint8_t *data = (uint8_t *)0x80000000L;
 void  set_u8() {
   for ( int i = 0; i < SIZE; i++) {
     data[i] = (uint8_t)((uint32_t)(&(data[i])) & 0xff);
-    // data[i] = 0x12345678;
-    // data[i] = 0x12345678;
   }
 }
 
@@ -49,4 +46,5 @@ int main() {
   check_values_u16();
   set_u32();
   check_values_u32();
+  return 0;
 }
