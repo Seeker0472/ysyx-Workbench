@@ -1,8 +1,8 @@
 #include "trap.h"
 
-uint8_t *memory = (uint8_t *)0x80000000L;
+uint8_t *memory = (uint8_t *)0x80001000L;
 
-#define SIZE 4*1024*1024
+#define SIZE 4*1024
 // #define SIZE 4
 
 void  set_u8() {
