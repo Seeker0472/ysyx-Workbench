@@ -37,6 +37,7 @@ SECTIONS {
     *(.data.*)
     *(.sdata)
     *(.sdata.*)
+  . = ALIGN(4);
     _data_section_end = .;
   }> sram AT> flash : data
   .bss : {
@@ -45,6 +46,7 @@ SECTIONS {
     *(.bss*)
     *(.sbss*)
     *(.scommon)
+  . = ALIGN(4);
 	_bss_end = .;
   }> sram AT> flash : bss
   

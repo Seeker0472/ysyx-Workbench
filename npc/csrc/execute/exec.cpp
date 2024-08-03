@@ -47,7 +47,9 @@ void single_cycle(bool check_pc) {
       dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
   uint32_t now_pc =
       dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+  int i = 0;
   do {
+    i++;
     dut->clock = 0;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
@@ -57,6 +59,9 @@ void single_cycle(bool check_pc) {
     now_pc =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+    if (i % 300 == 0) {
+      Info_R("WARN: PC didn't change for 300 Cycles!\n");
+    }
   } while (prev_pc == now_pc && check_pc);
   update_reg_state();
 
