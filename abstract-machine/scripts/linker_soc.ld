@@ -14,10 +14,10 @@ SECTIONS {
     *(entry)
     *(.bl)
   } > flash
-  . = ALIGN(4);
+  . = ALIGN(1);
   _text_section_src = .;
   .text : {
-  . = ALIGN(4);
+  . = ALIGN(1);
   _text_section_start = .;
     *(.text*)
   } > sram AT> flash : text
