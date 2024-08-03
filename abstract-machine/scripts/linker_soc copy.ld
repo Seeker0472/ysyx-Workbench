@@ -15,14 +15,11 @@ SECTIONS {
     *(.fsbl)
   . = ALIGN(4);
   }> flash : fsbl
-  _ssbl_section_src = .;
   .ssbl : {
   . = ALIGN(4);
-  _ssbl_section_start = .;
     *(.ssbl)
-  _ssbl_section_end = .;
   . = ALIGN(4);
-  }> sram AT> flash : ssbl
+  }> flash : ssbl
   _text_section_src = .;
   .text : {
   . = ALIGN(4);

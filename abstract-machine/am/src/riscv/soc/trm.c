@@ -74,9 +74,10 @@ void _trm_init() {
   halt(ret);
 }
 
+
 extern unsigned char _text_section_start, _data_section_end, _text_section_src,
     _bss_start, _bss_end;
-void __attribute__((section(".bl"))) _bootloader() {
+void __attribute__((section(".ssbl"))) _sbootloader() {
   // if (&_text_section_src != (unsigned char *)0x30000000L)
   //   halt(1);
   unsigned char *src = &_text_section_src;
@@ -95,4 +96,17 @@ void __attribute__((section(".bl"))) _bootloader() {
     *(bss_src++) = 0;
   }
   _trm_init();
+}
+
+extern unsigned char _ssbl_section_start, _ssbl_section_end, _ssbl_section_src;
+void __attribute__((section(".fsbl"))) _fbootloader() {
+  unsigned char *src = &_ssbl_section_src;
+  unsigned char *dest = &_ssbl_section_start;
+  unsigned char *end = &_ssbl_section_end;
+  while (dest <= end) {
+    *dest = *src;
+    dest++;
+    src++;
+  }
+  _sbootloader();
 }
