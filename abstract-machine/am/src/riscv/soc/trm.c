@@ -8,7 +8,7 @@ int main(const char *args);
 
 extern char _pmem_start;
 #define PMEM_SIZE (128 * 1024 * 1024)
-#define PMEM_END ((uintptr_t)&_pmem_start + PMEM_SIZE)
+#define PMEM_END  ((uintptr_t)&_pmem_start + PMEM_SIZE)
 
 Area heap = RANGE(&_heap_start, PMEM_END);
 #ifndef MAINARGS
@@ -36,7 +36,23 @@ void halt(int code) {
   while (1);
 }
 
-
+extern unsigned char  _data_section_start,_data_section_end,_data_section_src,_bss_start,_bss_end;
+void  bootloader() {
+    unsigned char *src = &_data_section_src;
+    unsigned char *dest = &_data_section_start;
+    unsigned char *end = &_data_section_end;
+    while (dest <= end) {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+    //初始化bss段
+    unsigned char *bss_src = &_bss_start;
+    unsigned char *bss_end = &_bss_end;
+    while (bss_src <= bss_end) {
+        *(bss_src++ )= 0;
+    }
+}
 void init_uart(){
   outb(SERIAL_PORT+3,0x80);
   outb(SERIAL_PORT,0x10);   //写入Divisor Latch
@@ -61,37 +77,14 @@ void print_welcome(){
       : "x0"             // 被修改的寄存器
   );
 
-  // printf("Hello from %c%c%c%c_%d! \nHave a good day! =ω= \n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
+  printf("Hello from %c%c%c%c_%d! \nHave a good day! =ω= \n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
 }
 
-extern unsigned char _text_section_start, _data_section_end, _text_section_src,
-    _bss_start, _bss_end;
-void __attribute__((section(".bl"))) _bootloader() {
-  // if (&_text_section_src != (unsigned char *)0x30000000L)
-  //   halt(1);
-  unsigned char *src = &_text_section_src;
-  // unsigned char *src = (unsigned char *)0x30000000L;
-  unsigned char *dest = &_text_section_start;
-  unsigned char *end = &_data_section_end;
-  while (dest <= end) {
-    *dest = *src;
-    dest++;
-    src++;
-  }
-  //初始化bss段
-  unsigned char *bss_src = &_bss_start;
-  unsigned char *bss_end = &_bss_end;
-  while (bss_src <= bss_end) {
-    *(bss_src++) = 0;
-  }
-  // _trm_init();
-}
+
 void _trm_init() {
   init_uart();
-  _bootloader();
+  bootloader();
   print_welcome();
-  // int ret = main(mainargs);
   int ret = main(mainargs);
   halt(ret);
 }
-
