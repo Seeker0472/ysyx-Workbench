@@ -47,9 +47,9 @@ SECTIONS {
   
   . = ORIGIN(sram);
   _pmem_start = . ;
-  . +=  _bss_end - _text_section_src;
+  . +=  _bss_end - _text_section_start;
   _stack_top = ALIGN(0x4);
-  . = _stack_top + 0x500;
+  . = _stack_top + 0x1000;
   _stack_pointer = .;
   _heap_start = ALIGN(0x10);
 
