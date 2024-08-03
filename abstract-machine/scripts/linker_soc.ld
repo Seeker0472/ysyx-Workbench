@@ -1,6 +1,6 @@
 ENTRY(_start)
 /*ENTRY*/
-PHDRS { text PT_LOAD;rodata PT_LOAD;data PT_LOAD;bss PT_LOAD;  }
+PHDRS { bl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data PT_LOAD;bss PT_LOAD;  }
 MEMORY {
   mrom (rx) : ORIGIN = 0x20000000, LENGTH = 4K
   sram (rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
@@ -13,7 +13,7 @@ SECTIONS {
   . = ALIGN(4);
     *(entry)
     *(.bl)
-  } > flash
+  } > flash : bl
   _text_section_src = .;
   . = ALIGN(4);
   .text : {
