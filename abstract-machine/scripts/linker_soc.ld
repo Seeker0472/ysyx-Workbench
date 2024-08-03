@@ -1,6 +1,6 @@
 ENTRY(_start)
 /*ENTRY*/
-PHDRS { bl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data PT_LOAD;bss PT_LOAD;  }
+/* PHDRS { bl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data PT_LOAD;bss PT_LOAD;  } */
 MEMORY {
   mrom (rx) : ORIGIN = 0x20000000, LENGTH = 4K
   sram (rwx) : ORIGIN = 0x0f000000, LENGTH = 8K
@@ -13,7 +13,7 @@ SECTIONS {
   . = ALIGN(4);
     *(entry)
     *(.bl)
-  } > flash : bl
+  } > flash 
   _text_section_src = .;
   . = ALIGN(4);
   .text : {
@@ -22,7 +22,7 @@ SECTIONS {
     *(.text*)
     *(.text.*)
   . = ALIGN(4);
-  } > psram AT> flash : text
+  } > psram AT> flash 
     /* . = ALIGN(0x10); */
   _etext = .;
   .rodata : {
@@ -31,7 +31,10 @@ SECTIONS {
     *(.rodata.*)
     *(.srodata.*)
   . = ALIGN(4);
-  }> psram AT> flash : rodata
+  }> psram AT> flash
+  .data.extra : {
+    *(.data.extra)
+  }> psram AT> flash
   _data_section_src = LOADADDR(.data);
   .data : {
   . = ALIGN(4);
@@ -42,7 +45,10 @@ SECTIONS {
     *(.sdata.*)
   . = ALIGN(4);
     _data_section_end = .;
-  }> psram AT> flash : data
+  }> psram AT> flash
+  .bss.extra : {
+    *(.bss.extra)
+  }> psram AT> flash
   .bss : {
   . = ALIGN(4);
 	_bss_start = .;
@@ -52,7 +58,7 @@ SECTIONS {
     *(.scommon)
   . = ALIGN(4);
 	_bss_end = .;
-  }> psram AT> flash : bss
+  }> psram AT> flash
   
   _stack_top = ORIGIN(sram);
   _stack_pointer = _stack_top + LENGTH(sram);
