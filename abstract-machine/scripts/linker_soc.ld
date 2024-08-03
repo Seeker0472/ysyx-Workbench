@@ -26,6 +26,7 @@ SECTIONS {
   .rodata : {
   . = ALIGN(4);
     *(.rodata*)
+    *(.srodata.*)
   }> sram AT> flash : rodata
   _data_section_src = LOADADDR(.data);
   .data : {
