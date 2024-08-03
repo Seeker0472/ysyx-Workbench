@@ -14,6 +14,7 @@ SECTIONS {
     *(entry)
     *(.bl)
   } > flash
+  . = ALIGN(4);
   _text_section_src = .;
   .text : {
   . = ALIGN(4);
