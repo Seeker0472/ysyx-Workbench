@@ -9,24 +9,18 @@ MEMORY {
 }
 SECTIONS {
   . = ORIGIN(flash);
-  /* 一级加载 */
   .fsbl : {
   . = ALIGN(4);
     *(entry)
     *(.fsbl)
   . = ALIGN(4);
   }> flash : fsbl
-  /* 二级加载 */
-  _ssbl_section_src = LOADADDR(.ssbl);
   .ssbl : {
-  _ssbl_section_start = .;
   . = ALIGN(4);
     *(.ssbl)
-  _ssbl_section_end = .;
   . = ALIGN(4);
-  }> sram AT> flash : ssbl
-  /* text段，ssbl复制的起点 */
-  _text_section_src = LOADADDR(.text);
+  }> flash : ssbl
+  _text_section_src = .;
   .text : {
   . = ALIGN(4);
   _text_section_start = .;
@@ -34,6 +28,7 @@ SECTIONS {
     *(.text.*)
   . = ALIGN(4);
   } > psram AT> flash : text
+    /* . = ALIGN(0x10); */
   _etext = .;
   .rodata : {
   . = ALIGN(4);
@@ -83,7 +78,6 @@ SECTIONS {
     _data_section_end = .;
   }> psram AT> flash : data
   .bss.extra : {
-	_bss_start = .;
     . = ALIGN(8);
     __am_apps_bss_start = .;
     *(__am_apps.bss*)
@@ -94,6 +88,7 @@ SECTIONS {
   }> psram AT> flash : bss_ext
   .bss : {
   . = ALIGN(4);
+	_bss_start = .;
     *(.bss*)
     *(.bss.*)
     *(.sbss*)
@@ -101,13 +96,10 @@ SECTIONS {
   . = ALIGN(4);
 	_bss_end = .;
   }> psram AT> flash : bss
-  /* ssbl复制的终点 */
-
-  /* 栈顶指针 */
+  
   _stack_top = ORIGIN(sram);
   _stack_pointer = _stack_top + LENGTH(sram);
 
-  /* 堆区 */
   . = ORIGIN(psram);
   . += _bss_end - _text_section_start;
   _heap_start = ALIGN(0x10);
