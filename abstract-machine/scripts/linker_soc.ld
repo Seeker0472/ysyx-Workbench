@@ -17,8 +17,8 @@ SECTIONS {
   }> flash : fsbl
   _ssbl_section_src = .;
   .ssbl : {
-  . = ALIGN(4);
   _ssbl_section_start = .;
+  . = ALIGN(4);
     *(.ssbl)
   _ssbl_section_end = .;
   . = ALIGN(4);
