@@ -1,6 +1,6 @@
 ENTRY(_start)
 /*ENTRY*/
-PHDRS { fsbl PT_LOAD;ssbl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data_ext PT_LOAD;data PT_LOAD;bss_ext PT_LOAD;bss PT_LOAD;  }
+/* PHDRS { bl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data_ext PT_LOAD;data PT_LOAD;bss_ext PT_LOAD;bss PT_LOAD;  } */
 MEMORY {
   mrom  : ORIGIN = 0x20000000, LENGTH = 4K
   sram  : ORIGIN = 0x0f000000, LENGTH = 8K
@@ -9,31 +9,21 @@ MEMORY {
 }
 SECTIONS {
   . = ORIGIN(flash);
-  /* 一级加载 */
-  .fsbl : {
+  .bl : {
   . = ALIGN(4);
     *(entry)
-    *(.fsbl)
+    *(.bl)
   . = ALIGN(4);
-  }> flash : fsbl
-  /* 二级加载 */
-  _ssbl_section_src = LOADADDR(.ssbl);
-  .ssbl : {
-  _ssbl_section_start = .;
-  . = ALIGN(4);
-    *(.ssbl)
-  _ssbl_section_end = .;
-  . = ALIGN(4);
-  }> sram AT> flash : ssbl
-  /* text段，ssbl复制的起点 */
-  _text_section_src = LOADADDR(.text);
+  }> flash 
+  _text_section_src = .;
   .text : {
   . = ALIGN(4);
   _text_section_start = .;
     *(.text*)
-    *(.text.*)
+    /* *(.text.*) */
   . = ALIGN(4);
-  } > psram AT> flash : text
+  } > psram AT> flash
+    /* . = ALIGN(0x10); */
   _etext = .;
   .rodata : {
   . = ALIGN(4);
@@ -41,9 +31,9 @@ SECTIONS {
     *(.rodata.*)
     *(.srodata.*)
   . = ALIGN(4);
-  }> psram AT> flash : rodata
+  }> psram AT> flash
   .data.extra : {
-       /* section information for finsh shell */
+        /* section information for finsh shell */
     __fsymtab_start = .;
     KEEP(*(FSymTab))
     __fsymtab_end = .;
@@ -70,7 +60,7 @@ SECTIONS {
     *(__am_apps.sdata*)
     __am_apps_data_end = .;
     . = ALIGN(8);
-  }> psram AT> flash : data_ext
+  }> psram AT> flash
   _data_section_src = LOADADDR(.data);
   .data : {
   . = ALIGN(4);
@@ -81,9 +71,8 @@ SECTIONS {
     *(.sdata.*)
   . = ALIGN(4);
     _data_section_end = .;
-  }> psram AT> flash : data
+  }> psram AT> flash 
   .bss.extra : {
-	_bss_start = .;
     . = ALIGN(8);
     __am_apps_bss_start = .;
     *(__am_apps.bss*)
@@ -91,23 +80,21 @@ SECTIONS {
     *(__am_apps.scommon*)
     __am_apps_bss_end = .;
     . = ALIGN(8);
-  }> psram AT> flash : bss_ext
+  }> psram AT> flash 
   .bss : {
   . = ALIGN(4);
+	_bss_start = .;
     *(.bss*)
     *(.bss.*)
     *(.sbss*)
     *(.scommon)
   . = ALIGN(4);
 	_bss_end = .;
-  }> psram AT> flash : bss
-  /* ssbl复制的终点 */
-
-  /* 栈顶指针 */
+  }> psram AT> flash
+  
   _stack_top = ORIGIN(sram);
   _stack_pointer = _stack_top + LENGTH(sram);
 
-  /* 堆区 */
   . = ORIGIN(psram);
   . += _bss_end - _text_section_start;
   _heap_start = ALIGN(0x10);
