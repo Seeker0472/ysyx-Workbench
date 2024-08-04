@@ -23,7 +23,7 @@ SECTIONS {
   _ssbl_section_end = .;
   . = ALIGN(4);
   }> sram AT> flash : ssbl
-  _text_section_src = .;
+  _text_section_src = LOADADDR(.text);
   .text : {
   . = ALIGN(4);
   _text_section_start = .;
@@ -81,6 +81,7 @@ SECTIONS {
     _data_section_end = .;
   }> psram AT> flash : data
   .bss.extra : {
+	_bss_start = .;
     . = ALIGN(8);
     __am_apps_bss_start = .;
     *(__am_apps.bss*)
@@ -91,7 +92,6 @@ SECTIONS {
   }> psram AT> flash : bss_ext
   .bss : {
   . = ALIGN(4);
-	_bss_start = .;
     *(.bss*)
     *(.bss.*)
     *(.sbss*)
