@@ -111,7 +111,7 @@ void __attribute__((section(".ssbl"))) _sbootloader() {
   while (bss_src <= bss_end) {
     *(bss_src++) = 0;
   }
-  check_func();
+  // check_func();
   _trm_init();
 }
 
