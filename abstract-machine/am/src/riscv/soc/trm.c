@@ -2,6 +2,10 @@
 #include <klib-macros.h>
 #include "../riscv.h"
 #include <klib.h>
+__attribute__((noinline)) void check(bool cond) {
+  if (!cond)
+    halt(1);
+}
 
 extern char _heap_start;
 int main(const char *args);
@@ -80,7 +84,7 @@ extern unsigned char _text_section_start, _data_section_end, _text_section_src,
     _bss_start, _bss_end;
 
 
-void check() {
+void check_func() {
   unsigned char *src = &_text_section_src;
   // unsigned char *src = (unsigned char *)0x30000000L;
   unsigned char *dest = &_text_section_start;
@@ -107,7 +111,7 @@ void __attribute__((section(".ssbl"))) _sbootloader() {
   while (bss_src <= bss_end) {
     *(bss_src++) = 0;
   }
-  check();
+  check_func();
   _trm_init();
 }
 
