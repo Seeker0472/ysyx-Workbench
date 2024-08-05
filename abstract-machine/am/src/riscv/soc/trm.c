@@ -2,7 +2,7 @@
 #include <klib-macros.h>
 #include "../riscv.h"
 #include <klib.h>
-__attribute__((noinline)) void check(bool cond) {
+__attribute__((noinline)) void check_ok(bool cond) {
   if (!cond)
     halt(1);
 }
@@ -90,7 +90,7 @@ void check_func() {
   unsigned char *dest = &_text_section_start;
   unsigned char *end = &_data_section_end;
   while (dest <= end) {
-    check(*dest == *src);
+    check_ok(*dest == *src);
   }
 }
 void __attribute__((section(".ssbl"))) _sbootloader() {

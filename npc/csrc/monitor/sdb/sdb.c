@@ -22,7 +22,7 @@
 word_t expr(char *e, bool *success);
 word_t mem_read(paddr_t addr) ;
 int update_reg_state();
-
+int set_break_point(char *name);
 static int is_batch_mode = false;
 
 void init_regex();
@@ -177,7 +177,7 @@ static int cmd_watch(char *args){
   }
   WP* wp=new_wp();
   strncpy(wp->expr,args,500);//复制表达式
-  wp->last_result=succ?result:0;
+  wp->last_result = succ ? result : 0;
   printf("Added watch_point :%s\n",args);
   return 0;
 }
@@ -220,7 +220,8 @@ static struct {
     {"w", "Set WatchPoint", cmd_watch},
     {"d", "Delete WatchPoint", cmd_del_watch},
     {"t", "t", (int (*)(char *))test_pr},
-    {"u", "Update Reg state.", update_reg_state},
+    {"u", "Update Reg state.", (int (*)(char *))update_reg_state},
+    {"b", "Set break point", (int (*)(char *))set_break_point},
     /* TODO: Add more commands */
 
 };

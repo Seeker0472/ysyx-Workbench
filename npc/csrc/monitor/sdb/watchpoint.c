@@ -83,8 +83,9 @@ bool check_watch_point(){
       printf("Failed to execute expression: %s\n",cur->expr);
     }
     if(succ&&result!=cur->last_result){
-      printf("Hit WatchPoint:%d %s \n",cur->NO,cur->expr);
-      
+      printf("Hit WatchPoint:%d %s \n", cur->NO, cur->expr);
+      printf("%s", cur->comment);
+
       MUXDEF(CONFIG_RV64, printf("Old value = 0x%lx (%lu)\n",cur->last_result,cur->last_result);, printf("Old value = 0x%x (%u)\n",cur->last_result,cur->last_result););
 
       MUXDEF(CONFIG_RV64, printf("New value = 0x%lx (%lu)\n",result,result);, printf("New value = 0x%x (%u)\n",result,result););

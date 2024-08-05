@@ -59,9 +59,9 @@ void single_cycle(bool check_pc) {
     now_pc =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-    if (i % 300 == 0) {
+    if (i % 1000 == 0) {
       nemu_state.state= NEMU_STOP;
-      Info_R("WARN: PC didn't change for 300 Cycles!\n");
+      Info_R("WARN: PC didn't change for 1000 Cycles!\n");
       break;
     }
   } while (prev_pc == now_pc && check_pc);
