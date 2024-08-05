@@ -41,11 +41,11 @@ void check_values_u32() {
 }
 
 int main() {
-  set_u8();
-  check_values_u8();
+  // set_u8();
+  // check_values_u8();
   // set_u16();
   // check_values_u16();
-  // set_u32();
-  // check_values_u32();
+  set_u32();
+  check_values_u32();
   return 0;
 }
