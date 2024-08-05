@@ -6,10 +6,10 @@ void __attribute__((optimize("O0"))) set_u8() {
   data[1] = 0x9876;
   // for (volatile int i = 0; i < 1000; i++)
   //   ;
-  uint16_t temp = data[0];
+  uint16_t temp = data[1];
   // for (volatile int i = 0; i < 1000; i++)
   //   ;
-  check(temp==0x1234);
+  check(temp==0x9876);
   // data[10] = temp;
 }
 
