@@ -3,7 +3,7 @@
 uint8_t *memory = (uint8_t *)0xa0000000L;
 
 // #define SIZE 4 * 1024
-#define SIZE 1024*2
+#define SIZE 1024*4
 
 void set_u8() {
   for (int i = 0; i < SIZE; i++) {
@@ -41,11 +41,11 @@ void check_values_u32() {
 }
 
 int main() {
-  // set_u8();
-  // check_values_u8();
+  set_u8();
+  check_values_u8();
   set_u16();
   check_values_u16();
-  // set_u32();
-  // check_values_u32(); 
+  set_u32();
+  check_values_u32(); 
   return 0;
 }
