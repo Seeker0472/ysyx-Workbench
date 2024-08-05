@@ -75,8 +75,20 @@ void _trm_init() {
 }
 
 
+
 extern unsigned char _text_section_start, _data_section_end, _text_section_src,
     _bss_start, _bss_end;
+
+
+void check() {
+  unsigned char *src = &_text_section_src;
+  // unsigned char *src = (unsigned char *)0x30000000L;
+  unsigned char *dest = &_text_section_start;
+  unsigned char *end = &_data_section_end;
+  while (dest <= end) {
+    check(*dest == *src);
+  }
+}
 void __attribute__((section(".ssbl"))) _sbootloader() {
   // if (&_text_section_src != (unsigned char *)0x30000000L)
   //   halt(1);
@@ -95,6 +107,7 @@ void __attribute__((section(".ssbl"))) _sbootloader() {
   while (bss_src <= bss_end) {
     *(bss_src++) = 0;
   }
+  check();
   _trm_init();
 }
 
