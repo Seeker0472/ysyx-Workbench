@@ -3,7 +3,7 @@
 uint8_t *memory = (uint8_t *)0xa0000000L;
 
 // #define SIZE 4 * 1024
-#define SIZE 1024*4
+#define SIZE 8*1024*1024*4
 
 void set_u8() {
   for (int i = 0; i < SIZE; i++) {
