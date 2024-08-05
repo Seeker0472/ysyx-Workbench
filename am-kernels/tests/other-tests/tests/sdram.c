@@ -46,6 +46,6 @@ int main() {
   // set_u16();
   // check_values_u16();
   set_u32();
-  check_values_u32();
+  check_values_u32(); 
   return 0;
 }
