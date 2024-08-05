@@ -45,7 +45,7 @@ int main() {
   check_values_u8();
   set_u16();
   check_values_u16();
-  // set_u32();
-  // check_values_u32(); 
+  set_u32();
+  check_values_u32(); 
   return 0;
 }
