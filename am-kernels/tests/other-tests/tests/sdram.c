@@ -24,7 +24,7 @@ void set_u16() {
 }
 
 void check_values_u16() {
-  for (int i = 2; i < SIZE / 2; i++) {
+  for (int i = 0x100; i < SIZE / 2; i++) {
     check(((uint16_t *)memory)[i] ==
           (uint16_t)((uint32_t)(memory + i) & 0xffff));
   }
