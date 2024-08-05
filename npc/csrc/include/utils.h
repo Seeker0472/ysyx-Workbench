@@ -21,7 +21,14 @@
 // ----------- state -----------
 
 enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
-
+//定义
+/*
+NEMU_RUNNING- 正常运行
+NEMU_STOP-    无异常暂停
+NEMU_END-     ebreak(运行结束)
+NEMU_ABORT-   异常终止
+NEMU_QUIT-    退出
+*/
 typedef struct {
   int state;
   vaddr_t halt_pc;

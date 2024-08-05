@@ -56,7 +56,7 @@ static int cmd_c(char *args) {
 
 static int cmd_q(char *args) {
   nemu_state.state=NEMU_QUIT;
-  return -1;
+  return 0;
 }
 //my_func start!
 static int cmd_step(char *args){
@@ -256,7 +256,8 @@ void sdb_mainloop() {
   //如果是batch_mode,直接执行结束后返回
   if (is_batch_mode) {
     cmd_c(NULL);
-    return;
+    if (nemu_state.state == NEMU_END)
+      return;
   }
 
   for (char *str; (str = rl_gets()) != NULL; ) {
@@ -282,7 +283,11 @@ void sdb_mainloop() {
     int i;
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
-        if (cmd_table[i].handler(args) < 0) { return; }
+        if (cmd_table[i].handler(args) < 0) {
+          return;
+        }
+        if (nemu_state.state == NEMU_QUIT)
+          return;
         break;
       }
     }
