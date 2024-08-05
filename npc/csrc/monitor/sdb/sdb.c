@@ -21,7 +21,7 @@
 // #include <memory/host.h>
 word_t expr(char *e, bool *success);
 word_t mem_read(paddr_t addr) ;
-
+int update_reg_state();
 
 static int is_batch_mode = false;
 
@@ -208,18 +208,20 @@ static struct {
   const char *name;
   const char *description;
   int (*handler) (char *);
-} cmd_table [] = {
-  { "help", "Display information about all supported commands", cmd_help },
-  { "c", "Continue the execution of the program", cmd_c },
-  { "q", "Exit NEMU", cmd_q },
-  { "si", "Single-step execution", cmd_step },
-  { "info", "Print the status of the program.(reg,watchpoint..etc)", cmd_print_status },
-  { "x", "Scan mem", cmd_scan_mem },
-  { "p", "Eval expression", cmd_eval },
-  { "w", "Set WatchPoint", cmd_watch },
-  { "d", "Delete WatchPoint", cmd_del_watch },
-  { "t", "t", (int (*)(char*))test_pr },
-  /* TODO: Add more commands */
+} cmd_table[] = {
+    {"help", "Display information about all supported commands", cmd_help},
+    {"c", "Continue the execution of the program", cmd_c},
+    {"q", "Exit NEMU", cmd_q},
+    {"si", "Single-step execution", cmd_step},
+    {"info", "Print the status of the program.(reg,watchpoint..etc)",
+     cmd_print_status},
+    {"x", "Scan mem", cmd_scan_mem},
+    {"p", "Eval expression", cmd_eval},
+    {"w", "Set WatchPoint", cmd_watch},
+    {"d", "Delete WatchPoint", cmd_del_watch},
+    {"t", "t", (int (*)(char *))test_pr},
+    {"u", "Update Reg state.", update_reg_state},
+    /* TODO: Add more commands */
 
 };
 
