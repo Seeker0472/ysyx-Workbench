@@ -8,7 +8,8 @@ void __attribute__((optimize("O0"))) set_u8() {
   uint8_t temp = data[0];
   // for (volatile int i = 0; i < 1000; i++)
   //   ;
-  data[10] = temp;
+  check(temp==0xff);
+  // data[10] = temp;
 }
 
 int main() {
