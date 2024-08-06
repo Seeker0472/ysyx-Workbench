@@ -112,8 +112,10 @@ SECTIONS {
 
   /* 堆区 */
   . = ORIGIN(psram);
+  _heap_start = . ;
   /* . += _bss_end - _text_section_start; */
-  _heap_start = ALIGN(0x10);
-  _pmem_start = . ;
+  /* _heap_start = ALIGN(0x10); */
+  . = ORIGIN(psram)+LENGTH(psram);
+  _heap_end = . ;
 
 }
