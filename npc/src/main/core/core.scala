@@ -23,7 +23,7 @@ class ypc extends Module {
   val br_han      = Module(new ebreak_handler())
   val ifu         = Module(new IFU())
   val exu         = Module(new EXU())
-  val memau       = Module(new LSU())
+  val        = Module(new LSU())
   val wbu         = Module(new WBU())
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
 
@@ -39,11 +39,11 @@ class ypc extends Module {
   exu.io.reg2 <> reg.io.Rread2
   exu.io.csr <> reg.io.CSRread
 //mem_access
-  memau.io.axi <> axi_arbiter.io.c2
-  StageConnect(exu.io.out, memau.io.in)
+  LSU.io.axi <> axi_arbiter.io.c2
+  StageConnect(exu.io.out, LSU.io.in)
 
 //wb
-  StageConnect(memau.io.out, wbu.io.in)
+  StageConnect(LSU.io.out, wbu.io.in)
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
