@@ -91,6 +91,8 @@ void check_func() {
   unsigned char *end = &_data_section_end;
   while (dest <= end) {
     check_ok(*dest == *src);
+    src++;
+    dest++;
   }
 }
 void __attribute__((section(".ssbl"))) _sbootloader() {
