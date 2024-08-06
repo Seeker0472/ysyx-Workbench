@@ -96,10 +96,10 @@ void check_func() {
 void __attribute__((section(".ssbl"))) _sbootloader() {
   // if (&_text_section_src != (unsigned char *)0x30000000L)
   //   halt(1);
-  unsigned char *src = &_text_section_src;
+  uint32_t *src = (uint32_t *)&_text_section_src;
   // unsigned char *src = (unsigned char *)0x30000000L;
-  unsigned char *dest = &_text_section_start;
-  unsigned char *end = &_data_section_end;
+  uint32_t *dest = (uint32_t *)&_text_section_start;
+  uint32_t *end = (uint32_t *)&_data_section_end;
   while (dest <= end) {
     *dest = *src;
     dest++;
