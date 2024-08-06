@@ -32,7 +32,8 @@ void difftest_check_state(){
     if(!difftest_check_regs()){
       reg_display_diff(ref_cpu);
       // assert(0);
-      nemu_state.state=NEMU_ABORT;
+      nemu_state.state = NEMU_ABORT;
+      nemu_state.halt_ret=-1;
     }
 }
 
