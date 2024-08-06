@@ -52,6 +52,8 @@ extern "C" void call_ebreak() {
 #define SRAM_TOP 0x0fffffff
 #define FLASH_BASE 0x30000000
 #define FLASH_TOP 0x3fffffff
+#define SDRAM_BASE 0x30000000
+#define SDRAM_TOP 0x3fffffff
 #define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
 
 // TODO:DIFFTEST/OUTPUT
@@ -79,6 +81,14 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
       record_axi_read("FLASH", addr, len);
     } else {
       record_axi_write("FLASH", addr, wmask, wdata);
+    }
+    return;
+  }
+  if (MEM_IN(addr, SDRAM_BASE, SDRAM_TOP)) { // flash
+    if (access_type) {
+      record_axi_read("SDRAM", addr, len);
+    } else {
+      record_axi_write("SDRAM", addr, wmask, wdata);
     }
     return;
   }

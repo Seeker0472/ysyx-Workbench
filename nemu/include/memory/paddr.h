@@ -33,6 +33,17 @@ paddr_t host_to_guest(uint8_t *haddr);
 #define SRAM_TOP 0x0fffffff
 #define FLASH_BASE 0x30000000
 #define FLASH_TOP 0x3fffffff
+#define SDRAM_BASE 0xa0000000
+#define SDRAM_TOP 0xbfffffff
+#define PSRAM_BASE 0x80000000
+#define PSRAM_TOP 0x9fffffff
+#define MROM_SIZE 0x2000
+#define FLASH_SIZE 0x10000000
+#define SRAM_SIZE 0x10000000
+#define SDRAM_SIZE 0x20000000
+#define PSRAM_SIZE 0x10000000
+#define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
+#define PHY_IN(haddr,phy_addr, start, end) ((haddr-phy_addr >= 0) && (haddr-phy_addr <= (end)-(start)))
 
 static inline bool in_pmem(paddr_t addr) {
   if (addr >= MROM_BASE && addr <= MROM_TOP) // mrom

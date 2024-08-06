@@ -24,35 +24,51 @@ void record_pwrite(paddr_t addr, int len, word_t data);
 
 #if defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;
+static uint8_t *flash = NULL;
+static uint8_t *sram = NULL;
+static uint8_t *mrom = NULL;
+static uint8_t *sdram = NULL;
+static uint8_t *psram = NULL;
+
 #else // CONFIG_PMEM_GARRAY
 
 
 
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
-static uint8_t flash[0x10000000] PG_ALIGN = {};
-static uint8_t sram[0x10000000] PG_ALIGN = {};
-static uint8_t mrom[0x2000] PG_ALIGN = {};
+static uint8_t flash[FLASH_SIZE] PG_ALIGN = {};
+static uint8_t sram[SRAM_SIZE] PG_ALIGN = {};
+static uint8_t mrom[MROM_SIZE] PG_ALIGN = {};
+static uint8_t sdram[SDRAM_SIZE] PG_ALIGN = {};
+static uint8_t psram[PSRAM_SIZE] PG_ALIGN = {};
 #endif
 
 uint8_t *guest_to_host(paddr_t paddr)
 {
-  if (paddr >= MROM_BASE && paddr <= MROM_TOP) // mrom
+  if (MEM_IN(paddr,MROM_BASE,MROM_TOP)) // mrom
     return mrom + paddr - MROM_BASE;
-  if (paddr >= SRAM_BASE && paddr <= SRAM_TOP) // sram
+  if (MEM_IN(paddr, SRAM_BASE, SRAM_TOP)) // sram
     return sram + paddr - SRAM_BASE;
-  if (paddr >= FLASH_BASE && paddr <= FLASH_TOP) // FLASH
+  if (MEM_IN(paddr, FLASH_BASE, FLASH_TOP)) // FLASH
     return flash + paddr - FLASH_BASE;
+  if (MEM_IN(paddr, SDRAM_BASE, SDRAM_TOP)) // sdram
+    return sdram + paddr - SDRAM_BASE;
+  if (MEM_IN(paddr, PSRAM_BASE, PSRAM_TOP)) // psram
+    return psram + paddr - PSRAM_BASE;
 
-    return pmem + paddr - CONFIG_MBASE;
+  return pmem + paddr - CONFIG_MBASE;
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
-  if (haddr - mrom + MROM_BASE >= MROM_BASE && haddr - mrom + MROM_BASE <= MROM_TOP) // mrom
+  if (PHY_IN(haddr, mrom, SRAM_BASE, SRAM_TOP)) // mrom
     return haddr - mrom + MROM_BASE;
-  if (haddr - sram + SRAM_BASE >= SRAM_BASE && haddr - sram + SRAM_BASE <= SRAM_TOP) // sram
+  if (PHY_IN(haddr, sram, FLASH_BASE, FLASH_TOP)) // sram
     return haddr - sram + SRAM_BASE;
-    if (haddr - flash + FLASH_BASE >= FLASH_BASE && haddr - sram + FLASH_BASE <= FLASH_TOP) // sram
-      return haddr - flash + FLASH_BASE;
+  if (PHY_IN(haddr, flash, FLASH_BASE, FLASH_TOP)) // flash
+    return haddr - flash + FLASH_BASE;
+  if (PHY_IN(haddr, sdram, SDRAM_BASE, SDRAM_TOP)) // sdram
+    return haddr - sdram + SDRAM_BASE;
+  if (PHY_IN(haddr, psram, PSRAM_BASE, PSRAM_TOP)) // psram
+    return haddr - psram + PSRAM_BASE;
   return haddr - pmem + CONFIG_MBASE;
 }
 
@@ -83,7 +99,17 @@ void init_mem()
 {
 #if defined(CONFIG_PMEM_MALLOC)
   pmem = malloc(CONFIG_MSIZE);
+  flash = malloc(FLASH_SIZE);
+  sram = malloc(SRAM_SIZE);
+  mrom = malloc(MROM_SIZE);
+  sdram = malloc(SDRAM_SIZE);
+  psram = malloc(PSRAM_SIZE);
   assert(pmem);
+  assert(flash);
+  assert(sram);
+  assert(mrom);
+  assert(sdram);
+  assert(psram);
 #endif
   IFDEF(CONFIG_MEM_RANDOM, memset(pmem, rand(), CONFIG_MSIZE));
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
