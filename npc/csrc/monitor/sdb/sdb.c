@@ -21,8 +21,8 @@
 // #include <memory/host.h>
 word_t expr(char *e, bool *success);
 word_t mem_read(paddr_t addr) ;
-
-
+int update_reg_state();
+int set_break_point(char *name);
 static int is_batch_mode = false;
 
 void init_regex();
@@ -56,7 +56,7 @@ static int cmd_c(char *args) {
 
 static int cmd_q(char *args) {
   nemu_state.state=NEMU_QUIT;
-  return -1;
+  return 0;
 }
 //my_func start!
 static int cmd_step(char *args){
@@ -177,7 +177,7 @@ static int cmd_watch(char *args){
   }
   WP* wp=new_wp();
   strncpy(wp->expr,args,500);//复制表达式
-  wp->last_result=succ?result:0;
+  wp->last_result = succ ? result : 0;
   printf("Added watch_point :%s\n",args);
   return 0;
 }
@@ -208,18 +208,21 @@ static struct {
   const char *name;
   const char *description;
   int (*handler) (char *);
-} cmd_table [] = {
-  { "help", "Display information about all supported commands", cmd_help },
-  { "c", "Continue the execution of the program", cmd_c },
-  { "q", "Exit NEMU", cmd_q },
-  { "si", "Single-step execution", cmd_step },
-  { "info", "Print the status of the program.(reg,watchpoint..etc)", cmd_print_status },
-  { "x", "Scan mem", cmd_scan_mem },
-  { "p", "Eval expression", cmd_eval },
-  { "w", "Set WatchPoint", cmd_watch },
-  { "d", "Delete WatchPoint", cmd_del_watch },
-  { "t", "t", (int (*)(char*))test_pr },
-  /* TODO: Add more commands */
+} cmd_table[] = {
+    {"help", "Display information about all supported commands", cmd_help},
+    {"c", "Continue the execution of the program", cmd_c},
+    {"q", "Exit NEMU", cmd_q},
+    {"si", "Single-step execution", cmd_step},
+    {"info", "Print the status of the program.(reg,watchpoint..etc)",
+     cmd_print_status},
+    {"x", "Scan mem", cmd_scan_mem},
+    {"p", "Eval expression", cmd_eval},
+    {"w", "Set WatchPoint", cmd_watch},
+    {"d", "Delete WatchPoint", cmd_del_watch},
+    {"t", "t", (int (*)(char *))test_pr},
+    {"u", "Update Reg state.", (int (*)(char *))update_reg_state},
+    {"b", "Set break point", (int (*)(char *))set_break_point},
+    /* TODO: Add more commands */
 
 };
 
@@ -256,7 +259,8 @@ void sdb_mainloop() {
   //如果是batch_mode,直接执行结束后返回
   if (is_batch_mode) {
     cmd_c(NULL);
-    return;
+    if (nemu_state.state == NEMU_END)
+      return;
   }
 
   for (char *str; (str = rl_gets()) != NULL; ) {
@@ -282,7 +286,11 @@ void sdb_mainloop() {
     int i;
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
-        if (cmd_table[i].handler(args) < 0) { return; }
+        if (cmd_table[i].handler(args) < 0) {
+          return;
+        }
+        if (nemu_state.state == NEMU_QUIT)
+          return;
         break;
       }
     }

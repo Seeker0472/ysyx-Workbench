@@ -24,7 +24,8 @@ typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
   word_t last_result;
-  char expr[500]; 
+  char expr[500];
+  char comment [500];
 } WP;
 //my_func
 WP* new_wp();

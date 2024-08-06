@@ -1,4 +1,5 @@
 #include "../include/ydb_all.h"
+#include "../monitor/sdb/sdb.h"
 
 #include <elf.h>
 
@@ -146,7 +147,7 @@ void read_symbol_table(const char *filename)
 }
 
 // 初始化函数名表，(用链表维护)
-void init_ftrace(char *filepath)
+void read_func_info(char *filepath)
 {
     // 初始化头结点
     nodes = (trace_node *)malloc(sizeof(trace_node));
@@ -161,6 +162,30 @@ void init_ftrace(char *filepath)
     Log("Reading Symbol Table from %s", filepath);
 
     read_symbol_table(filepath);
+}
+paddr_t find_addr_byName(char *name) {
+  assert(nodes);
+  trace_node *now = nodes->next;
+  for (; now != NULL; now = now->next) {
+    if (!strcmp(name, now->name)) {
+      return now->start_addr;
+    }
+  }
+  printf("Symbol '%s' Not Found!!!\n",name);
+  return -1;
+}
+
+int set_break_point(char *name) {
+  paddr_t addr = find_addr_byName(name);
+  if (addr == -1)
+    return 0;
+  bool succ = false;
+  WP *watchpoint = new_wp();
+  sprintf(watchpoint->comment, "BreakPoint on %x [%s]\n", addr, name);
+  sprintf(watchpoint->expr, "$pc==0x%x", addr);
+  watchpoint->last_result = expr(watchpoint->expr, &succ);
+  printf("BreakPoint on %x [%s] added.\n", addr, name);
+  return 0;
 }
 
 void ftrace_func_call(paddr_t pc_now, paddr_t target)
