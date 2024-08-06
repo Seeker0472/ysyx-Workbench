@@ -6,7 +6,6 @@ MEMORY {
   sram  : ORIGIN = 0x0f000000, LENGTH = 8K
   flash : ORIGIN = 0x30000000, LENGTH = 16M
   psram : ORIGIN = 0x80000000, LENGTH = 4M
-  sdram : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 SECTIONS {
   . = ORIGIN(flash);
@@ -34,7 +33,7 @@ SECTIONS {
     *(.text*)
     *(.text.*)
   . = ALIGN(4);
-  } > sdram AT> flash : text
+  } > psram AT> flash : text
   _etext = .;
   .rodata : {
   . = ALIGN(4);
@@ -42,8 +41,7 @@ SECTIONS {
     *(.rodata.*)
     *(.srodata.*)
   . = ALIGN(4);
-  }> sdram AT> flash : rodata
-  
+  }> psram AT> flash : rodata
   .data.extra : {
        /* section information for finsh shell */
     __fsymtab_start = .;
@@ -72,8 +70,7 @@ SECTIONS {
     *(__am_apps.sdata*)
     __am_apps_data_end = .;
     . = ALIGN(8);
-  }> sdram AT> flash : data_ext
-
+  }> psram AT> flash : data_ext
   _data_section_src = LOADADDR(.data);
   .data : {
   . = ALIGN(4);
@@ -84,7 +81,7 @@ SECTIONS {
     *(.sdata.*)
   . = ALIGN(4);
     _data_section_end = .;
-  }> sdram AT> flash : data
+  }> psram AT> flash : data
   .bss.extra : {
 	_bss_start = .;
     . = ALIGN(8);
@@ -94,7 +91,7 @@ SECTIONS {
     *(__am_apps.scommon*)
     __am_apps_bss_end = .;
     . = ALIGN(8);
-  }> sdram AT> flash : bss_ext
+  }> psram AT> flash : bss_ext
   .bss : {
   . = ALIGN(4);
     *(.bss*)
@@ -103,7 +100,7 @@ SECTIONS {
     *(.scommon)
   . = ALIGN(4);
 	_bss_end = .;
-  }> sdram AT> flash : bss
+  }> psram AT> flash : bss
   /* ssbl复制的终点 */
 
   /* 栈顶指针 */
@@ -112,7 +109,7 @@ SECTIONS {
 
   /* 堆区 */
   . = ORIGIN(psram);
-  /* . += _bss_end - _text_section_start; */
+  . += _bss_end - _text_section_start;
   _heap_start = ALIGN(0x10);
   _pmem_start = . ;
 
