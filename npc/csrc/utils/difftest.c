@@ -3,6 +3,7 @@
 // #include <isa.h>
 #include "../include/diftest.h"
 #include "../include/ydb_all.h"
+#include "utils.h"
 
 
 extern CPU_state *cpu;
@@ -30,7 +31,8 @@ void difftest_check_state(){
     difftest_regcpy(ref_cpu,DIFFTEST_TO_DUT);
     if(!difftest_check_regs()){
       reg_display_diff(ref_cpu);
-        assert(0);
+      // assert(0);
+      nemu_state.state=NEMU_ABORT;
     }
 }
 
