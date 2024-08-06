@@ -1,11 +1,12 @@
 ENTRY(_start)
 /*ENTRY*/
-PHDRS { fsbl PT_LOAD;ssbl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data PT_LOAD;bss PT_LOAD;  }
+PHDRS { fsbl PT_LOAD;ssbl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data_ext PT_LOAD;data PT_LOAD;bss_ext PT_LOAD;bss PT_LOAD;  }
 MEMORY {
   mrom  : ORIGIN = 0x20000000, LENGTH = 4K
   sram  : ORIGIN = 0x0f000000, LENGTH = 8K
   flash : ORIGIN = 0x30000000, LENGTH = 16M
   psram : ORIGIN = 0x80000000, LENGTH = 4M
+  sdram : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 SECTIONS {
   . = ORIGIN(flash);
@@ -33,7 +34,7 @@ SECTIONS {
     *(.text*)
     *(.text.*)
   . = ALIGN(4);
-  } > psram AT> flash : text
+  } > sdram AT> flash : text
   _etext = .;
   .rodata : {
   . = ALIGN(4);
@@ -41,7 +42,8 @@ SECTIONS {
     *(.rodata.*)
     *(.srodata.*)
   . = ALIGN(4);
-  }> psram AT> flash : rodata
+  }> sdram AT> flash : rodata
+
   _data_section_src = LOADADDR(.data);
   .data : {
   . = ALIGN(4);
@@ -52,9 +54,11 @@ SECTIONS {
     *(.sdata.*)
   . = ALIGN(4);
     _data_section_end = .;
-  }> psram AT> flash : data
+  }> sdram AT> flash : data
+
   .bss : {
-    _bss_start = . ;
+	_bss_start = .;
+
   . = ALIGN(4);
     *(.bss*)
     *(.bss.*)
@@ -62,7 +66,7 @@ SECTIONS {
     *(.scommon)
   . = ALIGN(4);
 	_bss_end = .;
-  }> psram AT> flash : bss
+  }> sdram AT> flash : bss
   /* ssbl复制的终点 */
 
   /* 栈顶指针 */
@@ -71,7 +75,7 @@ SECTIONS {
 
   /* 堆区 */
   . = ORIGIN(psram);
-  . += _bss_end - _text_section_start;
+  /* . += _bss_end - _text_section_start; */
   _heap_start = ALIGN(0x10);
   _pmem_start = . ;
 
