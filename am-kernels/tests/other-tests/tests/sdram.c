@@ -41,19 +41,19 @@ void check_values_u32() {
 }
 
 int main() {
-  printf("Testing mem_area[%x---%x]", memory, memory + SIZE);
-  printf("setting Uint8");
+  printf("Testing mem_area[%x---%x]\n", memory, memory + SIZE);
+  printf("setting Uint8\n");
   set_u8();
-  printf("checking Uint8");
+  printf("checking Uint8\n");
   check_values_u8();
-  printf("setting Uint16");
+  printf("setting Uint16\n");
   set_u16();
-  printf("checking Uint16");
+  printf("checking Uint16\n");
   check_values_u16();
-  printf("setting Uint32");
+  printf("setting Uint32\n");
   set_u32();
-  printf("checking Uint32");
+  printf("checking Uint32\n");
   check_values_u32();
-  printf("mem-check OKEY!");
+  printf("mem-check OKEY!\n");
   return 0;
 }
