@@ -62,6 +62,7 @@ void single_cycle(bool check_pc) {
     if (i % 1000 == 0) {
       nemu_state.state= NEMU_STOP;
       Info_R("WARN: PC didn't change for 1000 Cycles!\n");
+      nemu_state.halt_ret = -1;
       break;
     }
   } while (prev_pc == now_pc && check_pc);
