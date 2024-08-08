@@ -12,6 +12,6 @@ int main() {
     // putch(0);
     outw(0x10002000L, num);
     num = (num << 1) | (num >> (15));
-    for(volatile int i=0;i<100;i++);
+    for(volatile int i=0;i<1000;i++);
   }
 }
