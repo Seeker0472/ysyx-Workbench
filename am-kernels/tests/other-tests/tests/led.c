@@ -12,13 +12,18 @@ static inline uint32_t inl(uintptr_t addr) {
   return *(volatile uint32_t *)addr;
 }
 int main() {
-  uint16_t num=1;
+  uint16_t num = 1;
+  uint16_t in = 0;
   while (1) {
     // putch(0);
     outw(GPIO_BASE, num);
+    uint16_t now_in = inl(GPIO_BASE + 4);
     num = (num << 1) | (num >> (15));
     for (volatile int i = 0; i < 1000; i++)
       ;
-    printf("%x\n", inl(GPIO_BASE+4));
+    if (in != now_in) {
+      printf("%x\n", now_in);
+      in = now_in;
+    }
   }
 }
