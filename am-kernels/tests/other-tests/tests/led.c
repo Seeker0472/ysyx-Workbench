@@ -7,9 +7,10 @@ static inline void outw(uintptr_t addr, uint16_t data) {
 }
 
 int main() {
-  uint16_t num=0;
+  uint16_t num=1;
   while (1) {
     // putch(0);
-    outw(0x10002000L, num++);
+    outw(0x10002000L, num);
+    num = (num << 1) | (num >> (15));
   }
 }
