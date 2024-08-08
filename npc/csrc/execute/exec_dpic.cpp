@@ -52,6 +52,10 @@ extern "C" void call_ebreak() {
 #define SRAM_TOP 0x0fffffff
 #define FLASH_BASE 0x30000000
 #define FLASH_TOP 0x3fffffff
+#define SDRAM_BASE 0xa0000000
+#define SDRAM_TOP 0xbfffffff
+#define PSRAM_BASE 0x80000000
+#define PSRAM_TOP 0x9fffffff
 #define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
 
 // TODO:DIFFTEST/OUTPUT
@@ -82,8 +86,22 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
     }
     return;
   }
-  // putchar('\n');
-  // printf("\n%x\n",addr);
+  if (MEM_IN(addr, SDRAM_BASE, SDRAM_TOP)) { // sdram
+    if (access_type) {
+      record_axi_read("SDRAM", addr, len);
+    } else {
+      record_axi_write("SDRAM", addr, wmask, wdata);
+    }
+    return;
+  }
+  if (MEM_IN(addr, PSRAM_BASE, PSRAM_TOP)) { // psram
+    if (access_type) {
+      record_axi_read("PSRAM", addr, len);
+    } else {
+      record_axi_write("PSRAM", addr, wmask, wdata);
+    }
+    return;
+  }
   if (access_type) {
     record_axi_read("Other", addr, len);
   } else {
@@ -91,4 +109,6 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
     record_axi_write("Other", addr, wmask, wdata);
   }
   difftest_step = true;
+  // printf("STEP\n");
+  // sleep(1);
 }

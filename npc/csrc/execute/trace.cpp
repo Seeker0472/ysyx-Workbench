@@ -46,7 +46,7 @@ static bool state_valid() //检测从状态valid->fetching
   //     return true;
 }
 
-void update_reg_state() {
+int update_reg_state() {
   cpu->pc =
       dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
   cpu->gpr[0] =
@@ -147,6 +147,7 @@ void update_reg_state() {
       dut->rootp
           ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_31;
 #endif
+  return 0;
 }
 
 void trace_and_difftest(paddr_t pc, word_t inst_in) {

@@ -6,6 +6,7 @@ MEMORY {
   sram  : ORIGIN = 0x0f000000, LENGTH = 8K
   flash : ORIGIN = 0x30000000, LENGTH = 16M
   psram : ORIGIN = 0x80000000, LENGTH = 4M
+  sdram : ORIGIN = 0xa0000000, LENGTH = 32M
 }
 SECTIONS {
   . = ORIGIN(flash);
@@ -33,7 +34,7 @@ SECTIONS {
     *(.text*)
     *(.text.*)
   . = ALIGN(4);
-  } > psram AT> flash : text
+  } > sdram AT> flash : text
   _etext = .;
   .rodata : {
   . = ALIGN(4);
@@ -41,36 +42,8 @@ SECTIONS {
     *(.rodata.*)
     *(.srodata.*)
   . = ALIGN(4);
-  }> psram AT> flash : rodata
-  .data.extra : {
-       /* section information for finsh shell */
-    __fsymtab_start = .;
-    KEEP(*(FSymTab))
-    __fsymtab_end = .;
-    . = ALIGN(8);
-    __vsymtab_start = .;
-    KEEP(*(VSymTab))
-    __vsymtab_end = .;
-    . = ALIGN(8);
+  }> sdram AT> flash : rodata
 
-    /* section information for initial. */
-    . = ALIGN(8);
-    __rt_init_start = .;
-    KEEP(*(SORT(.rti_fn*)))
-    __rt_init_end = .;
-    . = ALIGN(8);
-
-    __rt_utest_tc_tab_start = .;
-    KEEP(*(UtestTcTab))
-    __rt_utest_tc_tab_end = .;
-
-    . = ALIGN(8);
-    __am_apps_data_start = .;
-    *(__am_apps.data*)
-    *(__am_apps.sdata*)
-    __am_apps_data_end = .;
-    . = ALIGN(8);
-  }> psram AT> flash : data_ext
   _data_section_src = LOADADDR(.data);
   .data : {
   . = ALIGN(4);
@@ -81,18 +54,11 @@ SECTIONS {
     *(.sdata.*)
   . = ALIGN(4);
     _data_section_end = .;
-  }> psram AT> flash : data
-  .bss.extra : {
-	_bss_start = .;
-    . = ALIGN(8);
-    __am_apps_bss_start = .;
-    *(__am_apps.bss*)
-    *(__am_apps.sbss*)
-    *(__am_apps.scommon*)
-    __am_apps_bss_end = .;
-    . = ALIGN(8);
-  }> psram AT> flash : bss_ext
+  }> sdram AT> flash : data
+
   .bss : {
+	_bss_start = .;
+
   . = ALIGN(4);
     *(.bss*)
     *(.bss.*)
@@ -100,7 +66,7 @@ SECTIONS {
     *(.scommon)
   . = ALIGN(4);
 	_bss_end = .;
-  }> psram AT> flash : bss
+  }> sdram AT> flash : bss
   /* ssbl复制的终点 */
 
   /* 栈顶指针 */
@@ -109,8 +75,10 @@ SECTIONS {
 
   /* 堆区 */
   . = ORIGIN(psram);
-  . += _bss_end - _text_section_start;
-  _heap_start = ALIGN(0x10);
-  _pmem_start = . ;
+  _heap_start = . ;
+  /* . += _bss_end - _text_section_start; */
+  /* _heap_start = ALIGN(0x10); */
+  . = ORIGIN(psram)+LENGTH(psram);
+  _heap_end = . ;
 
 }

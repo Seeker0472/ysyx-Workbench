@@ -15,7 +15,7 @@ uint64_t g_timer = 0; // unit: us
 void print_iringbuf();
 
 void trace_and_difftest(paddr_t pc, word_t inst_in);
-void update_reg_state();
+int update_reg_state();
 void print_inst_asm(paddr_t pc, word_t inst);
 void statistic();
 
@@ -59,8 +59,11 @@ void single_cycle(bool check_pc) {
     now_pc =
         dut->rootp
             ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-    if (i % 300 == 0) {
-      Info_R("WARN: PC didn't change for 300 Cycles!\n");
+    if (i % 1000 == 0) {
+      nemu_state.state= NEMU_STOP;
+      Info_R("WARN: PC didn't change for 1000 Cycles!\n");
+      nemu_state.halt_ret = -1;
+      break;
     }
   } while (prev_pc == now_pc && check_pc);
   update_reg_state();

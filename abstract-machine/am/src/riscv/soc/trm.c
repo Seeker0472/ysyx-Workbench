@@ -2,15 +2,20 @@
 #include <klib-macros.h>
 #include "../riscv.h"
 #include <klib.h>
+__attribute__((noinline)) void check_ok(bool cond) {
+  if (!cond)
+    halt(1);
+}
 
 extern char _heap_start;
+extern char _heap_end;
 int main(const char *args);
 
-extern char _pmem_start;
-#define PMEM_SIZE (128 * 1024 * 1024)
-#define PMEM_END ((uintptr_t)&_pmem_start + PMEM_SIZE)
+// extern char _pmem_start;
+// #define PMEM_SIZE (128 * 1024 * 1024)
+// #define PMEM_END ((uintptr_t)&_pmem_start + PMEM_SIZE)
 
-Area heap = RANGE(&_heap_start, PMEM_END);
+Area heap = RANGE(&_heap_start, &_heap_end);
 #ifndef MAINARGS
 #define MAINARGS ""
 #endif
@@ -75,15 +80,29 @@ void _trm_init() {
 }
 
 
+
 extern unsigned char _text_section_start, _data_section_end, _text_section_src,
     _bss_start, _bss_end;
-void __attribute__((section(".ssbl"))) _sbootloader() {
-  // if (&_text_section_src != (unsigned char *)0x30000000L)
-  //   halt(1);
+
+
+void check_func() {
   unsigned char *src = &_text_section_src;
   // unsigned char *src = (unsigned char *)0x30000000L;
   unsigned char *dest = &_text_section_start;
   unsigned char *end = &_data_section_end;
+  while (dest <= end) {
+    check_ok(*dest == *src);
+    src++;
+    dest++;
+  }
+}
+void __attribute__((section(".ssbl"))) _sbootloader() {
+  // if (&_text_section_src != (unsigned char *)0x30000000L)
+  //   halt(1);
+  uint32_t *src = (uint32_t *)&_text_section_src;
+  // unsigned char *src = (unsigned char *)0x30000000L;
+  uint32_t *dest = (uint32_t *)&_text_section_start;
+  uint32_t *end = (uint32_t *)&_data_section_end;
   while (dest <= end) {
     *dest = *src;
     dest++;
@@ -95,6 +114,7 @@ void __attribute__((section(".ssbl"))) _sbootloader() {
   while (bss_src <= bss_end) {
     *(bss_src++) = 0;
   }
+  // check_func();
   _trm_init();
 }
 
