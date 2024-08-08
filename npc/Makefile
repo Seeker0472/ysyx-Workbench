@@ -1,4 +1,5 @@
 # TOP
+include $(NVBOARD_HOME)/scripts/nvboard.mk
 TOP ?=example
 
 BUILD_DIR = ./build
@@ -27,21 +28,21 @@ ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv $(YSYXSOC_HOME)/build/ysyxSoCFull.v
 
 LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 
+LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image
+
 CHISEL_SOURCES := $(shell find src -name '*.scala')
 ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
 TARGET := build/ypc.sv
 
-# $(shell llvm-config --cxxflags)
-# deleted:::::   --CFLAGS -D__STDC_FORMAT_MACROS
-CXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
+VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
 
 FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
-FLAGS += ${CXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU}
+FLAGS += --CFLAGS -I${NVBOARD_USR_INC}
+FLAGS += --LDFLAGS -lSDL2 --LDFLAGS -lSDL2_image
+FLAGS += ${VCXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU} ${LINK_NVBoard}
 # Verilator Includes list
 FLAGS += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
 FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
-
-# CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
 HINCLUDE := 
 
