@@ -7,6 +7,8 @@ TOP ?= core
 PRJ = playground
 TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
+NXDC_FILE := ${NPC_HOME}/csrc/nvb/soc.nxdc
+SRC_AUTO_BIND :=${NPC_HOME}/csrc/nvb/bind.cpp
 
 ARGS ?=
 IMG  ?=
@@ -57,6 +59,9 @@ $(TARGET): $(ABS_CHISEL_SOURCES)
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/ypc.sv
+
+$(SRC_AUTO_BIND): $(NXDC_FILE)
+	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 test:
 	mill -i $(PRJ).test
