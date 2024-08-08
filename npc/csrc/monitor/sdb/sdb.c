@@ -129,7 +129,7 @@ static int cmd_scan_mem(char *args){
 }
 static int test_pr()
 {
-  FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
+  FILE *fp = fopen("/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
   int result;
   char *exp = (char *)malloc(700 * sizeof(char));
   int time=0;

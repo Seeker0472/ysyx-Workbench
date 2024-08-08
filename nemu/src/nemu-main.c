@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 #ifdef TEST_CALC
-  FILE *fp = fopen("/home/seeker/Develop/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
+  FILE *fp = fopen("/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
   int result;
   char *exp = malloc(700 * sizeof(char));
   int time=0;

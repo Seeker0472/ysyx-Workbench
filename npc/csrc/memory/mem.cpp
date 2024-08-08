@@ -81,7 +81,7 @@ void free_mem() {
 void init_img(char *img_file) {
   init_mem();
   // init_flash();
-  // init_flash_img("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
+  // init_flash_img("/ysyx-workbench/npc/char-test.bin");
   init_flash_img(img_file);
   // init_mrom(img_file);
   if (img_file != NULL) {
