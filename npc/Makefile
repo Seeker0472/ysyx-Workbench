@@ -88,7 +88,7 @@ clean:
 
 .PHONY: test verilog help reformat checkformat clean
 
-sim:
+sim:$(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
