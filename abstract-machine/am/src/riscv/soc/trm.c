@@ -2,6 +2,7 @@
 #include <klib-macros.h>
 #include "../riscv.h"
 #include <klib.h>
+#include <stdint.h>
 __attribute__((noinline)) void check_ok(bool cond) {
   if (!cond)
     halt(1);
@@ -49,6 +50,14 @@ void init_uart(){
   outb(SERIAL_PORT+3,0x03);
 }
 
+// uint32_t to_sig(uint32_t val) {
+//   uint32_t vals[] = {
+//       0b0000001, 0b1001111, 0b0010010, 0b0000110, 0b1001100, 0b0100100,
+//       0b0100000, 0b0001111, 0b0000000, 0b0000000, 0b0000100, 0b0001000,
+//       0b1100000, 0b0110001, 0b1000010, 0b0110000, 0b0111000,
+//   };
+//   return vals[val & 0xf];
+// }
 
 void print_welcome(){
   uint32_t ysyx, id;
@@ -59,15 +68,21 @@ void print_welcome(){
       :
       : "x0"             // 被修改的寄存器
   );
-    __asm__(
-      "csrrs %0, marchid, x0"     // 复制学号
-      : "=r"(id)       
-      :
-      : "x0"             // 被修改的寄存器
+  __asm__("csrrs %0, marchid, x0" // 复制学号
+          : "=r"(id)
+          :
+          : "x0" // 被修改的寄存器
   );
-
-  printf("Hello from %c%c%c%c_%d! \nHave a good day! =ω= \n",(ysyx>>24)&0xff,(ysyx>>16)&0xff,(ysyx>>8)&0xff,(ysyx)&0xff,id);
+  printf("Hello from %c%c%c%c_%d! \nHave a good day! =ω= \n",
+         (ysyx >> 24) & 0xff, (ysyx >> 16) & 0xff, (ysyx >> 8) & 0xff,
+         (ysyx)&0xff, id);
+  // uint32_t sig_reg = 0;
+  // for (int i = 0; i < 8; i++) {
+  //   sig_reg=(sig_reg<<4)|(id>>)
+  // }
+  outl(0x10002008L,id);
 }
+
 
 
 void _trm_init() {
