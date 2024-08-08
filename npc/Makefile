@@ -28,7 +28,7 @@ ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv $(YSYXSOC_HOME)/build/ysyxSoCFull.v
 
 LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 
-LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image
+LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a
 
 CHISEL_SOURCES := $(shell find src -name '*.scala')
 ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
