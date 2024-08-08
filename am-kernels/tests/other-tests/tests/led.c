@@ -14,6 +14,8 @@ static inline uint32_t inl(uintptr_t addr) {
 int main() {
   uint16_t num = 1;
   uint16_t in = 0;
+  outw(GPIO_BASE+8, 0xf);
+
   while (1) {
     // putch(0);
     outw(GPIO_BASE, num);
