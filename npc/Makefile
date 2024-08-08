@@ -38,11 +38,11 @@ VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   
 
 FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
 FLAGS += --CFLAGS -I${NVBOARD_USR_INC}
-FLAGS += -LDFLAGS -lSDL2 -LDFLAGS -lSDL2_image -LDFLAGS -lSDL2_ttf
 FLAGS += ${VCXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU} ${LINK_NVBoard}
 # Verilator Includes list
 FLAGS += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
 FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
+FLAGS += -LDFLAGS -lSDL2 -LDFLAGS -lSDL2_image -LDFLAGS -lSDL2_ttf
 
 HINCLUDE := 
 
