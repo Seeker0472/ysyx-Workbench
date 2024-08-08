@@ -97,9 +97,10 @@ void init_runtime() {
   dut->trace(tfp, 99); // 跟踪99级信号
   MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");
          , tfp->open("/dev/null");) // 打开VCD文件
-  reset(20);                        // 复位5个周期
   nvboard_bind_all_pins(dut);
   nvboard_init();
+  reset(20);                        // 复位5个周期
+
 }
 
 int run(int step) {
