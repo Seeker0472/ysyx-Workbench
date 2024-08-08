@@ -3,11 +3,13 @@
 #include "VysyxSoCFull___024root.h"
 #include <diftest.h>
 #include <iostream>
+#include <nvboard.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
 VerilatedVcdC *tfp; // 用于生成波形的指针
 VysyxSoCFull *dut;
+void nvboard_bind_all_pins(VysyxSoCFull *dut);
 
 uint64_t sim_time = 0;
 uint64_t g_nr_guest_inst = 0;
@@ -95,6 +97,8 @@ void init_runtime() {
   MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");
          , tfp->open("/dev/null");) // 打开VCD文件
   reset(20);                        // 复位5个周期
+  nvboard_bind_all_pins(&dut);
+  nvboard_init();
 }
 
 int run(int step) {
