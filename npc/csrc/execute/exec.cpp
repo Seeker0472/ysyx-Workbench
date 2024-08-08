@@ -97,7 +97,7 @@ void init_runtime() {
   MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");
          , tfp->open("/dev/null");) // 打开VCD文件
   reset(20);                        // 复位5个周期
-  nvboard_bind_all_pins(&dut);
+  nvboard_bind_all_pins(dut);
   nvboard_init();
 }
 
