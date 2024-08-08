@@ -48,7 +48,7 @@ void init_uart(){
   outb(SERIAL_PORT,0x10);   //写入Divisor Latch
   outb(SERIAL_PORT+1,0x00);
   outb(SERIAL_PORT + 3, 0x03);
-  outb(SERIAL_PORT, 0x01);
+  // outb(SERIAL_PORT, 0x01);
 }
 
 // uint32_t to_sig(uint32_t val) {
