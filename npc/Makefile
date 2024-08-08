@@ -9,6 +9,7 @@ TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
 NXDC_FILE = ${NPC_HOME}/csrc/nvb/soc.nxdc
 SRC_AUTO_BIND = ${NPC_HOME}/csrc/nvb/bind.cpp
+YSYXSOC_V := $(YSYXSOC_HOME)/build/ysyxSoCFull.v
 
 ARGS ?=
 IMG  ?=
@@ -26,7 +27,9 @@ C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 PERIP_V_ABS:=$(shell find $(YSYXSOC_HOME)/perip  -type f -name '*.v' -exec realpath {} \;)
 
-ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv $(YSYXSOC_HOME)/build/ysyxSoCFull.v
+SOC_SCALA_ABS:=$(shell find $(YSYXSOC_HOME)/src  -type f -name '*.v' -exec realpath {} \;)
+
+ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv ${YSYXSOC_V}
 
 LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 
@@ -63,6 +66,9 @@ $(TARGET): $(ABS_CHISEL_SOURCES)
 $(SRC_AUTO_BIND): $(NXDC_FILE)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
+$(YSYXSOC_V): $(SOC_SCALA_ABS)
+	make -C ysyxSoC/ verilog
+
 test:
 	mill -i $(PRJ).test
 
@@ -88,13 +94,13 @@ clean:
 
 .PHONY: test verilog help reformat checkformat clean
 
-sim:$(SRC_AUTO_BIND)
+sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
-gdb:
+gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS} 
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	gdb   --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)

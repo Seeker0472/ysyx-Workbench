@@ -39,7 +39,7 @@ void check_values_u32() {
     check(((uint32_t *)memory)[i] == (uint32_t)(memory + i));
   }
 }
-
+  
 int main() {
   printf("Testing mem_area[%x---%x]\n", memory, memory + SIZE);
   printf("setting Uint8\n");
