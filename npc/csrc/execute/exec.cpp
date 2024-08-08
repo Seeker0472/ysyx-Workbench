@@ -69,6 +69,7 @@ void single_cycle(bool check_pc) {
     }
   } while (prev_pc == now_pc && check_pc);
   update_reg_state();
+  nvboard_update();
 
 #ifdef CONFIG_WATCHPOINT
   if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
