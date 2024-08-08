@@ -27,7 +27,7 @@ C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 PERIP_V_ABS:=$(shell find $(YSYXSOC_HOME)/perip  -type f -name '*.v' -exec realpath {} \;)
 
-SOC_SCALA_ABS:=$(shell find $(YSYXSOC_HOME)/src  -type f -name '*.v' -exec realpath {} \;)
+SOC_SCALA_ABS:=$(shell find $(YSYXSOC_HOME)/src  -type f -name '*.scala' -exec realpath {} \;)
 
 ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv ${YSYXSOC_V}
 
@@ -67,7 +67,7 @@ $(SRC_AUTO_BIND): $(NXDC_FILE)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 $(YSYXSOC_V): $(SOC_SCALA_ABS)
-	make -C ysyxSoC/ verilog
+	make -C $(YSYXSOC_HOME) verilog
 
 test:
 	mill -i $(PRJ).test
