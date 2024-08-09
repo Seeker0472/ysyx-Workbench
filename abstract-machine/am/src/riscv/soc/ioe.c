@@ -13,6 +13,8 @@ static void __am_input_config(AM_INPUT_CONFIG_T *cfg) { cfg->present = true;  }
 static void __am_uart_config(AM_INPUT_CONFIG_T *cfg) { cfg->present = false; }
 void __am_uart_rx(AM_UART_RX_T *uart) {
   bool have_code = (inb(SERIAL_PORT + 5) & 0x1) == 1;
+  if (have_code)
+    putch('A');
   uart->data = have_code ? inb(SERIAL_PORT) : 0xff;
 }
 
