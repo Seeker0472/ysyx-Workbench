@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include <am.h>
 
-#define KEYDOWN_MASK 0x8000
+#define KEYDOWN_MASK 0xff00
 #define KBD_ADDR 0x10011000
 
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
