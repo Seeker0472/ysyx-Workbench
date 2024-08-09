@@ -8,7 +8,7 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   bool have_code = (inb(SERIAL_PORT + 5) & 0x1) == 1;
   uint32_t code = have_code ? inb(SERIAL_PORT) : 0xff;
   if (have_code == 1)
-    printf("%x",code);
+    putch('A');
   kbd->keydown = 0;
-  kbd->keycode = AM_KEY_NONE;
+  kbd->keycode = code;
 }
