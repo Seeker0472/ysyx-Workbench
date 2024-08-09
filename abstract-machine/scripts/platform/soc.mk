@@ -10,7 +10,12 @@ AM_SRCS := riscv/soc/start.S \
 # TODO！！！
 
 CFLAGS    += -fdata-sections -ffunction-sections
-LDFLAGS   += -T $(AM_HOME)/scripts/linker_soc.ld 
+
+ifeq ($(NAME),rtthread)
+LDFLAGS   += -T $(AM_HOME)/scripts/linker_soc_sdram_rtt.ld
+else
+LDFLAGS   += -T $(AM_HOME)/scripts/linker_soc_sdram.ld 
+endif
             #  --defsym=_sram_start=0x0f000000  --defsym=_mrom_start=0x20000000
 # TODO！！！
 LDFLAGS   += --gc-sections -e _start
