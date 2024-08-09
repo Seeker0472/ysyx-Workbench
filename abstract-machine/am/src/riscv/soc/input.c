@@ -3,7 +3,7 @@
 #include <am.h>
 #include <stdint.h>
 
-#define KEYDOWN_MASK 0x8000
+#define KEYDOWN_MASK 0xff00
 #define KBD_ADDR 0x10011000
 
 uint32_t codes[] = {
