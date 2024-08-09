@@ -3,11 +3,13 @@
 #include "VysyxSoCFull___024root.h"
 #include <diftest.h>
 #include <iostream>
+#include <nvboard.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
 VerilatedVcdC *tfp; // 用于生成波形的指针
 VysyxSoCFull *dut;
+void nvboard_bind_all_pins(VysyxSoCFull *dut);
 
 uint64_t sim_time = 0;
 uint64_t g_nr_guest_inst = 0;
@@ -65,6 +67,7 @@ void single_cycle(bool check_pc) {
       nemu_state.halt_ret = -1;
       break;
     }
+    nvboard_update();
   } while (prev_pc == now_pc && check_pc);
   update_reg_state();
 
@@ -94,7 +97,10 @@ void init_runtime() {
   dut->trace(tfp, 99); // 跟踪99级信号
   MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");
          , tfp->open("/dev/null");) // 打开VCD文件
+  nvboard_bind_all_pins(dut);
+  nvboard_init();
   reset(20);                        // 复位5个周期
+
 }
 
 int run(int step) {
