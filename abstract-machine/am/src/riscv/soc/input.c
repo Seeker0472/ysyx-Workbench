@@ -23,7 +23,8 @@ uint32_t codes[] = {
     0x3a, 0x41, 0x49,   0x4a,   0x59, // end5
     0x14,           0xff,                  // TODO:application
     0x11, 0x29, 0xE011, 0xE014,       // end6
-    //TODO
+    //TODO:拓展码-通码？
+    
 
 
 };
