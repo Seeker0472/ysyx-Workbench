@@ -4,7 +4,7 @@ PHDRS { fsbl PT_LOAD;ssbl PT_LOAD;text PT_LOAD;rodata PT_LOAD;data_ext PT_LOAD;d
 MEMORY {
   mrom  : ORIGIN = 0x20000000, LENGTH = 4K
   sram  : ORIGIN = 0x0f000000, LENGTH = 8K
-  flash : ORIGIN = 0x30000000, LENGTH = 16M
+  flash : ORIGIN = 0x30000000, LENGTH = 120M
   psram : ORIGIN = 0x80000000, LENGTH = 4M
   sdram : ORIGIN = 0xa0000000, LENGTH = 32M
 }
