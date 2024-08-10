@@ -5,6 +5,7 @@ AM_SRCS := riscv/soc/start.S \
            riscv/soc/input.c \
            riscv/soc/cte.c \
            riscv/soc/trap.S \
+           riscv/soc/gpu.c \
            platform/dummy/vme.c \
            platform/dummy/mpe.c
 # TODO！！！
