@@ -8,9 +8,9 @@ void __am_gpu_init() {
   // int i;
   sw = 640;                      
   sh = 480;        
-  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  for (int i = 0; i < sw * 100; i++)
-    fb[i] = i;
+//   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+//   for (int i = 0; i < sw * 100; i++)
+//     fb[i] = i;
 //   outl(SYNC_ADDR, 1);
 }
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
