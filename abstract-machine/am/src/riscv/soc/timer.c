@@ -3,10 +3,11 @@
 #include<stdio.h>
 
 uint64_t am_start_time = 0;
+#define CLINT_ADDR 0x02000000L
 
 uint64_t get_time_am(){
-  uint32_t time_low = inl(RTC_ADDR);
-  uint32_t time_high = inl(RTC_ADDR + 4);
+  uint32_t time_low = inl(CLINT_ADDR);
+  uint32_t time_high = inl(CLINT_ADDR + 4);
   // printf("%d,%d\n",time_low,time_high);
   return ((uint64_t)time_high << 32) + time_low;
 }
