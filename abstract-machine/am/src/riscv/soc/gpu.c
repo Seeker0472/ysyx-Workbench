@@ -10,7 +10,7 @@ void __am_gpu_init() {
   sh = 480;        
   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
   for (int i = 0; i < sw * 100; i++)
-    fb[i] = 40;
+    fb[i] = 70;
 //   outl(SYNC_ADDR, 1);
 }
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
