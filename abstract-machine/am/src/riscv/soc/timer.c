@@ -1,5 +1,6 @@
 #include <am.h>
 #include "../riscv.h"
+// #include <stdint.h>
 #include<stdio.h>
 
 uint64_t am_start_time = 0;
@@ -9,7 +10,8 @@ uint64_t get_time_am(){
   uint32_t time_low = inl(CLINT_ADDR);
   uint32_t time_high = inl(CLINT_ADDR + 4);
   // printf("%d,%d\n",time_low,time_high);
-  return ((uint64_t)time_high << 32) + time_low;
+  uint64_t result = ((uint64_t)time_high << 32) + time_low;
+  return result *2;
 }
 
 void __am_timer_init() {
