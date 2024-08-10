@@ -8,9 +8,9 @@ void __am_gpu_init() {
   // int i;
   sw = 640;                      
   sh = 480;        
-  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-  for (int i = 0; i < sw * sh; i++)
-    fb[i] = i;
+//   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+//   for (int i = 0; i < sw * sh; i++)
+//     fb[i] = i;
 //   outl(SYNC_ADDR, 1);
 }
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
@@ -21,12 +21,12 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
                            .vmemsz = 1};
 }
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
-//   uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
-//   int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
-//   for (int i = 0; i < h; i++)
-//     for (int j = 0; j < w; j++) {
-//       fb[sw * (y + i) + (x + j)] = ((uint32_t *)(ctl->pixels))[w * i + j];
-//     }
+  uint32_t *fb = (uint32_t *)(uintptr_t)FB_ADDR;
+  int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
+  for (int i = 0; i < h; i++)
+    for (int j = 0; j < w; j++) {
+      fb[sw * (y + i) + (x + j)] = ((uint32_t *)(ctl->pixels))[w * i + j];
+    }
 //   if (ctl->sync) {
 //     outl(SYNC_ADDR, 1);
 //   }
