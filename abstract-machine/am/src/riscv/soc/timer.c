@@ -11,7 +11,7 @@ uint64_t get_time_am(){
   uint32_t time_high = inl(CLINT_ADDR + 4);
   // printf("%d,%d\n",time_low,time_high);
   uint64_t result = ((uint64_t)time_high << 32) + time_low;
-  return result *2;
+  return result ;
 }
 
 void __am_timer_init() {
