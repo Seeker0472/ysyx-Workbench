@@ -36,7 +36,7 @@ void set_u32() {
 }
 void check_values_u32() {
   for (int i = 0; i < SIZE / 4; i++) {
-    printf("%d",((uint32_t *)memory)[i]);
+    // printf("%d",((uint32_t *)memory)[i]);
     check(((uint32_t *)memory)[i] == (uint32_t)(memory + i));
   }
 }
