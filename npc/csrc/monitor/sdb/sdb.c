@@ -85,7 +85,11 @@ static int cmd_print_status(char *args) {
     print_watch_points();
     break;
   case 'i':
+#ifdef CONFIG_IRINGBUF
     print_iringbuf();
+#else
+printf("IringBuf Not Enabled");
+#endif
     break;
   case 'f':
     Assert(0,"function status not Implemented");
