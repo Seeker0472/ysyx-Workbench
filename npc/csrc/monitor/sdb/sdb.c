@@ -70,7 +70,7 @@ static int cmd_step(char *args) {
 static int cmd_print_status(char *args) {
   char op;
   if (!args) {
-    printf("Please enter a operation(w/r)!\n");
+    printf("Please enter a operation(w/r/i/f)!\n");
     return 0;
   }
   if (sscanf(args, "%c", &op) != 1) {
@@ -84,8 +84,14 @@ static int cmd_print_status(char *args) {
   case 'w':
     print_watch_points();
     break;
+  case 'i':
+    print_iringbuf();
+    break;
+  case 'f':
+    Assert(0,"function status not Implemented");
+    break;
   default:
-    printf("Please enter a operation(w/r)!\n");
+    printf("Please enter a operation(w/r/i/f)!\n");
     return 0;
   }
   // printf("cmd_print_status :%s",args);
