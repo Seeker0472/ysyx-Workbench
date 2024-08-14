@@ -1,5 +1,4 @@
 #include <common.h>
-# ifdef CONFIG_ITRACE
 typedef struct
 {
     paddr_t pc;
@@ -11,6 +10,7 @@ typedef struct
 inst_Node ibuf[BUF_SIZE];
 int pbuf=0;
 bool full=false;
+#ifdef CONFIG_ITRACE
 
 void write_iringbuf(paddr_t pc, word_t inst){
     ibuf[pbuf].pc=pc;
@@ -19,6 +19,7 @@ void write_iringbuf(paddr_t pc, word_t inst){
         full=true;
     pbuf=(pbuf+1)%BUF_SIZE;
 }
+#endif
 
 void print_inst(paddr_t pc, word_t inst,bool wrong){
     char logbuf[128];
@@ -59,5 +60,3 @@ void print_iringbuf(){
         }
     }
 }
-
-#endif

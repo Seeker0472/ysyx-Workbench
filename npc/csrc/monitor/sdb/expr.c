@@ -40,21 +40,22 @@ static struct rule {
   int token_type;
 } rules[] = {
 
-
-  {"0x[0-9,a-f,A-F]+", TK_HEX}, // hex
-  {"[0-9]+",TK_NUM},
-  {" +", TK_NOTYPE},    // spaces
-  {"\\$\\w+",TK_REG},     // reg
-  {"\\(",'('},
-  {"\\)",')'},
-  {"\\+", '+'},         // +
-  {"-",'-'},
-  {"\\*",'*'},
-  {"/",'/'},
-  {"==", TK_EQ},        // ==
-  {"!=", TK_NOTEQ},     // !=
-  {"&&", TK_AND},       // &&
-  //指针解引用放在乘法一起处理
+    {"0x[0-9,a-f,A-F]+", TK_HEX}, // hex
+    {"[0-9]+", TK_NUM},
+    {" +", TK_NOTYPE},   // spaces
+    {"\\$\\w+", TK_REG}, // reg
+    {"\\(", '('},
+    {"\\)", ')'},
+    {"\\+", '+'}, // +
+    {"-", '-'},
+    {"\\*", '*'},
+    {"/", '/'},
+    {"==", TK_EQ},    // ==
+    {"!=", TK_NOTEQ}, // !=
+    {"&&", TK_AND},   // &&
+    {">", '>'},   
+    {"<", '<'}
+    //指针解引用放在乘法一起处理
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -237,6 +238,8 @@ long eval(int p,int q) {
       case '-': return val1-val2;
       case '*': return val1*val2;
       case '/': return val1/val2;
+      case '>': return val1>val2;
+      case '<': return val1<val2;
       case TK_EQ :return val1==val2;
       case TK_NOTEQ :return val1!=val2;
       case TK_AND: return val1&&val2;
@@ -275,6 +278,13 @@ int get_main_op(int p,int q){
         if(top==0&&priority<=3){
           pos=p;
           priority=3;
+        }
+      break;
+      case '<':
+      case '>':
+        if(top==0&&priority<6){
+          pos=p;
+          priority=6;
         }
       break;
       case TK_EQ:

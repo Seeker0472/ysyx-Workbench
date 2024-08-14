@@ -1,4 +1,5 @@
 # TOP
+include $(NVBOARD_HOME)/scripts/nvboard.mk
 TOP ?=example
 
 BUILD_DIR = ./build
@@ -6,6 +7,9 @@ TOP ?= core
 PRJ = playground
 TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
+NXDC_FILE = ${NPC_HOME}/csrc/nvb/soc.nxdc
+SRC_AUTO_BIND = ${NPC_HOME}/csrc/nvb/bind.cpp
+YSYXSOC_V := $(YSYXSOC_HOME)/build/ysyxSoCFull.v
 
 ARGS ?=
 IMG  ?=
@@ -23,25 +27,28 @@ C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 PERIP_V_ABS:=$(shell find $(YSYXSOC_HOME)/perip  -type f -name '*.v' -exec realpath {} \;)
 
-ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv $(YSYXSOC_HOME)/build/ysyxSoCFull.v
+SOC_SCALA_ABS:=$(shell find $(YSYXSOC_HOME)/src  -type f -name '*.scala' -exec realpath {} \;)
+
+ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv ${YSYXSOC_V}
 
 LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
+
+LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a
 
 CHISEL_SOURCES := $(shell find src -name '*.scala')
 ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
 TARGET := build/ypc.sv
 
-# $(shell llvm-config --cxxflags)
-# deleted:::::   --CFLAGS -D__STDC_FORMAT_MACROS
-CXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
+VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -std=c++14 --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
 
 FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
-FLAGS += ${CXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU}
+
+FLAGS += ${VCXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU} ${LINK_NVBoard}
+FLAGS += --CFLAGS -I${NVBOARD_USR_INC}
+FLAGS += -CFLAGS -I/usr/include/SDL2 -LDFLAGS -lSDL2 -LDFLAGS -lSDL2_image -LDFLAGS -lSDL2_ttf
 # Verilator Includes list
 FLAGS += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
 FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
-
-# CINCLUDE := $(ROOT_DIR)/csrc/main.cpp $(ROOT_DIR)/csrc/execute/exec.cpp $(ROOT_DIR)/csrc/memory/mem.cpp $(ROOT_DIR)/csrc/monitor/monitor.cpp
 
 HINCLUDE := 
 
@@ -55,6 +62,12 @@ $(TARGET): $(ABS_CHISEL_SOURCES)
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/ypc.sv
+
+$(SRC_AUTO_BIND): $(NXDC_FILE)
+	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
+
+$(YSYXSOC_V): $(SOC_SCALA_ABS)
+	make -C $(YSYXSOC_HOME) verilog
 
 test:
 	mill -i $(PRJ).test
@@ -81,15 +94,13 @@ clean:
 
 .PHONY: test verilog help reformat checkformat clean
 
-sim:
-	@echo "所有文件的绝对路径："
-	@echo "$(C_CPP_ABS)"
+sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS}
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
-gdb:
+gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS} 
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	gdb   --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)

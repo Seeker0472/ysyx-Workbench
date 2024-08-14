@@ -69,7 +69,7 @@ void init_flash_img(char *img_file) {
 }
 void init_mem() {
   mrom = (uint32_t *)malloc(4 * 1024 * sizeof(uint8_t));
-  flash = (uint32_t *)malloc(16 * 1024 * 1024 * sizeof(uint8_t));
+  flash = (uint32_t *)malloc(128 * 1024 * 1024 * sizeof(uint8_t));//TODO:FLASH so small
   psram = (uint32_t *)malloc(4 * 1024 * 1024 * sizeof(uint8_t));
 }
 void free_mem() {
@@ -81,7 +81,7 @@ void free_mem() {
 void init_img(char *img_file) {
   init_mem();
   // init_flash();
-  // init_flash_img("/home/seeker/Develop/ysyx-workbench/npc/char-test.bin");
+  // init_flash_img("/ysyx-workbench/npc/char-test.bin");
   init_flash_img(img_file);
   // init_mrom(img_file);
   if (img_file != NULL) {
