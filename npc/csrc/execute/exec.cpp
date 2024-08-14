@@ -107,7 +107,7 @@ int run(int step) {
   int now = step;
   uint64_t timer_start = get_time();
   while ((now) != 0) {
-    now = now >= 0 ? now - 1 : now;
+    now = now >= 0 ? now - 1 : now;//如果now>0,就正常递减，否则保持原来的值
     switch (nemu_state.state) {
     case NEMU_ABORT:
     case NEMU_END:
@@ -141,6 +141,6 @@ int run(int step) {
 
 void assert_fail_msg() {
   isa_reg_display();
-  IFDEF(CONFIG_ITRACE, print_iringbuf());
+  IFDEF(CONFIG_IRINGBUF, print_iringbuf());
   statistic();
 }
