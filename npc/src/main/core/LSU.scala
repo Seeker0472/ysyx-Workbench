@@ -60,7 +60,7 @@ class LSU extends Module {
 
   //TODO: OKEY?
   io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
-  io.axi.RA.bits.addr := io.in.bits.alu_result
+  io.axi.RA.bits.addr := Cat(io.in.bits.alu_result(31,2),0.U(2.W))
   io.axi.RD.ready     := true.B
 
   val mrres = io.axi.RD.bits.data
