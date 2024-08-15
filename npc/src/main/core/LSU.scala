@@ -99,7 +99,7 @@ class LSU extends Module {
 
   val mask_move = mem_write_mask << ((io.in.bits.alu_result)(1, 0))  
   
-  val wd_move_ch = io.in.bits.src2 << ((io.in.bits.alu_result(1, 1)) << 3)
+  val wd_move_ch = io.in.bits.src2 << ((io.in.bits.alu_result(1, 1)) << 4)
 
   val mask_move_ch = mem_write_mask << ((io.in.bits.alu_result)(1, 1))
 
