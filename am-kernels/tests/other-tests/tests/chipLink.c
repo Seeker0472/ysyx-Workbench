@@ -32,13 +32,13 @@ void check_values_u16() {
 void set_u32() {
   for (int i = 0; i < SIZE / 4; i++) {
     // ((uint32_t *)memory)[i] = (uint32_t)(memory + i);
-    ((uint16_t *)memory)[i] = 0xff;
+    ((uint32_t *)memory)[i] = 0xff;
   }
 }
 void check_values_u32() {
   for (int i = 0; i < SIZE / 4; i++) {
     printf("%d\n\n\n",((uint16_t *)memory)[i]);
-    check(((uint16_t *)memory)[i] == 0xffffffff);
+    check(((uint32_t *)memory)[i] == 0xffffffff);
   }
 }
   
