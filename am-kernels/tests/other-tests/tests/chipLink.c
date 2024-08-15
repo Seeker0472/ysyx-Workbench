@@ -32,8 +32,12 @@ void check_values_u16() {
 void set_u32() {
   for (int i = 0; i < SIZE / 4; i++) {
     // ((uint32_t *)memory)[i] = (uint32_t)(memory + i);
-{((uint32_t *)memory)[i] = 0xaa;
-for(volatile int i=100;i<1000;i++);}
+{
+  ((uint32_t *)memory)[i] = 0xaa;
+    ((uint32_t *)memory)[i] = 0xaa;
+    for (volatile int i = 100; i < 1000; i++)
+      ;
+  }
   }
 }
 void check_values_u32() {
