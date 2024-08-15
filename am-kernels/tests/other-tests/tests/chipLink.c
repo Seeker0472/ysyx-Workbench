@@ -34,7 +34,7 @@ void set_u32() {
     // ((uint32_t *)memory)[i] = (uint32_t)(memory + i);
 {
   ((uint32_t *)memory)[i] = 0xaa;
-  ((uint32_t *)memory)[1000] = 0xaa;
+  // ((uint32_t *)memory)[1000] = 0xaa;
     // for (volatile int i = 100; i < 1000; i++)
     //   ;
   }
