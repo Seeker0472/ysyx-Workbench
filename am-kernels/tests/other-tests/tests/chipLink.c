@@ -43,8 +43,8 @@ void check_values_u32() {
   
 int main() {
   printf("Testing mem_area[%x---%x]\n", memory, memory + SIZE);
-  // printf("setting Uint8\n");
-  // set_u8();
+  printf("setting Uint8\n");
+  set_u8();
   // printf("checking Uint8\n");
   // check_values_u8();
   // printf("setting Uint16\n");
