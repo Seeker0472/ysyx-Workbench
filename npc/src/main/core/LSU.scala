@@ -99,16 +99,16 @@ class LSU extends Module {
 
   val mask_move = mem_write_mask << ((io.in.bits.alu_result)(1, 0))  
   
-  val wd_move_ch = io.in.bits.src2 << ((io.in.bits.alu_result(1, 1)) << 4)
+  val wd_move_ch = io.in.bits.src2 << ((io.in.bits.alu_result(1, 1)) << 3)
 
   val mask_move_ch = mem_write_mask << ((io.in.bits.alu_result)(1, 1))
 
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result
-  // io.axi.WD.bits.data  := wd_move //移动
-  // io.axi.WD.bits.wstrb := mask_move //移动
-  io.axi.WD.bits.data  := Mux(io.in.bits.alu_result(31,28)>=0xc.U,wd_move_ch,wd_move)
-  io.axi.WD.bits.wstrb := Mux(io.in.bits.alu_result(31,28)>=0xc.U,mask_move_ch,mask_move)
+  io.axi.WD.bits.data  := wd_move //移动
+  io.axi.WD.bits.wstrb := mask_move //移动
+  // io.axi.WD.bits.data  := Mux(io.in.bits.alu_result(31,28)>=0xc.U,wd_move_ch,wd_move)
+  // io.axi.WD.bits.wstrb := Mux(io.in.bits.alu_result(31,28)>=0xc.U,mem_write_mask,mask_move)
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
   io.axi.WD.valid := state === s_w_busy
