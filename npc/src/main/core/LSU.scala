@@ -102,9 +102,9 @@ class LSU extends Module {
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result
   io.axi.WD.bits.data  := wd_move //移动
-  io.axi.WD.bits.wstrb := mask_move //移动  
-  // io.axi.WD.bits.data  := io.in.bits.src2 
-  // io.axi.WD.bits.wstrb := mem_write_mask 
+  io.axi.WD.bits.wstrb := mask_move //移动
+  io.axi.WD.bits.data  := Mux(io.in.bits.alu_result(31,28)>=0xc.U,io.in.bits.src2,wd_move)
+  io.axi.WD.bits.wstrb := Mux(io.in.bits.alu_result(31,28)>=0xc.U,mem_write_mask,mask_move)
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
   io.axi.WD.valid := state === s_w_busy
