@@ -32,7 +32,7 @@ void check_values_u16() {
 void set_u32() {
   for (int i = 0; i < SIZE / 4; i++) {
     // ((uint32_t *)memory)[i] = (uint32_t)(memory + i);
-    ((uint32_t *)memory)[i] = 0xff;
+    ((uint32_t *)memory)[i] = 0xaa;
   }
 }
 void check_values_u32() {
