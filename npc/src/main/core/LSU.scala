@@ -28,7 +28,7 @@ class LSU extends Module {
   io.out.bits.imm             := io.in.bits.imm
 
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_wait :: Nil = Enum(5)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_wait :: Nil = Enum(6)
   val state                                                              = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(
     List(
