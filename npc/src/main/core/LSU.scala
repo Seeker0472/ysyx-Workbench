@@ -60,7 +60,7 @@ class LSU extends Module {
 
   //TODO: OKEY?
   io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
-  io.axi.RA.bits.addr := Cat(io.in.bits.alu_result(31,2),0.U(2.W))
+  io.axi.RA.bits.addr := io.in.bits.alu_result
   io.axi.RD.ready     := true.B
 
   val mrres = io.axi.RD.bits.data
@@ -100,7 +100,7 @@ class LSU extends Module {
   val mask_move = mem_write_mask << ((io.in.bits.alu_result)(1, 0))
 
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
-  io.axi.WA.bits.addr  := io.in.bits.alu_result
+  io.axi.WA.bits.addr  := Cat(io.in.bits.alu_result(31,2),0.U(2.W))
   io.axi.WD.bits.data  := wd_move //移动
   io.axi.WD.bits.wstrb := mask_move //移动
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
