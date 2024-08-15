@@ -35,14 +35,15 @@ class LSU extends Module {
       s_idle -> Mux(
         (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
         // Mux(io.in.bits.mem_read_enable, s_r_busy, s_w_busy),
-        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), s_wait),
+        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), s_w_busy),
         Mux(io.in.valid, s_valid, s_idle)
       ),
       s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
-      s_wait -> s_w_busy,
-      s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
+      s_wait -> Mux(io.axi.WR.valid,s_valid,s_wait),
+      // s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
+      s_w_busy -> Mux(io.axi.WD.ready, s_wait, s_w_busy), //不等返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
