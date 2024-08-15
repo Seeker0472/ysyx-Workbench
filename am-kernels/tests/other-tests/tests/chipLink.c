@@ -1,6 +1,6 @@
 #include "trap.h"
 
-uint8_t *memory = (uint8_t *)0xc0000000;
+volatile uint8_t *memory = (uint8_t *)0xc0000000;
 
 // #define SIZE 4 * 1024
 #define SIZE 4
@@ -34,7 +34,7 @@ void set_u32() {
     // ((uint32_t *)memory)[i] = (uint32_t)(memory + i);
 {
   ((uint32_t *)memory)[i] = 0xaa;
-    ((uint32_t *)memory)[i] = 0xaa;
+  ((uint32_t *)memory)[i] = 0xaa;
     for (volatile int i = 100; i < 1000; i++)
       ;
   }
