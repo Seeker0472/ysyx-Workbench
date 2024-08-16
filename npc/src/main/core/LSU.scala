@@ -28,20 +28,22 @@ class LSU extends Module {
   io.out.bits.imm             := io.in.bits.imm
 
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready :: Nil = Enum(5)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_w_wait_result ::s_w_wait_ready :: Nil = Enum(7)
   val state                                                              = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
         (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
         // Mux(io.in.bits.mem_read_enable, s_r_busy, s_w_busy),
-        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), s_w_busy),
+        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), Mux(io.axi.WA.ready,s_w_busy,s_w_wait_ready)),
         Mux(io.in.valid, s_valid, s_idle)
       ),
       s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
-      s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
-      // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
+      s_w_wait_ready -> Mux(io.axi.WA.valid,s_w_busy,s_w_wait_ready),
+      s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
+      s_w_wait_result -> Mux(io.axi.WR.valid,s_valid,s_w_wait_result),
       s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
+      // s_w_busy -> Mux(io.axi.WD.ready, s_w_wait_result, s_w_busy), //等待返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
@@ -58,15 +60,12 @@ class LSU extends Module {
   )
   io.axi.RA.bits.size := mem_read_size
 
-  //TODO: OKEY?
   io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
   io.axi.RA.bits.addr := io.in.bits.alu_result
   io.axi.RD.ready     := true.B
 
   val mrres = io.axi.RD.bits.data
 
-  // mem.io.write_enable := io.in.bits.mem_write_enable && io.in.valid&&state===s_busy//由于读写延迟
-  // mem.io.write_addr := io.in.bits.alu_result
   val mrrm = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.mem_read_type, 0.S)(
@@ -97,20 +96,17 @@ class LSU extends Module {
   )
   val wd_move = io.in.bits.src2 << ((io.in.bits.alu_result(1, 0)) << 3)
 
-  val mask_move = mem_write_mask << ((io.in.bits.alu_result)(1, 0))
-
-  io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
+  val mask_move = mem_write_mask << ((io.in.bits.alu_result)(1, 0))  
+  
+  io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && (state === s_idle || state === s_w_wait_ready)//避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result
   io.axi.WD.bits.data  := wd_move //移动
   io.axi.WD.bits.wstrb := mask_move //移动
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
-  // io.axi.WD.valid      := true.B
   io.axi.WD.valid := state === s_w_busy
-  // io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
   io.axi.WR.ready := true.B
   //暂时忽略错误处理
 
-  // io.out.bits.mem_read_result:=mem_read_result
   val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值
   io.out.bits.mem_read_result := read_res
   read_res                    := mem_read_result
