@@ -110,7 +110,8 @@ class LSU extends Module {
 
   val mask_move_ch = mem_write_mask << ((io.in.bits.alu_result)(1, 1))
 
-  io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && (state === s_idle || state===s_w_busy )//避免多次访存
+  io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && (state === s_idle )//避免多次访存
+  // io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && (state === s_idle || state===s_w_busy )//避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result
   io.axi.WD.bits.data  := wd_move //移动
   io.axi.WD.bits.wstrb := mask_move //移动
