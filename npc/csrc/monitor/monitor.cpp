@@ -80,13 +80,9 @@ void init_monitor(int argc, char *argv[]){
     init_img(img_file);
     init_runtime();
     // 初始化反汇编
-    Log("1");
     init_disasm((MUXDEF(CONFIG_RV64, "riscv64", "riscv32") "-pc-linux-gnu"));
-    Log("1");
     IFDEF(CONFIG_FTRACE, read_func_info(elf_file););
-    Log("1");
     IFDEF(CONFIG_DIFFTEST, difftest_init_all(););
-    Log("1");
     welcome();
     // run();
 }
