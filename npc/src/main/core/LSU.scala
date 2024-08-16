@@ -28,17 +28,16 @@ class LSU extends Module {
   io.out.bits.imm             := io.in.bits.imm
 
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_wait:: s_w :: Nil = Enum(7)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_wait :: Nil = Enum(6)
   val state                                                              = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
         (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
         // Mux(io.in.bits.mem_read_enable, s_r_busy, s_w_busy),
-        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), s_w),
+        Mux(io.in.bits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), s_w_busy),
         Mux(io.in.valid, s_valid, s_idle)
       ),
-      s_w->s_w_busy,
       s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
