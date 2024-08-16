@@ -54,7 +54,7 @@ class REG extends Module {
   io.CSRread.data := csrs(csr_r_ADDR)
   io.csr_mstvec   := csrs(0.U) //mstvec--支持ecall
 
-  when(io.Rwrite.write_enablqe && io.Rwrite.addr =/= 0.U) { //保证寄存器不被写入
+  when(io.Rwrite.write_enable && io.Rwrite.addr =/= 0.U) { //保证寄存器不被写入
     regs(io.Rwrite.addr(3,0)) := io.Rwrite.data
   }
   when(io.CSRwrite.write_enable) {
