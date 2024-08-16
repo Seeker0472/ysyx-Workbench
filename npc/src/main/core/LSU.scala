@@ -4,7 +4,6 @@ import chisel3._
 import chisel3.util._
 import core.IO._
 import Constants_Val._
-import os.stat
 
 class LSU extends Module {
   val io = IO(new Bundle {
@@ -28,9 +27,6 @@ class LSU extends Module {
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
 
-  //Note:to support chiplink
-  val is_chipLink=io.in.bits.alu_result(31,30)===3.U
-
   //sigs and status
   val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_wait ::chiplink_delay :: Nil = Enum(7)
   val state                                                              = RegInit(s_idle)
@@ -46,8 +42,7 @@ class LSU extends Module {
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
       s_wait -> Mux(io.axi.WR.valid,s_valid,s_wait),
-      s_w_busy -> Mux(io.axi.WD.ready, Mux(false.B,chiplink_delay,s_valid), s_w_busy), //不等返回值
-      chiplink_delay->s_valid,
+      s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
       // s_w_busy -> Mux(io.axi.WD.ready, s_wait, s_w_busy), //不等返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
@@ -106,10 +101,7 @@ class LSU extends Module {
 
   val mask_move = mem_write_mask << ((io.in.bits.alu_result)(1, 0))  
   
-  val wd_move_ch = io.in.bits.src2 << ((io.in.bits.alu_result(1, 1)) << 3)
-
-  val mask_move_ch = mem_write_mask << ((io.in.bits.alu_result)(1, 1))
-
+  //TODO!!
   io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && (state === s_idle )//避免多次访存
   // io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && (state === s_idle || state===s_w_busy )//避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result
@@ -119,7 +111,7 @@ class LSU extends Module {
   // io.axi.WD.bits.wstrb := Mux(io.in.bits.alu_result(31,28)>=0xc.U,mem_write_mask,mask_move)
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
-  io.axi.WD.valid := state === s_w_busy || state===chiplink_delay
+  io.axi.WD.valid := state === s_w_busy
   // io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
   io.axi.WR.ready := true.B
   //暂时忽略错误处理
