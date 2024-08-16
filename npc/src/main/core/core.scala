@@ -57,7 +57,7 @@ class ypc extends Module {
   io.master.awid              := 0.U
   io.master.awlen             := 0.U
   io.master.awsize            := axi_arbiter.io.out.WA.bits.size
-  io.master.awburst           := 1.U
+  io.master.awburst           := 0.U
 
   axi_arbiter.io.out.WD.ready := io.master.wready
   io.master.wvalid            := axi_arbiter.io.out.WD.valid
