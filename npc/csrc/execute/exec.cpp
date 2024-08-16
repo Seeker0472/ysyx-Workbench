@@ -99,7 +99,7 @@ void init_runtime() {
          , tfp->open("/dev/null");) // 打开VCD文件
   nvboard_bind_all_pins(dut);
   nvboard_init();
-  reset(50);                        // 复位50个周期
+  reset(20);                        // 复位5个周期
 
 }
 
