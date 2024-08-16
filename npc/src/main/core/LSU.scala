@@ -41,7 +41,7 @@ class LSU extends Module {
       s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
-      // s_wait -> Mux(io.axi.WR.valid,s_valid,s_wait),
+      s_wait -> Mux(io.axi.WR.valid,s_valid,s_wait),
       s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
       // s_w_busy -> Mux(io.axi.WD.ready, s_wait, s_w_busy), //不等返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
@@ -105,7 +105,7 @@ class LSU extends Module {
 
   val mask_move_ch = mem_write_mask << ((io.in.bits.alu_result)(1, 1))
 
-  io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid //避免多次访存
+  io.axi.WA.valid      := io.in.bits.mem_write_enable && io.in.valid && (state === s_idle || state===s_w_busy )//避免多次访存
   io.axi.WA.bits.addr  := io.in.bits.alu_result
   io.axi.WD.bits.data  := wd_move //移动
   io.axi.WD.bits.wstrb := mask_move //移动
