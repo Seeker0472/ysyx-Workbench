@@ -115,7 +115,7 @@ class LSU extends Module {
   // io.axi.WD.valid      := true.B
   io.axi.WD.valid := state === s_w_busy
   // io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
-  io.axi.WR.ready := true.B
+  io.axi.WR.ready := state===s_wait
   //暂时忽略错误处理
 
   // io.out.bits.mem_read_result:=mem_read_result
