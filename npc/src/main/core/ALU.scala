@@ -19,7 +19,7 @@ class ALU extends Module {
 //     io.dst := io.src1 + io.imm
 //   }
   val add_val  = io.in.src1.asSInt + io.in.src2.asSInt
-  val sub_val  = io.in.src1.asSInt + io.in.src2.asSInt
+  val sub_val  = io.in.src1.asSInt - io.in.src2.asSInt
   val xor      = io.in.src1 ^ io.in.src2
   val or       = io.in.src1 | io.in.src2
   val and      = io.in.src1 & io.in.src2
