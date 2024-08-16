@@ -28,8 +28,11 @@ class LSU extends Module {
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
 
+  //Note:to support chiplink
+  val is_chipLink=io.in.bits.alu_result(31,30)===3.U
+
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_wait :: Nil = Enum(6)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_wait ::chiplink_delay :: Nil = Enum(7)
   val state                                                              = RegInit(s_idle)
   state := MuxLookup(state, s_idle)(
     List(
@@ -43,7 +46,8 @@ class LSU extends Module {
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy), //depends on the mem delay
       // s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
       s_wait -> Mux(io.axi.WR.valid,s_valid,s_wait),
-      s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
+      s_w_busy -> Mux(io.axi.WD.ready, Mux(is_chipLink,chiplink_delay,s_valid), s_w_busy), //不等返回值
+      chiplink_delay->s_valid,
       // s_w_busy -> Mux(io.axi.WD.ready, s_wait, s_w_busy), //不等返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
@@ -114,7 +118,7 @@ class LSU extends Module {
   // io.axi.WD.bits.wstrb := Mux(io.in.bits.alu_result(31,28)>=0xc.U,mem_write_mask,mask_move)
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
-  io.axi.WD.valid := state === s_w_busy
+  io.axi.WD.valid := state === s_w_busy || state===chiplink_delay
   // io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
   io.axi.WR.ready := true.B
   //暂时忽略错误处理
