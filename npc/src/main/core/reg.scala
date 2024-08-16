@@ -43,7 +43,7 @@ class REG extends Module {
     )
   )
   //默认写入mepc
-  val csr_w_addr = MuxLookup(io.CSRwrite.addr(3,0), 3.U)(
+  val csr_w_addr = MuxLookup(io.CSRwrite.addr, 3.U)(
     Seq(
       0x305.U -> 0.U,
       0x342.U -> 1.U,
@@ -51,7 +51,7 @@ class REG extends Module {
       0x341.U -> 3.U
     )
   )
-  io.CSRread.data := csrs(csr_r_ADDR)
+  io.CSRread.data := csrs(csr_r_ADDR(3,0))
   io.csr_mstvec   := csrs(0.U) //mstvec--支持ecall
 
   when(io.Rwrite.write_enable && io.Rwrite.addr =/= 0.U) { //保证寄存器不被写入
