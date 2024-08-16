@@ -15,7 +15,7 @@ LDFLAGS   += --gc-sections -e _start
 CFLAGS += -DMAINARGS=\"$(mainargs)\"
 
 NPC_ARGS ?= -l $(shell dirname $(IMAGE).elf)/npc-log.txt -e $(IMAGE).elf -b
-NPC_GDB_ARGS ?= -l $(shell dirname $(IMAGE).elf)/npc-log.txt -e $(IMAGE).elf -b
+NPC_GDB_ARGS ?= -l $(shell dirname $(IMAGE).elf)/npc-log.txt -e $(IMAGE).elf 
 
 .PHONY: $(AM_HOME)/am/src/riscv/npc/trm.c
 
