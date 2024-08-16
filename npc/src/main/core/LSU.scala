@@ -113,7 +113,7 @@ class LSU extends Module {
   // io.axi.WD.bits.wstrb := Mux(io.in.bits.alu_result(31,28)>=0xc.U,mem_write_mask,mask_move)
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
   // io.axi.WD.valid      := true.B
-  io.axi.WD.valid := state === s_w_busy
+  io.axi.WD.valid := state === s_w_busy || state === s_wait
   // io.axi.WD.valid := io.in.bits.mem_write_enable && io.in.valid && state =/= s_valid
   io.axi.WR.ready := true.B
   //暂时忽略错误处理
