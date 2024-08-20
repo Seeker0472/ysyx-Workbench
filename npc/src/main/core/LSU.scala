@@ -143,7 +143,7 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
       |  input [31:0] wdata,
       |  input [31:0] len,
       |  input clock
-      |);
+      |); 
       |always @(negedge clock) begin
       |   if (wen||ren) begin
       |      check_addr(addr,ren,wmask,wdata,len);
@@ -153,5 +153,37 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
+// //判断input改变
+// class DPI_C_TRACELSU extends BlackBox with HasBlackBoxInline {
+//   val io = IO(new Bundle {
+//     val addr  = Input(UInt(CVAL.DLEN.W))
+//     val wdata  = Input(UInt(CVAL.DLEN.W))
+//     val wmask  = Input(UInt(CVAL.DLEN.W))
+//     val len  = Input(UInt(CVAL.DLEN.W))
+//     val wen = Input(Bool())
+//     val ren = Input(Bool())
+//     val clock = Input(Clock())
+//   })
+//     setInline(
+//     "check_addr.v",
+//     """import "DPI-C" function void check_addr(int unsigned addr,bit access_type, int unsigned wmask,int unsigned wdata,int unsigned len);
+//       |module DPI_C_CHECK(
+//       |  input wen,
+//       |  input ren,
+//       |  input [31:0] addr,
+//       |  input [31:0] wmask,
+//       |  input [31:0] wdata,
+//       |  input [31:0] len,
+//       |  input clock
+//       |);
+//       |always @(negedge clock) begin
+//       |   if (wen||ren) begin
+//       |      check_addr(addr,ren,wmask,wdata,len);
+//       |  end
+//       | end
+//       |endmodule
+//     """.stripMargin
+//   )
+// }
 //TODO:LSU 取到数据/写入数据--使用valid
 //TODO:LSU 延迟
