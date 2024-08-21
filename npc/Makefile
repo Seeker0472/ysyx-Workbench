@@ -49,7 +49,7 @@ FLAGS += -CFLAGS -I/usr/include/SDL2 -LDFLAGS -lSDL2 -LDFLAGS -lSDL2_image -LDFL
 # Verilator Includes list
 FLAGS += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
 FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
-FLAGS += --threads 1 -j 8	
+FLAGS += --threads 0 -j 8	
 
 HINCLUDE := 
 
