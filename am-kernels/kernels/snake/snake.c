@@ -84,7 +84,7 @@ static void clear_tail(snake_t* snake, rect_t board) {
 
 static dir_t get_dir(int c) {
   switch (c) {
-    case AM_KEY_LEFT:  return LEFT;
+    case AM_KEY_LEFT:case AM_KEY_A:  return LEFT;
     case AM_KEY_UP:    return UP;
     case AM_KEY_RIGHT: return RIGHT;
     case AM_KEY_DOWN:  return DOWN;
