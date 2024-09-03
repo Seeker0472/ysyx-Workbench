@@ -1,7 +1,6 @@
 #include <am.h>
 #include <klib-macros.h>
-// #include "../riscv.h"
-#include "../soc.h"
+#include "../riscv.h"
 #include <klib.h>
 #include <stdint.h>
 __attribute__((noinline)) void check_ok(bool cond) {
@@ -23,7 +22,7 @@ Area heap = RANGE(&_heap_start, &_heap_end);
 #endif
 static const char mainargs[] = MAINARGS;
 
-#define SERIAL_PORT 0x10000000L
+// #define SERIAL_PORT 0x10000000L
 
 void putch(char ch) {//实现putch
   while((inb(SERIAL_PORT+5)&0x20) == 0);

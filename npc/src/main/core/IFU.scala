@@ -57,6 +57,4 @@ class IFU extends Module {
   when(io.rwerr) {
     state := s_error
   }
-} 
-//TODO:IFU取到指令-使用AXIRDvalid
-//TODO:IFU延迟
+}

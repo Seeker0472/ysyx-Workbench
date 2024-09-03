@@ -7,6 +7,7 @@ import core.IO._
 
 class URAT extends Module {
   val io = IO(new AXIIO)
+  //TODO:DPI_C
   val dpi_c_out=Module(new DPI_C_WriteChar)
   val w_addr = Reg(UInt(CVAL.DLEN.W))
   val w_data = Reg(UInt(CVAL.DLEN.W))

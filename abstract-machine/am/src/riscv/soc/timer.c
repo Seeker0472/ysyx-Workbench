@@ -1,5 +1,5 @@
 #include <am.h>
-#include "../soc.h"
+#include "../riscv.h"
 // #include <stdint.h>
 #include<stdio.h>
 
