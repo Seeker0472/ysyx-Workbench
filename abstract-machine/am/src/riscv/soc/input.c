@@ -1,4 +1,4 @@
-#include "../soc.h"
+#include "../riscv.h"
 #include "stdio.h"
 #include <am.h>
 #include <stdint.h>

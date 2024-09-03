@@ -58,7 +58,7 @@ extern "C" void call_ebreak() {
 #define PSRAM_TOP 0x9fffffff
 #define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
 
-// TODO:加入更多设备的地址检测，同时用宏定义减少Copy_Paste Code
+// TODO:DIFFTEST/OUTPUT
 extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
                            uint32_t wdata, uint32_t len) {
 

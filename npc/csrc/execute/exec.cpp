@@ -13,7 +13,6 @@ void nvboard_bind_all_pins(VysyxSoCFull *dut);
 
 uint64_t sim_time = 0;
 uint64_t g_nr_guest_inst = 0;
-uint64_t g_cycles = 0;
 uint64_t g_timer = 0; // unit: us
 void print_iringbuf();
 
@@ -37,8 +36,6 @@ void statistic() {
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
-  Log("total cycles = " NUMBERIC_FMT, g_cycles);
-  Log("IPC = %lf", (double)g_nr_guest_inst/g_cycles);
   if (g_timer > 0)
     Log("simulation frequency = " NUMBERIC_FMT " inst/s",
         g_nr_guest_inst * 1000000 / g_timer);
@@ -54,7 +51,6 @@ void single_cycle(bool check_pc) {
       dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
   int i = 0;
   do {
-    g_cycles++;
     i++;
     dut->clock = 0;
     dut->eval();
