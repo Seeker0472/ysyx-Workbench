@@ -32,6 +32,8 @@ static uint8_t *psram = NULL;
 
 #else // CONFIG_PMEM_GARRAY
 
+
+
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 static uint8_t flash[FLASH_SIZE] PG_ALIGN = {};
 static uint8_t sram[SRAM_SIZE] PG_ALIGN = {};
