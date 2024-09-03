@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <klib-macros.h>
 
-#define FPS 45
+#define FPS 30
 #define CHAR_WHITE '.'
 #define CHAR_BLACK 'X'
 
