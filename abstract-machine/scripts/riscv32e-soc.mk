@@ -1,4 +1,4 @@
-include $(AM_HOME)/scripts/isa/soc.mk
+include $(AM_HOME)/scripts/isa/riscv.mk
 include $(AM_HOME)/scripts/platform/soc.mk
 COMMON_CFLAGS += -march=rv32e_zicsr -mabi=ilp32e  # overwrite
 LDFLAGS       += -melf32lriscv                    # overwrite
