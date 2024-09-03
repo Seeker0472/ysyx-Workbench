@@ -1,6 +1,8 @@
 #include "../riscv.h"
+#include "../soc.h"
 #include <am.h>
 #include <klib-macros.h>
+# define SERIAL_PORT     0x10000000L
 
 void __am_timer_init();
 
