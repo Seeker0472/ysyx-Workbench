@@ -56,7 +56,8 @@ static inline bool in_pmem(paddr_t addr) {
     return true;
   if (MEM_IN(addr, PSRAM_BASE, PSRAM_TOP)) // psram
     return true;
-  return addr - CONFIG_MBASE > CONFIG_MSIZE;
+  // return addr - CONFIG_MBASE > CONFIG_MSIZE;
+  return false;
 }
 
 word_t paddr_read(paddr_t addr, int len);
