@@ -3,9 +3,12 @@
 
 #include <stdint.h>
 
+// # define DEVICE_BASE 0x10000000   //TODO
+// # define RTC_ADDR        (DEVICE_BASE + 0x0000048)
+// # define SERIAL_PORT     (DEVICE_BASE + 0x00003f8)
 # define DEVICE_BASE 0x10000000   //TODO
 # define RTC_ADDR        (DEVICE_BASE + 0x0000048)
-# define SERIAL_PORT     (DEVICE_BASE + 0x00003f8)
+# define SERIAL_PORT     0x10000000L
 
 
 static inline uint8_t  inb(uintptr_t addr) { return *(volatile uint8_t  *)addr; }
