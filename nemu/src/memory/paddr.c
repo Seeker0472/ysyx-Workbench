@@ -32,8 +32,6 @@ static uint8_t *psram = NULL;
 
 #else // CONFIG_PMEM_GARRAY
 
-
-
 static uint8_t pmem[CONFIG_MSIZE] PG_ALIGN = {};
 static uint8_t flash[FLASH_SIZE] PG_ALIGN = {};
 static uint8_t sram[SRAM_SIZE] PG_ALIGN = {};
@@ -44,6 +42,7 @@ static uint8_t psram[PSRAM_SIZE] PG_ALIGN = {};
 
 uint8_t *guest_to_host(paddr_t paddr)
 {
+  #ifdef TARGET_SHARE
   if (MEM_IN(paddr,MROM_BASE,MROM_TOP)) // mrom
     return mrom + paddr - MROM_BASE;
   if (MEM_IN(paddr, SRAM_BASE, SRAM_TOP)) // sram
@@ -54,11 +53,12 @@ uint8_t *guest_to_host(paddr_t paddr)
     return sdram + paddr - SDRAM_BASE;
   if (MEM_IN(paddr, PSRAM_BASE, PSRAM_TOP)) // psram
     return psram + paddr - PSRAM_BASE;
-
+#endif
   return pmem + paddr - CONFIG_MBASE;
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
+  #ifdef TARGET_SHARE
   if (PHY_IN(haddr, mrom, SRAM_BASE, SRAM_TOP)) // mrom
     return haddr - mrom + MROM_BASE;
   if (PHY_IN(haddr, sram, FLASH_BASE, FLASH_TOP)) // sram
@@ -69,6 +69,7 @@ paddr_t host_to_guest(uint8_t *haddr)
     return haddr - sdram + SDRAM_BASE;
   if (PHY_IN(haddr, psram, PSRAM_BASE, PSRAM_TOP)) // psram
     return haddr - psram + PSRAM_BASE;
+#endif
   return haddr - pmem + CONFIG_MBASE;
 }
 

@@ -89,3 +89,5 @@ class Branch_comp extends Module {
     )
   )
 }
+
+//TODO:exu完成计算-valid信号

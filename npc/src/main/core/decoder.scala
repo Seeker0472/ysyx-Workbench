@@ -339,3 +339,9 @@ class Decoder extends Module {
   io.out.bits.mret  := decodedResults(Is_Mret)
 
 }
+//TODO:译码出来的指令类型
+/*
+1.访存RW
+2.是否是运算-检测inv
+3.csr-csrrw/mret
+*/
