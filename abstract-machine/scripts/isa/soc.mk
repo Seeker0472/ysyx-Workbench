@@ -6,4 +6,4 @@ ASFLAGS       += $(COMMON_CFLAGS) -O0
 LDFLAGS       += -melf64lriscv
 
 # overwrite ARCH_H defined in $(AM_HOME)/Makefile
-ARCH_H := /ysyx-workbench/abstract-machine/am/src/riscv/soc.h
+ARCH_H := arch/riscv.h
