@@ -110,27 +110,27 @@ void video_init() {
   screen_w = io_read(AM_GPU_CONFIG).width;
   screen_h = io_read(AM_GPU_CONFIG).height;
 
-  // extern char font[];
+  extern char font[];
   for (int i = 0; i < CHAR_W * CHAR_H; i++)
     blank[i] = COL_PURPLE;
 
-  uint32_t blank_line[screen_w];
-  for (int i = 0; i < screen_w; i++)
-    blank_line[i] = COL_PURPLE;
+  // uint32_t blank_line[screen_w];
+  // for (int i = 0; i < screen_w; i++)
+  //   blank_line[i] = COL_PURPLE;
 
-  for (int y = 0; y < screen_h; y ++)
-    io_write(AM_GPU_FBDRAW, 0, y, blank_line, screen_w, 1, false);
+  // for (int y = 0; y < screen_h; y ++)
+  //   io_write(AM_GPU_FBDRAW, 0, y, blank_line, screen_w, 1, false);
 
-  // for (int ch = 0; ch < 26; ch++) {
-  //   char *c = &font[CHAR_H * ch];
-  //   for (int i = 0, y = 0; y < CHAR_H; y++)
-  //     for (int x = 0; x < CHAR_W; x++, i++) {
-  //       int t = (c[y] >> (CHAR_W - x - 1)) & 1;
-  //       texture[WHITE][ch][i] = t ? COL_WHITE : COL_PURPLE;
-  //       texture[GREEN][ch][i] = t ? COL_GREEN : COL_PURPLE;
-  //       texture[RED  ][ch][i] = t ? COL_RED   : COL_PURPLE;
-  //     }
-  // }
+  for (int ch = 0; ch < 26; ch++) {
+    char *c = &font[CHAR_H * ch];
+    for (int i = 0, y = 0; y < CHAR_H; y++)
+      for (int x = 0; x < CHAR_W; x++, i++) {
+        int t = (c[y] >> (CHAR_W - x - 1)) & 1;
+        texture[WHITE][ch][i] = t ? COL_WHITE : COL_PURPLE;
+        texture[GREEN][ch][i] = t ? COL_GREEN : COL_PURPLE;
+        texture[RED  ][ch][i] = t ? COL_RED   : COL_PURPLE;
+      }
+  }
 }
 
 char lut[256] = {
