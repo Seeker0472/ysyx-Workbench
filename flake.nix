@@ -50,7 +50,7 @@
             # verilator end
             # llvmPackages.llvm
             # llvmPackages.libllvm
-            pkgs.llvm_18
+            pkgs.llvm_16
             pkgs.pkgsCross.riscv64.buildPackages.gcc
             pkgs.pkgsCross.riscv64.buildPackages.binutils
             # TODO:add more!!!
@@ -65,11 +65,11 @@
               pkgs.SDL2_image
               pkgs.SDL2_ttf
               pkgs.libz
-            # pkgs.llvm_18.llvm-lib  
+            # pkgs.llvm_16.llvm-lib  
             ]}:$LD_LIBRARY_PATH
-            export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/include -I${pkgs.SDL2.dev}/include $CFLAGS"
-            export LDFLAGS="-L${pkgs.ncurses.dev}/lib -L${pkgs.readline.dev}/lib -L${pkgs.llvm_18.dev}/lib -L${pkgs.libz.dev}/lib $LDFLAGS"
-            export CPPFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/include -I${pkgs.SDL2.dev}/include $CPPFLAGS"
+            export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_16.dev}/include -I${pkgs.SDL2.dev}/include $CFLAGS"
+            export LDFLAGS="-L${pkgs.ncurses.dev}/lib -L${pkgs.readline.dev}/lib -L${pkgs.llvm_16.dev}/lib -L${pkgs.libz.dev}/lib $LDFLAGS"
+            export CPPFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_16.dev}/include -I${pkgs.SDL2.dev}/include $CPPFLAGS"
             export PATH=${llvmPackages.llvm}/bin:$PATH
           '';
       runScript = "bash";
@@ -79,7 +79,7 @@
           buildInputs = [ 
             fhsEnv
             #TODO Why??
-            pkgs.llvm_18
+            pkgs.llvm_16
             pkgs.SDL2
             pkgs.mill
          ];
@@ -116,7 +116,7 @@
   #       pkgs.gperftools
   #       pkgs.numactl
   #       # verilator end
-  #       pkgs.llvm_18  
+  #       pkgs.llvm_16  
   #       pkgs.pkgsCross.riscv64.buildPackages.gcc
   #       pkgs.pkgsCross.riscv64.buildPackages.binutils
   #       # TODO:add more!!!
