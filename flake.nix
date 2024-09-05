@@ -66,9 +66,9 @@
               pkgs.SDL2_ttf
             # pkgs.llvm_18.llvm-lib  
             ]}:$LD_LIBRARY_PATH
-            export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/inlcude $CFLAGS"
+            export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/inlcude -I${pkgs.SDL2.dev}/include $CFLAGS"
             export LDFLAGS="-L${pkgs.ncurses.dev}/lib -L${pkgs.readline.dev}/lib -L${pkgs.llvm_18.dev}/lib $LDFLAGS"
-            export CPPFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/inlcude $CPPFLAGS"
+            export CPPFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/inlcude -I${pkgs.SDL2.dev}/include $CPPFLAGS"
             export PATH=${llvmPackages.llvm}/bin:$PATH
           '';
       runScript = "bash";
@@ -77,6 +77,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [ 
             fhsEnv
+            #TODO Why??
             pkgs.llvm_18
          ];
           shellHook = ''
