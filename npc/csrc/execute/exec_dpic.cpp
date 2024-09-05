@@ -22,7 +22,7 @@ void record_axi_read(const char *type, paddr_t addr, int len);
 
 // 使用DPI-C机制实现ebreak
 extern "C" void call_ebreak() {
-  if (nemu_state.state ==
+  if (!nemu_state.state ==
       NEMU_END) // Prevent_Display_Twice!!!!!------TODO:Why called Twice????
     return;
   Log("Ebreak Called!!");
