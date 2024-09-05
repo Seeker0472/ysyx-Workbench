@@ -46,7 +46,7 @@
             pkgs.gperftools
             pkgs.numactl
             # verilator end
-            pkgs.llvm_18
+            pkgs.llvmPackages_latest.llvm
             pkgs.pkgsCross.riscv64.buildPackages.gcc
             pkgs.pkgsCross.riscv64.buildPackages.binutils
             # TODO:add more!!!
@@ -62,8 +62,7 @@
             pkgs.SDL2_image
             pkgs.SDL2_ttf
             pkgs.libz
-            pkgs.llvm_18
-            "${pkgs.llvm_18}/lib"
+            pkgs.llvmPackages_latest.llvm
           ];
           NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
         };
