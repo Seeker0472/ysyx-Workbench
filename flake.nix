@@ -67,6 +67,7 @@
               pkgs.libz
             # pkgs.llvm_18.llvm-lib  
             ]}:$LD_LIBRARY_PATH
+            alias riscv64-linux-gnu-gcc='riscv64-unknown-linux-gnu-gcc'
             export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/include -I${pkgs.SDL2.dev}/include $CFLAGS"
             export LDFLAGS="-L${pkgs.ncurses.dev}/lib -L${pkgs.readline.dev}/lib -L${pkgs.llvm_18.dev}/lib -L${pkgs.libz.dev}/lib $LDFLAGS"
             export CPPFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/include -I${pkgs.SDL2.dev}/include $CPPFLAGS"
