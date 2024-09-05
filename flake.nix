@@ -62,7 +62,7 @@
             pkgs.SDL2_image
             pkgs.SDL2_ttf
             pkgs.libz
-            pkgs.llvm_18.dev
+            pkgs.llvm_18
           ];
           NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
         };
