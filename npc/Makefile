@@ -102,7 +102,7 @@ sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@make -j  -f print.mk print
 	@echo $(LDFLAGS)
 	@env | grep LDFLAGS
-	@bash make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	@bash "make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull"
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
