@@ -83,7 +83,6 @@
             pkgs.llvm_18
             pkgs.SDL2
             pkgs.mill
-            pkgs.perl
          ];
           shellHook = ''
             echo "Welcome to ysyx_workbench development environment!"
