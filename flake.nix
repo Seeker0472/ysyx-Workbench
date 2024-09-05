@@ -79,6 +79,8 @@
             fhsEnv
             #TODO Why??
             pkgs.llvm_18
+            pkgs.SDL2
+            pkgs.mill
          ];
           shellHook = ''
             echo "Welcome to ysyx_workbench development environment!"
