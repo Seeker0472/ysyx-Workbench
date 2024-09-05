@@ -67,6 +67,11 @@
           ];
           NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
         };
+                  environment.variables = {
+            PATH = [
+              "${pkgs.llvm_18}/bin"
+            ];
+          };
       }
     );
 }
