@@ -45,11 +45,10 @@ $(MCONF):
 # 	$(Q)$(MAKE) $(silent) -C $(FIXDEP_PATH)
 
 menuconfig: $(MCONF) $(CONF) 
-
+	@rm -rf csrc/include/generated
 	$(Q)$(MCONF) $(Kconfig)
 	$(Q)$(CONF) $(silent) --syncconfig $(Kconfig)
-	@rm -rf csrc/include/generated
-	@mv -f include/generated csrc/include
+	# @mv -f include/generated csrc/include
 	@rm -rf include
 
 savedefconfig: $(CONF)
