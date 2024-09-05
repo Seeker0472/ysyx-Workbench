@@ -64,6 +64,7 @@
               pkgs.SDL2
               pkgs.SDL2_image
               pkgs.SDL2_ttf
+              pkgs.libz
             # pkgs.llvm_18.llvm-lib  
             ]}:$LD_LIBRARY_PATH
             export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_18.dev}/inlcude -I${pkgs.SDL2.dev}/include $CFLAGS"
