@@ -66,7 +66,7 @@
           ];
           NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
           shellHook = ''
-            export PATH=${pkgs.llvmPackages_latest.llvm}/lib:$PATH
+            export PATH=${pkgs.lib.makeLibraryPath [pkgs.llvmPackages_latest.llvm]}:$PATH
           '';
         };
       }
