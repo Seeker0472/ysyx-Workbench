@@ -101,6 +101,7 @@ sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
 	echo verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	@make -j  -f print.mk print
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
