@@ -67,9 +67,9 @@
               pkgs.libz
             # pkgs.llvm_16.llvm-lib  
             ]}:$LD_LIBRARY_PATH
-            export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_16.dev}/include -I${pkgs.SDL2.dev}/include $CFLAGS"
+            export CFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.SDL2.dev}/include $CFLAGS"
             export LDFLAGS="-L${pkgs.ncurses.dev}/lib -L${pkgs.readline.dev}/lib -L${pkgs.llvm_16.dev}/lib -L${pkgs.libz.dev}/lib $LDFLAGS"
-            export CPPFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.llvm_16.dev}/include -I${pkgs.SDL2.dev}/include $CPPFLAGS"
+            export CPPFLAGS="-I${pkgs.ncurses.dev}/include -I${pkgs.readline.dev}/include -I${pkgs.SDL2.dev}/include $CPPFLAGS"
             export PATH=${llvmPackages.llvm}/bin:$PATH
           '';
       runScript = "bash";
