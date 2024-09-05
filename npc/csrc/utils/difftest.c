@@ -44,6 +44,6 @@ void difftest_init_all(){
     ref_cpu=(CPU_state*)malloc(sizeof(CPU_state));
     difftest_copy_regs();
     difftest_memcpy(0x20000000,mrom,0x300*sizeof(uint32_t),DIFFTEST_TO_REF);
-    difftest_memcpy(0x30000000, flash, mem_size, DIFFTEST_TO_REF);
+    // difftest_memcpy(0x30000000, flash, mem_size, DIFFTEST_TO_REF);
 }
 
