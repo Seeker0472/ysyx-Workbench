@@ -205,7 +205,7 @@ class TRACE_LSU extends BlackBox with HasBlackBoxInline {
       |      trace_lsu(addr,false,false);
       |     w=1'b0;
       |  end
-      |   if (r_end && r=1'b1) begin
+      |   if (r_end && r==1'b1) begin
       |      trace_lsu(addr,true,false);
       |     r=1'b0;
       |  end
