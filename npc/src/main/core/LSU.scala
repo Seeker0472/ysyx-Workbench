@@ -191,7 +191,8 @@ class TRACE_LSU extends BlackBox with HasBlackBoxInline {
       |);
       | reg w,r;
       |initial
-      | w=r=1'b0;
+      | w=1'b0;
+      | r=1'b0;
       |always @(negedge clock) begin
       |   if (w_start) begin
       |      trace_lsu(addr,false,true);
