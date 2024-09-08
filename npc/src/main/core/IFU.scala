@@ -92,11 +92,11 @@ class TRACE_IFU extends BlackBox with HasBlackBoxInline {
       | initial f=1'b0;
       |always @(negedge clock) begin
       |   if (f_start&&f==1'b0) begin
-      |      trace_lsu(addr,true);
+      |      trace_lsu(addr,1'b1);
       |   f=1'b1;
       |  end
       |   if (f_end&&f==1'b1) begin
-      |      trace_lsu(addr,false);
+      |      trace_lsu(addr,1'b0);
       |  f=1'b0;
       |  end
       | end
