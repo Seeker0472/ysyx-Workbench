@@ -158,6 +158,8 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
 //TODO:LSU 延迟
 /*
   addr,w/wfin,r/rfin
+  RW--R-True/W-False
+  start_end--start-True/end-False
 */
 class TRACE_LSU extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
