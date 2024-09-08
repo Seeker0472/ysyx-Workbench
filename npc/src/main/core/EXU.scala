@@ -111,7 +111,7 @@ class TRACE_EXU extends BlackBox with HasBlackBoxInline {
       | reg prev;
       | initial prev=1'b0;
       |always @(negedge clock) begin
-      |   if (valid&&f==1'b0) begin
+      |   if (valid&&prev==1'b0) begin
       |      trace_exu();
       |  end
       | prev = valid;
