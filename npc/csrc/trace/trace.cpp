@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../inlcude/debug.h"
+#include "../include/debug.h"
 
 #define OK(ITEM) (ITEM?"True":"False");
 
