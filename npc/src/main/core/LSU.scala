@@ -153,37 +153,47 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
-// //判断input改变
-// class DPI_C_TRACELSU extends BlackBox with HasBlackBoxInline {
-//   val io = IO(new Bundle {
-//     val addr  = Input(UInt(CVAL.DLEN.W))
-//     val wdata  = Input(UInt(CVAL.DLEN.W))
-//     val wmask  = Input(UInt(CVAL.DLEN.W))
-//     val len  = Input(UInt(CVAL.DLEN.W))
-//     val wen = Input(Bool())
-//     val ren = Input(Bool())
-//     val clock = Input(Clock())
-//   })
-//     setInline(
-//     "check_addr.v",
-//     """import "DPI-C" function void check_addr(int unsigned addr,bit access_type, int unsigned wmask,int unsigned wdata,int unsigned len);
-//       |module DPI_C_CHECK(
-//       |  input wen,
-//       |  input ren,
-//       |  input [31:0] addr,
-//       |  input [31:0] wmask,
-//       |  input [31:0] wdata,
-//       |  input [31:0] len,
-//       |  input clock
-//       |);
-//       |always @(negedge clock) begin
-//       |   if (wen||ren) begin
-//       |      check_addr(addr,ren,wmask,wdata,len);
-//       |  end
-//       | end
-//       |endmodule
-//     """.stripMargin
-//   )
-// }
+//判断input改变
 //TODO:LSU 取到数据/写入数据--使用valid
 //TODO:LSU 延迟
+/*
+  addr,w/wfin,r/rfin
+*/
+class TRACE_LSU extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val addr  = Input(UInt(CVAL.DLEN.W))
+    val w_start = Input(Bool())
+    val r_start = Input(Bool())
+    val w_end = Input(Bool())
+    val r_end = Input(Bool())
+    val clock = Input(Clock())
+  })
+    setInline(
+    "trace_lsu.v",
+    """import "DPI-C" function void trace_lsu(int unsigned addr,bool RW,bool start_end);
+      |module DPI_C_CHECK(
+      |  input w_start,
+      |  input r_start,      
+      |  input w_end,
+      |  input r_end,
+      |  input [31:0] addr,
+      |  input clock
+      |);
+      |always @(negedge clock) begin
+      |   if (w_start) begin
+      |      trace_lsu(addr,false,true);
+      |  end
+      |   if (r_start) begin
+      |      trace_lsu(addr,true,true);
+      |  end
+      |   if (w_end) begin
+      |      trace_lsu(addr,false,false);
+      |  end
+      |   if (r_end) begin
+      |      trace_lsu(addr,true,false);
+      |  end
+      | end
+      |endmodule
+    """.stripMargin
+  )
+}

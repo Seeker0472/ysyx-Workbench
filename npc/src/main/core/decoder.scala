@@ -338,10 +338,52 @@ class Decoder extends Module {
   io.out.bits.ecall := decodedResults(Is_Ecall)
   io.out.bits.mret  := decodedResults(Is_Mret)
 
+  //Trace
+  val trace_decoder = Module(new TRACE_DECODER)
+  trace_decoder.io.clock := clock
+  trace_decoder.io.mem_R := decodedResults(Read_En) //MEM_Read
+  trace_decoder.io.mem_W := decodedResults(Write_En) //MEM_Write
+  trace_decoder.io.calc := decodedResults(ALUOp_Gen) =/= ALU_Op.inv //calc instr
+  trace_decoder.io.csr := decodedResults(CSRRW) //scrrw/scrrs/mert/ecall
+  trace_decoder.io.valid := io.in.valid //valid
+
 }
-//TODO:译码出来的指令类型
+//DONE:译码出来的指令类型
 /*
 1.访存RW
 2.是否是运算-检测inv
 3.csr-csrrw/mret
 */
+class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val clock = Input(Clock())
+    val mem_R = Input(Bool())
+    val mem_W = Input(Bool())
+    val calc = Input(Bool())
+    val csr = Input(Bool())
+    val valid = Input(Bool())
+  })
+    setInline(
+    "trace_decoder.v",
+    """import "DPI-C" function void trace_decoder(bool mem_R,bool mem_W,bool calc,bool csr);
+      |module DPI_C_CHECK(
+      |  input mem_R,
+      |  input mem_W,
+      |  input calc,
+      |  input csr,
+      |  input valid,
+      |  input clock
+      |); 
+      | reg last_stat;
+      | initial
+      | last_stat = 0'b0;
+      |always @(negedge clock) begin
+      |   if (valid && !last_stat) begin
+      |      trace_decoder(mem_R,mem_W,calc,csr);
+      |  end
+      | last_stat = valid;
+      | end
+      |endmodule
+    """.stripMargin
+  )
+}
