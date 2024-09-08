@@ -1,6 +1,7 @@
 #include <am.h>
 #include <klib-macros.h>
-#include "../riscv.h"
+// #include "../riscv.h"
+#include "../soc.h"
 #include <klib.h>
 #include <stdint.h>
 __attribute__((noinline)) void check_ok(bool cond) {
