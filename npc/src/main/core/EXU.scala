@@ -71,7 +71,7 @@ class EXU extends Module {
   io.out.bits.go_branch   := go_branch
 
   //Trace
-  val trace_exu = Module(TRACE_EXU)
+  val trace_exu = Module(new TRACE_EXU)
   trace_exu.io.clock:=clock
   trace_exu.io.valid:=io.in.valid
 }
@@ -96,7 +96,6 @@ class Branch_comp extends Module {
 }
 
 //TODO:exu完成计算-valid信号
-
 class TRACE_EXU extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val valid  = Input(Bool())
