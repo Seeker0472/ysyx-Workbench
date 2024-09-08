@@ -366,7 +366,7 @@ class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
     setInline(
     "trace_decoder.v",
     """import "DPI-C" function void trace_decoder(bit mem_R,bit mem_W,bit calc,bit csr);
-      |module DPI_C_CHECK(
+      |module TRACE_DECODER(
       |  input mem_R,
       |  input mem_W,
       |  input calc,

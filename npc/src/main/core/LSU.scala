@@ -181,7 +181,7 @@ class TRACE_LSU extends BlackBox with HasBlackBoxInline {
     setInline(
     "trace_lsu.v",
     """import "DPI-C" function void trace_lsu(int unsigned addr,bit RW,bit start_end);
-      |module DPI_C_CHECK(
+      |module TRACE_LSU(
       |  input w_start,
       |  input r_start,      
       |  input w_end,

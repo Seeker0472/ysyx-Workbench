@@ -104,7 +104,7 @@ class TRACE_EXU extends BlackBox with HasBlackBoxInline {
     setInline(
     "trace_exu.v",
     """import "DPI-C" function void trace_exu();
-      |module DPI_C_CHECK(
+      |module TRACE_EXU(
       |  input valid,
       |  input clock
       |);
