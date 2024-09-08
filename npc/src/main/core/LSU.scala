@@ -127,6 +127,7 @@ class LSU extends Module {
   trace_lsu.io.w_end  := io.axi.WR.valid
   trace_lsu.io.r_start := io.in.bits.mem_read_enable && io.in.valid
   trace_lsu.io.r_end := io.axi.RD.valid
+  trace_lsu.io.clock := clock
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {

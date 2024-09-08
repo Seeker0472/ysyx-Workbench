@@ -63,6 +63,7 @@ class IFU extends Module {
   trace_ifu.io.addr := pc
   trace_ifu.io.f_start := state === s_fetching
   trace_ifu.io.f_end := state === s_valid
+  trace_ifu.io.clock := clock
 
 } 
 //TODO:IFU取到指令-使用AXIRDvalid
