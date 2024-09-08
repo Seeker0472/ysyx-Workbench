@@ -81,7 +81,7 @@ class TRACE_IFU extends BlackBox with HasBlackBoxInline {
   })
     setInline(
     "trace_ifu.v",
-    """import "DPI-C" function void trace_ifu(int unsigned addr,bool start_end);
+    """import "DPI-C" function void trace_ifu(int unsigned addr,bit start_end);
       |module DPI_C_CHECK(
       |  input f_start,
       |  input f_end,      
