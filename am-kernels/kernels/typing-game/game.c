@@ -11,7 +11,7 @@
 #define COL_RED      0xff0033
 #define COL_GREEN    0x00cc33
 #define COL_PURPLE   0x2a0a29
-#define COL_BLACK   0x0
+#define COL_BLACK   0x0 //这里我修改了背景颜色，取消了清空背景
 
 enum { WHITE = 0, RED, GREEN, PURPLE };
 struct character {
