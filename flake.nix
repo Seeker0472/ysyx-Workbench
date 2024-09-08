@@ -9,7 +9,10 @@
   outputs = { self, nixpkgs,flake-utils }: 
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs {
+           inherit system;
+           config = { allowUnfree = true; };
+        };
         my-verilator= (pkgs.verilator.overrideAttrs (oldAttrs: rec {
           version = "5.008"; 
           src = pkgs.fetchFromGitHub {
@@ -24,6 +27,7 @@
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
+            pkgs.espresso
             # 指定verilator版本为5.008
             my-verilator
             #build-essential
@@ -53,6 +57,7 @@
             # TODO:add more!!!
             # pkgs.ncurses6
             pkgs.ncurses
+
           ];
           
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
