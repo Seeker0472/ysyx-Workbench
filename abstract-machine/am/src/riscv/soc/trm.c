@@ -23,7 +23,7 @@ Area heap = RANGE(&_heap_start, &_heap_end);
 #endif
 static const char mainargs[] = MAINARGS;
 
-#define SERIAL_PORT 0x10000000L
+// #define SERIAL_PORT 0x10000000L
 
 void putch(char ch) {//实现putch
   while((inb(SERIAL_PORT+5)&0x20) == 0);
