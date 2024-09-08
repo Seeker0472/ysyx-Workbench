@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../include/debug.h"
+#include "../include/ydb_all.h"
 #include "svdpi.h"
 
 #define OK(ITEM) (ITEM?"True":"False")
