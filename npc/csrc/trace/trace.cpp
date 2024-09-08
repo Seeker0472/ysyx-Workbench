@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../include/debug.h"
 
-#define OK(ITEM) (ITEM?"True":"False");
+#define OK(ITEM) (ITEM?"True":"False")
 
 void trace_decoder(bool mem_R, bool mem_W, bool calc, bool csr);
 void trace_exu();
