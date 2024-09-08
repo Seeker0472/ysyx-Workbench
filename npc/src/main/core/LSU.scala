@@ -120,6 +120,13 @@ class LSU extends Module {
   check_mem.io.wen:=io.in.bits.mem_write_enable && io.in.valid && state === s_idle 
   check_mem.io.len:=mem_read_size
   check_mem.io.clock:=clock
+
+  val trace_lsu = Module(new TRACE_LSU)
+  trace_lsu.io.addr := io.in.bits.alu_result
+  trace_lsu.io.w_start := io.in.bits.mem_write_enable && io.in.valid
+  trace_lsu.io.w_end  := io.axi.WR.valid
+  trace_lsu.io.r_start := io.in.bits.mem_read_enable && io.in.valid
+  trace_lsu.io.r_end := io.axi.RD.valid
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
@@ -181,18 +188,25 @@ class TRACE_LSU extends BlackBox with HasBlackBoxInline {
       |  input [31:0] addr,
       |  input clock
       |);
+      | reg w,r;
+      |initial
+      | w=r=1'b0;
       |always @(negedge clock) begin
       |   if (w_start) begin
       |      trace_lsu(addr,false,true);
+      |     w=1'b1;
       |  end
       |   if (r_start) begin
       |      trace_lsu(addr,true,true);
+      |     r=1'b1;
       |  end
-      |   if (w_end) begin
+      |   if (w_end && w=1'b1) begin
       |      trace_lsu(addr,false,false);
+      |     w=1'b0;
       |  end
-      |   if (r_end) begin
+      |   if (r_end && r=1'b1) begin
       |      trace_lsu(addr,true,false);
+      |     r=1'b0;
       |  end
       | end
       |endmodule

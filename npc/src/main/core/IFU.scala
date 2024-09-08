@@ -57,6 +57,49 @@ class IFU extends Module {
   when(io.rwerr) {
     state := s_error
   }
+
+  //TRACE_IFU
+  val trace_ifu = Module(new TRACE_IFU)
+  trace_ifu.io.addr := pc
+  trace_ifu.io.f_start := state === s_fetching
+  trace_ifu.io.f_end := state === s_valid
+
 } 
 //TODO:IFU取到指令-使用AXIRDvalid
 //TODO:IFU延迟
+
+/*
+  addr,f/ffin
+*/
+class TRACE_IFU extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val addr  = Input(UInt(CVAL.DLEN.W))
+    val f_start = Input(Bool())
+    val f_end = Input(Bool())
+    val clock = Input(Clock())
+  })
+    setInline(
+    "trace_ifu.v",
+    """import "DPI-C" function void trace_ifu(int unsigned addr,bool start_end);
+      |module DPI_C_CHECK(
+      |  input f_start,
+      |  input f_end,      
+      |  input [31:0] addr,
+      |  input clock
+      |);
+      | reg f;
+      | initial f=1'b0;
+      |always @(negedge clock) begin
+      |   if (f_start&&f==1'b0) begin
+      |      trace_lsu(addr,true);
+      |   f=1'b1;
+      |  end
+      |   if (f_end&&f==1'b1) begin
+      |      trace_lsu(addr,false);
+      |  f=1'b0;
+      |  end
+      | end
+      |endmodule
+    """.stripMargin
+  )
+}
