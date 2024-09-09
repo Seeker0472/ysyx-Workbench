@@ -109,7 +109,7 @@ void print_perf_statistics() {
   printf("MEMw: %ld\tCycles: %ld\tpercent:%.2lf\n", instTypeCount.memw,
          instCycles.memw / instTypeCount.memw,
          ((double)instTypeCount.memw) / g_nr_guest_inst * 100);
-  printf("CSR: %ld\tCycles:%ld\tpercent:%.2lf\n\n", instTypeCount.csr,
+  printf("CSR : %ld\tCycles:%ld\tpercent:%.2lf\n\n", instTypeCount.csr,
          instCycles.csr / instTypeCount.csr,
          ((double)instTypeCount.csr) / g_nr_guest_inst * 100);
 
