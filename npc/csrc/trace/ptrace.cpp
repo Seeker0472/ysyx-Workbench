@@ -100,14 +100,18 @@ void print_perf_statistics() {
   printf("YPC's performance statistics as follows:===============\n");
   printf("Instructions:%ld  IFU Latency=%ld\n", g_nr_guest_inst,
          memLatency.ifu / g_nr_guest_inst);
-  printf("Calc: %ld  Cycles: %ld\n", instTypeCount.calc,
-         instCycles.calc / instTypeCount.calc);
-  printf("MEMr: %ld  Cycles: %ld\n", instTypeCount.memr,
-         instCycles.memr/instTypeCount.memr);
-  printf("MEMw: %ld  Cycles: %ld\n", instTypeCount.memw,
-         instCycles.memr / instTypeCount.memr);
-  printf("CSR: %ld Cycles:%ld\n\n", instTypeCount.csr,
-         instCycles.csr / instTypeCount.csr);
+  printf("Calc: %ld  Cycles: %ld percent:%.2lf\n", instTypeCount.calc,
+         instCycles.calc / instTypeCount.calc,
+         ((double)instTypeCount.calc) / g_nr_guest_inst*100);
+  printf("MEMr: %ld  Cycles: %ld percent:%.2lf\n", instTypeCount.memr,
+         instCycles.memr / instTypeCount.memr,
+         ((double)instTypeCount.memr) / g_nr_guest_inst * 100);
+  printf("MEMw: %ld  Cycles: %ld percent:%.2lf\n", instTypeCount.memw,
+         instCycles.memw / instTypeCount.memw,
+         ((double)instTypeCount.memw) / g_nr_guest_inst * 100);
+  printf("CSR: %ld Cycles:%ld percent:%.2lf\n\n", instTypeCount.csr,
+         instCycles.csr / instTypeCount.csr,
+         ((double)instTypeCount.csr) / g_nr_guest_inst * 100);
 
   printf("LSUr: %ld LSUw: %ld IFU: %ld\n", memLatency.lsur / instTypeCount.memr,
          memLatency.lsuw / instTypeCount.memw,
