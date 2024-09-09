@@ -98,23 +98,23 @@ extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end) {
 
 void print_perf_statistics() {
   printf("YPC's performance statistics as follows:===============\n");
-  printf("Instructions:%ld  IFU Latency=%ld\n", g_nr_guest_inst,
+  printf("Instructions:%ld\tIFU Latency=%ld\n", g_nr_guest_inst,
          memLatency.ifu / g_nr_guest_inst);
-  printf("Calc: %ld  Cycles: %ld percent:%.2lf\n", instTypeCount.calc,
+  printf("Calc: %ld\tCycles: %ld\tpercent:%.2lf%% \n", instTypeCount.calc,
          instCycles.calc / instTypeCount.calc,
-         ((double)instTypeCount.calc) / g_nr_guest_inst*100);
-  printf("MEMr: %ld  Cycles: %ld percent:%.2lf\n", instTypeCount.memr,
+         ((double)instTypeCount.calc) / g_nr_guest_inst * 100);
+  printf("MEMr: %ld\tCycles: %ld\tpercent:%.2lf\n", instTypeCount.memr,
          instCycles.memr / instTypeCount.memr,
          ((double)instTypeCount.memr) / g_nr_guest_inst * 100);
-  printf("MEMw: %ld  Cycles: %ld percent:%.2lf\n", instTypeCount.memw,
+  printf("MEMw: %ld\tCycles: %ld\tpercent:%.2lf\n", instTypeCount.memw,
          instCycles.memw / instTypeCount.memw,
          ((double)instTypeCount.memw) / g_nr_guest_inst * 100);
-  printf("CSR: %ld Cycles:%ld percent:%.2lf\n\n", instTypeCount.csr,
+  printf("CSR: %ld\tCycles:%ld\tpercent:%.2lf\n\n", instTypeCount.csr,
          instCycles.csr / instTypeCount.csr,
          ((double)instTypeCount.csr) / g_nr_guest_inst * 100);
 
-  printf("LSUr: %ld LSUw: %ld IFU: %ld\n", memLatency.lsur / instTypeCount.memr,
-         memLatency.lsuw / instTypeCount.memw,
-         memLatency.ifu / g_nr_guest_inst);
+  printf(
+      "LSUr: %ld\tLSUw: %ld\tIFU: %ld\n\n", memLatency.lsur / instTypeCount.memr,
+      memLatency.lsuw / instTypeCount.memw, memLatency.ifu / g_nr_guest_inst);
   //   printf("")
 }
