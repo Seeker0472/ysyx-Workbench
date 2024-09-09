@@ -87,14 +87,15 @@ uint64_t lsu_start = 0;
 //维护memLatency
 extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end) {
   // Log("LSU:addr = %x,start=%s,Read=%s",addr,OK(start_end),OK(RW));
-  if(lsu_start!=0)
-  {if (start_end) {
+  if (start_end) {
     lsu_start = g_cycles;
   } else if (RW) {
+    printf("%ld,%ld\n", lsu_start, g_cycles);
     memLatency.lsur+=lsu_start-g_cycles;
   } else {
+    printf("%ld,%ld\n", lsu_start, g_cycles);
     memLatency.lsuw+=lsu_start-g_cycles;
-  }}
+  }
 }
 
 void print_perf_statistics() {
