@@ -91,10 +91,10 @@ extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end) {
     lsu_start = g_cycles;
   } else if (RW) {
     printf("%ld,%ld\n", lsu_start, g_cycles);
-    memLatency.lsur+=lsu_start-g_cycles;
+    memLatency.lsur+=g_cycles-lsu_start;
   } else {
     printf("%ld,%ld\n", lsu_start, g_cycles);
-    memLatency.lsuw+=lsu_start-g_cycles;
+    memLatency.lsuw+=g_cycles-lsu_start;
   }
 }
 
