@@ -6,22 +6,22 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs,flake-utils }: 
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
-           inherit system;
-           config = { allowUnfree = true; };
+          inherit system;
+          config = { allowUnfree = true; };
         };
-        my-verilator= (pkgs.verilator.overrideAttrs (oldAttrs: rec {
-          version = "5.008"; 
+        my-verilator = (pkgs.verilator.overrideAttrs (oldAttrs: rec {
+          version = "5.008";
           src = pkgs.fetchFromGitHub {
             owner = "verilator";
             repo = "verilator";
             rev = "v${version}";
             sha256 = "0wqnn2r8kjbrm28c5qajldw5axmrkslds1957wz9r4qfyhd43qpr";
           };
-          patches = []; # 禁用所有补丁
+          patches = [ ]; # 禁用所有补丁
         }));
       in
       {
@@ -57,9 +57,10 @@
             # TODO:add more!!!
             # pkgs.ncurses6
             pkgs.ncurses
-
+            pkgs.clang-tools
+            pkgs.zulu17
           ];
-          
+
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
             # 添加需要的库
             pkgs.ncurses
