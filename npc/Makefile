@@ -51,8 +51,6 @@ FLAGS += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
 FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 FLAGS += -j 8	--compiler gcc
 
-FLAFS = 
-
 HINCLUDE := 
 
 WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd
