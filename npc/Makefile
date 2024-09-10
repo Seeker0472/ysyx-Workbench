@@ -77,7 +77,7 @@ test:
 verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
-	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR) -DPC_VALUE=h80000000  --throw-on-first-error --full-stacktrace 
+	mill -i -DPC_VALUE=h80000000 $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)   --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/ypc.sv
 
 help:
