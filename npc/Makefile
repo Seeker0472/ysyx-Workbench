@@ -34,7 +34,7 @@ CFLAGS_SOC += $(CFLAGS) -I$(NVBOARD_HOME)/usr/include
 
 # sdls 
 # CFLAGS += -I/usr/include/SDL2
-CFLAGS_SOC +=  $(shell pkg-config --cflags sdl2) $(shell pkg-config --cflags SDL2_image) $(shell pkg-config --cflags SDL2_ttf)
+CFLAGS_SOC += $(shell pkg-config --cflags sdl2) $(shell pkg-config --cflags SDL2_image) $(shell pkg-config --cflags SDL2_ttf)
 
 # common ldflags
 LDFLAGS += -L${NEMU_HOME}/build/ ${NEMU_HOME}/build/riscv32-nemu-interpreter-so #NEMU
@@ -52,8 +52,8 @@ WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd
 
 include $(NPC_HOME)/scripts/conf.mk
 
-CFLAGS := $(foreach flag,$(CFLAGS),--CFLAGS $(flag))
-LDFLAGS := $(foreach flag,$(LDFLAGS),--LDFLAGS $(flag))
+# CFLAGS := $(foreach flag,$(CFLAGS),--CFLAGS $(flag))
+# LDFLAGS := $(foreach flag,$(LDFLAGS),--LDFLAGS $(flag))
 CFLAGS_SOC := $(foreach flag,$(CFLAGS_SOC),--CFLAGS $(flag))
 LDFLAGS_SOC := $(foreach flag,$(LDFLAGS_SOC),--LDFLAGS $(flag))
 
