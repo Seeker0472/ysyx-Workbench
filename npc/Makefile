@@ -31,12 +31,11 @@ LD_LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/ris
 
 LD_LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a
 
-CHISEL_SOURCES := $(shell find src -name '*.scala')
-# ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
 ABS_CHISEL_SOURCES := $(shell find src -type f -name '*.scala' -exec realpath {} \;)
 TARGET := build/ypc.sv
 
-VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
+# VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
+VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include 
 # VCXXFLAGS += --CFLAGS -std=c++14 
 
 FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
