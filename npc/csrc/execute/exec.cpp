@@ -1,8 +1,9 @@
 #include "../include/ydb_all.h"
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull___024root.h"
-#include <diftest.h>
-#include <iostream>
+// #include <diftest.h>
+#include "../include/diftest.h"
+// #include <iostream>
 #include <nvboard.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
