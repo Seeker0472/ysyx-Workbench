@@ -1,11 +1,6 @@
-# TOP
 include $(NVBOARD_HOME)/scripts/nvboard.mk
-TOP ?=example
-
 BUILD_DIR = ./build
-TOP ?= core
 PRJ = playground
-TOP_NAME=V${TOP}
 SED_CMD = sed -i "s/^.*\.v$$//"
 NXDC_FILE = ${NPC_HOME}/csrc/nvb/soc.nxdc
 SRC_AUTO_BIND = ${NPC_HOME}/csrc/nvb/bind.cpp

@@ -5,10 +5,10 @@ import chisel3.util._
 import Constants_Val._
 import core.IO._
 import Constants_Val.CVAL.DLEN
-import os.stat
+import chisel3.experimental.Param
 
 //存放PC，负责取出指令
-class IFU extends Module {
+class IFU(implicit val p: Parameters) extends Module {
   val io = IO(new Bundle {
     val in       = Flipped(Decoupled(new WBU_O))
     val inst_now = Output(UInt(CVAL.DLEN.W))
@@ -21,7 +21,10 @@ class IFU extends Module {
   // val axi = Module(new AXI_Master())
 
   val state = RegInit(s_idle)
-  val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
+  // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
+  val defaultRegValue = p.get[String]("DEFAULT_REG_VALUE").U(CVAL.DLEN.W)
+  val pc    = RegInit(defaultRegValue)
+  
   val inst  = Reg(UInt(CVAL.DLEN.W))
 
   state := MuxLookup(state, s_idle)(

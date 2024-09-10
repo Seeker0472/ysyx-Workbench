@@ -7,9 +7,6 @@ import Constants_Val.CVAL
 import core.IO.StageConnect
 import bus.AXI_Lite_Arbiter
 
-// import os.write
-// import chisel3.Output
-
 class ypc extends Module {
   val io = IO(new Bundle {
     // val inst_now = Output(UInt(CVAL.DLEN.W))
