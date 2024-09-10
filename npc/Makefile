@@ -36,7 +36,8 @@ TARGET := build/ypc.sv
 CFLAGS := -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
 CFLAGS := -I$(NVBOARD_HOME)/include
 # sdls 
-CFLAGS += -I/usr/include/SDL2
+# CFLAGS += -I/usr/include/SDL2
+CFLAGS +=  $(shell pkg-config --cflags sdl2)
 CFLAGS += -save-temps -fPIE
 
 LDFLAGS += -L${NEMU_HOME}/build/ ${NEMU_HOME}/build/riscv32-nemu-interpreter-so #NEMU

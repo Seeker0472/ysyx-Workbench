@@ -86,6 +86,7 @@
             pkgs.zulu17
             pkgs.yosys
             # libyaml_cpp_0_7
+            pkgs.pkg-config
           ];
 
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
