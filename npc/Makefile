@@ -34,11 +34,11 @@ TARGET := build/ypc.sv
 
 #cincludes --CFLAGS
 CFLAGS := -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
-CFLAGS += -I$(NVBOARD_HOME)/include
+CFLAGS += -I$(NVBOARD_HOME)/usr/include
 # sdls 
 # CFLAGS += -I/usr/include/SDL2
 CFLAGS +=  $(shell pkg-config --cflags sdl2) $(shell pkg-config --cflags SDL2_image) $(shell pkg-config --cflags SDL2_ttf)
-CFLAGS += -save-temps -fPIE -fno-exceptions  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS  -D__STDC_LIMIT_MACROS
+CFLAGS += -save-temps -fPIE -fno-exceptions
 
 LDFLAGS += -L${NEMU_HOME}/build/ ${NEMU_HOME}/build/riscv32-nemu-interpreter-so #NEMU
 LDFLAGS += $(shell llvm-config --libs) #llvm
