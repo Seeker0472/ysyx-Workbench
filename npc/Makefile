@@ -34,6 +34,7 @@ TARGET := build/ypc.sv
 
 #cincludes --CFLAGS
 CFLAGS := -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
+CFLAGS := -I$(NVBOARD_HOME)/include
 # sdls 
 CFLAGS += -I/usr/include/SDL2
 CFLAGS += -save-temps -fPIE
@@ -102,7 +103,7 @@ clean:
 
 sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
 	@make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
