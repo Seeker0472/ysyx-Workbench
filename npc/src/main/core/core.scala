@@ -18,6 +18,7 @@ class ypc extends Module {
     val interrupt = Input(Bool()) //TODO
   })
 
+
   val decoder     = Module(new Decoder())
   val reg         = Module(new REG())
   val br_han      = Module(new ebreak_handler())

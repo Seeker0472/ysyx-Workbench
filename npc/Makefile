@@ -17,26 +17,23 @@ IMG  ?=
 ROOT_DIR := $(shell pwd)
 # 这里是列举所有c/cpp/cc的绝对路径
 SRC_DIR := csrc
-# C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' )
 ABS_C_FILES := $(shell find $(SRC_DIR) -type f -name '*.c' -exec realpath {} \;)
-# CPP_FILES := $(shell find $(SRC_DIR) -type f -name '*.cpp' )
 ABS_CPP_FILES := $(shell find $(SRC_DIR) -type f -name '*.cpp' -exec realpath {} \;)
-# CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' )
 ABS_CC_FILES := $(shell find $(SRC_DIR) -type f -name '*.cc' -exec realpath {} \;)
 C_CPP_ABS := $(ABS_C_FILES) $(ABS_CPP_FILES) $(ABS_CC_FILES)
 
 PERIP_V_ABS:=$(shell find $(YSYXSOC_HOME)/perip  -type f -name '*.v' -exec realpath {} \;)
-
 SOC_SCALA_ABS:=$(shell find $(YSYXSOC_HOME)/src  -type f -name '*.scala' -exec realpath {} \;)
 
 ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv ${YSYXSOC_V}
 
-LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
+LD_LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
 
-LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a
+LD_LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a
 
 CHISEL_SOURCES := $(shell find src -name '*.scala')
-ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
+# ABS_CHISEL_SOURCES := $(foreach src,$(CHISEL_SOURCES),$(realpath $(src)))
+ABS_CHISEL_SOURCES := $(shell find src -type f -name '*.scala' -exec realpath {} \;)
 TARGET := build/ypc.sv
 
 VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS   -fno-exceptions --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
@@ -44,7 +41,7 @@ VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS   -fno-exceptions --CF
 
 FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
 
-FLAGS += ${VCXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LINK_NEMU} ${LINK_NVBoard}
+FLAGS += ${VCXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LD_LINK_NEMU} ${LD_LINK_NVBoard}
 FLAGS += --CFLAGS -I${NVBOARD_USR_INC}
 FLAGS += -CFLAGS -I/usr/include/SDL2 -LDFLAGS -lSDL2 -LDFLAGS -lSDL2_image -LDFLAGS -lSDL2_ttf
 # Verilator Includes list
