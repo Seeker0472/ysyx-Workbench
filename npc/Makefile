@@ -27,32 +27,40 @@ SOC_SCALA_ABS:=$(shell find $(YSYXSOC_HOME)/src  -type f -name '*.scala' -exec r
 
 ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv ${YSYXSOC_V}
 
-LD_LINK_NEMU := --LDFLAGS -L${NEMU_HOME}/build/ --LDFLAGS ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
-
-LD_LINK_NVBoard := --LDFLAGS -L${NVBOARD_HOME}/build/ --LDFLAGS ${NVBOARD_HOME}/build/nvboard.a
-
 ABS_CHISEL_SOURCES := $(shell find src -type f -name '*.scala' -exec realpath {} \;)
 TARGET := build/ypc.sv
 
-# VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include --CFLAGS -D_GNU_SOURCE --CFLAGS -D__STDC_CONSTANT_MACROS  --CFLAGS -D__STDC_LIMIT_MACROS
-VCXXFLAGS := --CFLAGS -I/usr/lib/llvm-14/include 
 # VCXXFLAGS += --CFLAGS -std=c++14 
 
-FLAGS += --CFLAGS -I$(ROOT_DIR)/csrc/include/ --CFLAGS -save-temps --LDFLAGS -lreadline
+#cincludes --CFLAGS
+CFLAGS := -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
+# sdls 
+CFLAGS += -I/usr/include/SDL2
+CFLAGS += -save-temps -fPIE
 
-FLAGS += ${VCXXFLAGS} --CFLAGS -fPIE --LDFLAGS $(shell llvm-config --libs) ${LD_LINK_NEMU} ${LD_LINK_NVBoard}
-FLAGS += --CFLAGS -I${NVBOARD_USR_INC}
-FLAGS += -CFLAGS -I/usr/include/SDL2 -LDFLAGS -lSDL2 -LDFLAGS -lSDL2_image -LDFLAGS -lSDL2_ttf
+LDFLAGS += -L${NEMU_HOME}/build/ ${NEMU_HOME}/build/riscv32-nemu-interpreter-so #NEMU
+LDFLAGS += $(shell llvm-config --libs) #llvm
+LDFLAGS += -lreadline #readline
+
+LDFLAGS += -L${NVBOARD_HOME}/build/ ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image -lSDL2_ttf #NVBoard
+
 # Verilator Includes list
 FLAGS += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
 FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
 FLAGS += -j 8	--compiler gcc
+
+FLAFS = 
 
 HINCLUDE := 
 
 WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd
 
 include $(NPC_HOME)/scripts/conf.mk
+
+CFLAGS := $(foreach flag,$(CFLAGS),--CFLAGS $(flag))
+LDFLAGS := $(foreach flag,$(LDFLAGS),--LDFLAGS $(flag))
+
+FLAGS += $(CFLAGS) $(LDFLAGS)
 
 # 仅仅当chisel代码发生变化的时候重新编译
 $(TARGET): $(ABS_CHISEL_SOURCES)
