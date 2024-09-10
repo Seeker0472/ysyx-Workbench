@@ -101,16 +101,16 @@ void print_perf_statistics() {
   printf("Instructions:%ld\tIFU Latency=%ld\n", g_nr_guest_inst,
          memLatency.ifu / g_nr_guest_inst);
   printf("Calc: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.calc,
-         instCycles.calc / instTypeCount.calc,
+         instTypeCount.calc!=0?(instCycles.calc / instTypeCount.calc):-1,
          ((double)instTypeCount.calc) / g_nr_guest_inst * 100);
   printf("MEMr: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.memr,
-         instCycles.memr / instTypeCount.memr,
+         instTypeCount.memr!=0?(instCycles.memr / instTypeCount.memr):-1,
          ((double)instTypeCount.memr) / g_nr_guest_inst * 100);
   printf("MEMw: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.memw,
-         instCycles.memw / instTypeCount.memw,
+         instTypeCount.memw!=0?(instCycles.memw / instTypeCount.memw):-1,
          ((double)instTypeCount.memw) / g_nr_guest_inst * 100);
   printf("CSR : %ld\tCycles:%ld\tpercent:%.2lf%%\n\n", instTypeCount.csr,
-         instCycles.csr / instTypeCount.csr,
+         instTypeCount.csr != 0 ? (instCycles.csr / instTypeCount.csr) : -1,
          ((double)instTypeCount.csr) / g_nr_guest_inst * 100);
 
   printf(
