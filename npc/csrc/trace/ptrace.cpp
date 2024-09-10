@@ -4,6 +4,8 @@
 #include <stdio.h>
 
 #define OK(ITEM) (ITEM ? "True" : "False")
+#define CsPI(ITEM)                                                             \
+  (instTypeCount.ITEM != 0 ? (instCycles.ITEM / instTypeCount.ITEM) : -1)
 
 extern "C" void trace_decoder(svBit mem_R, svBit mem_W, svBit calc, svBit csr);
 extern "C" void trace_exu();
@@ -101,8 +103,8 @@ void print_perf_statistics() {
   printf("Instructions:%ld\tIFU Latency=%ld\n", g_nr_guest_inst,
          memLatency.ifu / g_nr_guest_inst);
   printf("Calc: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.calc,
-         instTypeCount.calc!=0?(instCycles.calc / instTypeCount.calc):-1,
-         ((double)instTypeCount.calc) / g_nr_guest_inst * 100);
+         //  instTypeCount.calc!=0?(instCycles.calc / instTypeCount.calc):-1,
+         CsPI(calc), ((double)instTypeCount.calc) / g_nr_guest_inst * 100);
   printf("MEMr: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.memr,
          instTypeCount.memr!=0?(instCycles.memr / instTypeCount.memr):-1,
          ((double)instTypeCount.memr) / g_nr_guest_inst * 100);
