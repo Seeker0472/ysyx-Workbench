@@ -379,7 +379,7 @@ class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
       | last_stat = 1'b0;
       |always @(negedge clock) begin
       |   if (valid && !last_stat) begin
-      |      trace_deco der(mem_R,mem_W,calc,csr);
+      |      trace_decoder(mem_R,mem_W,calc,csr);
       |  end
       | last_stat = valid;
       | end
