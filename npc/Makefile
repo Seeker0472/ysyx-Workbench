@@ -108,7 +108,8 @@ gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	gdb   --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 wave:
-	nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
+	# nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
+	nohup gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
 all: $(TARGET) sim
 
 -include ../Makefile
