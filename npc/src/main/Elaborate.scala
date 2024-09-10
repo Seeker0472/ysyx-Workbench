@@ -6,5 +6,6 @@ object Elaborate extends App {
     "disallowPackedArrays",//If true, eliminate packed arrays for tools that don't support them (e.g. Yosys).
     "locationInfoStyle=wrapInAtSquareBracket"//wrapInAtSquareBracket: // @[perf/regress/AndNot.fir:3:10, :7:{10,17}]
   ).reduce(_ + "," + _))
+  circt.stage.ChiselStage.emitSystemVerilogFile(new core.raw_core(), args, firtoolOptions)
   circt.stage.ChiselStage.emitSystemVerilogFile(new core.ypc(), args, firtoolOptions)
 }

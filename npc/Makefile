@@ -28,25 +28,25 @@ TARGET := build/ypc.sv
 # VCXXFLAGS += --CFLAGS -std=c++14 
 
 #cincludes --CFLAGS
-CFLAGS := -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
-CFLAGS += -I$(NVBOARD_HOME)/usr/include
+CFLAGS += -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
+CFLAGS += -save-temps -fPIE -fno-exceptions
+CFLAGS_SOC += $(CFLAGS) -I$(NVBOARD_HOME)/usr/include
+
 # sdls 
 # CFLAGS += -I/usr/include/SDL2
-CFLAGS +=  $(shell pkg-config --cflags sdl2) $(shell pkg-config --cflags SDL2_image) $(shell pkg-config --cflags SDL2_ttf)
-CFLAGS += -save-temps -fPIE -fno-exceptions
+CFLAGS_SOC +=  $(shell pkg-config --cflags sdl2) $(shell pkg-config --cflags SDL2_image) $(shell pkg-config --cflags SDL2_ttf)
 
+# common ldflags
 LDFLAGS += -L${NEMU_HOME}/build/ ${NEMU_HOME}/build/riscv32-nemu-interpreter-so #NEMU
 LDFLAGS += $(shell llvm-config --libs) #llvm
 LDFLAGS += -lreadline #readline
 
-LDFLAGS += -L${NVBOARD_HOME}/build/ ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image -lSDL2_ttf #NVBoard
+LDFLAGS_SOC += $(LDFLAGS) -L${NVBOARD_HOME}/build/ ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image -lSDL2_ttf #NVBoard
 
-# Verilator Includes list
-FLAGS += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
-FLAGS += --timescale "1ns/1ns" --no-timing --autoflush
-FLAGS += -j 8	--compiler gcc
+FLAGS += -j 8
 
-HINCLUDE := 
+FLAGS_SOC += $(FLAGS) -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
+FLAGS_SOC += --timescale "1ns/1ns" --no-timing --autoflush
 
 WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd
 
@@ -54,8 +54,11 @@ include $(NPC_HOME)/scripts/conf.mk
 
 CFLAGS := $(foreach flag,$(CFLAGS),--CFLAGS $(flag))
 LDFLAGS := $(foreach flag,$(LDFLAGS),--LDFLAGS $(flag))
+CFLAGS_SOC := $(foreach flag,$(CFLAGS_SOC),--CFLAGS $(flag))
+LDFLAGS_SOC := $(foreach flag,$(LDFLAGS_SOC),--LDFLAGS $(flag))
 
 FLAGS += $(CFLAGS) $(LDFLAGS)
+FLAGS_SOC += $(CFLAGS_SOC) $(LDFLAGS_SOC)
 
 # 仅仅当chisel代码发生变化的时候重新编译
 $(TARGET): $(ABS_CHISEL_SOURCES)
@@ -97,12 +100,12 @@ clean:
 
 sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	# $(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
+	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
 	make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
-	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS} 
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} 
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	gdb   --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 

@@ -21,7 +21,8 @@ class IFU extends Module {
 
   val state = RegInit(s_idle)
   // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
-  val PC_VALUE = sys.props.getOrElse("PC_VALUE", "h30000000").U(CVAL.DLEN.W)
+  // println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","1111")}")
+  val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
   val pc    = RegInit(PC_VALUE)
   
   val inst  = Reg(UInt(CVAL.DLEN.W))
@@ -106,3 +107,4 @@ class TRACE_IFU extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
+
