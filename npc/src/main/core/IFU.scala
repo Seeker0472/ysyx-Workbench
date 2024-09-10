@@ -8,7 +8,7 @@ import Constants_Val.CVAL.DLEN
 import chisel3.experimental.Param
 
 //存放PC，负责取出指令
-class IFU(implicit val p: Parameters) extends Module {
+class IFU extends Module {
   val io = IO(new Bundle {
     val in       = Flipped(Decoupled(new WBU_O))
     val inst_now = Output(UInt(CVAL.DLEN.W))
