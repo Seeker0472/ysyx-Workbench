@@ -5,7 +5,6 @@ import chisel3.util._
 import Constants_Val._
 import core.IO._
 import Constants_Val.CVAL.DLEN
-import chisel3.experimental.Param
 
 //存放PC，负责取出指令
 class IFU extends Module {
@@ -22,8 +21,8 @@ class IFU extends Module {
 
   val state = RegInit(s_idle)
   // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
-  val defaultRegValue = sys.props.getOrElse("DEFAULT_REG_VALUE", "h30000000").U(CVAL.DLEN.W)
-  val pc    = RegInit(defaultRegValue)
+  val PC_VALUE = sys.props.getOrElse("PC_VALUE", "h30000000").U(CVAL.DLEN.W)
+  val pc    = RegInit(PC_VALUE)
   
   val inst  = Reg(UInt(CVAL.DLEN.W))
 
