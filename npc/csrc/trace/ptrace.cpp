@@ -7,6 +7,8 @@
 #define CsPI(ITEM)                                                             \
   (instTypeCount.ITEM != 0 ? (instCycles.ITEM / instTypeCount.ITEM) : -1)
 
+#define Perc(ITEM) ((double)instTypeCount.ITEM) / g_nr_guest_inst * 100
+
 extern "C" void trace_decoder(svBit mem_R, svBit mem_W, svBit calc, svBit csr);
 extern "C" void trace_exu();
 extern "C" void trace_ifu(int unsigned addr, svBit start_end);
@@ -104,17 +106,14 @@ void print_perf_statistics() {
          memLatency.ifu / g_nr_guest_inst);
   printf("Calc: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.calc,
          //  instTypeCount.calc!=0?(instCycles.calc / instTypeCount.calc):-1,
-         CsPI(calc), ((double)instTypeCount.calc) / g_nr_guest_inst * 100);
+         CsPI(calc), Perc(calc));
   printf("MEMr: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.memr,
-         instTypeCount.memr!=0?(instCycles.memr / instTypeCount.memr):-1,
-         ((double)instTypeCount.memr) / g_nr_guest_inst * 100);
+         CsPI(memr), Perc(memr));
   printf("MEMw: %ld\tCycles: %ld\tpercent:%.2lf%%\n", instTypeCount.memw,
-         instTypeCount.memw!=0?(instCycles.memw / instTypeCount.memw):-1,
-         ((double)instTypeCount.memw) / g_nr_guest_inst * 100);
+         CsPI(memw), Perc(memw));
   printf("CSR : %ld\tCycles:%ld\tpercent:%.2lf%%\n\n", instTypeCount.csr,
-         instTypeCount.csr != 0 ? (instCycles.csr / instTypeCount.csr) : -1,
-         ((double)instTypeCount.csr) / g_nr_guest_inst * 100);
-
+         CsPI(csr), Perc(csr));
+printf("Latency:\n");
   printf(
       "LSUr: %ld\tLSUw: %ld\tIFU: %ld\n\n", memLatency.lsur / instTypeCount.memr,
       memLatency.lsuw / instTypeCount.memw, memLatency.ifu / g_nr_guest_inst);
