@@ -10,11 +10,6 @@ import mill.bsp._
 
 object playground extends SbtModule with ScalafmtModule { m =>
   val useChisel3 = false
-  def buildInfo = T {
-    Seq(
-      "DEFAULT_REG_VALUE" -> "h30000000"
-    )
-  }
   override def millSourcePath = os.pwd / "src"
   override def scalaVersion = if (useChisel3) "2.13.10" else "2.13.14"
   override def scalacOptions = Seq(

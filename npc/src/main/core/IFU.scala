@@ -22,7 +22,7 @@ class IFU(implicit val p: Parameters) extends Module {
 
   val state = RegInit(s_idle)
   // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
-  val defaultRegValue = p.get[String]("DEFAULT_REG_VALUE").U(CVAL.DLEN.W)
+  val defaultRegValue = sys.props.getOrElse("DEFAULT_REG_VALUE", "h30000000").U(CVAL.DLEN.W)
   val pc    = RegInit(defaultRegValue)
   
   val inst  = Reg(UInt(CVAL.DLEN.W))
