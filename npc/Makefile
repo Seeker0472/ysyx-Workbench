@@ -28,37 +28,41 @@ TARGET := build/ypc.sv
 # VCXXFLAGS += --CFLAGS -std=c++14 
 
 #cincludes --CFLAGS
-CFLAGS += -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
-CFLAGS += -save-temps -fPIE -fno-exceptions
-CFLAGS_SOC += $(CFLAGS) -I$(NVBOARD_HOME)/usr/include
+NPC_CFLAGS += -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
+NPC_CFLAGS += -save-temps -fPIE -fno-exceptions
+NPC_CFLAGS_SOC += $(NPC_CFLAGS) -I$(NVBOARD_HOME)/usr/include
 
 # sdls 
-# CFLAGS += -I/usr/include/SDL2
-CFLAGS_SOC += $(shell pkg-config --cflags sdl2) $(shell pkg-config --cflags SDL2_image) $(shell pkg-config --cflags SDL2_ttf)
+# NPC_CFLAGS += -I/usr/include/SDL2
+NPC_CFLAGS_SOC += $(shell pkg-config --cflags sdl2) $(shell pkg-config --cflags SDL2_image) $(shell pkg-config --cflags SDL2_ttf)
 
-# common ldflags
-LDFLAGS += -L${NEMU_HOME}/build/ ${NEMU_HOME}/build/riscv32-nemu-interpreter-so #NEMU
-LDFLAGS += $(shell llvm-config --libs) #llvm
-LDFLAGS += -lreadline #readline
+# common NPC_LDFLAGS
+NPC_LDFLAGS += -L${NEMU_HOME}/build/ ${NEMU_HOME}/build/riscv32-nemu-interpreter-so #NEMU
+NPC_LDFLAGS += $(shell llvm-config --libs) #llvm
+NPC_LDFLAGS += -lreadline #readline
 
-LDFLAGS_SOC += $(LDFLAGS) -L${NVBOARD_HOME}/build/ ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image -lSDL2_ttf #NVBoard
-
-FLAGS += -j 8
-
-FLAGS_SOC += $(FLAGS) -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
-FLAGS_SOC += --timescale "1ns/1ns" --no-timing --autoflush
+NPC_LDFLAGS_SOC += $(NPC_LDFLAGS) -L${NVBOARD_HOME}/build/ ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image -lSDL2_ttf #NVBoard
 
 WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd
 
 include $(NPC_HOME)/scripts/conf.mk
 
-# CFLAGS := $(foreach flag,$(CFLAGS),--CFLAGS $(flag))
-# LDFLAGS := $(foreach flag,$(LDFLAGS),--LDFLAGS $(flag))
-CFLAGS_SOC := $(foreach flag,$(CFLAGS_SOC),--CFLAGS $(flag))
-LDFLAGS_SOC := $(foreach flag,$(LDFLAGS_SOC),--LDFLAGS $(flag))
+# NPC_CFLAGS := $(foreach flag,$(NPC_CFLAGS),--CFLAGS $(flag))
+# NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
+NPC_CFLAGS_SOC := $(foreach flag,$(NPC_CFLAGS_SOC),--CFLAGS $(flag))
+NPC_LDFLAGS_SOC := $(foreach flag,$(NPC_LDFLAGS_SOC),--LDFLAGS $(flag))
+NPC_CFLAGS := $(foreach flag,$(NPC_CFLAGS),--CFLAGS $(flag))
+NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
 
-FLAGS += $(CFLAGS) $(LDFLAGS)
-FLAGS_SOC += $(CFLAGS_SOC) $(LDFLAGS_SOC)
+FLAGS += $(NPC_CFLAGS) $(NPC_LDFLAGS)
+FLAGS_SOC += $(NPC_CFLAGS_SOC) $(NPC_LDFLAGS_SOC)
+
+FLAGS += -j 8 --compiler gcc
+
+## TODO:似乎是因为惰性求值，导致save-temps有两次！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+
+FLAGS_SOC += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
+FLAGS_SOC += --timescale "1ns/1ns" --no-timing --autoflush
 
 # 仅仅当chisel代码发生变化的时候重新编译
 $(TARGET): $(ABS_CHISEL_SOURCES)
