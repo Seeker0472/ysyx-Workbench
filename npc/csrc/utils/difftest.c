@@ -46,7 +46,6 @@ void difftest_init_all(){
     // difftest_memcpy(0x20000000,mrom,4 * 1024 *
     // sizeof(uint8_t),DIFFTEST_TO_REF);
 #ifdef NVB
-    printf("NVB!!");
     difftest_memcpy(0x80000000, mem, mem_size, DIFFTEST_TO_REF);
 #else
     difftest_memcpy(0x30000000, flash, mem_size, DIFFTEST_TO_REF);
