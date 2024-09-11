@@ -1,4 +1,5 @@
 // #define NPC
+#include "../include/regs.h"
 
 #include "../include/diftest.h"
 #include "../include/ydb_all.h"

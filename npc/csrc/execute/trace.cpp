@@ -1,4 +1,5 @@
 // #define NPC
+#include "../include/regs.h"
 
 #include "../include/diftest.h"
 #include "../include/ydb_all.h"
@@ -13,8 +14,6 @@ extern VysyxSoCFull *dut;
 #include "Vraw_core__Dpi.h"
 #include "Vraw_core___024root.h"
 extern Vraw_core *dut;
-
-
 #endif
 #include "svdpi.h"
 #include <stdint.h>
@@ -43,70 +42,32 @@ int prev_state = 0;
 static bool state_valid() //检测从状态valid->fetching
 {
   bool ret = false;
-  if (prev_state == 3 &&
-      dut->rootp
-              ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state ==
-          1)
+  if (prev_state == 3 && IFU_STATE == 1)
     ret = true;
-  prev_state =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state;
+  prev_state = IFU_STATE;
   return ret;
   // if(dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state==2)
   //     return true;
 }
 
 int update_reg_state() {
-  cpu->pc =
-      dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-  cpu->gpr[0] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_0;
-  cpu->gpr[1] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_1;
-  cpu->gpr[2] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_2;
-  cpu->gpr[3] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_3;
-  cpu->gpr[4] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_4;
-  cpu->gpr[5] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_5;
-  cpu->gpr[6] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_6;
-  cpu->gpr[7] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_7;
-  cpu->gpr[8] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_8;
-  cpu->gpr[9] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_9;
-  cpu->gpr[10] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10;
-  cpu->gpr[11] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_11;
-  cpu->gpr[12] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_12;
-  cpu->gpr[13] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_13;
-  cpu->gpr[14] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_14;
-  cpu->gpr[15] =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_15;
+  cpu->pc = PC_STRUCT;
+  cpu->gpr[0] = REG_0_STRUCT;
+  cpu->gpr[1] = REG_1_STRUCT;
+  cpu->gpr[2] = REG_2_STRUCT;
+  cpu->gpr[3] = REG_3_STRUCT;
+  cpu->gpr[4] = REG_4_STRUCT;
+  cpu->gpr[5] = REG_5_STRUCT;
+  cpu->gpr[6] = REG_6_STRUCT;
+  cpu->gpr[7] = REG_7_STRUCT;
+  cpu->gpr[8] = REG_8_STRUCT;
+  cpu->gpr[9] = REG_9_STRUCT;
+  cpu->gpr[10] = REG_10_STRUCT;
+  cpu->gpr[11] = REG_11_STRUCT;
+  cpu->gpr[12] = REG_12_STRUCT;
+  cpu->gpr[13] = REG_13_STRUCT;
+  cpu->gpr[14] = REG_14_STRUCT;
+  cpu->gpr[15] = REG_15_STRUCT;
 #ifndef CONFIG_RVE
   cpu->gpr[16] =
       dut->rootp
