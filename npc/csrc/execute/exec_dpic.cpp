@@ -8,7 +8,6 @@
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
 extern VysyxSoCFull *dut;
-
 #else
 #include "Vraw_core.h"
 #include "Vraw_core___024root.h"
