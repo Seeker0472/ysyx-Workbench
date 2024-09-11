@@ -55,7 +55,6 @@ NPC_LDFLAGS_SOC := $(foreach flag,$(NPC_LDFLAGS_SOC),--LDFLAGS $(flag))
 
 NPC_CFLAGS += -DNPC
 
-
 NPC_CFLAGS := $(foreach flag,$(NPC_CFLAGS),--CFLAGS $(flag))
 NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
 
