@@ -73,7 +73,7 @@ class DPIC_MEMRW extends BlackBox with HasBlackBoxInline {
   setInline(
     "DPIC_MEMRW.v",
     """import "DPI-C" function int pmem_read(int raddr);
-      |import "DPI-C" function void pmem_write(int waddr, int wdata, char wmask);
+      |import "DPI-C" function void pmem_write(int waddr, int wdata, byte wmask);
       |
       |module DPIC_MEMRW(
       |  input [31:0] raddr,

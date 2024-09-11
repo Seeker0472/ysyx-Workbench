@@ -1,16 +1,27 @@
-#include "../../obj_dir/VysyxSoCFull.h"
+// #define NPC
+
 #include "../include/diftest.h"
 #include "../include/ydb_all.h"
+
+#ifndef NPC
+#include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
+extern VysyxSoCFull *dut;
+#else
+#include "Vraw_core.h"
+#include "Vraw_core__Dpi.h"
+#include "Vraw_core___024root.h"
+extern Vraw_core *dut;
+
+
+#endif
 #include "svdpi.h"
-#include <diftest.h>
 #include <stdint.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
 extern CPU_state *cpu;
-extern VysyxSoCFull *dut;
 bool difftest_step = false;
 void ftrace_check_inst(paddr_t pc_now, word_t inst);
 void difftest_check_state();

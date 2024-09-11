@@ -1,8 +1,25 @@
+// #define NPC
+
 #include "../include/diftest.h"
 #include "../include/ydb_all.h"
+#ifndef NPC
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
+extern VysyxSoCFull *dut;
+#define REG_10_STRUCT                                                                 \
+  dut->rootp                                                                   \
+      ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10
+#define PC_STRUCT                                                              \
+  dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc
+#else
+#include "Vraw_core.h"
+#include "Vraw_core___024root.h"
+#include "Vraw_core__Dpi.h"
+extern Vraw_core *dut;
+#define PC_STRUCT dut->rootp->raw_core__DOT__ypc__DOT__ifu__DOT__pc
+#define REG_10_STRUCT dut->rootp->raw_core__DOT__ypc__DOT__reg_0__DOT__regs_10
+#endif
 #include "svdpi.h"
 #include <cstdint>
 #include <cstdio>
@@ -10,8 +27,6 @@
 #include <verilated_vcd_c.h>
 
 extern VerilatedVcdC *tfp;
-
-extern VysyxSoCFull *dut;
 extern bool difftest_step;
 extern "C" void print_char(char w_char) {
   printf("%c", w_char);
@@ -27,11 +42,8 @@ extern "C" void call_ebreak() {
     return;
   Log("Ebreak Called!!");
   // tfp->
-  uint32_t regs_2_value =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10;
-  uint32_t pc =
-      dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+  uint32_t regs_2_value = REG_10_STRUCT;
+  uint32_t pc = PC_STRUCT;
 
   Log("YDB: %s at pc = " FMT_WORD,
       ((regs_2_value == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
