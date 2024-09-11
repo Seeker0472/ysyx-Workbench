@@ -6,14 +6,11 @@
   #include "VysyxSoCFull.h"
   #include "VysyxSoCFull___024root.h"
   #include <nvboard.h>
-  #define PC_STRUCT                                                              \
-    dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc
   #define INST_STRUCT                                                            \
     dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst
 #else
   #include "Vraw_core.h"
   #include "Vraw_core___024root.h"
-  #define PC_STRUCT dut->rootp->raw_core__DOT__ypc__DOT__ifu__DOT__pc
   #define INST_STRUCT dut->rootp->raw_core__DOT__ypc__DOT__ifu__DOT__inst
 #endif
 #include "../include/diftest.h"

@@ -8,18 +8,13 @@
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
 extern VysyxSoCFull *dut;
-#define REG_10_STRUCT                                                                 \
-  dut->rootp                                                                   \
-      ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10
-#define PC_STRUCT                                                              \
-  dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc
+
 #else
 #include "Vraw_core.h"
 #include "Vraw_core___024root.h"
 #include "Vraw_core__Dpi.h"
 extern Vraw_core *dut;
-#define PC_STRUCT dut->rootp->raw_core__DOT__ypc__DOT__ifu__DOT__pc
-#define REG_10_STRUCT dut->rootp->raw_core__DOT__ypc__DOT__reg_0__DOT__regs_10
+
 #endif
 #include "svdpi.h"
 #include <cstdint>
