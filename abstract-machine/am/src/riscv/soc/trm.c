@@ -147,3 +147,5 @@ void __attribute__((section(".fsbl"))) _fbootloader() {
   }
   _sbootloader();
 }
+//可以通过extern这个变量来判断是不是soc
+bool is_soc = true;

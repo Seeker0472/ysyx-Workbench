@@ -8,7 +8,7 @@
 
 extern CPU_state *cpu;
 CPU_state *ref_cpu;
-extern uint32_t mem[];
+extern uint32_t *mem;
 extern uint32_t* mrom;
 extern uint32_t* flash;
 extern word_t mem_size;
@@ -43,7 +43,12 @@ void difftest_init_all(){
     difftest_init(0);
     ref_cpu=(CPU_state*)malloc(sizeof(CPU_state));
     difftest_copy_regs();
-    // difftest_memcpy(0x20000000,mrom,4 * 1024 * sizeof(uint8_t),DIFFTEST_TO_REF);
+    // difftest_memcpy(0x20000000,mrom,4 * 1024 *
+    // sizeof(uint8_t),DIFFTEST_TO_REF);
+#ifdef NPC
+    difftest_memcpy(0x80000000, mem, mem_size, DIFFTEST_TO_REF);
+#else
     difftest_memcpy(0x30000000, flash, mem_size, DIFFTEST_TO_REF);
+#endif
 }
 

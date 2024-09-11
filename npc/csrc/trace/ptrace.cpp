@@ -9,6 +9,8 @@
 
 #define Perc(ITEM) ((double)instTypeCount.ITEM) / g_nr_guest_inst * 100
 
+#define DIV(ITEM1,ITEM2) (ITEM2!=0?(ITEM1/ITEM2):-1)
+
 extern "C" void trace_decoder(svBit mem_R, svBit mem_W, svBit calc, svBit csr);
 extern "C" void trace_exu();
 extern "C" void trace_ifu(int unsigned addr, svBit start_end);
@@ -113,9 +115,10 @@ void print_perf_statistics() {
          CsPI(memw), Perc(memw));
   printf("CSR : %ld\tCycles:%ld\tpercent:%.2lf%%\n\n", instTypeCount.csr,
          CsPI(csr), Perc(csr));
-printf("Latency:\n");
-  printf(
-      "LSUr: %ld\tLSUw: %ld\tIFU: %ld\n\n", memLatency.lsur / instTypeCount.memr,
-      memLatency.lsuw / instTypeCount.memw, memLatency.ifu / g_nr_guest_inst);
+  printf("Latency:\n");
+  printf("LSUr: %ld\tLSUw: %ld\tIFU: %ld\n\n",
+         DIV(memLatency.lsur, instTypeCount.memr),
+         DIV(memLatency.lsuw, instTypeCount.memw),
+         DIV(memLatency.ifu, g_nr_guest_inst));
   //   printf("")
 }
