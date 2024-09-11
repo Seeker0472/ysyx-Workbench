@@ -51,6 +51,7 @@ include $(NPC_HOME)/scripts/conf.mk
 # NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
 NPC_CFLAGS_SOC := $(foreach flag,$(NPC_CFLAGS_SOC),--CFLAGS $(flag))
 NPC_LDFLAGS_SOC := $(foreach flag,$(NPC_LDFLAGS_SOC),--LDFLAGS $(flag))
+
 NPC_CFLAGS := $(foreach flag,$(NPC_CFLAGS),--CFLAGS $(flag))
 NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
 
@@ -58,8 +59,6 @@ FLAGS += $(NPC_CFLAGS) $(NPC_LDFLAGS)
 FLAGS_SOC += $(NPC_CFLAGS_SOC) $(NPC_LDFLAGS_SOC)
 
 FLAGS += -j 8 --compiler gcc
-
-## TODO:似乎是因为惰性求值，导致save-temps有两次！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 
 FLAGS_SOC += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
 FLAGS_SOC += --timescale "1ns/1ns" --no-timing --autoflush
@@ -103,9 +102,9 @@ clean:
 .PHONY: test verilog help reformat checkformat clean
 
 sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
-	# $(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
-	make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
+	@make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
