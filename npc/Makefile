@@ -52,8 +52,8 @@ include $(NPC_HOME)/scripts/conf.mk
 NPC_CFLAGS_SOC := $(foreach flag,$(NPC_CFLAGS_SOC),--CFLAGS $(flag))
 NPC_LDFLAGS_SOC := $(foreach flag,$(NPC_LDFLAGS_SOC),--LDFLAGS $(flag))
 
-NPC_CFLAGS := $(foreach flag,$(NPC_CFLAGS),--CFLAGS $(flag))
-NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
+# NPC_CFLAGS := $(foreach flag,$(NPC_CFLAGS),--CFLAGS $(flag))
+# NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
 
 FLAGS += $(NPC_CFLAGS) $(NPC_LDFLAGS)
 FLAGS_SOC += $(NPC_CFLAGS_SOC) $(NPC_LDFLAGS_SOC)
@@ -83,7 +83,7 @@ test:
 verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
-	mill -i -D PC_VALUE=h80000000 $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)   --throw-on-first-error --full-stacktrace 
+	mill -i -DPC_VALUE=h80000000 $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)   --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/ypc.sv
 
 help:
@@ -106,6 +106,9 @@ sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
 	@make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
+
+simnpc:
+
 
 gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} 
