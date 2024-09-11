@@ -24,6 +24,7 @@ ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv ${YSYXSOC_V}
 
 ABS_CHISEL_SOURCES := $(shell find src -type f -name '*.scala' -exec realpath {} \;)
 TARGET := build/ypc.sv
+TARGETRaw := build/raw_core.sv
 
 # VCXXFLAGS += --CFLAGS -std=c++14 
 
@@ -70,6 +71,11 @@ $(TARGET): $(ABS_CHISEL_SOURCES)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/ypc.sv
 
+$(TARGETRaw): $(ABS_CHISEL_SOURCES)
+	mkdir -p $(BUILD_DIR)
+	mill -DPC_VALUE="h80000000" -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
+	$(SED_CMD) ./build/ypc.sv
+
 $(SRC_AUTO_BIND): $(NXDC_FILE)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
@@ -83,7 +89,7 @@ test:
 verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
-	mill -i -DPC_VALUE=h80000000 $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)   --throw-on-first-error --full-stacktrace 
+	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)   --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/ypc.sv
 
 help:
