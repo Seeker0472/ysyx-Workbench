@@ -61,10 +61,10 @@ NPC_LDFLAGS := $(foreach flag,$(NPC_LDFLAGS),--LDFLAGS $(flag))
 FLAGS += $(NPC_CFLAGS) $(NPC_LDFLAGS)
 FLAGS_SOC += $(NPC_CFLAGS_SOC) $(NPC_LDFLAGS_SOC)
 
-FLAGS += -j 8 --compiler gcc
+FLAGS += -j 8  -Mdir build/npc_build
 
 FLAGS_SOC += -I$(YSYXSOC_HOME)/perip/uart16550/rtl -I$(YSYXSOC_HOME)/perip/spi/rtl
-FLAGS_SOC += --timescale "1ns/1ns" --no-timing --autoflush
+FLAGS_SOC += --timescale "1ns/1ns" --no-timing --autoflush -Mdir build/soc_build -j 8
 
 # 仅仅当chisel代码发生变化的时候重新编译
 $(TARGET): $(ABS_CHISEL_SOURCES)
@@ -105,30 +105,31 @@ checkformat:
 
 clean:
 	-rm -rf $(BUILD_DIR)
-	-rm -rf obj_dir
+	# -rm -rf obj_dir
+	# -rm -rf obj_dir_npc
 
 .PHONY: test verilog help reformat checkformat clean
 
 sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
-	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
-	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
+	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
+	./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 
 simnpc:$(TARGETRaw)
 	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
-	@make -j -C obj_dir -f Vraw_core.mk Vraw_core
-	./obj_dir/Vraw_core $(ARGS) $(IMG)
+	@make -j -C build/npc_build -f Vraw_core.mk Vraw_core
+	./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
 gdbnpc:$(TARGETRaw)
 	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
-	@make -j -C obj_dir -f Vraw_core.mk Vraw_core
-	gdb   --args ./obj_dir/Vraw_core $(ARGS) $(IMG)
+	@make -j -C build/npc_build -f Vraw_core.mk Vraw_core
+	gdb   --args ./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
 gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} 
-	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
-	gdb --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
+	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
+	gdb --args ./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 
 wave:
 	# nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
