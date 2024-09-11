@@ -147,3 +147,5 @@ void __attribute__((section(".fsbl"))) _fbootloader() {
   }
   _sbootloader();
 }
+
+bool is_soc = true;

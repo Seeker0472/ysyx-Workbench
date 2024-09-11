@@ -145,7 +145,6 @@ int run(int step) {
     word_t inst = INST_STRUCT;
     if (step < PRINT_INST_MIN && step >= 0)
       print_inst_asm(pc, inst);
-    // // TODO::在某一些条件下打印指令！！！！
     trace_and_difftest(pc, inst);
 
     if (nemu_state.state != NEMU_RUNNING)

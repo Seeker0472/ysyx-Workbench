@@ -31,6 +31,7 @@ TARGETRaw := build/raw_core.sv
 #cincludes --CFLAGS
 NPC_CFLAGS += -I/usr/lib/llvm-14/include -I$(ROOT_DIR)/csrc/include/
 NPC_CFLAGS += -save-temps -fPIE -fno-exceptions
+NPC_CFLAGS += -DNPC
 NPC_CFLAGS_SOC += $(NPC_CFLAGS) -I$(NVBOARD_HOME)/usr/include
 
 # sdls 

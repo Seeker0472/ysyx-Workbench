@@ -25,3 +25,5 @@ void _trm_init() { //用于进行TRM相关的初始化工作
   int ret = main(mainargs);
   halt(ret);
 }
+
+bool is_soc = false;
