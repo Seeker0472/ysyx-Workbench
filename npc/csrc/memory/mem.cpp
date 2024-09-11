@@ -8,12 +8,14 @@ uint64_t time_now = 114514;
 
 uint32_t mem_read(uint32_t pc);
 // unused
-uint32_t mem[0x80] = {
+uint32_t default_proj[0x80] = {
     0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493,
     0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493, 0x00448493,
     0x00448493, 0x00448493, 0x00100073, 0x00448493, 0x00448493, 0x00448493,
     0x00448493, 0x00448493, 0x00448493,
 };
+//16MB pmem
+uint32_t *mem;
 // 4KB mrom
 uint32_t *mrom;
 // 16MB flash
@@ -56,7 +58,7 @@ void init_flash() {
 void init_flash_img(char *img_file) {
   if (!img_file) {
     for (int i = 0; i < 20; i++)
-      flash[i] = mem[i];
+      flash[i] = default_proj[i];
     return;
   }
   int size = 0;
@@ -71,11 +73,31 @@ void init_mem() {
   mrom = (uint32_t *)malloc(4 * 1024 * sizeof(uint8_t));
   flash = (uint32_t *)malloc(128 * 1024 * 1024 * sizeof(uint8_t));//TODO:FLASH so small
   psram = (uint32_t *)malloc(4 * 1024 * 1024 * sizeof(uint8_t));
+  mem = (uint32_t *)malloc(16 * 1024 * 1024 * sizeof(uint8_t));
 }
 void free_mem() {
   free(mrom);
   free(flash);
   free(psram);
+}
+void init_pmem_img(char *img_file) {
+  if (img_file != NULL) {
+    // 原本是把镜像加载进pmem中
+    FILE *fp = fopen(img_file, "rb");
+    fseek(fp, 0, SEEK_END);
+    mem_size = ftell(fp);
+    Log("The image is %s, size = %d", img_file, mem_size);
+    // #ifdef CONFIG_USE_PMEM
+    fseek(fp, 0, SEEK_SET);
+    int ret = fread(mem, mem_size, 1, fp);
+    // #endif
+    fclose(fp);
+  } else {
+    Log("No Img file Loaded,Using Default IMG");
+    for (int i = 0; i < 20; i++)
+      mem[i] = default_proj[i];
+    return;
+  }
 }
 
 void init_img(char *img_file) {
@@ -83,19 +105,7 @@ void init_img(char *img_file) {
   // init_flash();
   // init_flash_img("/ysyx-workbench/npc/char-test.bin");
   init_flash_img(img_file);
+  init_pmem_img(img_file);
   // init_mrom(img_file);
-  if (img_file != NULL) {
-    //原本是把镜像加载进pmem中
-    FILE *fp = fopen(img_file, "rb");
-    fseek(fp, 0, SEEK_END);
-    mem_size = ftell(fp);
-    Log("The image is %s, size = %d", img_file, mem_size);
-#ifdef CONFIG_USE_PMEM
-    fseek(fp, 0, SEEK_SET);
-    int ret = fread(mem, mem_size, 1, fp);
-#endif
-    fclose(fp);
-  } else {
-    Log("No Img file Loaded,Using Default IMG");
-  }
+
 }

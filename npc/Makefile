@@ -73,7 +73,7 @@ $(TARGET): $(ABS_CHISEL_SOURCES)
 
 $(TARGETRaw): $(ABS_CHISEL_SOURCES)
 	mkdir -p $(BUILD_DIR)
-	mill -DPC_VALUE="h80000000" -i $(PRJ).runMain ElaborateRaw --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
+	PC_VALUE="h80000000" mill -i $(PRJ).runMain ElaborateRaw --target-dir $(BUILD_DIR)  --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) $(TARGETRaw)
 
 $(SRC_AUTO_BIND): $(NXDC_FILE)
@@ -110,18 +110,23 @@ clean:
 sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
-	@make -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
+	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
 	./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 simnpc:$(TARGETRaw)
 	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
-	@make -C obj_dir -f Vraw_core.mk Vraw_core
+	@make -j -C obj_dir -f Vraw_core.mk Vraw_core
 	./obj_dir/Vraw_core $(ARGS) $(IMG)
+
+gdbnpc:$(TARGETRaw)
+	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
+	@make -j -C obj_dir -f Vraw_core.mk Vraw_core
+	gdb   --args ./obj_dir/Vraw_core $(ARGS) $(IMG)
 
 gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} 
 	@make -j -C obj_dir -f VysyxSoCFull.mk VysyxSoCFull
-	gdb   --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
+	gdb --args ./obj_dir/VysyxSoCFull $(ARGS) $(IMG)
 
 wave:
 	# nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &

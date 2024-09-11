@@ -53,6 +53,12 @@ class raw_core extends Module {
     memrw.io.waddr:=ypc.io.master.awaddr
     memrw.io.wdata:=ypc.io.master.wdata
     memrw.io.wmask:=ypc.io.master.wstrb
+        // memrw.io.wmask := MuxLookup(ypc.io.master.wstrb,0.U)(Seq(
+        //   0.U->1.U,
+        //   1.U->3.U,
+        //   2.U->7.U,
+        //   3.U->15.U,
+        // ))
     memrw.io.read:=ypc.io.master.arvalid
     memrw.io.write:=ypc.io.master.wvalid
     memrw.io.clock:=clock
