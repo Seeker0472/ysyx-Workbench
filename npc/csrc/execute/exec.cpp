@@ -74,7 +74,7 @@ void single_cycle(bool check_pc) {
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
     now_pc = PC_STRUCT;
-    if (i % 7000 == 0) {
+    if (unlikely(i % 7000 == 0)) {
       nemu_state.state= NEMU_STOP;
       Info_R("WARN: PC didn't change for 7000 Cycles!\n");
       nemu_state.halt_ret = -1;
@@ -83,7 +83,7 @@ void single_cycle(bool check_pc) {
 #ifndef NPC
     nvboard_update();
 #endif
-  } while (prev_pc == now_pc && check_pc);
+  } while (likely(prev_pc == now_pc && check_pc));
   update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
@@ -127,7 +127,7 @@ void init_runtime() {
 int run(int step) {
   int now = step;
   uint64_t timer_start = get_time();
-  while ((now) != 0) {
+  while (likely((now) != 0)) {
     now = now >= 0 ? now - 1 : now;//如果now>0,就正常递减，否则保持原来的值
     switch (nemu_state.state) {
     case NEMU_ABORT:
@@ -143,11 +143,17 @@ int run(int step) {
     tfp->flush();
     g_nr_guest_inst++;
     word_t inst = INST_STRUCT;
-    if (step < PRINT_INST_MIN && step >= 0)
+    if (unlikely(step < PRINT_INST_MIN && step >= 0))
       print_inst_asm(pc, inst);
     trace_and_difftest(pc, inst);
-
-    if (nemu_state.state != NEMU_RUNNING)
+#ifdef CONFIG_WAVE_FORM
+    if (unlikely(g_nr_guest_inst == 800000)){
+      Warn("Waveform Enabled!May result in a very large file!");
+      nemu_state.state = NEMU_STOP;
+    }
+      
+#endif
+    if (unlikely(nemu_state.state != NEMU_RUNNING))
       break; // 出现异常
   }
   uint64_t timer_end = get_time();

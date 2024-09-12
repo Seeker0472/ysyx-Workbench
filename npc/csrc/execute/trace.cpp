@@ -161,7 +161,7 @@ void trace_and_difftest(paddr_t pc, word_t inst_in) {
   ftrace_check_inst(pc, inst_in);
 #endif
 #ifdef CONFIG_DIFFTEST
-  if (difftest_step) {
+  if (unlikely(difftest_step)) {
     difftest_copy_regs();
     difftest_step = false;
   } else {
