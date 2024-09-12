@@ -74,7 +74,7 @@ void single_cycle(bool check_pc) {
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
     now_pc = PC_STRUCT;
-    if (i % 7000 == 0) {
+    if (unlikely(i % 7000 == 0)) {
       nemu_state.state= NEMU_STOP;
       Info_R("WARN: PC didn't change for 7000 Cycles!\n");
       nemu_state.halt_ret = -1;
@@ -83,7 +83,7 @@ void single_cycle(bool check_pc) {
 #ifndef NPC
     nvboard_update();
 #endif
-  } while (prev_pc == now_pc && check_pc);
+  } while (likely(prev_pc == now_pc && check_pc));
   update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
@@ -147,7 +147,7 @@ int run(int step) {
       print_inst_asm(pc, inst);
     trace_and_difftest(pc, inst);
 #ifdef CONFIG_WAVE_FORM
-    if (unlikely(g_nr_guest_inst == 100000)){
+    if (unlikely(g_nr_guest_inst == 800000)){
       Warn("Waveform Enabled!,May result in a very large file!");
       nemu_state.state = NEMU_STOP;
     }
