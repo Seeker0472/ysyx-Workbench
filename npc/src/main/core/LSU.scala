@@ -123,9 +123,9 @@ class LSU extends Module {
 
   val trace_lsu = Module(new TRACE_LSU)
   trace_lsu.io.addr := io.in.bits.alu_result
-  trace_lsu.io.w_start := io.in.bits.mem_write_enable && io.in.valid
+  trace_lsu.io.w_start := io.in.bits.mem_write_enable && io.in.valid && state === s_idle
   trace_lsu.io.w_end  := io.axi.WR.valid
-  trace_lsu.io.r_start := io.in.bits.mem_read_enable && io.in.valid
+  trace_lsu.io.r_start := io.in.bits.mem_read_enable && io.in.valid && state === s_idle
   trace_lsu.io.r_end := io.axi.RD.valid
   trace_lsu.io.clock := clock
 }
