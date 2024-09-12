@@ -39,5 +39,5 @@ void _trm_init() {
   halt(ret);
 }
 
-
+// 可以通过extern这个变量来判断是不是soc
 bool is_soc = false;

@@ -1,4 +1,3 @@
-#include "../include/regs.h"
 #ifndef NPC
 #include <nvboard.h>
 #include "VysyxSoCFull.h"

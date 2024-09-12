@@ -100,6 +100,7 @@
             pkgs.llvmPackages_latest.llvm
             # yosys-sta libs
             # pkgs.yaml-cpp
+            # 以下是yosys-sta的依赖
             libyaml_cpp_0_7
             pkgs.libgcc.lib
             pkgs.gmp

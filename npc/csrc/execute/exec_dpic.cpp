@@ -120,6 +120,7 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
   // printf("STEP\n");
   // sleep(1);
 #else
+  //run with npc
   record_axi_write("NPC", addr, wmask, wdata);
   if (addr >= 0xa0000000 || addr < 0x80000000)
     difftest_step = true;
