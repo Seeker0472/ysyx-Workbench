@@ -9,11 +9,12 @@
   _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", __FILE__, __LINE__,  \
        __func__, ##__VA_ARGS__)
 // 自定义颜色
-#define Info_N(fmt, ...) _Log(ANSI_FG_WHITE fmt ANSI_NONE "\n", ##__VA_ARGS__)
+#define PP_RESTORE "\33[0m"
+#define Info_N(fmt, ...) _Log(ANSI_FG_WHITE fmt PP_RESTORE "\n", ##__VA_ARGS__)
 
-#define Info_R(fmt, ...) _Log(ANSI_FG_MAGENTA fmt ANSI_NONE "\n", ##__VA_ARGS__)
+#define Info_R(fmt, ...) _Log(ANSI_FG_MAGENTA fmt PP_RESTORE "\n", ##__VA_ARGS__)
 
-#define Warn(fmt, ...) _Log(ANSI_FG_RED fmt ANSI_FG_RED "\n", ##__VA_ARGS__)
+#define Warn(fmt, ...) _Log(ANSI_FG_RED fmt PP_RESTORE "\n", ##__VA_ARGS__)
 
 #define Assert(cond, format, ...)                                              \
   do {                                                                         \
