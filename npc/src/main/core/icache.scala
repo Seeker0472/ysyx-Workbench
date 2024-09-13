@@ -41,7 +41,7 @@ class icache extends Module{
 
   //get the targeted cache block
   val target_block = cache(addr_index)
-  val hit = target_block(tag_len+block_size*8,tag_len+block_size*8).B&&(target_block(tag_len+block_size*8-1,block_size*8)===addr_tag)
+  val hit = target_block(tag_len+block_size*8,tag_len+block_size*8).B&&&(target_block(tag_len+block_size*8-1,block_size*8)===addr_tag)
   //if miss, firstly load data into cache,next cyc visit cache and resut into a hit.
   val data = target_block(block_size*8-1,0)
   io.inst := data
@@ -50,7 +50,7 @@ class icache extends Module{
   val s_idle :: s_fetching :: s_wait_data :: s_valid :: s_error :: Nil = Enum(5)
   val state = RegInit(s_idle)
   state := MuxLookUp(state,s_idle)(Seq(
-    s_idle -> Mux(io.addr_valid&&hit,s_valid,Mux(io.addr_valid,s_fetching,s_idle)),
+    s_idle -> Mux(io.addr_valid&&&hit,s_valid,Mux(io.addr_valid,s_fetching,s_idle)),
     s_fetching -> Mux(io.axi.RA.ready,s_wait_data,s_fetching),
     s_wait_data -> Mux(io.axi.RD.valid,s_valid,s_wait_data),
     s_valid -> s_idle //Didn't stay
