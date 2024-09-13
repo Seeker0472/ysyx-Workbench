@@ -15,41 +15,25 @@ class IFU extends Module {
     val axi      = Flipped(new AXIReadIO())
     val rwerr    = Input(Bool())
   })
-  val s_idle :: s_fetching :: s_wait_data :: s_valid :: s_error :: Nil = Enum(5)
+  val s_idle::s_fetching::s_valid::s_error = Enum(4)
+  val icache = Module(new icache)
+  icache.io.axi <> io.axi
 
-  // val axi = Module(new AXI_Master())
 
   val state = RegInit(s_idle)
-  // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
+
+  val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
   println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","Default:h30000000")}")
   val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
   val pc    = RegInit(PC_VALUE)
+  icache.io.addr := pc
+  icache.io.addr_valid := state===s_fetching
   
-  val inst  = Reg(UInt(CVAL.DLEN.W))
-
-  state := MuxLookup(state, s_idle)(
-    List(
-      s_idle -> Mux(true.B, s_fetching, s_idle), //Initial
-      s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching), //1cycle,depends on memory
-      s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
-      s_valid -> Mux(io.in.valid, s_fetching, s_valid),
-      s_error -> s_error
-    )
-  )
   io.out.valid        := state === s_valid
-  io.axi.RA.bits.addr := pc
-
-  when(io.axi.RD.valid) {
-    inst := io.axi.RD.bits.data //next - inst
-  }
-  io.axi.RA.valid     := state === s_fetching
-  io.axi.RA.bits.size := "b010".U
-  io.axi.RD.ready     := true.B
 
   io.in.ready := true.B
 
-  // io.pc          := pc
-  io.inst_now := inst
+  // io.inst_now := 
 
   io.out.bits.pc    := pc
   io.out.bits.instr := inst
@@ -60,6 +44,14 @@ class IFU extends Module {
   when(io.rwerr) {
     state := s_error
   }
+
+
+  state:= MuxLookup(state,s_idle)(Seq(
+    s_idle -> Mux(io.in.valid,s_fetching,s_idle),
+    s_fetching -> Mux(icache.io.inst_valid,s_valid),
+    s_valid -> s_idle,
+    s_error ->s_error,
+  ))
 
   //TRACE_IFU
   val trace_ifu = Module(new TRACE_IFU)
