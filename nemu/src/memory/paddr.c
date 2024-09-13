@@ -29,6 +29,7 @@ static uint8_t *sram = NULL;
 static uint8_t *mrom = NULL;
 static uint8_t *sdram = NULL;
 static uint8_t *psram = NULL;
+static uint8_t *rubbish = NULL;
 
 #else // CONFIG_PMEM_GARRAY
 
@@ -38,6 +39,7 @@ static uint8_t sram[SRAM_SIZE] PG_ALIGN = {};
 static uint8_t mrom[MROM_SIZE] PG_ALIGN = {};
 static uint8_t sdram[SDRAM_SIZE] PG_ALIGN = {};
 static uint8_t psram[PSRAM_SIZE] PG_ALIGN = {};
+static uint8_t rubbish[0x800000] PG_ALIGN = {};
 #endif
 
 uint8_t *guest_to_host(paddr_t paddr)
@@ -53,8 +55,11 @@ uint8_t *guest_to_host(paddr_t paddr)
     return sdram + paddr - SDRAM_BASE;
   if (MEM_IN(paddr, PSRAM_BASE, PSRAM_TOP)) // psram
     return psram + paddr - PSRAM_BASE;
-// #endif
-  return pmem + paddr - CONFIG_MBASE;
+  // #endif
+  if (MEM_IN(paddr, CONFIG_MBASE, CONFIG_MBASE + CONFIG_MSIZE)) {
+    Log("Warning:assessing rubbish area!!!!");
+    return pmem + paddr - CONFIG_MBASE;}
+  return rubbish;
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
@@ -69,8 +74,11 @@ paddr_t host_to_guest(uint8_t *haddr)
     return haddr - sdram + SDRAM_BASE;
   if (PHY_IN(haddr, psram, PSRAM_BASE, PSRAM_TOP)) // psram
     return haddr - psram + PSRAM_BASE;
-// #endif
-  return haddr - pmem + CONFIG_MBASE;
+  // #endif
+  if (PHY_IN(haddr, pmem, CONFIG_MBASE, CONFIG_MBASE + CONFIG_MSIZE))
+    return haddr - pmem + CONFIG_MBASE;
+  return haddr-rubbish;
+
 }
 
 static word_t pmem_read(paddr_t addr, int len)
@@ -105,12 +113,14 @@ void init_mem()
   mrom = malloc(MROM_SIZE);
   sdram = malloc(SDRAM_SIZE);
   psram = malloc(PSRAM_SIZE);
+  rubbish = malloc(0x800000);
   assert(pmem);
   assert(flash);
   assert(sram);
   assert(mrom);
   assert(sdram);
   assert(psram);
+  assert(rubbish);
 #endif
   IFDEF(CONFIG_MEM_RANDOM, memset(pmem, rand(), CONFIG_MSIZE));
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
