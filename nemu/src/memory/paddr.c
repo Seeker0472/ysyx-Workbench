@@ -124,6 +124,7 @@ void init_mem()
   assert(psram);
   assert(rubbish);
 #endif
+  memset(rubbish, rand(), 0x800000);
   IFDEF(CONFIG_MEM_RANDOM, memset(pmem, rand(), CONFIG_MSIZE));
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }
