@@ -138,7 +138,7 @@ void init_monitor(int argc, char *argv[]) {
   init_isa();
 
   //初始化ftrace
-  init_ftrace(elf_file);
+  // init_ftrace(elf_file);
 
   /* Load the image to memory. This will overwrite the built-in image. */
   long img_size = load_img();
