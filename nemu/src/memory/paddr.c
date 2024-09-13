@@ -39,7 +39,7 @@ static uint8_t sram[SRAM_SIZE] PG_ALIGN = {};
 static uint8_t mrom[MROM_SIZE] PG_ALIGN = {};
 static uint8_t sdram[SDRAM_SIZE] PG_ALIGN = {};
 static uint8_t psram[PSRAM_SIZE] PG_ALIGN = {};
-static uint8_t rubbish[0x800000] PG_ALIGN = {};
+static uint8_t rubbish[0x8] PG_ALIGN = {};
 #endif
 
 uint8_t *guest_to_host(paddr_t paddr)
@@ -115,7 +115,7 @@ void init_mem()
   mrom = malloc(MROM_SIZE);
   sdram = malloc(SDRAM_SIZE);
   psram = malloc(PSRAM_SIZE);
-  rubbish = malloc(0x800000);
+  rubbish = malloc(0x8);
   assert(pmem);
   assert(flash);
   assert(sram);
