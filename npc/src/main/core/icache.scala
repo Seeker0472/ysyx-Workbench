@@ -62,8 +62,8 @@ class icache extends Module{
   io.axi.RD.ready     := true.B
   io.inst_valid := state===s_valid
   //miss,update  cache
-  val data = io.RD.bits.data
+  val data_read = io.RD.bits.data
   when(io.axi.RD.valid&&state===s_wait_data){
-    target_block := Cat(1.U(1.W),Cat(addr_tag,data))
+    target_block := Cat(1.U(1.W),Cat(addr_tag,data_read))
   }
 }                
