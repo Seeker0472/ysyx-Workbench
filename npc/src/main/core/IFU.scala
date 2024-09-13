@@ -19,10 +19,10 @@ class IFU extends Module {
   val icache = Module(new icache)
   icache.io.axi <> io.axi
 
-
   val state = RegInit(s_idle)
 
   val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
+  // val inst = Reg(UInt(32.W))
   println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","Default:h30000000")}")
   val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
   val pc    = RegInit(PC_VALUE)
@@ -36,7 +36,7 @@ class IFU extends Module {
   // io.inst_now := 
 
   io.out.bits.pc    := pc
-  io.out.bits.instr := inst
+  io.out.bits.instr := icache.io.inst
 
   when(io.in.valid) {
     pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
