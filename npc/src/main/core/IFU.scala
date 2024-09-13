@@ -21,7 +21,7 @@ class IFU extends Module {
 
   val state = RegInit(s_idle)
   // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
-  println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","1111")}")
+  println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","Default:h30000000")}")
   val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
   val pc    = RegInit(PC_VALUE)
   

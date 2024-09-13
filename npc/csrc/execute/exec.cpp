@@ -148,7 +148,7 @@ int run(int step) {
     trace_and_difftest(pc, inst);
 #ifdef CONFIG_WAVE_FORM
     if (unlikely(g_nr_guest_inst == 800000)){
-      Warn("Waveform Enabled!,May result in a very large file!");
+      Warn("Waveform Enabled!May result in a very large file!");
       nemu_state.state = NEMU_STOP;
     }
       

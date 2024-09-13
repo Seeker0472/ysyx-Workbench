@@ -69,7 +69,7 @@ void welcome(){
     // printf("Welcome To YPC(Yuki Processor Core)!\n");
     Log("Welcome To YDB(Yuki Debugger)!");
     IFDEF(CONFIG_WAVE_FORM,
-          Warn("Waveform Enabled!,May result in a very large file!"));
+          Warn("Waveform Enabled!May result in a very large file!"));
 }
 
 void init_monitor(int argc, char *argv[]){
