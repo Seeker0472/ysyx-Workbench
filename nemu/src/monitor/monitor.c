@@ -13,6 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "debug.h"
 #include <isa.h>
 #include <memory/paddr.h>
 
@@ -70,6 +71,7 @@ static long load_img() {
   if (soc_img) {
     // soc,加载进flash
     Log("Loading into Flash");
+    assert(0);
     int ret = fread(guest_to_host(FLASH_BASE), size, 1, fp);
     assert(ret == 1);
   } else {
