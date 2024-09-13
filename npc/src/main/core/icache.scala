@@ -28,7 +28,7 @@ class icache extends Module {
   // val tag_len = math.log(block_num*block_size/4)/math.log(2)
   val offset_len = (math.log(block_size / 4) / math.log(2)).toInt
   val index_len = (math.log(block_num) / math.log(2)).toInt
-  val tag_len = 32 - offset_len - index_len
+  val tag_len = 31 - offset_len - index_len
   // calc cache_line size:[1(valid)][(tag_len)][block_size*8(data)]
 
   val cache = RegInit(
