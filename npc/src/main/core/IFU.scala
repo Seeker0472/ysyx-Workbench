@@ -100,4 +100,25 @@ class TRACE_IFU extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
+class TRACE_INST extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val addr  = Input(UInt(CVAL.DLEN.W))
+    val f_start = Input(Bool())
+    val f_end = Input(Bool())
+    val clock = Input(Clock())
+  })
+    setInline(
+    "trace_inst.v",
+    """import "DPI-C" function void trace_inst(int unsigned inst_now);
+      |module TRACE_IFU(
+      |  input [31:0] inst,
+      |  input clock
+      |);
+      |always @(negedge clock) begin
+      |  trace_inst(inst);
+      |endmodule
+    """.stripMargin
+  )
+}
+
 
