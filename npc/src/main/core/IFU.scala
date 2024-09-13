@@ -15,13 +15,13 @@ class IFU extends Module {
     val axi      = Flipped(new AXIReadIO())
     val rwerr    = Input(Bool())
   })
-  val s_idle::s_fetching::s_valid::s_error = Enum(4)
+  val s_idle::s_fetching::s_valid::s_error::Nil = Enum(4)
   val icache = Module(new icache)
   icache.io.axi <> io.axi
 
   val state = RegInit(s_idle)
 
-  val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
+  // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
   // val inst = Reg(UInt(32.W))
   println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","Default:h30000000")}")
   val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
