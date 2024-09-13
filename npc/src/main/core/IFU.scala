@@ -10,49 +10,31 @@ import Constants_Val.CVAL.DLEN
 class IFU extends Module {
   val io = IO(new Bundle {
     val in       = Flipped(Decoupled(new WBU_O))
-    val inst_now = Output(UInt(CVAL.DLEN.W))
+    // val inst_now = Output(UInt(CVAL.DLEN.W))
     val out      = Decoupled(new IFUO())
     val axi      = Flipped(new AXIReadIO())
     val rwerr    = Input(Bool())
   })
-  val s_idle :: s_fetching :: s_wait_data :: s_valid :: s_error :: Nil = Enum(5)
+  val s_idle::s_fetching::s_valid::s_error::Nil = Enum(4)
+  val icache = Module(new icache)
+  icache.io.axi <> io.axi
 
-  // val axi = Module(new AXI_Master())
+  val state = RegInit(s_fetching)
 
-  val state = RegInit(s_idle)
-  // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
-  println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","1111")}")
+  // val inst = Reg(UInt(32.W))
+  println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","Default:h30000000")}")
   val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
   val pc    = RegInit(PC_VALUE)
+  icache.io.addr := pc
+  icache.io.addr_valid := state===s_fetching
   
-  val inst  = Reg(UInt(CVAL.DLEN.W))
-
-  state := MuxLookup(state, s_idle)(
-    List(
-      s_idle -> Mux(true.B, s_fetching, s_idle), //Initial
-      s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching), //1cycle,depends on memory
-      s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
-      s_valid -> Mux(io.in.valid, s_fetching, s_valid),
-      s_error -> s_error
-    )
-  )
   io.out.valid        := state === s_valid
-  io.axi.RA.bits.addr := pc
-
-  when(io.axi.RD.valid) {
-    inst := io.axi.RD.bits.data //next - inst
-  }
-  io.axi.RA.valid     := state === s_fetching
-  io.axi.RA.bits.size := "b010".U
-  io.axi.RD.ready     := true.B
 
   io.in.ready := true.B
 
-  // io.pc          := pc
-  io.inst_now := inst
 
   io.out.bits.pc    := pc
-  io.out.bits.instr := inst
+  io.out.bits.instr := icache.io.inst
 
   when(io.in.valid) {
     pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
@@ -60,6 +42,14 @@ class IFU extends Module {
   when(io.rwerr) {
     state := s_error
   }
+
+
+  state:= MuxLookup(state,s_idle)(Seq(
+    s_idle -> Mux(io.in.valid,s_fetching,s_idle),
+    s_fetching -> Mux(icache.io.inst_valid,s_valid,s_fetching),
+    s_valid -> s_idle,
+    s_error ->s_error,
+  ))
 
   //TRACE_IFU
   val trace_ifu = Module(new TRACE_IFU)
@@ -69,8 +59,8 @@ class IFU extends Module {
   trace_ifu.io.clock := clock
 
 } 
-//TODO:IFU取到指令-使用AXIRDvalid
-//TODO:IFU延迟
+//DONE:IFU取到指令-使用AXIRDvalid
+//DONE:IFU延迟
 
 /*
   addr,f/ffin
@@ -107,4 +97,25 @@ class TRACE_IFU extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
+class TRACE_INST extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val addr  = Input(UInt(CVAL.DLEN.W))
+    val f_start = Input(Bool())
+    val f_end = Input(Bool())
+    val clock = Input(Clock())
+  })
+    setInline(
+    "trace_inst.v",
+    """import "DPI-C" function void trace_inst(int unsigned inst_now);
+      |module TRACE_IFU(
+      |  input [31:0] inst,
+      |  input clock
+      |);
+      |always @(negedge clock) begin
+      |  trace_inst(inst);
+      |endmodule
+    """.stripMargin
+  )
+}
+
 

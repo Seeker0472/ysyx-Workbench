@@ -6,12 +6,9 @@
   #include "VysyxSoCFull.h"
   #include "VysyxSoCFull___024root.h"
   #include <nvboard.h>
-  #define INST_STRUCT                                                            \
-    dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst
 #else
   #include "Vraw_core.h"
   #include "Vraw_core___024root.h"
-  #define INST_STRUCT dut->rootp->raw_core__DOT__ypc__DOT__ifu__DOT__inst
 #endif
 #include "../include/diftest.h"
 #include <verilated.h>
@@ -124,6 +121,8 @@ void init_runtime() {
 
 }
 
+word_t inst=0;
+
 int run(int step) {
   int now = step;
   uint64_t timer_start = get_time();
@@ -142,7 +141,6 @@ int run(int step) {
     single_cycle(true);
     tfp->flush();
     g_nr_guest_inst++;
-    word_t inst = INST_STRUCT;
     if (unlikely(step < PRINT_INST_MIN && step >= 0))
       print_inst_asm(pc, inst);
     trace_and_difftest(pc, inst);
