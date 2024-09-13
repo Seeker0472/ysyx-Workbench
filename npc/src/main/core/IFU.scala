@@ -19,7 +19,7 @@ class IFU extends Module {
   val icache = Module(new icache)
   icache.io.axi <> io.axi
 
-  val state = RegInit(s_idle)
+  val state = RegInit(s_fetching)
 
   // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
   // val inst = Reg(UInt(32.W))
