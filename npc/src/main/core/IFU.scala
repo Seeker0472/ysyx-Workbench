@@ -37,6 +37,7 @@ class IFU extends Module {
 
   io.out.bits.pc    := pc
   io.out.bits.instr := icache.io.inst
+  io.inst_now := icache.io.inst
 
   when(io.in.valid) {
     pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
