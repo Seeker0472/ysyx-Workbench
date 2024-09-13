@@ -50,6 +50,7 @@ int main(int argc, char *argv[]) {
 #endif
   /* Start engine. */
   engine_start();
-
+  void close_pc_trace();
+  IFDEF(CONFIG_PC_TRACE, close_pc_trace(););
   return is_exit_status_bad();
 }
