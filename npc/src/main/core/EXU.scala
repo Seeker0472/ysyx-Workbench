@@ -69,6 +69,11 @@ class EXU extends Module {
   io.out.bits.csr_alu_res := csr_alu_res
   io.out.bits.csr_val     := io.csr.data
   io.out.bits.go_branch   := go_branch
+
+  //Trace
+  val trace_exu = Module(new TRACE_EXU)
+  trace_exu.io.clock:=clock
+  trace_exu.io.valid:=io.in.valid
 }
 
 class Branch_comp extends Module {
@@ -87,5 +92,31 @@ class Branch_comp extends Module {
       Branch_Type.bltu -> (io.src1 < io.src2),
       Branch_Type.bgeu -> (io.src1 >= io.src2)
     )
+  )
+}
+
+//TODO:exu完成计算-valid信号
+class TRACE_EXU extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val valid  = Input(Bool())
+    val clock = Input(Clock())
+  })
+    setInline(
+    "trace_exu.v",
+    """import "DPI-C" function void trace_exu();
+      |module TRACE_EXU(
+      |  input valid,
+      |  input clock
+      |);
+      | reg prev;
+      | initial prev=1'b0;
+      |always @(negedge clock) begin
+      |   if (valid&&prev==1'b0) begin
+      |      trace_exu();
+      |  end
+      | prev = valid;
+      | end
+      |endmodule
+    """.stripMargin
   )
 }

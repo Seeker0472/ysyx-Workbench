@@ -1,8 +1,20 @@
+// #define NPC
+#include "../include/regs.h"
+
 #include "../include/diftest.h"
 #include "../include/ydb_all.h"
+#ifndef NPC
 #include "VysyxSoCFull.h"
 #include "VysyxSoCFull__Dpi.h"
 #include "VysyxSoCFull___024root.h"
+extern VysyxSoCFull *dut;
+#else
+#include "Vraw_core.h"
+#include "Vraw_core___024root.h"
+#include "Vraw_core__Dpi.h"
+extern Vraw_core *dut;
+
+#endif
 #include "svdpi.h"
 #include <cstdint>
 #include <cstdio>
@@ -10,8 +22,6 @@
 #include <verilated_vcd_c.h>
 
 extern VerilatedVcdC *tfp;
-
-extern VysyxSoCFull *dut;
 extern bool difftest_step;
 extern "C" void print_char(char w_char) {
   printf("%c", w_char);
@@ -27,11 +37,8 @@ extern "C" void call_ebreak() {
     return;
   Log("Ebreak Called!!");
   // tfp->
-  uint32_t regs_2_value =
-      dut->rootp
-          ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__reg_0__DOT__regs_10;
-  uint32_t pc =
-      dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+  uint32_t regs_2_value = REG_10_STRUCT;
+  uint32_t pc = PC_STRUCT;
 
   Log("YDB: %s at pc = " FMT_WORD,
       ((regs_2_value == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
@@ -58,10 +65,10 @@ extern "C" void call_ebreak() {
 #define PSRAM_TOP 0x9fffffff
 #define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
 
-// TODO:DIFFTEST/OUTPUT
+// TODO:加入更多设备的地址检测，同时用宏定义减少Copy_Paste Code
 extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
                            uint32_t wdata, uint32_t len) {
-
+#ifndef NPC
   if (MEM_IN(addr, MROM_BASE, MROM_TOP)) { // mrom
     if (access_type) {
       record_axi_read("MROM", addr, len);
@@ -108,7 +115,20 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
     //TODO:Mask not correct?
     record_axi_write("Other", addr, wmask, wdata);
   }
+
   difftest_step = true;
   // printf("STEP\n");
   // sleep(1);
+#else
+  //run with npc
+  record_axi_write("NPC", addr, wmask, wdata);
+  if (addr >= 0xa0000000 || addr < 0x80000000)
+    difftest_step = true;
+#endif
+}
+
+extern word_t inst;
+
+extern "C" void trace_inst(unsigned int inst_now) {
+  inst=inst_now;
 }

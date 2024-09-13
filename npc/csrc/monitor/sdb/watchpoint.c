@@ -78,11 +78,11 @@ bool check_watch_point(){
   for(WP* cur=head;cur!=NULL;cur=cur->next){
     bool succ=false;
     word_t result=expr(cur->expr,&succ);
-    if(!succ){
+    if(unlikely(!succ)){
       changed=true;
       printf("Failed to execute expression: %s\n",cur->expr);
     }
-    if(succ&&result!=cur->last_result){
+    if(unlikely(succ&&result!=cur->last_result)){
       printf("Hit WatchPoint:%d %s \n", cur->NO, cur->expr);
       printf("%s", cur->comment);
 

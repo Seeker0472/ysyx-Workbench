@@ -11,6 +11,7 @@
 #define COL_RED      0xff0033
 #define COL_GREEN    0x00cc33
 #define COL_PURPLE   0x2a0a29
+#define COL_BLACK   0x0 //这里我修改了背景颜色，取消了清空背景
 
 enum { WHITE = 0, RED, GREEN, PURPLE };
 struct character {
@@ -112,23 +113,23 @@ void video_init() {
 
   extern char font[];
   for (int i = 0; i < CHAR_W * CHAR_H; i++)
-    blank[i] = COL_PURPLE;
+    blank[i] = COL_BLACK;
 
-  uint32_t blank_line[screen_w];
-  for (int i = 0; i < screen_w; i++)
-    blank_line[i] = COL_PURPLE;
+  // uint32_t blank_line[screen_w];
+  // for (int i = 0; i < screen_w; i++)
+  //   blank_line[i] = COL_PURPLE;
 
-  for (int y = 0; y < screen_h; y ++)
-    io_write(AM_GPU_FBDRAW, 0, y, blank_line, screen_w, 1, false);
+  // for (int y = 0; y < screen_h; y ++)
+  //   io_write(AM_GPU_FBDRAW, 0, y, blank_line, screen_w, 1, false);
 
   for (int ch = 0; ch < 26; ch++) {
     char *c = &font[CHAR_H * ch];
     for (int i = 0, y = 0; y < CHAR_H; y++)
       for (int x = 0; x < CHAR_W; x++, i++) {
         int t = (c[y] >> (CHAR_W - x - 1)) & 1;
-        texture[WHITE][ch][i] = t ? COL_WHITE : COL_PURPLE;
-        texture[GREEN][ch][i] = t ? COL_GREEN : COL_PURPLE;
-        texture[RED  ][ch][i] = t ? COL_RED   : COL_PURPLE;
+        texture[WHITE][ch][i] = t ? COL_WHITE : COL_BLACK;
+        texture[GREEN][ch][i] = t ? COL_GREEN : COL_BLACK;
+        texture[RED  ][ch][i] = t ? COL_RED   : COL_BLACK;
       }
   }
 }

@@ -14,3 +14,7 @@
 /nvboard
 /fceux-am
 !/am-kernels
+!*.nix
+!flake.lock
+
+yosys-sta/*

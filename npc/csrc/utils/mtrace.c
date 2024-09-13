@@ -2,7 +2,7 @@
 
 void record_pread(paddr_t addr, int len)
 {
-    Info_N("ReadAddr at: 0x%x len:%d\n", addr, len);
+    Info_N("ReadAddr at: 0x%x len:%d", addr, len);
 }
 
 void record_pwrite(paddr_t addr, char wmask, word_t data)
@@ -18,12 +18,12 @@ void record_pwrite(paddr_t addr, char wmask, word_t data)
         wmask >>= 1;
         index--;
     }
-    MUXDEF(CONFIG_RV64, Info_R("WriteAddr at: 0x%x wmask:%s 0x%lx\n", addr, binaryStr, data);, Info_R("WriteAddr at: 0x%x wmask:%s 0x%x\n", addr, binaryStr, data);)
+    MUXDEF(CONFIG_RV64, Info_R("WriteAddr at: 0x%x wmask:%s 0x%lx", addr, binaryStr, data);, Info_R("WriteAddr at: 0x%x wmask:%s 0x%x", addr, binaryStr, data);)
 }
 
 void record_axi_read(const char *type, paddr_t addr, int len) {
 #ifdef CONFIG_MTRACE
-  Info_N("ReadAddr(%s) at: 0x%x len:%d\n", type, addr, len);
+  Info_N("ReadAddr(%s) at: 0x%x len:%d", type, addr, len);
   #endif
 }
 
@@ -39,11 +39,11 @@ void record_axi_write(const char *type, paddr_t addr, char wmask, word_t data) {
   //   index--;
   // }
   // MUXDEF(CONFIG_RV64,
-  //        Info_R("WriteAddr(%s) at: 0x%x wmask:%s 0x%lx\n",type, addr,
+  //        Info_R("WriteAddr(%s) at: 0x%x wmask:%s 0x%lx",type, addr,
   //        binaryStr, data); , Info_R("WriteAddr(%s) at: 0x%x wmask:%s
-  //        0x%x\n",type, addr, binaryStr, data);)
+  //        0x%x",type, addr, binaryStr, data);)
 #ifdef CONFIG_MTRACE
 
-  Info_R("WriteAddr(%s) at: 0x%x wmask:%x 0x%x\n", type, addr, wmask, data);
+  Info_R("WriteAddr(%s) at: 0x%x wmask:%x 0x%x", type, addr, wmask, data);
 #endif
 }

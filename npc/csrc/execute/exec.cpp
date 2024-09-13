@@ -1,28 +1,39 @@
+// #define NPC
+#include "../include/regs.h"
+
 #include "../include/ydb_all.h"
-#include "VysyxSoCFull.h"
-#include "VysyxSoCFull___024root.h"
-#include <diftest.h>
-#include <iostream>
-#include <nvboard.h>
+#ifndef NPC
+  #include "VysyxSoCFull.h"
+  #include "VysyxSoCFull___024root.h"
+  #include <nvboard.h>
+#else
+  #include "Vraw_core.h"
+  #include "Vraw_core___024root.h"
+#endif
+#include "../include/diftest.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
-VerilatedVcdC *tfp; // 用于生成波形的指针
-VysyxSoCFull *dut;
-void nvboard_bind_all_pins(VysyxSoCFull *dut);
+    VerilatedVcdC *tfp; // 用于生成波形的指针
+#ifndef NPC
+    VysyxSoCFull *dut;
+    void nvboard_bind_all_pins(VysyxSoCFull *dut);
+#else
+    Vraw_core *dut;
+#endif
+    uint64_t sim_time = 0;
+    uint64_t g_nr_guest_inst = 0;
+    uint64_t g_cycles = 0;
+    uint64_t g_timer = 0; // unit: us
+    void print_iringbuf();
 
-uint64_t sim_time = 0;
-uint64_t g_nr_guest_inst = 0;
-uint64_t g_timer = 0; // unit: us
-void print_iringbuf();
+    void trace_and_difftest(paddr_t pc, word_t inst_in);
+    int update_reg_state();
+    void print_inst_asm(paddr_t pc, word_t inst);
+    void statistic();
 
-void trace_and_difftest(paddr_t pc, word_t inst_in);
-int update_reg_state();
-void print_inst_asm(paddr_t pc, word_t inst);
-void statistic();
-
-void init_verilator(int argc, char *argv[]) {
-  Verilated::commandArgs(argc, argv);
+    void init_verilator(int argc, char *argv[]) {
+      Verilated::commandArgs(argc, argv);
 }
 
 uint32_t mem_read(uint32_t pc);
@@ -36,6 +47,8 @@ void statistic() {
 #define NUMBERIC_FMT MUXDEF(CONFIG_TARGET_AM, "%", "%'") PRIu64
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
+  Log("total cycles = " NUMBERIC_FMT, g_cycles);
+  Log("IPC = %lf", (double)g_nr_guest_inst/g_cycles);
   if (g_timer > 0)
     Log("simulation frequency = " NUMBERIC_FMT " inst/s",
         g_nr_guest_inst * 1000000 / g_timer);
@@ -45,12 +58,11 @@ void statistic() {
 }
 
 void single_cycle(bool check_pc) {
-  uint32_t prev_pc =
-      dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-  uint32_t now_pc =
-      dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+  uint32_t prev_pc = PC_STRUCT;
+  uint32_t now_pc = PC_STRUCT;
   int i = 0;
   do {
+    g_cycles++;
     i++;
     dut->clock = 0;
     dut->eval();
@@ -58,17 +70,17 @@ void single_cycle(bool check_pc) {
     dut->clock = 1;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
-    now_pc =
-        dut->rootp
-            ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
-    if (i % 1000 == 0) {
+    now_pc = PC_STRUCT;
+    if (unlikely(i % 7000 == 0)) {
       nemu_state.state= NEMU_STOP;
-      Info_R("WARN: PC didn't change for 1000 Cycles!\n");
+      Info_R("WARN: PC didn't change for 7000 Cycles!\n");
       nemu_state.halt_ret = -1;
       break;
     }
+#ifndef NPC
     nvboard_update();
-  } while (prev_pc == now_pc && check_pc);
+#endif
+  } while (likely(prev_pc == now_pc && check_pc));
   update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
@@ -91,22 +103,30 @@ void reset(int n) {
 }
 
 void init_runtime() {
-  dut = new VysyxSoCFull;       // Initialize the DUT instance
+#ifdef NPC
+  dut = new Vraw_core;
+#else
+  dut = new VysyxSoCFull; // Initialize the DUT instance
+#endif
   Verilated::traceEverOn(true); // 启用波形追踪
   tfp = new VerilatedVcdC;
   dut->trace(tfp, 99); // 跟踪99级信号
   MUXDEF(CONFIG_WAVE_FORM, tfp->open("./build/waveform.vcd");
          , tfp->open("/dev/null");) // 打开VCD文件
+#ifndef NPC
   nvboard_bind_all_pins(dut);
   nvboard_init();
+#endif
   reset(20);                        // 复位5个周期
 
 }
 
+word_t inst=0;
+
 int run(int step) {
   int now = step;
   uint64_t timer_start = get_time();
-  while ((now) != 0) {
+  while (likely((now) != 0)) {
     now = now >= 0 ? now - 1 : now;//如果now>0,就正常递减，否则保持原来的值
     switch (nemu_state.state) {
     case NEMU_ABORT:
@@ -117,21 +137,21 @@ int run(int step) {
     default:
       nemu_state.state = NEMU_RUNNING;
     }
-    uint32_t pc =
-        dut->rootp
-            ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__pc;
+    uint32_t pc = PC_STRUCT;
     single_cycle(true);
     tfp->flush();
     g_nr_guest_inst++;
-    word_t inst =
-        dut->rootp
-            ->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__inst;
-    if (step < PRINT_INST_MIN && step >= 0)
+    if (unlikely(step < PRINT_INST_MIN && step >= 0))
       print_inst_asm(pc, inst);
-    // // TODO::在某一些条件下打印指令！！！！
     trace_and_difftest(pc, inst);
-
-    if (nemu_state.state != NEMU_RUNNING)
+#ifdef CONFIG_WAVE_FORM
+    if (unlikely(g_nr_guest_inst == 800000)){
+      Warn("Waveform Enabled!May result in a very large file!");
+      nemu_state.state = NEMU_STOP;
+    }
+      
+#endif
+    if (unlikely(nemu_state.state != NEMU_RUNNING))
       break; // 出现异常
   }
   uint64_t timer_end = get_time();

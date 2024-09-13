@@ -42,8 +42,8 @@ class LSU extends Module {
       s_w_wait_ready -> Mux(io.axi.WA.valid,s_w_busy,s_w_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
       s_w_wait_result -> Mux(io.axi.WR.valid,s_valid,s_w_wait_result),
-      s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
-      // s_w_busy -> Mux(io.axi.WD.ready, s_w_wait_result, s_w_busy), //等待返回值
+      // s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
+      s_w_busy -> Mux(io.axi.WD.ready, s_w_wait_result, s_w_busy), //等待返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
@@ -120,6 +120,14 @@ class LSU extends Module {
   check_mem.io.wen:=io.in.bits.mem_write_enable && io.in.valid && state === s_idle 
   check_mem.io.len:=mem_read_size
   check_mem.io.clock:=clock
+
+  val trace_lsu = Module(new TRACE_LSU)
+  trace_lsu.io.addr := io.in.bits.alu_result
+  trace_lsu.io.w_start := io.in.bits.mem_write_enable && io.in.valid && state === s_idle
+  trace_lsu.io.w_end  := io.axi.WR.valid
+  trace_lsu.io.r_start := io.in.bits.mem_read_enable && io.in.valid && state === s_idle
+  trace_lsu.io.r_end := io.axi.RD.valid
+  trace_lsu.io.clock := clock
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
@@ -143,10 +151,65 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
       |  input [31:0] wdata,
       |  input [31:0] len,
       |  input clock
-      |);
+      |); 
       |always @(negedge clock) begin
       |   if (wen||ren) begin
       |      check_addr(addr,ren,wmask,wdata,len);
+      |  end
+      | end
+      |endmodule
+    """.stripMargin
+  )
+}
+//判断input改变
+//TODO:LSU 取到数据/写入数据--使用valid
+//TODO:LSU 延迟
+/*
+  addr,w/wfin,r/rfin
+  RW--R-True/W-False
+  start_end--start-True/end-False
+*/
+class TRACE_LSU extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val addr  = Input(UInt(CVAL.DLEN.W))
+    val w_start = Input(Bool())
+    val r_start = Input(Bool())
+    val w_end = Input(Bool())
+    val r_end = Input(Bool())
+    val clock = Input(Clock())
+  })
+    setInline(
+    "trace_lsu.v",
+    """import "DPI-C" function void trace_lsu(int unsigned addr,bit RW,bit start_end);
+      |module TRACE_LSU(
+      |  input w_start,
+      |  input r_start,      
+      |  input w_end,
+      |  input r_end,
+      |  input [31:0] addr,
+      |  input clock
+      |);
+      | reg w,r;
+      |initial begin
+      | w=1'b0;
+      | r=1'b0;
+      |end
+      |always @(negedge clock) begin
+      |   if (w_start&&w==1'b0) begin
+      |      trace_lsu(addr,1'b0,1'b1);
+      |     w=1'b1;
+      |  end
+      |   if (r_start&&r==1'b0) begin
+      |      trace_lsu(addr,1'b1,1'b1);
+      |     r=1'b1;
+      |  end
+      |   if (w_end && w==1'b1) begin
+      |      trace_lsu(addr,1'b0,1'b0);
+      |     w=1'b0;
+      |  end
+      |   if (r_end && r==1'b1) begin
+      |      trace_lsu(addr,1'b1,1'b0);
+      |     r=1'b0;
       |  end
       | end
       |endmodule

@@ -12,36 +12,36 @@ SECTIONS {
   . = ORIGIN(flash);
   /* 一级加载 */
   .fsbl : {
-  . = ALIGN(4);
+  . = ALIGN(8);
     *(entry)
     *(.fsbl)
-  . = ALIGN(4);
+  . = ALIGN(8);
   }> flash : fsbl
   /* 二级加载 */
   _ssbl_section_src = LOADADDR(.ssbl);
   .ssbl : {
   _ssbl_section_start = .;
-  . = ALIGN(4);
+  . = ALIGN(8);
     *(.ssbl)
   _ssbl_section_end = .;
-  . = ALIGN(4);
+  . = ALIGN(8);
   }> sram AT> flash : ssbl
   /* text段，ssbl复制的起点 */
   _text_section_src = LOADADDR(.text);
   .text : {
-  . = ALIGN(4);
+  . = ALIGN(8);
   _text_section_start = .;
     *(.text*)
     *(.text.*)
-  . = ALIGN(4);
+  . = ALIGN(8);
   } > sdram AT> flash : text
   _etext = .;
   .rodata : {
-  . = ALIGN(4);
+  . = ALIGN(8);
     *(.rodata*)
     *(.rodata.*)
     *(.srodata.*)
-  . = ALIGN(4);
+  . = ALIGN(8);
   }> sdram AT> flash : rodata
   
   .data.extra : {
@@ -73,16 +73,15 @@ SECTIONS {
     __am_apps_data_end = .;
     . = ALIGN(8);
   }> sdram AT> flash : data_ext
-
   _data_section_src = LOADADDR(.data);
   .data : {
-  . = ALIGN(4);
+  . = ALIGN(8);
     _data_section_start = .;
     *(.data)
     *(.data.*)
     *(.sdata)
     *(.sdata.*)
-  . = ALIGN(4);
+  . = ALIGN(8);
     _data_section_end = .;
   }> sdram AT> flash : data
   .bss.extra : {
@@ -96,12 +95,12 @@ SECTIONS {
     . = ALIGN(8);
   }> sdram AT> flash : bss_ext
   .bss : {
-  . = ALIGN(4);
+  . = ALIGN(8);
     *(.bss*)
     *(.bss.*)
     *(.sbss*)
     *(.scommon)
-  . = ALIGN(4);
+  . = ALIGN(8);
 	_bss_end = .;
   }> sdram AT> flash : bss
   /* ssbl复制的终点 */
