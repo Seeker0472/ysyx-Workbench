@@ -10,7 +10,7 @@ import Constants_Val.CVAL.DLEN
 class IFU extends Module {
   val io = IO(new Bundle {
     val in       = Flipped(Decoupled(new WBU_O))
-    val inst_now = Output(UInt(CVAL.DLEN.W))
+    // val inst_now = Output(UInt(CVAL.DLEN.W))
     val out      = Decoupled(new IFUO())
     val axi      = Flipped(new AXIReadIO())
     val rwerr    = Input(Bool())
@@ -33,11 +33,10 @@ class IFU extends Module {
 
   io.in.ready := true.B
 
-  // io.inst_now := 
 
   io.out.bits.pc    := pc
   io.out.bits.instr := icache.io.inst
-  io.inst_now := icache.io.inst
+  // io.inst_now := icache.io.inst
 
   when(io.in.valid) {
     pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
