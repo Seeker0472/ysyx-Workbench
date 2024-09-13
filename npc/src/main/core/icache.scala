@@ -36,7 +36,7 @@ class icache extends Module {
   )
 
   // split the tag, index, offset from addr
-  val addr_tag = io.addr(31, 32 - tag_len)
+  val addr_tag = io.addr(31, 31 - tag_len)
   val addr_index = io.addr(31 - tag_len, 31 - tag_len - index_len)
   val addr_offset = 0 // TODO
 
