@@ -98,7 +98,7 @@ static int parse_args(int argc, char *argv[]) {
   while ( (o = getopt_long(argc, argv, "-bshl:d:p:e:", table, NULL)) != -1) {
     switch (o) {
       case 'b': sdb_set_batch_mode(); break;
-      case 's': soc_img=true; break;
+      case 's': soc_img=true;load_img(); break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
