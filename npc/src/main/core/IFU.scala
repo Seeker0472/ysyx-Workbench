@@ -21,7 +21,6 @@ class IFU extends Module {
 
   val state = RegInit(s_fetching)
 
-  // val pc    = RegInit("h30000000".U(CVAL.DLEN.W))
   // val inst = Reg(UInt(32.W))
   println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","Default:h30000000")}")
   val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
@@ -36,7 +35,6 @@ class IFU extends Module {
 
   io.out.bits.pc    := pc
   io.out.bits.instr := icache.io.inst
-  // io.inst_now := icache.io.inst
 
   when(io.in.valid) {
     pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
@@ -61,8 +59,8 @@ class IFU extends Module {
   trace_ifu.io.clock := clock
 
 } 
-//TODO:IFU取到指令-使用AXIRDvalid
-//TODO:IFU延迟
+//DONE:IFU取到指令-使用AXIRDvalid
+//DONE:IFU延迟
 
 /*
   addr,f/ffin

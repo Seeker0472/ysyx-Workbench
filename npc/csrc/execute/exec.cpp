@@ -141,7 +141,6 @@ int run(int step) {
     single_cycle(true);
     tfp->flush();
     g_nr_guest_inst++;
-    // word_t inst = INST_STRUCT;
     if (unlikely(step < PRINT_INST_MIN && step >= 0))
       print_inst_asm(pc, inst);
     trace_and_difftest(pc, inst);
