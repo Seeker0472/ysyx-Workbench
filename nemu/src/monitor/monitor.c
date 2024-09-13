@@ -68,12 +68,10 @@ static long load_img() {
   Log("The image is %s, size = %ld", img_file, size);
 
   fseek(fp, 0, SEEK_SET);
-
-  Log("soc_img%s",soc_img?"True":"False");
   if (soc_img) {
     // soc,加载进flash
     Log("Loading into Flash");
-    assert(0);
+    // assert(0);
     int ret = fread(guest_to_host(FLASH_BASE), size, 1, fp);
     assert(ret == 1);
   } else {
@@ -100,7 +98,7 @@ static int parse_args(int argc, char *argv[]) {
   while ( (o = getopt_long(argc, argv, "-bshl:d:p:e:", table, NULL)) != -1) {
     switch (o) {
       case 'b': sdb_set_batch_mode(); break;
-      case 's': soc_img=true;load_img(); break;
+      case 's': soc_img=true; break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
