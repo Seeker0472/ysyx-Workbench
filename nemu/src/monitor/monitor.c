@@ -68,6 +68,8 @@ static long load_img() {
   Log("The image is %s, size = %ld", img_file, size);
 
   fseek(fp, 0, SEEK_SET);
+
+  Log("soc_img%s",soc_img?"True":"False");
   if (soc_img) {
     // soc,加载进flash
     Log("Loading into Flash");
