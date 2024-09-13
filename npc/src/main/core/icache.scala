@@ -41,7 +41,7 @@ class icache extends Module{
 
   //get the targeted cache block
   val target_block = cache(addr_index)
-  val hit = target_block(tag_len+block_size*8,tag_len+block_size*8)&&(target_block(tag_len+block_size*8-1,block_size*8)===addr_tag)
+  val hit = target_block(tag_len+block_size*8,tag_len+block_size*8).B&&(target_block(tag_len+block_size*8-1,block_size*8)===addr_tag)
   //if miss, firstly load data into cache,next cyc visit cache and resut into a hit.
   val data = target_block(block_size*8-1,0)
   io.inst := data
