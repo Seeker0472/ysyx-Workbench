@@ -175,6 +175,10 @@ config ETRACE
   bool "Emable Exception Trace"
   default n
 
+config PC_TRACE
+  bool "Emable PC Trace"
+  default n
+
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
   bool "Enable differential testing"

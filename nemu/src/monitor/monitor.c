@@ -141,7 +141,7 @@ void init_monitor(int argc, char *argv[]) {
   init_isa();
 
   //初始化ftrace
-  // init_ftrace(elf_file);   
+  IFDEF(CONFIG_FTRACE,init_ftrace(elf_file);)
 
   /* Load the image to memory. This will overwrite the built-in image. */
   long img_size = load_img();
@@ -153,7 +153,7 @@ void init_monitor(int argc, char *argv[]) {
   init_sdb();
 
   void init_pc_trace();
-  init_pc_trace();
+  IFDEF(CONFIG_PC_TRACE,init_pc_trace(););
 #ifndef CONFIG_ISA_loongarch32r
   IFDEF(CONFIG_ITRACE, init_disasm(
     MUXDEF(CONFIG_ISA_x86,     "i686",

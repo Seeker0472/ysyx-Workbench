@@ -87,7 +87,7 @@ static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
     void trace_pc(uint32_t pc);
-    trace_pc(cpu.pc);
+    IFDEF( CONFIG_PC_TRACE,trace_pc(cpu.pc););
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
