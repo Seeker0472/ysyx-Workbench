@@ -74,6 +74,9 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   //        wmask, wdata);
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
+extern "C" void trace_hit(int waddr, int wdata, char wmask) {
+  printf("cache Hit!\n");
+}
 // extern "C" void pmem_write(int waddr, int wdata, char wmask) {
 //   int aligned_addr = waddr & ~0x3u; // 对齐地址
 //   int offset = waddr & 0x3u;
