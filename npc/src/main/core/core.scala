@@ -89,7 +89,8 @@ class ypc extends Module {
   io.master.awqos:=0.U
   io.master.arcache:=0.U
   io.master.arprot:=0.U
-  io.master.arprot:=0.U
+  io.master.arlock:=0.U
+  io.master.arqos:=0.U
   //slave
   io.slave.awready := 0.U
   io.slave.wready  := 0.U
