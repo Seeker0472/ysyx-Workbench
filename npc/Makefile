@@ -112,7 +112,7 @@ clean:
 
 sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} 
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
 	./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 
