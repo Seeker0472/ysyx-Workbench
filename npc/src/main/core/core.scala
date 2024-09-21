@@ -82,6 +82,14 @@ class ypc extends Module {
   axi_arbiter.io.out.RD.bits.data  := io.master.rdata
   axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
 
+//temp
+  io.master.awcache:=0.U
+  io.master.awprot:=0.U
+  io.master.awlock:=0.U
+  io.master.awqos:=0.U
+  io.master.arcache:=0.U
+  io.master.arprot:=0.U
+  io.master.arprot:=0.U
   //slave
   io.slave.awready := 0.U
   io.slave.wready  := 0.U
