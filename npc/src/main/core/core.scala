@@ -82,15 +82,15 @@ class ypc extends Module {
   axi_arbiter.io.out.RD.bits.data  := io.master.rdata
   axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
 
-//temp
-  io.master.awcache:=0.U
-  io.master.awprot:=0.U
-  io.master.awlock:=0.U
-  io.master.awqos:=0.U
-  io.master.arcache:=0.U
-  io.master.arprot:=0.U
-  io.master.arlock:=0.U
-  io.master.arqos:=0.U
+// //temp
+//   io.master.awcache:=0.U
+//   io.master.awprot:=0.U
+//   io.master.awlock:=0.U
+//   io.master.awqos:=0.U
+//   io.master.arcache:=0.U
+//   io.master.arprot:=0.U
+//   io.master.arlock:=0.U
+//   io.master.arqos:=0.U
   //slave
   io.slave.awready := 0.U
   io.slave.wready  := 0.U
@@ -118,10 +118,10 @@ class master_io extends Bundle {
   val awlen   = Output(UInt(8.W)) //Burst length--set to 1?
   val awsize  = Output(UInt(3.W)) //Burst size---0b101---32
   val awburst = Output(UInt(2.W)) //Burst type-----0b00----FIXED
-  val awcache = Output(UInt(4.W))
-  val awprot = Output(UInt(3.W))
-  val awlock = Output(Bool())
-  val awqos = Output(UInt(4.W))
+  // val awcache = Output(UInt(4.W))
+  // val awprot = Output(UInt(3.W))
+  // val awlock = Output(Bool())
+  // val awqos = Output(UInt(4.W))
 
   val wready = Input(Bool())
   val wvalid = Output(Bool())
@@ -141,10 +141,10 @@ class master_io extends Bundle {
   val arlen   = Output(UInt(8.W))
   val arsize  = Output(UInt(3.W))
   val arburst = Output(UInt(2.W))
-  val arlock = Output(Bool())
-  val arcache = Output(UInt(4.W))
-  val arprot = Output(UInt(3.W))
-  val arqos = Output(UInt(4.W))
+  // val arlock = Output(Bool())
+  // val arcache = Output(UInt(4.W))
+  // val arprot = Output(UInt(3.W))
+  // val arqos = Output(UInt(4.W))
 
 
   val rready = Output(Bool())
