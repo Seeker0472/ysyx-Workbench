@@ -12,6 +12,7 @@ lway = []
 lset = []
 lsize = []
 lmiss = []
+lhit = []
 
 # read the results
 results = ["cache_result"]
@@ -26,7 +27,7 @@ for fileName in results:
             lset.append(int(rset))
             lsize.append(int(rsize))
             lmiss.append(float(rmiss) / (float(rmiss) + float(rhit)))
-
+            lhit.append(float(rhit) / (float(rmiss) + float(rhit)))
 
 # data
 ways = np.array(lway)
@@ -34,6 +35,8 @@ sets = np.array(lset)
 sizes = np.array(lsize)
 
 miss_probabilities = np.array(lmiss)
+
+point_sizes= np.array(lhit)*50 +5
 
 # 创建3D图形
 fig = plt.figure()
@@ -46,6 +49,7 @@ sc = ax.scatter(
     sizes,
     c=miss_probabilities,
     # cmap="viridis",
+    s=point_sizes
 )
 
 
