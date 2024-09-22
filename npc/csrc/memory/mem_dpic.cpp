@@ -1,5 +1,6 @@
 #include "../include/ydb_all.h"
 #include <cassert>
+#include <cstdint>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -74,8 +75,10 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   //        wmask, wdata);
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
+uint64_t cache_hit_times=0;
 extern "C" void trace_hit(int waddr, int wdata, char wmask) {
-  printf("cache Hit!\n");
+  // printf("cache Hit!\n");
+  cache_hit_times+=1;
 }
 // extern "C" void pmem_write(int waddr, int wdata, char wmask) {
 //   int aligned_addr = waddr & ~0x3u; // 对齐地址
