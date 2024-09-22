@@ -110,7 +110,7 @@ clean:
 
 .PHONY: test verilog help reformat checkformat clean
 
-sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
+sim: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
@@ -126,8 +126,8 @@ gdbnpc:$(TARGETRaw)
 	@make -j -C build/npc_build -f Vraw_core.mk Vraw_core
 	gdb   --args ./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
-gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
-	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} 
+gdb: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
+	@verilator -O0 -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} 
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
 	gdb --args ./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 

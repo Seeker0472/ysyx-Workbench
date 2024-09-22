@@ -18,5 +18,6 @@
 !.envrc
 !flake.lock
 !/cachesim/*.py
+!.clangd
 
 yosys-sta/*
