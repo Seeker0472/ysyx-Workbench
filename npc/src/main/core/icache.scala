@@ -77,3 +77,30 @@ class icache extends Module {
     target_block := Cat(1.U(1.W), Cat(addr_tag, data_read))
   }
 }
+
+class TRACE_ICache extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val clock = Input(Clock())
+    val valid = Input(Bool())
+  })
+    setInline(
+    "trace_hit.v",
+    """import "DPI-C" function void trace_hit();
+      |module TRACE_ICache(
+      |  input valid,
+      |  input clock
+      |); 
+      | reg last_stat;
+      | initial
+      | last_stat = 1'b0;
+      |always @(negedge clock) begin
+      |   if (valid&&!last_stat) begin
+      |      trace_hit();
+      |  end
+      | last_stat = valid;
+      | end
+      |endmodule
+    """.stripMargin
+  )
+}
+

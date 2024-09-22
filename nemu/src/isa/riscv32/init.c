@@ -27,9 +27,14 @@ static const uint32_t img [] = {
   0xdeadbeef,  // some data
 };
 
+extern bool soc_img;
+
 static void restart() {
   /* Set the initial program counter. */
-  cpu.pc = RESET_VECTOR;
+  if (soc_img)
+    cpu.pc = FLASH_BASE;
+  else
+    cpu.pc = RESET_VECTOR;
 
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;
