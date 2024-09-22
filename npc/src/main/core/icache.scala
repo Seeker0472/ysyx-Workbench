@@ -28,7 +28,7 @@ class icache extends Module {
   //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt
   val index_len = (math.log(block_num) / math.log(2)).toInt
-  val tag_len = 31 - offset_len - index_len
+  val tag_len = 32 - offset_len - index_len
 
   println(s"offset_len: $offset_len, index_len: $index_len, tag_len: $tag_len")
   
@@ -38,7 +38,7 @@ class icache extends Module {
 
   // split the tag, index, offset from addr
   val addr_tag = io.addr(31, 31 - tag_len+1)
-  val addr_index = io.addr(31 - tag_len, 31 - tag_len - index_len+1)
+  val addr_index = io.addr(31 - tag_len, 31 - tag_len - index_len + 1)
   val addr_offset = 0 // TODO
 
   // get the targeted cache block
