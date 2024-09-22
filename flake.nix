@@ -89,9 +89,9 @@
             pkgs.yosys
             # libyaml_cpp_0_7
             pkgs.pkg-config
-python312
-	python312Packages.matplotlib
-	python312Packages.numpy
+            python312 
+            python312Packages.matplotlib
+            python312Packages.numpy
           ];
 
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
