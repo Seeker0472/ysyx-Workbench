@@ -110,7 +110,7 @@ class TRACE_INST extends BlackBox with HasBlackBoxInline {
     setInline(
     "trace_inst.v",
     """import "DPI-C" function void trace_inst(int unsigned inst_now);
-      |module TRACE_IFU(
+      |module TRACE_INST(
       |  input [31:0] inst,
       |  input clock
       |);
