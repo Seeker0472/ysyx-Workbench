@@ -15,6 +15,7 @@
 /fceux-am
 !/am-kernels
 !*.nix
+!.envrc
 !flake.lock
 !/cachesim/*.py
 
