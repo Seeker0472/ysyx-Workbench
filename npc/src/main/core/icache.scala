@@ -24,8 +24,6 @@ class icache extends Module {
   val block_size = 4
   val block_num = 16
   // assume ifu will only get 32bit wide data!
-  // tag_len=log2<block_size/4>+log2<block_num>=log2<block_num*block_size/4>
-  // val tag_len = math.log(block_num*block_size/4)/math.log(2)
 
   //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt
@@ -81,7 +79,7 @@ class icache extends Module {
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
     target_block_tag := Cat(1.U(1.W),addr_tag)
-    cache(addr_tag):=data_read
+    cache(addr_index):=data_read
   }
 
   //Trace hit
