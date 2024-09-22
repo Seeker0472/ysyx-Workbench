@@ -76,6 +76,11 @@ class icache extends Module {
   when(io.axi.RD.valid && state === s_wait_data) {
     target_block := Cat(1.U(1.W), Cat(addr_tag, data_read))
   }
+
+  //Trace hit
+  val hit_trace = Module(new TRACE_ICache)
+  hit_trace.io.clock := clock
+  hit_trace.valid:= hit
 }
 
 class TRACE_ICache extends BlackBox with HasBlackBoxInline {
