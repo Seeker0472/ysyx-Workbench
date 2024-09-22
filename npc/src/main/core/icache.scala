@@ -26,7 +26,7 @@ class icache extends Module {
   // assume ifu will only get 32bit wide data!
   // tag_len=log2<block_size/4>+log2<block_num>=log2<block_num*block_size/4>
   // val tag_len = math.log(block_num*block_size/4)/math.log(2)
-  val offset_len = (math.log(block_size / 4) / math.log(2)).toInt
+  val offset_len = (math.log(block_size) / math.log(2)).toInt
   val index_len = (math.log(block_num) / math.log(2)).toInt
   val tag_len = 31 - offset_len - index_len
 
