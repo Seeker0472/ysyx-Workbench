@@ -16,5 +16,6 @@
 !/am-kernels
 !*.nix
 !flake.lock
+!/cachesim/*.py
 
 yosys-sta/*
