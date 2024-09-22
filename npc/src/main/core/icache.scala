@@ -26,18 +26,17 @@ class icache extends Module {
   // assume ifu will only get 32bit wide data!
   // tag_len=log2<block_size/4>+log2<block_num>=log2<block_num*block_size/4>
   // val tag_len = math.log(block_num*block_size/4)/math.log(2)
+
+  //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt
   val index_len = (math.log(block_num) / math.log(2)).toInt
   val tag_len = 31 - offset_len - index_len
 
   println(s"offset_len: $offset_len, index_len: $index_len, tag_len: $tag_len")
   
-  // calc cache_line size:[1(valid)][(tag_len)][block_size*8(data)]
-
-  val cachetag = 
-    RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
-  val cache = 
-    RegInit(VecInit(Seq.fill(block_num)(0.U((block_size*8).W))))
+  //Tag and cache
+  val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
+  val cache = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size*8).W))))
 
   // split the tag, index, offset from addr
   val addr_tag = io.addr(31, 31 - tag_len)
@@ -45,12 +44,15 @@ class icache extends Module {
   val addr_offset = 0 // TODO
 
   // get the targeted cache block
-  val target_block = cachetag(addr_index)
-  val hit = target_block(tag_len).asBool && (target_block(
+  val target_block_tag = cachetag(addr_index)
+  val hit = target_block_tag(tag_len).asBool && (target_block(
     tag_len  - 1,
     0
   ) === addr_tag)
+
   // if miss, firstly load data into cache,next cyc visit cache and resut into a hit.
+
+  //get the data
   val data = cache(addr_index)
   io.inst := data
 
@@ -78,7 +80,8 @@ class icache extends Module {
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
-    target_block := Cat(1.U(1.W), Cat(addr_tag, data_read))
+    target_block_tag := Cat(1.U(1.W),addr_tag)
+    cache(addr_tag):=data_read
   }
 
   //Trace hit
