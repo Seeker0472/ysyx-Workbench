@@ -121,7 +121,7 @@ void init_runtime() {
 
 }
 
-word_t inst=0;
+word_t inst=0;//TODO
 
 int run(int step) {
   int now = step;
