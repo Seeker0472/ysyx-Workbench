@@ -37,8 +37,8 @@ class icache extends Module {
   val cache = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size*8).W))))
 
   // split the tag, index, offset from addr
-  val addr_tag = io.addr(31, 31 - tag_len)
-  val addr_index = io.addr(31 - tag_len, 31 - tag_len - index_len)
+  val addr_tag = io.addr(31, 31 - tag_len+1)
+  val addr_index = io.addr(31 - tag_len, 31 - tag_len - index_len+1)
   val addr_offset = 0 // TODO
 
   // get the targeted cache block
