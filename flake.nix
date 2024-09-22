@@ -55,8 +55,8 @@
           buildInputs = with pkgs; [
             pkgs.espresso
             # 指定verilator版本为5.008
-            # my-verilator
-            verilator
+            my-verilator
+            # verilator
 
             #build-essential
             pkgs.man
