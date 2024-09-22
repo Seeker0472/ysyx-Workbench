@@ -29,6 +29,9 @@ class icache extends Module {
   val offset_len = (math.log(block_size / 4) / math.log(2)).toInt
   val index_len = (math.log(block_num) / math.log(2)).toInt
   val tag_len = 31 - offset_len - index_len
+
+  println(s"offset_len: $offset_len, index_len: $index_len, tag_len: $tag_len")
+  
   // calc cache_line size:[1(valid)][(tag_len)][block_size*8(data)]
 
   val cache = RegInit(
@@ -80,7 +83,7 @@ class icache extends Module {
   //Trace hit
   val hit_trace = Module(new TRACE_ICache)
   hit_trace.io.clock := clock
-  hit_trace.io.valid:= hit
+  hit_trace.io.valid := hit
 }
 
 class TRACE_ICache extends BlackBox with HasBlackBoxInline {
