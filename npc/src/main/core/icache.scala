@@ -45,7 +45,7 @@ class icache extends Module {
 
   // get the targeted cache block
   val target_block_tag = cachetag(addr_index)
-  val hit = target_block_tag(tag_len).asBool && (target_block(
+  val hit = target_block_tag(tag_len).asBool && (target_block_tag(
     tag_len  - 1,
     0
   ) === addr_tag)
