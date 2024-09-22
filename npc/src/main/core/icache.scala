@@ -80,7 +80,7 @@ class icache extends Module {
   //Trace hit
   val hit_trace = Module(new TRACE_ICache)
   hit_trace.io.clock := clock
-  hit_trace.valid:= hit
+  hit_trace.io.valid:= hit
 }
 
 class TRACE_ICache extends BlackBox with HasBlackBoxInline {
