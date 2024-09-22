@@ -34,8 +34,11 @@ class icache extends Module {
   
   // calc cache_line size:[1(valid)][(tag_len)][block_size*8(data)]
 
+  val cachetag = RegInit(
+    RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
+  )
   val cache = RegInit(
-    RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len + block_size * 8).W))))
+    RegInit(VecInit(Seq.fill(block_num)(0.U((block_size*8).W))))
   )
 
   // split the tag, index, offset from addr
@@ -44,13 +47,13 @@ class icache extends Module {
   val addr_offset = 0 // TODO
 
   // get the targeted cache block
-  val target_block = cache(addr_index)
-  val hit = target_block(tag_len + block_size * 8,tag_len + block_size * 8).asBool && (target_block(
-    tag_len + block_size * 8 - 1,
-    block_size * 8
+  val target_block = cachetag(addr_index)
+  val hit = target_block(tag_len).asBool && (target_block(
+    tag_len  - 1,
+    0
   ) === addr_tag)
   // if miss, firstly load data into cache,next cyc visit cache and resut into a hit.
-  val data = target_block(block_size * 8 - 1, 0)
+  val data = cache(addr_index)
   io.inst := data
 
   // the state machine
