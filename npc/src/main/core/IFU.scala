@@ -116,6 +116,7 @@ class TRACE_INST extends BlackBox with HasBlackBoxInline {
       |);
       |always @(negedge clock) begin
       |  trace_inst(inst);
+      |end
       |endmodule
     """.stripMargin
   )
