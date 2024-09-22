@@ -6,4 +6,4 @@
 	url = https://github.com/NJU-ProjectN/riscv-arch-test-am.git
 [submodule "nvboard"]
 	path = nvboard
-	url = https://github.com/NJU-ProjectN/nvboard.git
+	url = git@github.com:Seeker0472/nvboard.git
