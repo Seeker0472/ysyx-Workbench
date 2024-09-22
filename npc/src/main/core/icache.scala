@@ -34,12 +34,10 @@ class icache extends Module {
   
   // calc cache_line size:[1(valid)][(tag_len)][block_size*8(data)]
 
-  val cachetag = RegInit(
+  val cachetag = 
     RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
-  )
-  val cache = RegInit(
+  val cache = 
     RegInit(VecInit(Seq.fill(block_num)(0.U((block_size*8).W))))
-  )
 
   // split the tag, index, offset from addr
   val addr_tag = io.addr(31, 31 - tag_len)
