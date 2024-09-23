@@ -21,7 +21,7 @@ class icache extends Module {
     val addr_valid = Input(Bool())
   })
 
-  val block_size = 4
+  val block_size = 8
   val block_num = 16
   // assume ifu will only get 32bit wide data!
 
