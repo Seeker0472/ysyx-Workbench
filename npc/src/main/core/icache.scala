@@ -82,7 +82,7 @@ class icache extends Module {
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
     target_block_tag := Cat(1.U(1.W),addr_tag)
-    cache(addr_index):=data_read
+    cache(addr_index):=Cat(cache(addr_index)(block_size*8-32,0),data_read)
   }
 
   //Trace hit
