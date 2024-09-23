@@ -38,7 +38,7 @@ class icache extends Module {
   // split the tag, index, offset from addr
   val addr_tag = io.addr(31, 31 - tag_len+1)
   val addr_index = io.addr(31 - tag_len, 31 - tag_len - index_len + 1)
-  val addr_offset = 0 // TODO
+  val addr_offset = io.addr(offset_len-1,0)<<3
 
   // get the targeted cache block
   val target_block_tag = cachetag(addr_index)
@@ -50,7 +50,7 @@ class icache extends Module {
   // if miss, firstly load data into cache,next cyc visit cache and resut into a hit.
 
   //get the data
-  val data = cache(addr_index)
+  val data = (cache(addr_index)>>(addr_offset))(31,0)
   io.inst := data
 
   // the state machine
@@ -81,7 +81,7 @@ class icache extends Module {
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
     target_block_tag := Cat(1.U(1.W),addr_tag)
-    cache(addr_index):=Cat(cache(addr_index)(block_size*8-32,0),data_read)
+    cache(addr_index):=Cat(data_read,cache(addr_index)(block_size*8-32,0))
   }
 
   //Trace hit
