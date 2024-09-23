@@ -23,7 +23,6 @@ class icache extends Module {
 
   val block_size = 8
   val block_num = 16
-  // assume ifu will only get 32bit wide data!
 
   //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt
@@ -65,7 +64,7 @@ class icache extends Module {
         Mux(io.addr_valid, s_fetching, s_idle)
       ),
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching),
-      s_wait_data -> Mux(io.axi.RD.valid, s_valid, s_wait_data),
+      s_wait_data -> Mux(io.axi.RD.bits.last, s_valid, s_wait_data),
       s_valid -> s_idle // Didn't stay
     )
   )
