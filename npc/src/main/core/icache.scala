@@ -75,7 +75,7 @@ class icache extends Module {
   io.axi.RA.bits.size := "b010".U
   io.axi.RD.ready := true.B
   io.axi.RA.bits.id := 0.U //TODO!!!!!
-  io.axi.RA.bits.len := 0.U //TODO!!!
+  io.axi.RA.bits.len := (block_size/4-1).U
 
   io.inst_valid := state === s_valid
   // miss,update  cache
