@@ -70,7 +70,7 @@ class icache extends Module {
   )
   // axi
   io.axi.RA.valid := state === s_fetching
-  io.axi.RA.bits.addr := io.addr
+  io.axi.RA.bits.addr := io.addr & (~(1<<offset_len-1))
   io.axi.RA.bits.size := "b010".U
   io.axi.RD.ready := true.B
   io.axi.RA.bits.id := 0.U //TODO!!!!!
