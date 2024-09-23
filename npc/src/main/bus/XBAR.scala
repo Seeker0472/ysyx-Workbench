@@ -52,6 +52,8 @@ class XBAR extends Module {
   io.axi.RA.bits.id     := io.in.RA.bits.id
   clint.io.RA.bits.addr := io.in.RA.bits.addr
   clint.io.RA.bits.size := io.in.RA.bits.size
+  clint.io.RA.bits.len := io.in.RA.bits.len
+  clint.io.RA.bits.id := io.in.RA.bits.id
   io.in.RA.ready := Mux(
     mem_r_b === BitPat("b0") || mem_r_reg === BitPat("b0"),
     io.axi.RA.ready,
