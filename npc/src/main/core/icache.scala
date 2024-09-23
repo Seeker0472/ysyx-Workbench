@@ -74,6 +74,9 @@ class icache extends Module {
   io.axi.RA.bits.addr := io.addr
   io.axi.RA.bits.size := "b010".U
   io.axi.RD.ready := true.B
+  io.axi.RA.bits.id := 0.U //TODO!!!!!
+  io.axi.RA.bits.len := "b010".U(3.W)//TODO!!!
+
   io.inst_valid := state === s_valid
   // miss,update  cache
   val data_read = io.axi.RD.bits.data

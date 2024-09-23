@@ -59,6 +59,8 @@ class LSU extends Module {
     )
   )
   io.axi.RA.bits.size := mem_read_size
+  io.axi.RA.bits.id := 0.U //TODO!!!!!
+  io.axi.RA.bits.len := "b010".U(3.W)
 
   io.axi.RA.valid     := io.in.bits.mem_read_enable && io.in.valid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
   io.axi.RA.bits.addr := io.in.bits.alu_result
