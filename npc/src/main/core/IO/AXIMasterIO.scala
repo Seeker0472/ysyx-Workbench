@@ -20,35 +20,49 @@ class AXIMasterIO extends Bundle {
   })
 }
 
-class AXIIO extends Bundle {
-  //Write address
-  val WA = Flipped(Decoupled(new Bundle {
-    val addr = (UInt(CVAL.DLEN.W))
-    val size = (UInt(3.W))
-    //awport-特权相关
-  }))
-  //Write data
-  val WD = Flipped(Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
-    val wstrb = (UInt(4.W)) //掩码
-  }))
-  //Write response
-  val WR = Decoupled(new Bundle {
-    val bresp = Output(UInt(2.W))
-  })
+// class AXIIO extends Bundle {
+//   //Write address
+//   val WA = Flipped(Decoupled(new Bundle {
+//     val addr = (UInt(CVAL.DLEN.W))
+//     val size = (UInt(3.W))
+//     //awport-特权相关
+//   }))
+//   //Write data
+//   val WD = Flipped(Decoupled(new Bundle {
+//     val data  = (UInt(CVAL.DLEN.W))
+//     val wstrb = (UInt(4.W)) //掩码
+//   }))
+//   //Write response
+//   val WR = Decoupled(new Bundle {
+//     val bresp = Output(UInt(2.W))
+//   })
 
-  //Read address
-  val RA = Flipped(Decoupled(new Bundle {
-    val addr = (UInt(CVAL.DLEN.W))
-    val size = (UInt(3.W))
-    //arport-特权相关
-  }))
-  //Read data
-  val RD = (Decoupled(new Bundle {
-    val data  = (UInt(CVAL.DLEN.W))
-    val rresp = (UInt(2.W))
-  }))
+//   //Read address
+//   val RA = Flipped(Decoupled(new Bundle {
+//     val addr = (UInt(CVAL.DLEN.W))
+//     val size = (UInt(3.W))
+//     //arport-特权相关
+//   }))
+//   //Read data
+//   val RD = (Decoupled(new Bundle {
+//     val data  = (UInt(CVAL.DLEN.W))
+//     val rresp = (UInt(2.W))
+//   }))
+// }
+class AXIIO extends Bundle {
+  val read = new AXIReadIO
+  val write = new AXIWriteIO
+
+  // def
+  def RA = read.RA
+  def RD = read.RD
+  def WA = write.WA
+  def WD = write.WD
+  def WR = write.WR
 }
+
+
+
 class AXIReadIO extends Bundle {
   //Read address
   val RA = Flipped(Decoupled(new Bundle {
