@@ -39,19 +39,20 @@ class AXI_Lite_Arbiter extends Module {
   xbar.io.in.RA.valid     := io.c1.RA.valid || io.c2.RA.valid
   xbar.io.in.RA.bits.addr := Mux(io.c1.RA.valid, io.c1.RA.bits.addr, io.c2.RA.bits.addr)
   xbar.io.in.RA.bits.size := Mux(io.c1.RA.valid, io.c1.RA.bits.size, io.c2.RA.bits.size)
-  xbar.io.in.RA.bits.id := Mux(io.c1.RA.valid, io.c1.RA.bits.id, io.c2.RA.bits.id)
+  xbar.io.in.RA.bits.id   := Mux(io.c1.RA.valid, io.c1.RA.bits.id, io.c2.RA.bits.id)
+  xbar.io.in.RA.bits.len   := Mux(io.c1.RA.valid, io.c1.RA.bits.len, io.c2.RA.bits.len)
   xbar.io.in.RD.ready     := Mux(state === s_c1_busy, io.c1.RD.ready, io.c2.RD.ready)
   io.c1.RD.bits.data      := xbar.io.in.RD.bits.data
   io.c2.RD.bits.data      := xbar.io.in.RD.bits.data
   io.c1.RD.bits.rresp     := xbar.io.in.RD.bits.rresp
   io.c2.RD.bits.rresp     := xbar.io.in.RD.bits.rresp
   //TODO: Is Necessary?
-  io.c1.RD.bits.id     := xbar.io.in.RD.bits.id
-  io.c2.RD.bits.id     := xbar.io.in.RD.bits.id
-  io.c1.RD.bits.last     := xbar.io.in.RD.bits.last
-  io.c2.RD.bits.last     := xbar.io.in.RD.bits.last
-  io.c1.RD.valid          := Mux(state === s_c1_busy, xbar.io.in.RD.valid, false.B)
-  io.c2.RD.valid          := Mux(state === s_c2_busy, xbar.io.in.RD.valid, false.B)
+  io.c1.RD.bits.id   := xbar.io.in.RD.bits.id
+  io.c2.RD.bits.id   := xbar.io.in.RD.bits.id
+  io.c1.RD.bits.last := xbar.io.in.RD.bits.last
+  io.c2.RD.bits.last := xbar.io.in.RD.bits.last
+  io.c1.RD.valid     := Mux(state === s_c1_busy, xbar.io.in.RD.valid, false.B)
+  io.c2.RD.valid     := Mux(state === s_c2_busy, xbar.io.in.RD.valid, false.B)
 
   //结果
   io.out <> xbar.io.axi
