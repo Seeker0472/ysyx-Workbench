@@ -238,9 +238,9 @@ class Decoder extends Module {
     val ebreak = Output(Bool())
     val out    = Decoupled(new DecoderO)
   })
-  io.in.ready:=io.out.ready
+  io.in.ready := io.out.ready
   // io.out.valid := true.B
-  io.out.valid:=io.in.valid
+  io.out.valid := io.in.valid
 
   //pass_through
   io.out.bits.pc := io.in.bits.pc
@@ -320,7 +320,7 @@ class Decoder extends Module {
   io.out.bits.pc_jump          := decodedResults(Is_Jump)
   io.out.bits.reg_write_enable := decodedResults(R_Write_Enable)
 
-  io.ebreak := decodedResults(Is_Ebreak)
+  io.ebreak := decodedResults(Is_Ebreak) && io.in.valid
 
   io.out.bits.mem_read_enable := decodedResults(Read_En)
 
@@ -343,8 +343,8 @@ class Decoder extends Module {
   trace_decoder.io.clock := clock
   trace_decoder.io.mem_R := decodedResults(Read_En) //MEM_Read
   trace_decoder.io.mem_W := decodedResults(Write_En) //MEM_Write
-  trace_decoder.io.calc := decodedResults(ALUOp_Gen) =/= ALU_Op.inv //calc instr
-  trace_decoder.io.csr := decodedResults(CSRRW) //scrrw/scrrs/mert/ecall
+  trace_decoder.io.calc  := decodedResults(ALUOp_Gen) =/= ALU_Op.inv //calc instr
+  trace_decoder.io.csr   := decodedResults(CSRRW) //scrrw/scrrs/mert/ecall
   trace_decoder.io.valid := io.in.valid //valid
 
 }
@@ -353,17 +353,17 @@ class Decoder extends Module {
 1.访存RW
 2.是否是运算-检测inv
 3.csr-csrrw/mret
-*/
+ */
 class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val clock = Input(Clock())
     val mem_R = Input(Bool())
     val mem_W = Input(Bool())
-    val calc = Input(Bool())
-    val csr = Input(Bool())
+    val calc  = Input(Bool())
+    val csr   = Input(Bool())
     val valid = Input(Bool())
   })
-    setInline(
+  setInline(
     "trace_decoder.v",
     """import "DPI-C" function void trace_decoder(bit mem_R,bit mem_W,bit calc,bit csr);
       |module TRACE_DECODER(

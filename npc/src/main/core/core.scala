@@ -12,9 +12,8 @@ class ypc extends Module {
     // val inst_now = Output(UInt(CVAL.DLEN.W))
     val master    = (new master_io)
     val slave     = Flipped(new master_io)
-    val interrupt = Input(Bool()) //TODO
+    val interrupt = Input(Bool()) // TODO
   })
-
 
   val decoder     = Module(new Decoder())
   val reg         = Module(new REG())
@@ -48,7 +47,7 @@ class ypc extends Module {
 
   StageConnect(wbu.io.out, ifu.io.in)
 
-  //axi_connection_master
+  // axi_connection_master
   axi_arbiter.io.out.WA.ready := io.master.awready
   io.master.awvalid           := axi_arbiter.io.out.WA.valid
   io.master.awaddr            := axi_arbiter.io.out.WA.bits.addr
@@ -71,18 +70,19 @@ class ypc extends Module {
   axi_arbiter.io.out.RA.ready := io.master.arready
   io.master.arvalid           := axi_arbiter.io.out.RA.valid
   io.master.araddr            := axi_arbiter.io.out.RA.bits.addr
-  io.master.arid              := 0.U
-  io.master.arlen             := 0.U
-  // io.master.arsize            := "b010".U(3.W)
-  io.master.arsize  := axi_arbiter.io.out.RA.bits.size
-  io.master.arburst := 1.U
+  io.master.arid              := axi_arbiter.io.out.RA.bits.id
+  io.master.arlen             := axi_arbiter.io.out.RA.bits.len
+  io.master.arsize            := axi_arbiter.io.out.RA.bits.size
+  io.master.arburst           := 1.U
 
   io.master.rready                 := axi_arbiter.io.out.RD.ready
   axi_arbiter.io.out.RD.valid      := io.master.rvalid
   axi_arbiter.io.out.RD.bits.data  := io.master.rdata
   axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
+  axi_arbiter.io.out.RD.bits.id   := io.master.rid
+  axi_arbiter.io.out.RD.bits.last   := io.master.rlast
 
-  //slave
+  // slave
   io.slave.awready := 0.U
   io.slave.wready  := 0.U
   io.slave.bvalid  := 0.U
@@ -97,7 +97,7 @@ class ypc extends Module {
 
   // axi_arbiter.out<>
 
-  ifu.io.rwerr := (io.master.bresp =/= 0.U && io.master.bvalid) || (io.master.rresp =/= 0.U && io.master.rvalid) //出错跳转到0=
+  ifu.io.rwerr := (io.master.bresp =/= 0.U && io.master.bvalid) || (io.master.rresp =/= 0.U && io.master.rvalid) // 出错跳转到0=
 
 }
 
@@ -105,21 +105,21 @@ class master_io extends Bundle {
   val awready = Input(Bool())
   val awvalid = Output(Bool())
   val awaddr  = Output(UInt(32.W))
-  val awid    = Output(UInt(4.W)) //Write ID- Set to 0？
-  val awlen   = Output(UInt(8.W)) //Burst length--set to 1?
-  val awsize  = Output(UInt(3.W)) //Burst size---0b101---32
-  val awburst = Output(UInt(2.W)) //Burst type-----0b00----FIXED
+  val awid    = Output(UInt(4.W)) // Write ID
+  val awlen   = Output(UInt(8.W)) // Burst length
+  val awsize  = Output(UInt(3.W)) // Burst size---0b101---32
+  val awburst = Output(UInt(2.W)) // Burst type
 
   val wready = Input(Bool())
   val wvalid = Output(Bool())
   val wdata  = Output(UInt(CVAL.DLEN.W))
-  val wstrb  = Output(UInt(4.W)) //Write strobes
-  val wlast  = Output(Bool()) //the last transfer in a write burst---set to 1
+  val wstrb  = Output(UInt(4.W)) // Write strobes
+  val wlast  = Output(Bool()) // the last transfer in a write burst---set to 1
 
   val bready = Output(Bool())
   val bvalid = Input(Bool())
-  val bresp  = Input(UInt(2.W)) //Write response
-  val bid    = Input(UInt(4.W)) //Write ID- Set to 0？--IGNORE
+  val bresp  = Input(UInt(2.W)) // Write response
+  val bid    = Input(UInt(4.W)) // Write ID
 
   val arready = Input(Bool())
   val arvalid = Output(Bool())
@@ -133,6 +133,6 @@ class master_io extends Bundle {
   val rvalid = Input(Bool())
   val rresp  = Input(UInt(2.W))
   val rdata  = Input(UInt(CVAL.DLEN.W))
-  val rlast  = Input(Bool()) //ignore
-  val rid    = Input(UInt(4.W)) //ignore
+  val rlast  = Input(Bool()) // for arbiter TODO！！！！
+  val rid    = Input(UInt(4.W))
 }

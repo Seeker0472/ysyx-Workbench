@@ -1,6 +1,6 @@
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 BUILD_DIR = ./build
-PRJ = playground
+PRJ = npc
 SED_CMD = sed -i "s/^.*\.v$$//"
 NXDC_FILE = ${NPC_HOME}/csrc/nvb/soc.nxdc
 SRC_AUTO_BIND = ${NPC_HOME}/csrc/nvb/bind.cpp
