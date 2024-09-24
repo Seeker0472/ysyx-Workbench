@@ -21,7 +21,7 @@ class icache extends Module {
     val addr_valid = Input(Bool())
   })
 
-  val block_size = 16
+  val block_size = 8
   val block_num  = 16
 
   //calc the len
