@@ -47,7 +47,7 @@ class LSU extends Module {
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
-  io.in.ready  := true.B
+  io.in.ready  := state===s_valid//TODO:temp solution!
   io.out.valid := state === s_valid
   val mem_read_size = MuxLookup(io.in.bits.mem_read_type, 0.U(3.W))(
     Seq(
