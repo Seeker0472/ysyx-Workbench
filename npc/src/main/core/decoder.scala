@@ -238,38 +238,41 @@ class Decoder extends Module {
     val ebreak = Output(Bool())
     val out    = Decoupled(new DecoderO)
   })
-  io.in.ready := io.out.ready
+  //in
+  io.in.ready := true.B
+  val in_regbits  = RegNext(io.in.bits)
+  val in_regvalid = RegNext(io.in.valid)
   // io.out.valid := true.B
-  io.out.valid := io.in.valid
+  io.out.valid := in_regvalid
 
   //pass_through
-  io.out.bits.pc := io.in.bits.pc
+  io.out.bits.pc := in_regbits.pc
 
   val Patterns = decodePatterns.Patterns
 
   //Imms
-  val imm_I_Raw = io.in.bits.instr(31, 20)
+  val imm_I_Raw = in_regbits.instr(31, 20)
   val immI      = Cat(Fill(20, imm_I_Raw(11)), imm_I_Raw)
-  val imm_S_Raw = Cat(io.in.bits.instr(31, 25), io.in.bits.instr(11, 7))
+  val imm_S_Raw = Cat(in_regbits.instr(31, 25), in_regbits.instr(11, 7))
   val immS      = Cat(Fill(20, imm_S_Raw(11)), imm_S_Raw)
   val imm_B_Raw =
-    Cat(io.in.bits.instr(31, 31), io.in.bits.instr(7, 7), io.in.bits.instr(30, 25), io.in.bits.instr(11, 8), 0.U(1.W))
+    Cat(in_regbits.instr(31, 31), in_regbits.instr(7, 7), in_regbits.instr(30, 25), in_regbits.instr(11, 8), 0.U(1.W))
   val immB      = Cat(Fill(19, imm_B_Raw(12)), imm_B_Raw)
-  val imm_U_Raw = Cat(io.in.bits.instr(31, 12), 0.U(12.W))
+  val imm_U_Raw = Cat(in_regbits.instr(31, 12), 0.U(12.W))
   val immU      = imm_U_Raw
   val imm_J_Raw = Cat(
-    io.in.bits.instr(31, 31),
-    io.in.bits.instr(19, 12),
-    io.in.bits.instr(20, 20),
-    io.in.bits.instr(30, 21),
+    in_regbits.instr(31, 31),
+    in_regbits.instr(19, 12),
+    in_regbits.instr(20, 20),
+    in_regbits.instr(30, 21),
     0.U(1.W)
   )
   val immJ = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
 
-  // val opcode = io.in.bits.instr(6, 0)
-  val rs1 = io.in.bits.instr(19, 15)
-  val rs2 = io.in.bits.instr(24, 20)
-  val rd  = io.in.bits.instr(11, 7)
+  // val opcode = in_regbits.instr(6, 0)
+  val rs1 = in_regbits.instr(19, 15)
+  val rs2 = in_regbits.instr(24, 20)
+  val rd  = in_regbits.instr(11, 7)
 
   val decodedResults =
     new DecodeTable(
@@ -294,7 +297,7 @@ class Decoder extends Module {
         Is_Ecall
       )
     )
-      .decode(io.in.bits.instr)
+      .decode(in_regbits.instr)
   val Type = decodedResults(InstType)
   val imm = MuxLookup(Type, 0.U)(
     Seq(
@@ -320,7 +323,7 @@ class Decoder extends Module {
   io.out.bits.pc_jump          := decodedResults(Is_Jump)
   io.out.bits.reg_write_enable := decodedResults(R_Write_Enable)
 
-  io.ebreak := decodedResults(Is_Ebreak) && io.in.valid
+  io.ebreak := decodedResults(Is_Ebreak) && in_regvalid
 
   io.out.bits.mem_read_enable := decodedResults(Read_En)
 
@@ -345,7 +348,7 @@ class Decoder extends Module {
   trace_decoder.io.mem_W := decodedResults(Write_En) //MEM_Write
   trace_decoder.io.calc  := decodedResults(ALUOp_Gen) =/= ALU_Op.inv //calc instr
   trace_decoder.io.csr   := decodedResults(CSRRW) //scrrw/scrrs/mert/ecall
-  trace_decoder.io.valid := io.in.valid //valid
+  trace_decoder.io.valid := in_regvalid //valid
 
 }
 //DONE:译码出来的指令类型
