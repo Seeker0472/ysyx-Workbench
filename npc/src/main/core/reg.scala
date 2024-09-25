@@ -38,8 +38,6 @@ class REG extends Module {
       0x342.U -> 1.U,
       0x300.U -> 2.U,
       0x341.U -> 3.U,
-      // 0xF11.U -> 4.U,//mvendorid
-      // 0xF12.U -> 5.U,//marchid
     )
   )
   //默认写入mepc
