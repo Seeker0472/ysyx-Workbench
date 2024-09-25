@@ -25,8 +25,6 @@ class WBU extends Module {
 
 //wb
   //如果是store，Reg_Write_Enable应该是False
-  // val result   = alu.io.result
-  // val result   = Mux(io.in.bits.mem_read_enable, mem_read_result, alu.io.result)
   val result =
     Mux(
       io.in.bits.mem_read_enable,

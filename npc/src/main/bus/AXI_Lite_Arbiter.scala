@@ -30,9 +30,9 @@ class AXI_Lite_Arbiter extends Module {
     )
   )
   //写通道全部分配给c2
-  xbar.io.in.WA <> io.c2.WA
-  xbar.io.in.WD <> io.c2.WD
-  xbar.io.in.WR <> io.c2.WR
+  io.out.WA <> io.c2.WA
+  io.out.WD <> io.c2.WD
+  io.out.WR <> io.c2.WR
   //读通道看状态
   io.c1.RA.ready          := state === s_idle && xbar.io.in.RA.ready
   io.c2.RA.ready          := state === s_idle && xbar.io.in.RA.ready
