@@ -54,8 +54,10 @@ class REG extends Module {
   // io.CSRread.data := csrs(csr_r_ADDR)
   io.CSRread.data := MuxLookup(io.CSRread.addr,csrs(csr_r_ADDR))(
 Seq(      0xF11.U -> 0x79737978.U,////ysyx
-      0xF12.U -> 0x15fdf65.U,//学号)
+      0xF12.U -> 0x15fdf65.U,//学号
+      )
   )
+
   io.csr_mstvec   := csrs(0.U) //mstvec--支持ecall
 
   when(io.Rwrite.write_enable && io.Rwrite.addr =/= 0.U) { //保证寄存器不被写入
