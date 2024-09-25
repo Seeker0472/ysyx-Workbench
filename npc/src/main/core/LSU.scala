@@ -11,8 +11,10 @@ class LSU extends Module {
     val out = Decoupled(new MEMA_O)
     val axi = Flipped(new AXIIO())
   })
+  //sigs and status
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_w_wait_result ::s_w_wait_ready :: Nil = Enum(7)
+  val state                                                              = RegInit(s_idle)
   //
-
   io.in.ready  := true.B
   val in_regbits = RegNext(io.in.bits)
   val in_regvalid = RegNext(io.in.valid)
@@ -34,9 +36,7 @@ class LSU extends Module {
   io.out.bits.mret            := in_regbits.mret
   io.out.bits.imm             := in_regbits.imm
 
-  //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_w_wait_result ::s_w_wait_ready :: Nil = Enum(7)
-  val state                                                              = RegInit(s_idle)
+
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
