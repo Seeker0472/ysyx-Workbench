@@ -29,10 +29,7 @@ class AXI_Lite_Arbiter extends Module {
       // s_c2_valid -> Mux(io.c2.RD.ready, s_idle, s_c2_valid)
     )
   )
-  //写通道全部分配给c2
-  io.out.WA <> io.c2.WA
-  io.out.WD <> io.c2.WD
-  io.out.WR <> io.c2.WR
+
   //读通道看状态
   io.c1.RA.ready          := state === s_idle && xbar.io.in.RA.ready
   io.c2.RA.ready          := state === s_idle && xbar.io.in.RA.ready
@@ -54,8 +51,12 @@ class AXI_Lite_Arbiter extends Module {
   io.c1.RD.valid     := Mux(state === s_c1_busy, xbar.io.in.RD.valid, false.B)
   io.c2.RD.valid     := Mux(state === s_c2_busy, xbar.io.in.RD.valid, false.B)
 
-  //结果
-  io.out <> xbar.io.axi
+  //写通道全部分配给c2
+  io.out.WA <> io.c2.WA
+  io.out.WD <> io.c2.WD
+  io.out.WR <> io.c2.WR
+  io.out.RA <> xbar.io.axi.RA
+  io.out.RD <> xbar.io.axi.RD
 
   // //似乎不需要XBAR了
   // state := MuxLookup(state, s_idle)(
