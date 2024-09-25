@@ -13,7 +13,7 @@ class AXI_Lite_Arbiter extends Module {
   })
   val s_idle :: s_c1_busy :: s_c2_busy :: Nil = Enum(3)
   val state                                   = RegInit(s_idle)
-  val xbar = Module(new XBAR)
+  val xbar                                    = Module(new XBAR)
   //TODO:使用事物id来实现arbitor
   state := MuxLookup(state, s_idle)(
     List(
@@ -22,25 +22,25 @@ class AXI_Lite_Arbiter extends Module {
         s_c2_busy,
         Mux(io.c1.RA.valid && xbar.io.in.RA.ready, s_c1_busy, s_idle)
       ),
-      s_c1_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c1_busy),//TODO!!
+      s_c1_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c1_busy), //TODO!!
       s_c2_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c2_busy)
     )
   )
 
   //Read Channels
-  io.c1.RA.ready          := state === s_idle && xbar.io.in.RA.ready
-  io.c2.RA.ready          := state === s_idle && xbar.io.in.RA.ready
+  io.c1.RA.ready := state === s_idle && xbar.io.in.RA.ready
+  io.c2.RA.ready := state === s_idle && xbar.io.in.RA.ready
 
-  xbar.io.in.RA.valid     := io.c1.RA.valid || io.c2.RA.valid
-  xbar.io.in.RA.bits   := Mux(io.c1.RA.valid, io.c1.RA.bits, io.c2.RA.bits)
+  xbar.io.in.RA.valid := io.c1.RA.valid || io.c2.RA.valid
+  xbar.io.in.RA.bits  := Mux(io.c1.RA.valid, io.c1.RA.bits, io.c2.RA.bits)
 
-  xbar.io.in.RD.ready     := Mux(state === s_c1_busy, io.c1.RD.ready, io.c2.RD.ready)
+  xbar.io.in.RD.ready := Mux(state === s_c1_busy, io.c1.RD.ready, io.c2.RD.ready)
 
-  io.c1.RD.bits     := xbar.io.in.RD.bits
-  io.c2.RD.bits     := xbar.io.in.RD.bits
+  io.c1.RD.bits := xbar.io.in.RD.bits
+  io.c2.RD.bits := xbar.io.in.RD.bits
 
-  io.c1.RD.valid     := Mux(state === s_c1_busy, xbar.io.in.RD.valid, false.B)
-  io.c2.RD.valid     := Mux(state === s_c2_busy, xbar.io.in.RD.valid, false.B)
+  io.c1.RD.valid := Mux(state === s_c1_busy, xbar.io.in.RD.valid, false.B)
+  io.c2.RD.valid := Mux(state === s_c2_busy, xbar.io.in.RD.valid, false.B)
 
   //assign write channel to c2 Only
   io.out.WA <> io.c2.WA

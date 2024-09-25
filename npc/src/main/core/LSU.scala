@@ -12,11 +12,11 @@ class LSU extends Module {
     val axi = Flipped(new AXIIO())
   })
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready:: s_w_wait_result ::s_w_wait_ready :: Nil = Enum(7)
-  val state                                                              = RegInit(s_idle)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready :: s_w_wait_result :: s_w_wait_ready :: Nil = Enum(7)
+  val state                                                                                                   = RegInit(s_idle)
   //
-  io.in.ready  := true.B
-  val in_regbits = RegNext(io.in.bits)
+  io.in.ready := true.B
+  val in_regbits  = RegNext(io.in.bits)
   val in_regvalid = RegNext(io.in.valid)
 
   io.out.valid := state === s_valid
@@ -36,19 +36,22 @@ class LSU extends Module {
   io.out.bits.mret            := in_regbits.mret
   io.out.bits.imm             := in_regbits.imm
 
-
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
         (in_regbits.mem_write_enable || in_regbits.mem_read_enable) && in_regvalid,
         // Mux(in_regbits.mem_read_enable, s_r_busy, s_w_busy),
-        Mux(in_regbits.mem_read_enable, Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready), Mux(io.axi.WA.ready,s_w_busy,s_w_wait_ready)),
+        Mux(
+          in_regbits.mem_read_enable,
+          Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
+          Mux(io.axi.WA.ready, s_w_busy, s_w_wait_ready)
+        ),
         Mux(in_regvalid, s_valid, s_idle)
       ),
       s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
-      s_w_wait_ready -> Mux(io.axi.WA.valid,s_w_busy,s_w_wait_ready),
+      s_w_wait_ready -> Mux(io.axi.WA.valid, s_w_busy, s_w_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
-      s_w_wait_result -> Mux(io.axi.WR.valid,s_valid,s_w_wait_result),
+      s_w_wait_result -> Mux(io.axi.WR.valid, s_valid, s_w_wait_result),
       // s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
       s_w_busy -> Mux(io.axi.WD.ready, s_w_wait_result, s_w_busy), //等待返回值
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
@@ -65,8 +68,8 @@ class LSU extends Module {
     )
   )
   io.axi.RA.bits.size := mem_read_size
-  io.axi.RA.bits.id := 0.U //TODO!!!!!
-  io.axi.RA.bits.len := 0.U
+  io.axi.RA.bits.id   := 0.U //TODO!!!!!
+  io.axi.RA.bits.len  := 0.U
 
   io.axi.RA.valid     := in_regbits.mem_read_enable && in_regvalid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
   io.axi.RA.bits.addr := in_regbits.alu_result
@@ -104,51 +107,50 @@ class LSU extends Module {
   )
   val wd_move = in_regbits.src2 << ((in_regbits.alu_result(1, 0)) << 3)
 
-  val mask_move = mem_write_mask << ((in_regbits.alu_result)(1, 0))  
-  
-  io.axi.WA.valid      := in_regbits.mem_write_enable && in_regvalid && (state === s_idle || state === s_w_wait_ready)//避免多次访存
+  val mask_move = mem_write_mask << ((in_regbits.alu_result)(1, 0))
+
+  io.axi.WA.valid      := in_regbits.mem_write_enable && in_regvalid && (state === s_idle || state === s_w_wait_ready) //避免多次访存
   io.axi.WA.bits.addr  := in_regbits.alu_result
   io.axi.WD.bits.data  := wd_move //移动
   io.axi.WD.bits.wstrb := mask_move //移动
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
-  io.axi.WD.valid := state === s_w_busy
-  io.axi.WR.ready := true.B
+  io.axi.WD.valid      := state === s_w_busy
+  io.axi.WR.ready      := true.B
   //暂时忽略错误处理
 
   val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值
   io.out.bits.mem_read_result := read_res
   read_res                    := mem_read_result
 
-
-  val check_mem=Module(new DPI_C_CHECK)
-  check_mem.io.addr:=in_regbits.alu_result
-  check_mem.io.ren:=in_regbits.mem_read_enable && in_regvalid  && state === s_idle
-  check_mem.io.wdata:=wd_move
-  check_mem.io.wmask:=mask_move
-  check_mem.io.wen:=in_regbits.mem_write_enable && in_regvalid && state === s_idle 
-  check_mem.io.len:=mem_read_size
-  check_mem.io.clock:=clock
+  val check_mem = Module(new DPI_C_CHECK)
+  check_mem.io.addr  := in_regbits.alu_result
+  check_mem.io.ren   := in_regbits.mem_read_enable && in_regvalid && state === s_idle
+  check_mem.io.wdata := wd_move
+  check_mem.io.wmask := mask_move
+  check_mem.io.wen   := in_regbits.mem_write_enable && in_regvalid && state === s_idle
+  check_mem.io.len   := mem_read_size
+  check_mem.io.clock := clock
 
   val trace_lsu = Module(new TRACE_LSU)
-  trace_lsu.io.addr := in_regbits.alu_result
+  trace_lsu.io.addr    := in_regbits.alu_result
   trace_lsu.io.w_start := in_regbits.mem_write_enable && in_regvalid && state === s_idle
-  trace_lsu.io.w_end  := io.axi.WR.valid
+  trace_lsu.io.w_end   := io.axi.WR.valid
   trace_lsu.io.r_start := in_regbits.mem_read_enable && in_regvalid && state === s_idle
-  trace_lsu.io.r_end := io.axi.RD.valid
-  trace_lsu.io.clock := clock
+  trace_lsu.io.r_end   := io.axi.RD.valid
+  trace_lsu.io.clock   := clock
 }
 
 class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val addr  = Input(UInt(CVAL.DLEN.W))
-    val wdata  = Input(UInt(CVAL.DLEN.W))
-    val wmask  = Input(UInt(CVAL.DLEN.W))
-    val len  = Input(UInt(CVAL.DLEN.W))
-    val wen = Input(Bool())
-    val ren = Input(Bool())
+    val wdata = Input(UInt(CVAL.DLEN.W))
+    val wmask = Input(UInt(CVAL.DLEN.W))
+    val len   = Input(UInt(CVAL.DLEN.W))
+    val wen   = Input(Bool())
+    val ren   = Input(Bool())
     val clock = Input(Clock())
   })
-    setInline(
+  setInline(
     "check_addr.v",
     """import "DPI-C" function void check_addr(int unsigned addr,bit access_type, int unsigned wmask,int unsigned wdata,int unsigned len);
       |module DPI_C_CHECK(
@@ -176,17 +178,17 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
   addr,w/wfin,r/rfin
   RW--R-True/W-False
   start_end--start-True/end-False
-*/
+ */
 class TRACE_LSU extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
-    val addr  = Input(UInt(CVAL.DLEN.W))
+    val addr    = Input(UInt(CVAL.DLEN.W))
     val w_start = Input(Bool())
     val r_start = Input(Bool())
-    val w_end = Input(Bool())
-    val r_end = Input(Bool())
-    val clock = Input(Clock())
+    val w_end   = Input(Bool())
+    val r_end   = Input(Bool())
+    val clock   = Input(Clock())
   })
-    setInline(
+  setInline(
     "trace_lsu.v",
     """import "DPI-C" function void trace_lsu(int unsigned addr,bit RW,bit start_end);
       |module TRACE_LSU(

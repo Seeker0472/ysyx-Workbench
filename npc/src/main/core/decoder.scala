@@ -240,7 +240,7 @@ class Decoder extends Module {
   })
   //in
   io.in.ready := true.B
-  val in_regbits = RegNext(io.in.bits)
+  val in_regbits  = RegNext(io.in.bits)
   val in_regvalid = RegNext(io.in.valid)
   // io.out.valid := true.B
   io.out.valid := in_regvalid

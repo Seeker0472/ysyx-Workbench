@@ -20,7 +20,7 @@ class XBAR extends Module {
   val Table = TruthTable(
     Map(
       //TODO：不能取消XBAR，访问非法地址ready信号会直接置低
-      BitPat("b0000001000000000????????????????") -> BitPat("b1"), //CLINT
+      BitPat("b0000001000000000????????????????") -> BitPat("b1") //CLINT
       // BitPat("b10000000????????????????????????") -> BitPat("b0"), //OLD
       // BitPat("b00001111????????????????????????") -> BitPat("b0"), //SRAM
       // BitPat("b00100000000000000000????????????") -> BitPat("b0"), //MROM
@@ -40,10 +40,10 @@ class XBAR extends Module {
 
   //Read Addr
   //xbar controls valid only
-  io.axi.RA.valid       := Mux(mem_r_b === BitPat("b0"), io.in.RA.valid, false.B) //如果选择sram，就开
-  clint.io.RA.valid     := Mux(mem_r_b === BitPat("b1"), io.in.RA.valid, false.B)
+  io.axi.RA.valid   := Mux(mem_r_b === BitPat("b0"), io.in.RA.valid, false.B) //如果选择sram，就开
+  clint.io.RA.valid := Mux(mem_r_b === BitPat("b1"), io.in.RA.valid, false.B)
 
-  io.axi.RA.bits := io.in.RA.bits
+  io.axi.RA.bits   := io.in.RA.bits
   clint.io.RA.bits := io.in.RA.bits
 
   io.in.RA.ready := Mux(
@@ -53,10 +53,10 @@ class XBAR extends Module {
   )
   //Read Data
   //select Ready/Valid
-  io.axi.RD.ready     := Mux(mem_r_reg === BitPat("b0"), io.in.RD.ready, false.B)
-  clint.io.RD.ready   := Mux(mem_r_reg === BitPat("b0"), io.in.RD.ready, false.B)
+  io.axi.RD.ready   := Mux(mem_r_reg === BitPat("b0"), io.in.RD.ready, false.B)
+  clint.io.RD.ready := Mux(mem_r_reg === BitPat("b0"), io.in.RD.ready, false.B)
 
-  io.in.RD.bits  := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits, clint.io.RD.bits)
+  io.in.RD.bits := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits, clint.io.RD.bits)
 
   io.in.RD.valid := Mux(
     mem_r_reg === BitPat("b0"),
