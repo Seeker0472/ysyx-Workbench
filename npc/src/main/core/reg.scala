@@ -53,8 +53,8 @@ class REG extends Module {
   )
   // io.CSRread.data := csrs(csr_r_ADDR)
   io.CSRread.data := MuxLookup(io.CSRread.addr,csrs(csr_r_ADDR))(
-      0xF11.U -> 0x79737978.U,////ysyx
-      0xF12.U -> 0x15fdf65.U,//学号
+Seq(      0xF11.U -> 0x79737978.U,////ysyx
+      0xF12.U -> 0x15fdf65.U,//学号)
   )
   io.csr_mstvec   := csrs(0.U) //mstvec--支持ecall
 
