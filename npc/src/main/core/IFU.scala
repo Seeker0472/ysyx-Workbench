@@ -15,29 +15,31 @@ class IFU extends Module {
     val axi      = Flipped(new AXIReadIO())
     val rwerr    = Input(Bool())
   })
+  // states
   val s_idle::s_fetching::s_valid::s_error::Nil = Enum(4)
+  val state = RegInit(s_fetching)
+
+  // icache
   val icache = Module(new icache)
   icache.io.axi <> io.axi
 
-  val state = RegInit(s_fetching)
 
-  // val inst = Reg(UInt(32.W))
+  // pc
   println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE","Default:h30000000")}")
   val PC_VALUE = scala.util.Properties.envOrElse("PC_VALUE","h30000000").U(CVAL.DLEN.W)
   val pc    = RegInit(PC_VALUE)
   icache.io.addr := pc
   icache.io.addr_valid := state===s_fetching
   
+  //out
   io.out.valid        := state === s_valid
-
-  io.in.ready := true.B
-
-  val in_regbits = RegNext(io.in.bits)
-  val in_regvalid = RegNext(io.in.valid)
-
-
   io.out.bits.pc    := pc
   io.out.bits.instr := icache.io.inst
+
+  // in
+  io.in.ready := true.B
+  val in_regbits = RegNext(io.in.bits)
+  val in_regvalid = RegNext(io.in.valid)
 
   when(in_regvalid) {
     pc := Mux(state === s_error, 0.U, in_regbits.n_pc)
