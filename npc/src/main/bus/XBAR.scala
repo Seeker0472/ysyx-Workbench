@@ -64,10 +64,11 @@ class XBAR extends Module {
 
   io.axi.RD.ready     := Mux(mem_r_reg === BitPat("b0"), io.in.RD.ready, false.B)
   clint.io.RD.ready   := Mux(mem_r_reg === BitPat("b0"), io.in.RD.ready, false.B)
-  io.in.RD.bits.data  := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.data, clint.io.RD.bits.data)
-  io.in.RD.bits.rresp := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.rresp, clint.io.RD.bits.rresp)
-  io.in.RD.bits.id    := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.id, clint.io.RD.bits.id)
-  io.in.RD.bits.last  := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.last, clint.io.RD.bits.last)
+  // io.in.RD.bits.data  := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.data, clint.io.RD.bits.data)
+  // io.in.RD.bits.rresp := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.rresp, clint.io.RD.bits.rresp)
+  // io.in.RD.bits.id    := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.id, clint.io.RD.bits.id)
+  // io.in.RD.bits.last  := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits.last, clint.io.RD.bits.last)  
+  io.in.RD.bits  := Mux(mem_r_reg === BitPat("b0"), io.axi.RD.bits, clint.io.RD.bits)
 
   io.in.RD.valid := Mux(
     mem_r_reg === BitPat("b0"),
