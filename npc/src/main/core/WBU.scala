@@ -35,7 +35,6 @@ class WBU extends Module {
     ) //内存读取/csr操作/算数运算结果
   val pc_plus4 = io.in.bits.pc + 4.U
 
-  // val next_pc = Mux(io.in.bits.pc_jump || (io.in.bits.is_branch && go_branch), result, pc_plus4)
   val next_pc = Mux(
     io.in.bits.pc_jump || (io.in.bits.is_branch && io.in.bits.go_branch),
     result,

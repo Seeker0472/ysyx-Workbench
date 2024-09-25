@@ -138,7 +138,7 @@ wave:
 	nohup gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
 all: $(TARGET) sim
 
-sta:
+sta: $(TARGET)
 	@cd ./tools/py && python3 rm_dpic.py
 	mv build/ypc_nodpic.sv ../yosys-sta/ypc/ypc.sv
 	cd ../yosys-sta/ && make sta
