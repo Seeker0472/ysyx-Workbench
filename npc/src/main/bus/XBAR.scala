@@ -46,16 +46,16 @@ class XBAR extends Module {
   //选择设备(in),只负责选择valid，其他直接传送
   io.axi.RA.valid       := Mux(mem_r_b === BitPat("b0"), io.in.RA.valid, false.B) //如果选择sram，就开
   clint.io.RA.valid     := Mux(mem_r_b === BitPat("b1"), io.in.RA.valid, false.B)
-  // io.axi.RA.bits.addr   := io.in.RA.bits.addr
-  // io.axi.RA.bits.size   := io.in.RA.bits.size
-  // io.axi.RA.bits.len    := io.in.RA.bits.len
-  // io.axi.RA.bits.id     := io.in.RA.bits.id
-  io.axi.RA.bits := io.in.RA.bits
-  clint.io.RA.bits := io.in.RA.bits
-  // clint.io.RA.bits.addr := io.in.RA.bits.addr
-  // clint.io.RA.bits.size := io.in.RA.bits.size
-  // clint.io.RA.bits.len  := io.in.RA.bits.len
-  // clint.io.RA.bits.id   := io.in.RA.bits.id
+  io.axi.RA.bits.addr   := io.in.RA.bits.addr
+  io.axi.RA.bits.size   := io.in.RA.bits.size
+  io.axi.RA.bits.len    := io.in.RA.bits.len
+  io.axi.RA.bits.id     := io.in.RA.bits.id
+  // io.axi.RA.bits := io.in.RA.bits
+  // clint.io.RA.bits := io.in.RA.bits
+  clint.io.RA.bits.addr := io.in.RA.bits.addr
+  clint.io.RA.bits.size := io.in.RA.bits.size
+  clint.io.RA.bits.len  := io.in.RA.bits.len
+  clint.io.RA.bits.id   := io.in.RA.bits.id
   io.in.RA.ready := Mux(
     mem_r_b === BitPat("b0") || mem_r_reg === BitPat("b0"),
     io.axi.RA.ready,
