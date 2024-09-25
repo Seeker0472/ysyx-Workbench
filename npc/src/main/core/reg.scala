@@ -20,10 +20,6 @@ class REG extends Module {
   val regs = RegInit(VecInit(Seq.fill(15)(0.U(CVAL.DLEN.W))))
   val csrs = RegInit(VecInit(Seq.fill(4)(0.U(CVAL.DLEN.W))))
 
-  // csrs(4.U):=0x79737978.U//ysyx
-  // csrs(5.U):=0x15fdf65.U//学号
-
-
   //TODO:暂时简化实现，这两个寄存器的值保持不动
   csrs(1.U) := 0xb.U; //mcause
   csrs(2.U) := 0x1800.U; //mstatus
@@ -62,6 +58,6 @@ class REG extends Module {
     regs(io.Rwrite.addr(3,0)-1.U) := io.Rwrite.data
   }
   when(io.CSRwrite.write_enable) {
-    csrs(csr_r_ADDR) := io.CSRwrite.data
+    csrs(csr_w_addr) := io.CSRwrite.data
   }
 }
