@@ -22,7 +22,7 @@ class icache extends Module {
   })
 
   val block_size = 8
-  val block_num  = 16
+  val block_num  = 8
 
   //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt

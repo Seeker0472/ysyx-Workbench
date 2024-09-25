@@ -17,8 +17,6 @@ class WBU extends Module {
   // io.out.valid:=true.B
   io.out.valid:=io.in.valid
 
-
-
   io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
 //TODO:其实可以临时抽取？
   io.CSR_write.addr := io.in.bits.imm
