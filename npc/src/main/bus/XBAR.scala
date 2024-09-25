@@ -50,8 +50,8 @@ class XBAR extends Module {
   // io.axi.RA.bits.size   := io.in.RA.bits.size
   // io.axi.RA.bits.len    := io.in.RA.bits.len
   // io.axi.RA.bits.id     := io.in.RA.bits.id
-  io.axi.RA.bits <> io.in.RA.bits
-  clint.io.RA.bits <> io.in.RA.bits
+  io.axi.RA.bits := io.in.RA.bits
+  clint.io.RA.bits := io.in.RA.bits
   // clint.io.RA.bits.addr := io.in.RA.bits.addr
   // clint.io.RA.bits.size := io.in.RA.bits.size
   // clint.io.RA.bits.len  := io.in.RA.bits.len
