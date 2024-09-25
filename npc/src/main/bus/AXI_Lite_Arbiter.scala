@@ -44,12 +44,14 @@ class AXI_Lite_Arbiter extends Module {
   // io.c2.RD.bits.data      := xbar.io.in.RD.bits.data
   // io.c1.RD.bits.rresp     := xbar.io.in.RD.bits.rresp
   // io.c2.RD.bits.rresp     := xbar.io.in.RD.bits.rresp
+  io.c1.RD.bits     := xbar.io.in.RD.bits
   io.c2.RD.bits     := xbar.io.in.RD.bits
   //TODO: Is Necessary?
   // io.c1.RD.bits.id   := xbar.io.in.RD.bits.id
   // io.c2.RD.bits.id   := xbar.io.in.RD.bits.id
   // io.c1.RD.bits.last := xbar.io.in.RD.bits.last
   // io.c2.RD.bits.last := xbar.io.in.RD.bits.last
+  io.c1.RD.bits:=xbar.io.in.RD.bits
   io.c2.RD.bits:=xbar.io.in.RD.bits
   io.c1.RD.valid     := Mux(state === s_c1_busy, xbar.io.in.RD.valid, false.B)
   io.c2.RD.valid     := Mux(state === s_c2_busy, xbar.io.in.RD.valid, false.B)
