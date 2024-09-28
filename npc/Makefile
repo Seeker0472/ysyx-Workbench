@@ -117,7 +117,7 @@ sim: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 
 simnpc:$(TARGETRaw)
-	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
+	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} 
 	@make -j -C build/npc_build -f Vraw_core.mk Vraw_core
 	./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
