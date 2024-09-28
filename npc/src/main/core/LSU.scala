@@ -49,7 +49,7 @@ class LSU extends Module {
         Mux(in_regvalid, s_valid, s_idle)
       ),
       s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
-      s_w_wait_ready -> Mux(io.axi.WA.valid, s_w_busy, s_w_wait_ready),
+      s_w_wait_ready -> Mux(io.axi.WA.ready, s_w_busy, s_w_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
       s_w_wait_result -> Mux(io.axi.WR.valid, s_valid, s_w_wait_result),
       // s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
