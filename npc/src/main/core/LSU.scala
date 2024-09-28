@@ -109,7 +109,7 @@ class LSU extends Module {
 
   val mask_move = mem_write_mask << ((in_regbits.alu_result)(1, 0))
 
-  io.axi.WA.valid      := in_regbits.mem_write_enable && in_regvalid && (state === s_idle || state === s_w_wait_ready) //避免多次访存
+  io.axi.WA.valid      := (in_regbits.mem_write_enable && in_regvalid && state === s_idle) || state === s_w_wait_ready //避免多次访存
   io.axi.WA.bits.addr  := in_regbits.alu_result
   io.axi.WD.bits.data  := wd_move //移动
   io.axi.WD.bits.wstrb := mask_move //移动
