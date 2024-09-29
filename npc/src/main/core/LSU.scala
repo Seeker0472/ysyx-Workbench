@@ -65,7 +65,7 @@ class LSU extends Module {
   }
   sig_wvalid := MuxLookup(sig_wvalid, false.B) {
     Seq(
-      false.B -> Mux(state === s_idle && in_regbits.mem_read_enable && in_regvalid, true.B, false.B),
+      false.B -> Mux(state === s_idle && in_regbits.mem_write_enable && in_regvalid, true.B, false.B),
       true.B -> Mux(io.axi.WD.ready, false.B, true.B)
     )
   }
