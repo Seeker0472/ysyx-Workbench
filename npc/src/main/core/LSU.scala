@@ -44,7 +44,7 @@ class LSU extends Module {
       s_idle -> Mux(
         (in_regbits.mem_write_enable || in_regbits.mem_read_enable) && in_regvalid,
         Mux(in_regbits.mem_write_enable, s_w_busy, s_r_busy),
-        Mux(io.in_regvalid,s_valid,s_idle)
+        Mux(in_regvalid,s_valid,s_idle)
       ),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
       s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
