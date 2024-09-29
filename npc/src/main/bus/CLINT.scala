@@ -17,25 +17,16 @@ class CLINT extends Module {
       s_r_read_data -> Mux(io.RD.ready, s_r_idle, s_r_read_data) //返回数据
     )
   )
-  counter := counter+ 1.U
-  
+  counter := counter + 1.U
 
-  io.RD.bits.data  := Mux(io.RA.bits.addr(2,2)===1.U,counter(63,32),counter(31,0))
+  io.RD.bits.data  := Mux(io.RA.bits.addr(2, 2) === 1.U, counter(63, 32), counter(31, 0))
   io.RD.bits.rresp := 0.U
   io.RD.valid      := r_state === s_r_read_data
+  io.RD.bits.id    := 0.U//TODO!!!
+  io.RD.bits.last  := r_state === s_r_read_data
   io.RA.ready      := true.B
 
 }
-
-
-
-
-
-
-
-
-
-
 
 // class CLINT extends Module {
 //   val io                                                = IO(new AXIReadIO)

@@ -1,6 +1,6 @@
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 BUILD_DIR = ./build
-PRJ = playground
+PRJ = npc
 SED_CMD = sed -i "s/^.*\.v$$//"
 NXDC_FILE = ${NPC_HOME}/csrc/nvb/soc.nxdc
 SRC_AUTO_BIND = ${NPC_HOME}/csrc/nvb/bind.cpp
@@ -110,9 +110,9 @@ clean:
 
 .PHONY: test verilog help reformat checkformat clean
 
-sim: $(YSYXSOC_V) $(SRC_AUTO_BIND)
+sim: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} -Wno-WIDTHEXPAND
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} 
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
 	./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 
@@ -122,12 +122,14 @@ simnpc:$(TARGETRaw)
 	./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
 gdbnpc:$(TARGETRaw)
-	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND
+	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS}  ${FLAGS} -Wno-WIDTHEXPAND -O1 
 	@make -j -C build/npc_build -f Vraw_core.mk Vraw_core
 	gdb   --args ./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
-gdb: $(YSYXSOC_V) $(SRC_AUTO_BIND)
-	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} 
+gdb: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
+# 这里的－Ｏ１是避免编译器过度优化导致无法正常ｇｄｂ调试
+	@verilator  -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} -O1 
+	
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
 	gdb --args ./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 
@@ -135,5 +137,10 @@ wave:
 	# nohup /usr/bin/gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
 	nohup gtkwave ${WAVEFORM_DIR} > /dev/null 2>&1 &
 all: $(TARGET) sim
+
+sta: $(TARGET)
+	@cd ./tools/py && python3 rm_dpic.py
+	mv build/ypc_nodpic.sv ../yosys-sta/ypc/ypc.sv
+	cd ../yosys-sta/ && make sta
 
 -include ../Makefile

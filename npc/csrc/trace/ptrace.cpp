@@ -17,6 +17,7 @@ extern "C" void trace_ifu(int unsigned addr, svBit start_end);
 extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end);
 extern uint64_t g_cycles;
 extern uint64_t g_nr_guest_inst;
+extern uint64_t cache_hit_times;
 // count!!
 
 // count inst Type
@@ -120,5 +121,6 @@ void print_perf_statistics() {
          DIV(memLatency.lsur, instTypeCount.memr),
          DIV(memLatency.lsuw, instTypeCount.memw),
          DIV(memLatency.ifu, g_nr_guest_inst));
+  printf("Cache Hit times:%ld\t,Hit rate:%.2lf%%", cache_hit_times, DIV((double)cache_hit_times,g_nr_guest_inst));
   //   printf("")
 }
