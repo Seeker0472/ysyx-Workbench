@@ -20,7 +20,7 @@ class LSU extends Module {
   //
   io.in.ready := true.B
   val in_regbits  = Reg(new EXU_O)
-  val in_regvalid = Reg(io.in.valid)
+  val in_regvalid = Reg(Bool())
   // 更新逻辑
   when(state===s_idle) {
     in_regbits := io.in.bits
