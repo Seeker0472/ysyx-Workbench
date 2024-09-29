@@ -12,12 +12,19 @@ class LSU extends Module {
     val axi = Flipped(new AXIIO())
   })
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: s_r_wait_ready :: s_w_wait_result :: s_w_wait_ready :: Nil = Enum(7)
-  val state                                                                                                   = RegInit(s_idle)
+  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
+  val state                                            = RegInit(s_idle)
+  val sig_awvalid                                      = RegInit(false.B)
+  val sig_arvalid                                      = RegInit(false.B)
+  val sig_wvalid                                       = RegInit(false.B)
   //
   io.in.ready := true.B
-  val in_regbits  = RegNext(io.in.bits)
+  val in_regbits  = Reg(new EXU_O)
   val in_regvalid = RegNext(io.in.valid)
+  when(io.in.valid){
+    in_regbits := io.in.bits
+  }
+  
 
   io.out.valid := state === s_valid
   //pass_throughs
@@ -35,28 +42,37 @@ class LSU extends Module {
   io.out.bits.reg_w_enable    := in_regbits.reg_w_enable
   io.out.bits.mret            := in_regbits.mret
   io.out.bits.imm             := in_regbits.imm
-
+  //状态机不打拍？
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
         (in_regbits.mem_write_enable || in_regbits.mem_read_enable) && in_regvalid,
-        // Mux(in_regbits.mem_read_enable, s_r_busy, s_w_busy),
-        Mux(
-          in_regbits.mem_read_enable,
-          Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
-          Mux(io.axi.WA.ready, s_w_busy, s_w_wait_ready)
-        ),
-        Mux(in_regvalid, s_valid, s_idle)
+        Mux(in_regbits.mem_write_enable, s_w_busy, s_r_busy),
+        Mux(in_regvalid,s_valid,s_idle)
       ),
-      s_r_wait_ready -> Mux(io.axi.RA.ready, s_r_busy, s_r_wait_ready),
-      s_w_wait_ready -> Mux(io.axi.WA.valid, s_w_busy, s_w_wait_ready),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
-      s_w_wait_result -> Mux(io.axi.WR.valid, s_valid, s_w_wait_result),
-      // s_w_busy -> Mux(io.axi.WD.ready, s_valid, s_w_busy), //不等返回值
-      s_w_busy -> Mux(io.axi.WD.ready, s_w_wait_result, s_w_busy), //等待返回值
+      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
+  sig_awvalid := MuxLookup(sig_awvalid, false.B) {
+    Seq(
+      false.B -> Mux(state === s_idle && in_regbits.mem_write_enable && in_regvalid, true.B, false.B),
+      true.B -> Mux(io.axi.WA.ready, false.B, true.B)
+    )
+  }
+  sig_arvalid := MuxLookup(sig_arvalid, false.B) {
+    Seq(
+      false.B -> Mux(state === s_idle && in_regbits.mem_read_enable && in_regvalid, true.B, false.B),
+      true.B -> Mux(io.axi.RA.ready, false.B, true.B)
+    )
+  }
+  sig_wvalid := MuxLookup(sig_wvalid, false.B) {
+    Seq(
+      false.B -> Mux(state === s_idle && in_regbits.mem_write_enable && in_regvalid, true.B, false.B),
+      true.B -> Mux(io.axi.WD.ready, false.B, true.B)
+    )
+  }
 
   val mem_read_size = MuxLookup(in_regbits.mem_read_type, 0.U(3.W))(
     Seq(
@@ -71,7 +87,7 @@ class LSU extends Module {
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
   io.axi.RA.bits.len  := 0.U
 
-  io.axi.RA.valid     := in_regbits.mem_read_enable && in_regvalid && (state === s_idle || state === s_r_wait_ready) //避免多次访存
+  io.axi.RA.valid     := sig_arvalid
   io.axi.RA.bits.addr := in_regbits.alu_result
   io.axi.RD.ready     := true.B
 
@@ -109,12 +125,12 @@ class LSU extends Module {
 
   val mask_move = mem_write_mask << ((in_regbits.alu_result)(1, 0))
 
-  io.axi.WA.valid      := in_regbits.mem_write_enable && in_regvalid && (state === s_idle || state === s_w_wait_ready) //避免多次访存
+  io.axi.WA.valid      := sig_awvalid
   io.axi.WA.bits.addr  := in_regbits.alu_result
   io.axi.WD.bits.data  := wd_move //移动
   io.axi.WD.bits.wstrb := mask_move //移动
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
-  io.axi.WD.valid      := state === s_w_busy
+  io.axi.WD.valid      := sig_wvalid
   io.axi.WR.ready      := true.B
   //暂时忽略错误处理
 

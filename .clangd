@@ -14,4 +14,5 @@ CompileFlags:
         - "-I/nix/store/a0x4f1y21cb2sfk05s8p4bd9pvrbxg47-verilator-5.008/share/verilator/include"
         - "-DARCH_H=\"arch/riscv.h\""
         - "-D__GUEST_ISA__=riscv32"
+    Compiler: gcc
 
