@@ -20,12 +20,11 @@ class LSU extends Module {
   //
   io.in.ready := true.B
   val in_regbits  = Reg(new EXU_O)
-  val in_regvalid = Reg(Bool())
-  // 更新逻辑
-  when(state===s_idle) {
+  val in_regvalid = RegNext(io.in.valid)
+  when(io.in.valid){
     in_regbits := io.in.bits
-    in_regvalid := io.in.valid
   }
+  
 
   io.out.valid := state === s_valid
   //pass_throughs
@@ -43,7 +42,7 @@ class LSU extends Module {
   io.out.bits.reg_w_enable    := in_regbits.reg_w_enable
   io.out.bits.mret            := in_regbits.mret
   io.out.bits.imm             := in_regbits.imm
-
+  //状态机不打拍？
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
