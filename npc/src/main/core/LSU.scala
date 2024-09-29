@@ -14,9 +14,9 @@ class LSU extends Module {
   //sigs and status
   val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
   val state                                            = RegInit(s_idle)
-  val sig_awvalid=RegInit(false.B)
-  val sig_arvalid=RegInit(false.B)
-  val sig_wvalid=RegInit(false.B)
+  val sig_awvalid                                      = RegInit(false.B)
+  val sig_arvalid                                      = RegInit(false.B)
+  val sig_wvalid                                       = RegInit(false.B)
   //
   io.in.ready := true.B
   val in_regbits  = RegNext(io.in.bits)
@@ -43,24 +43,31 @@ class LSU extends Module {
     List(
       s_idle -> Mux(
         (in_regbits.mem_write_enable || in_regbits.mem_read_enable) && in_regvalid,
-        Mux(in_regbits.mem_write_enable,s_w_busy,s_r_busy),s_idle
+        Mux(in_regbits.mem_write_enable, s_w_busy, s_r_busy),
+        s_idle
       ),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
-      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy), 
+      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
-  sig_awvalid:=MuxLookup(sig_awvalid,false.B){
-    false.B -> Mux(state===s_idle&&in_regbits.mem_write_enable&&in_regvalid,true.B,false.B),
-    true.B -> Mux(io.axi.WA.ready,false.B,true.B),
+  sig_awvalid := MuxLookup(sig_awvalid, false.B) {
+    Seq(
+      false.B -> Mux(state === s_idle && in_regbits.mem_write_enable && in_regvalid, true.B, false.B),
+      true.B -> Mux(io.axi.WA.ready, false.B, true.B)
+    )
   }
-  sig_arvalid:=MuxLookup(sig_arvalid,false.B){
-    false.B -> Mux(state===s_idle&&in_regbits.mem_read_enable&&in_regvalid,true.B,false.B),
-    true.B -> Mux(io.axi.RA.ready,false.B,true.B),
+  sig_arvalid := MuxLookup(sig_arvalid, false.B) {
+    Seq(
+      false.B -> Mux(state === s_idle && in_regbits.mem_read_enable && in_regvalid, true.B, false.B),
+      true.B -> Mux(io.axi.RA.ready, false.B, true.B)
+    )
   }
-  sig_wvalid:=MuxLookup(sig_wvalid,false.B){
-    false.B -> Mux(state===s_idle&&in_regbits.mem_read_enable&&in_regvalid,true.B,false.B),
-    true.B -> Mux(io.axi.WD.ready,false.B,true.B),
+  sig_wvalid := MuxLookup(sig_wvalid, false.B) {
+    Seq(
+      false.B -> Mux(state === s_idle && in_regbits.mem_read_enable && in_regvalid, true.B, false.B),
+      true.B -> Mux(io.axi.WD.ready, false.B, true.B)
+    )
   }
 
   val mem_read_size = MuxLookup(in_regbits.mem_read_type, 0.U(3.W))(
