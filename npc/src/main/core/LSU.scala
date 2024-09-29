@@ -23,8 +23,8 @@ class LSU extends Module {
   val in_regvalid = Reg(io.in.valid)
   // 更新逻辑
   when(state===s_idle) {
-    regData := io.in.bits
-    regValid := true.B
+    in_regbits := io.in.bits
+    in_regvalid := io.in.valid
   }
 
   io.out.valid := state === s_valid
