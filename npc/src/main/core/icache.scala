@@ -36,7 +36,7 @@ class icache extends Module {
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
   val cache    = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size * 8).W))))
   //flush
-  when(flush){
+  when(io.flush){
     cachetag := VecInit(Seq.fill(block_num)(0.U))
   }
 
