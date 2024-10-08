@@ -183,8 +183,8 @@ object decodePatterns {
       func3     = BitPat("b001"),
       func7     = BitPat("b0000000"),
       rs1       = BitPat("b00000"),
-      rs2       = BitPat("b00000")
+      rs2       = BitPat("b00000"),
+      rd= BitPat("b00000")
     )
-    // InsP(name_in = "ebreak", opcode = BitPat("0010111"))
   )
 }
