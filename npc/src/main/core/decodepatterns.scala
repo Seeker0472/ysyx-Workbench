@@ -10,8 +10,8 @@ case class InsP(
   val Inst_Type: Inst_Type_Enum.Type,
   val name_in:   String = "Not Implemented!",
   val func7:     BitPat = BitPat.dontCare(7),
-  val rs1:       BitPat = BitPat.dontCare(5),
   val rs2:       BitPat = BitPat.dontCare(5),
+  val rs1:       BitPat = BitPat.dontCare(5),
   val func3:     BitPat = BitPat.dontCare(3),
   val rd:     BitPat = BitPat.dontCare(3),
   val opcode:    BitPat)
