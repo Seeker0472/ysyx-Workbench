@@ -21,8 +21,10 @@ class icache extends Module {
     val addr_valid = Input(Bool())
   })
 
-  val block_size = 8
-  val block_num  = 8
+  // val block_size = 8
+  // val block_num  = 8  
+  val block_size = 4
+  val block_num  = 1
 
   //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt
