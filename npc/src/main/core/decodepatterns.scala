@@ -173,6 +173,15 @@ object decodePatterns {
       func3     = BitPat("b000"),
       func7     = BitPat("b0011000")
     )
+    InsP(
+      name_in   = "fence.i",
+      Inst_Type = Inst_Type_Enum.I_Type,
+      opcode    = BitPat("b0001111"),
+      func3     = BitPat("b001"),
+      func7     = BitPat("b0000000"),
+      rs1       = BitPat("b00000")
+      rs2       = BitPat("b00000")
+    ),
     // InsP(name_in = "ebreak", opcode = BitPat("0010111"))
   )
 }

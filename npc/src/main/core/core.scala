@@ -30,6 +30,7 @@ class ypc extends Module {
 //decode_stage
   StageConnect(ifu.io.out, decoder.io.in)
   br_han.io.halt := decoder.io.ebreak
+  ifu.io.flush :=decode.io.flush
 //exc
   StageConnect(decoder.io.out, exu.io.in)
   exu.io.reg1 <> reg.io.Rread1
