@@ -10,11 +10,13 @@ case class InsP(
   val Inst_Type: Inst_Type_Enum.Type,
   val name_in:   String = "Not Implemented!",
   val func7:     BitPat = BitPat.dontCare(7),
+  val rs1:       BitPat = BitPat.dontCare(5),
   val rs2:       BitPat = BitPat.dontCare(5),
   val func3:     BitPat = BitPat.dontCare(3),
+  val rd:     BitPat = BitPat.dontCare(3),
   val opcode:    BitPat)
     extends DecodePattern {
-  def bitPat: BitPat = func7 ## rs2 ## BitPat.dontCare(5) ## func3 ## BitPat.dontCare(5) ## opcode
+  def bitPat: BitPat = func7 ## rs2 ## rs1 ## func3 ## rd ## opcode
   // def pattern: BitPat = func7 ## BitPat.dontCare(10) ## func3 ## BitPat.dontCare(5) ## opcode
   def name: String = name_in
 }
