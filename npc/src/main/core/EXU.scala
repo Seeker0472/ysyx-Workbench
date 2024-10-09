@@ -16,32 +16,29 @@ class EXU extends Module {
     val csr  = (new CSRReadIO)
     val out  = (Decoupled(new EXU_O))
   })
-
-  val in_regbits  = RegNext(io.in.bits)
-  val in_regvalid = RegNext(io.in.valid)
   io.in.ready  := io.out.ready
-  io.out.valid := in_regvalid
+  io.out.valid := io.in.valid
   //pass_throughs
-  io.out.bits.mem_read_enable  := in_regbits.mem_read_enable
-  io.out.bits.mem_write_enable := in_regbits.mem_write_enable
-  io.out.bits.func3            := in_regbits.func3
-  io.out.bits.pc               := in_regbits.pc //using!
-  io.out.bits.ecall            := in_regbits.ecall
-  io.out.bits.pc_jump          := in_regbits.pc_jump
-  io.out.bits.reg_w_addr       := in_regbits.rd
-  io.out.bits.reg_w_enable     := in_regbits.reg_write_enable
-  io.out.bits.mret             := in_regbits.mret
-  io.out.bits.imm              := in_regbits.imm
-  io.out.bits.csrrw            := in_regbits.csrrw
+  io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
+  io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
+  io.out.bits.func3            := io.in.bits.func3
+  io.out.bits.pc               := io.in.bits.pc //using!
+  io.out.bits.ecall            := io.in.bits.ecall
+  io.out.bits.pc_jump          := io.in.bits.pc_jump
+  io.out.bits.reg_w_addr       := io.in.bits.rd
+  io.out.bits.reg_w_enable     := io.in.bits.reg_write_enable
+  io.out.bits.mret             := io.in.bits.mret
+  io.out.bits.imm              := io.in.bits.imm
+  io.out.bits.csrrw            := io.in.bits.csrrw
 
-  io.reg1.addr := in_regbits.rs1
-  io.reg2.addr := in_regbits.rs2
-  io.csr.addr  := in_regbits.imm
+  io.reg1.addr := io.in.bits.rs1
+  io.reg2.addr := io.in.bits.rs2
+  io.csr.addr  := io.in.bits.imm
   val src1 = io.reg1.data
   val src2 = io.reg2.data
 
-  val alu_val1 = Mux(in_regbits.alu_use_pc, in_regbits.pc, src1)
-  val alu_val2 = Mux(in_regbits.alu_use_Imm_2, in_regbits.imm, src2)
+  val alu_val1 = Mux(io.in.bits.alu_use_pc, io.in.bits.pc, src1)
+  val alu_val2 = Mux(io.in.bits.alu_use_Imm_2, io.in.bits.imm, src2)
 
   val alu = Module(new ALU())
 
@@ -49,16 +46,16 @@ class EXU extends Module {
 //比较单元的输入
   comp.io.src1  := src1
   comp.io.src2  := src2
-  comp.io.func3 := in_regbits.func3
+  comp.io.func3 := io.in.bits.func3
   val go_branch = comp.io.result
 //alu的输入
   alu.io.in.src1        := alu_val1
   alu.io.in.src2        := alu_val2
-  alu.io.in.alu_op_type := in_regbits.alu_op_type
+  alu.io.in.alu_op_type := io.in.bits.alu_op_type
 
   //csrr_alu
   val or = io.csr.data | src1
-  val csr_alu_res = MuxLookup(in_regbits.csr_alu_type, or)(
+  val csr_alu_res = MuxLookup(io.in.bits.csr_alu_type, or)(
     Seq(
       CSRALU_Type.or -> or,
       CSRALU_Type.passreg -> src1
@@ -68,12 +65,12 @@ class EXU extends Module {
   io.out.bits.src2        := src2
   io.out.bits.csr_alu_res := csr_alu_res
   io.out.bits.csr_val     := io.csr.data
-  io.out.bits.go_branch   := go_branch && in_regbits.is_branch
+  io.out.bits.go_branch   := go_branch && io.in.bits.is_branch
 
   //Trace
   val trace_exu = Module(new TRACE_EXU)
   trace_exu.io.clock := clock
-  trace_exu.io.valid := in_regvalid
+  trace_exu.io.valid := io.in.valid
 }
 
 class Branch_comp extends Module {
