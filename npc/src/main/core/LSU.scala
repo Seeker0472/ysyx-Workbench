@@ -74,15 +74,16 @@ class LSU extends Module {
     )
   }
 
-  val mem_read_size = MuxLookup(in_regbits.mem_read_type, 0.U(3.W))(
-    Seq(
-      Load_Type.lb -> "b000".U(3.W),
-      Load_Type.lh -> "b001".U(3.W),
-      Load_Type.lw -> "b010".U(3.W),
-      Load_Type.lbu -> "b000".U(3.W),
-      Load_Type.lhu -> "b001".U(3.W)
-    )
-  )
+  // val mem_read_size = MuxLookup(in_regbits.mem_read_type, 0.U(3.W))(
+  //   Seq(
+  //     Load_Type.lb -> "b000".U(3.W),
+  //     Load_Type.lh -> "b001".U(3.W),
+  //     Load_Type.lw -> "b010".U(3.W),
+  //     Load_Type.lbu -> "b000".U(3.W),
+  //     Load_Type.lhu -> "b001".U(3.W)
+  //   )
+  // )
+  val mem_read_size = Cat(0.U(1.W),in_regbits.func3(1,0))
   io.axi.RA.bits.size := mem_read_size
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
   io.axi.RA.bits.len  := 0.U
@@ -95,30 +96,54 @@ class LSU extends Module {
 
   val mrrm = mrres >> ((in_regbits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
-  val mem_read_result_sint = MuxLookup(in_regbits.mem_read_type, 0.S)(
+  // val mem_read_result_sint = MuxLookup(in_regbits.mem_read_type, 0.S)(
+  //   Seq(
+  //     Load_Type.lb -> mrrm(7, 0).asSInt,
+  //     Load_Type.lh -> mrrm(15, 0).asSInt,
+  //     Load_Type.lw -> mrrm(31, 0).asSInt,
+  //     Load_Type.lbu -> mrrm(7, 0).zext,
+  //     Load_Type.lhu -> mrrm(15, 0).zext
+  //   )
+  // )  
+  val mem_read_result_sint = MuxLookup(in_regbits.func3, 0.S)(
     Seq(
-      Load_Type.lb -> mrrm(7, 0).asSInt,
-      Load_Type.lh -> mrrm(15, 0).asSInt,
-      Load_Type.lw -> mrrm(31, 0).asSInt,
-      Load_Type.lbu -> mrrm(7, 0).zext,
-      Load_Type.lhu -> mrrm(15, 0).zext
+      BitPat("b000") -> mrrm(7, 0).asSInt,
+      BitPat("b001") -> mrrm(15, 0).asSInt,
+      BitPat("b010") -> mrrm(31, 0).asSInt,
+      BitPat("b100") -> mrrm(7, 0).zext,
+      BitPat("b101") -> mrrm(15, 0).zext
     )
   )
+
 
   val mem_read_result = mem_read_result_sint.asUInt
 
-  val mem_write_mask = MuxLookup(in_regbits.mem_write_type, 0.U(4.W))(
+  // val mem_write_mask = MuxLookup(in_regbits.mem_write_type, 0.U(4.W))(
+  //   Seq(
+  //     Store_Type.sb -> "b0001".U(4.W),
+  //     Store_Type.sh -> "b0011".U(4.W),
+  //     Store_Type.sw -> "b1111".U(4.W)
+  //   )
+  // )
+  // val mem_write_size = MuxLookup(in_regbits.mem_write_type, 0.U(3.W))(
+  //   Seq(
+  //     Store_Type.sb -> "b000".U(3.W),
+  //     Store_Type.sh -> "b001".U(3.W),
+  //     Store_Type.sw -> "b010".U(3.W)
+  //   )
+  // )
+  val mem_write_mask = MuxLookup(in_regbits.func3, 0.U(4.W))(
     Seq(
-      Store_Type.sb -> "b0001".U(4.W),
-      Store_Type.sh -> "b0011".U(4.W),
-      Store_Type.sw -> "b1111".U(4.W)
+      BitPat("b000") -> "b0001".U(4.W),
+      BitPat("b001") -> "b0011".U(4.W),
+      BitPat("b010") -> "b1111".U(4.W)
     )
   )
-  val mem_write_size = MuxLookup(in_regbits.mem_write_type, 0.U(3.W))(
+  val mem_write_size = MuxLookup(in_regbits.func3, 0.U(3.W))(
     Seq(
-      Store_Type.sb -> "b000".U(3.W),
-      Store_Type.sh -> "b001".U(3.W),
-      Store_Type.sw -> "b010".U(3.W)
+      BitPat("b000") -> "b000".U(3.W),
+      BitPat("b001") -> "b001".U(3.W),
+      BitPat("b010") -> "b010".U(3.W)
     )
   )
   val wd_move = in_regbits.src2 << ((in_regbits.alu_result(1, 0)) << 3)

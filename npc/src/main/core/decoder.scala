@@ -286,6 +286,7 @@ class Decoder extends Module {
   val rs1 = in_regbits.instr(19, 15)
   val rs2 = in_regbits.instr(24, 20)
   val rd  = in_regbits.instr(11, 7)
+  val func3  = in_regbits.instr(14, 12)
 
   val decodedResults =
     new DecodeTable(
@@ -300,10 +301,10 @@ class Decoder extends Module {
         ALUOp_Gen,
         Read_En,
         Write_En,
-        Mem_LoadType,
-        Mem_WriteType,
+        // Mem_LoadType,
+        // Mem_WriteType,
         Is_Branch,
-        BranchType,
+        // BranchType,
         CSRRW,
         CSRR_ALU_Type,
         Is_Mret,
@@ -345,11 +346,13 @@ class Decoder extends Module {
 
   io.out.bits.mem_write_enable := decodedResults(Write_En)
 
-  io.out.bits.mem_write_type := decodedResults(Mem_WriteType)
-  io.out.bits.mem_read_type  := decodedResults(Mem_LoadType)
+  io.out.bits.func3:=func3
+
+  // io.out.bits.mem_write_type := decodedResults(Mem_WriteType)
+  // io.out.bits.mem_read_type  := decodedResults(Mem_LoadType)
 
   io.out.bits.is_branch   := decodedResults(Is_Branch)
-  io.out.bits.branch_type := decodedResults(BranchType)
+  // io.out.bits.branch_type := decodedResults(BranchType)
 
   io.out.bits.csrrw        := decodedResults(CSRRW)
   io.out.bits.csr_alu_type := decodedResults(CSRR_ALU_Type)

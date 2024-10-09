@@ -27,6 +27,7 @@ class DecoderO extends Bundle {
   val rs1 = Output(UInt(5.W))
   val rs2 = Output(UInt(5.W))
   val rd  = Output(UInt(5.W))
+  val func3  = Output(UInt(3.W))
   val imm = Output(UInt(CVAL.DLEN.W))
   //选择alu的输入/输出
   val alu_use_Imm_2    = Output(Bool())
@@ -37,12 +38,12 @@ class DecoderO extends Bundle {
   // val ebreak           = Bool()
 
   val mem_read_enable  = Output(Bool())
-  val mem_read_type    = Output(Load_Type())
+  // val mem_read_type    = Output(Load_Type())
   val mem_write_enable = Output(Bool())
-  val mem_write_type   = Output(Store_Type())
+  // val mem_write_type   = Output(Store_Type())
 
   val is_branch   = Output(Bool())
-  val branch_type = Output(Branch_Type())
+  // val branch_type = Output(Branch_Type())
 
   val csrrw        = Output(Bool())
   val csr_alu_type = Output(CSRALU_Type())

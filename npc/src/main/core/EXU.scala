@@ -21,9 +21,10 @@ class EXU extends Module {
   io.out.valid:=io.in.valid
   //pass_throughs
   io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
-  io.out.bits.mem_read_type    := io.in.bits.mem_read_type
+  // io.out.bits.mem_read_type    := io.in.bits.mem_read_type
   io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
-  io.out.bits.mem_write_type   := io.in.bits.mem_write_type
+  io.out.bits.func3 := io.in.bits.func3
+  // io.out.bits.mem_write_type   := io.in.bits.mem_write_type
   io.out.bits.pc               := io.in.bits.pc //using!
   io.out.bits.ecall            := io.in.bits.ecall
   io.out.bits.pc_jump          := io.in.bits.pc_jump
@@ -49,7 +50,8 @@ class EXU extends Module {
 //比较单元的输入
   comp.io.src1      := src1
   comp.io.src2      := src2
-  comp.io.comp_type := io.in.bits.branch_type
+  // comp.io.comp_type := io.in.bits.branch_type
+  comp.io.func3 := io.in.bits.func3
   val go_branch = comp.io.result
 //alu的输入
   alu.io.in.src1        := alu_val1
@@ -65,7 +67,7 @@ class EXU extends Module {
     )
   )
   io.out.bits.alu_result  := alu.io.result //alu的运算结果
-  io.out.bits.src2        := src2 //TODO:哪里需要？？
+  io.out.bits.src2        := src2 
   io.out.bits.csr_alu_res := csr_alu_res
   io.out.bits.csr_val     := io.csr.data
   io.out.bits.go_branch   := go_branch
@@ -80,17 +82,28 @@ class Branch_comp extends Module {
   val io = IO(new Bundle {
     val src1      = Input(UInt(CVAL.DLEN.W))
     val src2      = Input(UInt(CVAL.DLEN.W))
-    val comp_type = Input(Branch_Type())
+    // val comp_type = Input(Branch_Type())
+    val func3 = Input(UInt(3.W))
     val result    = Output(Bool())
   })
-  io.result := MuxLookup(io.comp_type, false.B)(
+  // io.result := MuxLookup(io.comp_type, false.B)(
+  //   Seq(
+  //     Branch_Type.beq -> (io.src1 === io.src2),
+  //     Branch_Type.bne -> (io.src1 =/= io.src2),
+  //     Branch_Type.blt -> (io.src1.asSInt < io.src2.asSInt),
+  //     Branch_Type.bge -> (io.src1.asSInt >= io.src2.asSInt),
+  //     Branch_Type.bltu -> (io.src1 < io.src2),
+  //     Branch_Type.bgeu -> (io.src1 >= io.src2)
+  //   )
+  // )
+    io.result := MuxLookup(io.func3, false.B)(
     Seq(
-      Branch_Type.beq -> (io.src1 === io.src2),
-      Branch_Type.bne -> (io.src1 =/= io.src2),
-      Branch_Type.blt -> (io.src1.asSInt < io.src2.asSInt),
-      Branch_Type.bge -> (io.src1.asSInt >= io.src2.asSInt),
-      Branch_Type.bltu -> (io.src1 < io.src2),
-      Branch_Type.bgeu -> (io.src1 >= io.src2)
+      BitPat("b000") -> (io.src1 === io.src2),
+      BitPat("b001") -> (io.src1 =/= io.src2),
+      BitPat("b100") -> (io.src1.asSInt < io.src2.asSInt),
+      BitPat("b101") -> (io.src1.asSInt >= io.src2.asSInt),
+      BitPat("b110") -> (io.src1 < io.src2),
+      BitPat("b111") -> (io.src1 >= io.src2)
     )
   )
 }
