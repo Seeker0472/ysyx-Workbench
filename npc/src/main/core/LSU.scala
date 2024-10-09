@@ -21,10 +21,9 @@ class LSU extends Module {
   io.in.ready := true.B
   val in_regbits  = Reg(new EXU_O)
   val in_regvalid = RegNext(io.in.valid)
-  when(io.in.valid){
+  when(io.in.valid) {
     in_regbits := io.in.bits
   }
-  
 
   io.out.valid := state === s_valid
   //pass_throughs
@@ -36,7 +35,6 @@ class LSU extends Module {
   io.out.bits.csr_val         := in_regbits.csr_val
   io.out.bits.alu_result      := in_regbits.alu_result //using!
   io.out.bits.pc_jump         := in_regbits.pc_jump
-  // io.out.bits.is_branch       := in_regbits.is_branch
   io.out.bits.go_branch       := in_regbits.go_branch
   io.out.bits.reg_w_addr      := in_regbits.reg_w_addr
   io.out.bits.reg_w_enable    := in_regbits.reg_w_enable
@@ -48,7 +46,7 @@ class LSU extends Module {
       s_idle -> Mux(
         (in_regbits.mem_write_enable || in_regbits.mem_read_enable) && in_regvalid,
         Mux(in_regbits.mem_write_enable, s_w_busy, s_r_busy),
-        Mux(in_regvalid,s_valid,s_idle)
+        Mux(in_regvalid, s_valid, s_idle)
       ),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
       s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
@@ -73,7 +71,7 @@ class LSU extends Module {
       true.B -> Mux(io.axi.WD.ready, false.B, true.B)
     )
   }
-  val mem_read_size = Cat(0.U(1.W),in_regbits.func3(1,0))
+  val mem_read_size = Cat(0.U(1.W), in_regbits.func3(1, 0))
   io.axi.RA.bits.size := mem_read_size
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
   io.axi.RA.bits.len  := 0.U
@@ -96,9 +94,8 @@ class LSU extends Module {
     )
   )
 
-
   val mem_read_result = mem_read_result_sint.asUInt
- 
+
   val mem_write_mask = MuxLookup(in_regbits.func3, 0.U(4.W))(
     Seq(
       "b000".U -> "b0001".U(4.W), //sb
