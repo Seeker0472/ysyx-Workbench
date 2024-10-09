@@ -75,7 +75,6 @@ object Is_Ebreak extends BoolDecodeField[InsP] {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
     if (
       op.name_in == "ebreak"
-      // op.opcode.rawString.matches("1110011") && op.func3.rawString.matches("000") && op.rs2.rawString.matches(("00001"))
     )
       y
     else n
@@ -91,6 +90,19 @@ object Read_En extends BoolDecodeField[InsP] {
     else n
   }
 }
+
+//fencei
+object Is_fenceI extends BoolDecodeField[InsP] {
+  def name: String = "Is_fencei"
+  def genTable(op: InsP) = {
+    if (
+      op.name_in == "fence.i"
+    )
+      y
+    else n
+  }
+}
+
 //读取内存的类型
 object Mem_LoadType extends DecodeField[InsP, Load_Type.Type] {
   def name: String = "Mem_LoadType"
@@ -236,6 +248,7 @@ class Decoder extends Module {
     // val pc =Input(UInt(CVAL.DLEN.W))
     val in     = Flipped(Decoupled(new IFUO))
     val ebreak = Output(Bool())
+    val flush  = Output(Bool())
     val out    = Decoupled(new DecoderO)
   })
   //in
@@ -294,7 +307,8 @@ class Decoder extends Module {
         CSRRW,
         CSRR_ALU_Type,
         Is_Mret,
-        Is_Ecall
+        Is_Ecall,
+        Is_fenceI
       )
     )
       .decode(in_regbits.instr)
@@ -324,6 +338,8 @@ class Decoder extends Module {
   io.out.bits.reg_write_enable := decodedResults(R_Write_Enable)
 
   io.ebreak := decodedResults(Is_Ebreak) && in_regvalid
+
+  io.flush := decodedResults(Is_fenceI) && in_regvalid
 
   io.out.bits.mem_read_enable := decodedResults(Read_En)
 

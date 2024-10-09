@@ -12,6 +12,7 @@ class IFU extends Module {
     val in = Flipped(Decoupled(new WBU_O))
     // val inst_now = Output(UInt(CVAL.DLEN.W))
     val out   = Decoupled(new IFUO())
+    val flush  = Input(Bool())
     val axi   = Flipped(new AXIReadIO())
     val rwerr = Input(Bool())
   })
@@ -21,6 +22,7 @@ class IFU extends Module {
 
   // icache
   val icache = Module(new icache)
+  icache.io.flush:=io.flush
   icache.io.axi <> io.axi
 
   // pc
