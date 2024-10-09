@@ -98,12 +98,12 @@ class Branch_comp extends Module {
   // )
     io.result := MuxLookup(io.func3, false.B)(
     Seq(
-      BitPat("b000") -> (io.src1 === io.src2),
-      BitPat("b001") -> (io.src1 =/= io.src2),
-      BitPat("b100") -> (io.src1.asSInt < io.src2.asSInt),
-      BitPat("b101") -> (io.src1.asSInt >= io.src2.asSInt),
-      BitPat("b110") -> (io.src1 < io.src2),
-      BitPat("b111") -> (io.src1 >= io.src2)
+      "b000".U -> (io.src1 === io.src2),
+      "b001".U -> (io.src1 =/= io.src2),
+      "b100".U -> (io.src1.asSInt < io.src2.asSInt),
+      "b101".U -> (io.src1.asSInt >= io.src2.asSInt),
+      "b110".U -> (io.src1 < io.src2),
+      "b111".U -> (io.src1 >= io.src2)
     )
   )
 }
