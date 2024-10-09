@@ -73,16 +73,6 @@ class LSU extends Module {
       true.B -> Mux(io.axi.WD.ready, false.B, true.B)
     )
   }
-
-  // val mem_read_size = MuxLookup(in_regbits.mem_read_type, 0.U(3.W))(
-  //   Seq(
-  //     Load_Type.lb -> "b000".U(3.W),
-  //     Load_Type.lh -> "b001".U(3.W),
-  //     Load_Type.lw -> "b010".U(3.W),
-  //     Load_Type.lbu -> "b000".U(3.W),
-  //     Load_Type.lhu -> "b001".U(3.W)
-  //   )
-  // )
   val mem_read_size = Cat(0.U(1.W),in_regbits.func3(1,0))
   io.axi.RA.bits.size := mem_read_size
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
@@ -96,22 +86,13 @@ class LSU extends Module {
 
   val mrrm = mrres >> ((in_regbits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv注意符号拓展！！！
-  // val mem_read_result_sint = MuxLookup(in_regbits.mem_read_type, 0.S)(
-  //   Seq(
-  //     Load_Type.lb -> mrrm(7, 0).asSInt,
-  //     Load_Type.lh -> mrrm(15, 0).asSInt,
-  //     Load_Type.lw -> mrrm(31, 0).asSInt,
-  //     Load_Type.lbu -> mrrm(7, 0).zext,
-  //     Load_Type.lhu -> mrrm(15, 0).zext
-  //   )
-  // )  
   val mem_read_result_sint = MuxLookup(in_regbits.func3, 0.S)(
     Seq(
-      "b000".U -> mrrm(7, 0).asSInt,
-      "b001".U -> mrrm(15, 0).asSInt,
-      "b010".U -> mrrm(31, 0).asSInt,
-      "b100".U -> mrrm(7, 0).zext,
-      "b101".U -> mrrm(15, 0).zext
+      "b000".U -> mrrm(7, 0).asSInt, //lb
+      "b001".U -> mrrm(15, 0).asSInt, //lh
+      "b010".U -> mrrm(31, 0).asSInt, //lw
+      "b100".U -> mrrm(7, 0).zext, //lbu
+      "b101".U -> mrrm(15, 0).zext //lhu
     )
   )
 
