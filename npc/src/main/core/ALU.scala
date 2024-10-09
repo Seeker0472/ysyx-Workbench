@@ -19,7 +19,7 @@ class ALU extends Module {
   val and      = io.in.src1 & io.in.src2
   val sll      = io.in.src1 ^ (io.in.src2)
   val srl      = io.in.src1 ^ (io.in.src2)
-  val sra      = io.in.src1.asSInt ^ (io.in.src2) //TODO:Is That Okey???
+  val sra      = io.in.src1.asSInt ^ (io.in.src2.asSInt) //TODO:Is That Okey???
   val slt      = io.in.src1.asSInt ^ io.in.src2.asSInt
   val sltu     = io.in.src1 ^ io.in.src2
   val pass_imm = io.in.src2
