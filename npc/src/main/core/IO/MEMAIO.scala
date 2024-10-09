@@ -14,7 +14,7 @@ class MEMA_O extends Bundle {
   val csr_val         = Output(UInt(CVAL.DLEN.W))
   val alu_result      = Output(UInt(CVAL.DLEN.W))
   val pc_jump         = Output(Bool())
-  val is_branch       = Output(Bool())
+  // val is_branch       = Output(Bool())
   val go_branch       = Output(Bool())
 
   val reg_w_addr   = Output(UInt(CVAL.REG_ADDR_LEN.W))

@@ -36,7 +36,7 @@ class LSU extends Module {
   io.out.bits.csr_val         := in_regbits.csr_val
   io.out.bits.alu_result      := in_regbits.alu_result //using!
   io.out.bits.pc_jump         := in_regbits.pc_jump
-  io.out.bits.is_branch       := in_regbits.is_branch
+  // io.out.bits.is_branch       := in_regbits.is_branch
   io.out.bits.go_branch       := in_regbits.go_branch
   io.out.bits.reg_w_addr      := in_regbits.reg_w_addr
   io.out.bits.reg_w_enable    := in_regbits.reg_w_enable
@@ -98,33 +98,19 @@ class LSU extends Module {
 
 
   val mem_read_result = mem_read_result_sint.asUInt
-
-  // val mem_write_mask = MuxLookup(in_regbits.mem_write_type, 0.U(4.W))(
-  //   Seq(
-  //     Store_Type.sb -> "b0001".U(4.W),
-  //     Store_Type.sh -> "b0011".U(4.W),
-  //     Store_Type.sw -> "b1111".U(4.W)
-  //   )
-  // )
-  // val mem_write_size = MuxLookup(in_regbits.mem_write_type, 0.U(3.W))(
-  //   Seq(
-  //     Store_Type.sb -> "b000".U(3.W),
-  //     Store_Type.sh -> "b001".U(3.W),
-  //     Store_Type.sw -> "b010".U(3.W)
-  //   )
-  // )
+ 
   val mem_write_mask = MuxLookup(in_regbits.func3, 0.U(4.W))(
     Seq(
-      "b000".U -> "b0001".U(4.W),
-      "b001".U -> "b0011".U(4.W),
-      "b010".U -> "b1111".U(4.W)
+      "b000".U -> "b0001".U(4.W), //sb
+      "b001".U -> "b0011".U(4.W), //sh
+      "b010".U -> "b1111".U(4.W) //sw
     )
   )
   val mem_write_size = MuxLookup(in_regbits.func3, 0.U(3.W))(
     Seq(
-      "b000".U -> "b000".U(3.W),
-      "b001".U -> "b001".U(3.W),
-      "b010".U -> "b010".U(3.W)
+      "b000".U -> "b000".U(3.W), //sb
+      "b001".U -> "b001".U(3.W), //sh
+      "b010".U -> "b010".U(3.W) //sw
     )
   )
   val wd_move = in_regbits.src2 << ((in_regbits.alu_result(1, 0)) << 3)

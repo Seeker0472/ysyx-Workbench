@@ -19,7 +19,7 @@ class EXU_O extends Bundle {
   val csrrw       = Output(Bool())
   val csr_val     = Output(UInt(CVAL.DLEN.W))
   val pc_jump     = Output(Bool())
-  val is_branch   = Output(Bool())
+  // val is_branch   = Output(Bool())
   val go_branch   = Output(Bool())
 
   val reg_w_addr   = Output(UInt(CVAL.REG_ADDR_LEN.W))

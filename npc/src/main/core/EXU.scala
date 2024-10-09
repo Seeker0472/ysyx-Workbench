@@ -21,14 +21,12 @@ class EXU extends Module {
   io.out.valid:=io.in.valid
   //pass_throughs
   io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
-  // io.out.bits.mem_read_type    := io.in.bits.mem_read_type
   io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
   io.out.bits.func3 := io.in.bits.func3
-  // io.out.bits.mem_write_type   := io.in.bits.mem_write_type
   io.out.bits.pc               := io.in.bits.pc //using!
   io.out.bits.ecall            := io.in.bits.ecall
   io.out.bits.pc_jump          := io.in.bits.pc_jump
-  io.out.bits.is_branch        := io.in.bits.is_branch
+  // io.out.bits.is_branch        := io.in.bits.is_branch
   io.out.bits.reg_w_addr       := io.in.bits.rd
   io.out.bits.reg_w_enable     := io.in.bits.reg_write_enable
   io.out.bits.mret             := io.in.bits.mret
@@ -70,7 +68,7 @@ class EXU extends Module {
   io.out.bits.src2        := src2 
   io.out.bits.csr_alu_res := csr_alu_res
   io.out.bits.csr_val     := io.csr.data
-  io.out.bits.go_branch   := go_branch
+  io.out.bits.go_branch   := go_branch&&io.in.bits.is_branch
 
   //Trace
   val trace_exu = Module(new TRACE_EXU)
@@ -86,24 +84,14 @@ class Branch_comp extends Module {
     val func3 = Input(UInt(3.W))
     val result    = Output(Bool())
   })
-  // io.result := MuxLookup(io.comp_type, false.B)(
-  //   Seq(
-  //     Branch_Type.beq -> (io.src1 === io.src2),
-  //     Branch_Type.bne -> (io.src1 =/= io.src2),
-  //     Branch_Type.blt -> (io.src1.asSInt < io.src2.asSInt),
-  //     Branch_Type.bge -> (io.src1.asSInt >= io.src2.asSInt),
-  //     Branch_Type.bltu -> (io.src1 < io.src2),
-  //     Branch_Type.bgeu -> (io.src1 >= io.src2)
-  //   )
-  // )
     io.result := MuxLookup(io.func3, false.B)(
     Seq(
-      "b000".U -> (io.src1 === io.src2),
-      "b001".U -> (io.src1 =/= io.src2),
-      "b100".U -> (io.src1.asSInt < io.src2.asSInt),
-      "b101".U -> (io.src1.asSInt >= io.src2.asSInt),
-      "b110".U -> (io.src1 < io.src2),
-      "b111".U -> (io.src1 >= io.src2)
+      "b000".U -> (io.src1 === io.src2), //beq
+      "b001".U -> (io.src1 =/= io.src2), //bne
+      "b100".U -> (io.src1.asSInt < io.src2.asSInt), //blt
+      "b101".U -> (io.src1.asSInt >= io.src2.asSInt), //bge
+      "b110".U -> (io.src1 < io.src2), //bltu
+      "b111".U -> (io.src1 >= io.src2) //bgeu
     )
   )
 }
