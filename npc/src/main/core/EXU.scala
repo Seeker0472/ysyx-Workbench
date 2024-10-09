@@ -63,7 +63,7 @@ class EXU extends Module {
   )
   io.out.bits.alu_result  := alu.io.result //alu的运算结果
   io.out.bits.src2        := src2
-  io.out.bits.csr_alu_res := csr_alu_res //这个有必要嘛
+  io.out.bits.csr_alu_res := csr_alu_res
   io.out.bits.csr_val     := io.csr.data
   io.out.bits.go_branch   := go_branch && io.in.bits.is_branch
 
