@@ -107,11 +107,11 @@ class LSU extends Module {
   // )  
   val mem_read_result_sint = MuxLookup(in_regbits.func3, 0.S)(
     Seq(
-      BitPat("b000") -> mrrm(7, 0).asSInt,
-      BitPat("b001") -> mrrm(15, 0).asSInt,
-      BitPat("b010") -> mrrm(31, 0).asSInt,
-      BitPat("b100") -> mrrm(7, 0).zext,
-      BitPat("b101") -> mrrm(15, 0).zext
+      "b000".U -> mrrm(7, 0).asSInt,
+      "b001".U -> mrrm(15, 0).asSInt,
+      "b010".U -> mrrm(31, 0).asSInt,
+      "b100".U -> mrrm(7, 0).zext,
+      "b101".U -> mrrm(15, 0).zext
     )
   )
 
@@ -134,16 +134,16 @@ class LSU extends Module {
   // )
   val mem_write_mask = MuxLookup(in_regbits.func3, 0.U(4.W))(
     Seq(
-      BitPat("b000") -> "b0001".U(4.W),
-      BitPat("b001") -> "b0011".U(4.W),
-      BitPat("b010") -> "b1111".U(4.W)
+      "b000".U -> "b0001".U(4.W),
+      "b001".U -> "b0011".U(4.W),
+      "b010".U -> "b1111".U(4.W)
     )
   )
   val mem_write_size = MuxLookup(in_regbits.func3, 0.U(3.W))(
     Seq(
-      BitPat("b000") -> "b000".U(3.W),
-      BitPat("b001") -> "b001".U(3.W),
-      BitPat("b010") -> "b010".U(3.W)
+      "b000".U -> "b000".U(3.W),
+      "b001".U -> "b001".U(3.W),
+      "b010".U -> "b010".U(3.W)
     )
   )
   val wd_move = in_regbits.src2 << ((in_regbits.alu_result(1, 0)) << 3)
