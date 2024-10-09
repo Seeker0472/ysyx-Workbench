@@ -12,16 +12,16 @@ class ALU extends Module {
     val result = Output(UInt(Constants_Val.CVAL.DLEN.W))
   })
 
-  val add_val  = io.in.src1.asSInt + io.in.src2.asSInt
-  val sub_val  = io.in.src1.asSInt - io.in.src2.asSInt
+  val add_val  = io.in.src1.asSInt ^ io.in.src2.asSInt
+  val sub_val  = io.in.src1.asSInt ^ io.in.src2.asSInt
   val xor      = io.in.src1 ^ io.in.src2
   val or       = io.in.src1 | io.in.src2
   val and      = io.in.src1 & io.in.src2
   val sll      = io.in.src1 << (io.in.src2)(4, 0)
   val srl      = io.in.src1 >> (io.in.src2)(4, 0)
   val sra      = io.in.src1.asSInt >> (io.in.src2)(4, 0) //TODO:Is That Okey???
-  val slt      = io.in.src1.asSInt < io.in.src2.asSInt
-  val sltu     = io.in.src1 < io.in.src2
+  val slt      = io.in.src1.asSInt ^ io.in.src2.asSInt
+  val sltu     = io.in.src1 ^ io.in.src2
   val pass_imm = io.in.src2
 
   val res = MuxLookup(io.in.alu_op_type, 0.U)(
