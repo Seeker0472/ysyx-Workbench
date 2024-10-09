@@ -12,6 +12,11 @@ import scala.math
 // +---------+---------+--------+
 //
 
+object ICACHE_Const{
+  val BLOCK_SIZE = 8
+  val BLOCK_NUM = 8
+}
+
 class icache extends Module {
   val io = IO(new Bundle {
     val axi        = Flipped(new AXIReadIO())
@@ -22,8 +27,8 @@ class icache extends Module {
     val flush  = Input(Bool())
   })
 
-  val block_size = 8
-  val block_num  = 8
+  val block_size = ICACHE_Const.BLOCK_SIZE
+  val block_num  = ICACHE_Const.BLOCK_NUM
 
   //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt
