@@ -32,20 +32,20 @@ class ypc extends Module {
   br_han.io.halt := decoder.io.ebreak
   ifu.io.flush := decoder.io.flush
 //exc
-  StageConnect(decoder.io.out, exu.io.in)
+  StageConnect(decoder.io.out, exu.io.in,"multi")
   exu.io.reg1 <> reg.io.Rread1
   exu.io.reg2 <> reg.io.Rread2
   exu.io.csr <> reg.io.CSRread
-//mem_access
+//lsu
   lsu.io.axi <> axi_arbiter.io.c2
   StageConnect(exu.io.out, lsu.io.in,"pipeline")
 
 //wb
-  StageConnect(lsu.io.out, wbu.io.in)
+  StageConnect(lsu.io.out, wbu.io.in,"multi")
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
-
+//ifu
   StageConnect(wbu.io.out, ifu.io.in,"pipeline")
 
   // axi_connection_master
