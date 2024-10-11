@@ -20,7 +20,7 @@ class IFU extends Module {
   val s_idle :: s_fetching :: s_valid :: s_error :: Nil = Enum(4)
   val state                                             = RegInit(s_fetching)
 
-  decoder_pc.ready := true.B
+  io.decoder_pc.ready := true.B
   // decoder_pc.bits
   //TODO:How To Use???
   //check decoder(EXU) First 

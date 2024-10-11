@@ -33,8 +33,8 @@ class Decoder extends Module {
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
-  decoder_pc.bits := io.in.bits.pc
-  decoder_pc.valid := io.in.valid
+  io.decoder_pc.bits := io.in.bits.pc
+  io.decoder_pc.valid := io.in.valid
 
   //in
   io.in.ready  := state === s_idle
@@ -135,7 +135,7 @@ class Decoder extends Module {
   io.out.bits.ecall := decodedResults(Is_Ecall)
   io.out.bits.mret  := decodedResults(Is_Mret)
   //TODO
-  val conflict = MuxLookUp(Type,false.B)(Seq(
+  val conflict = MuxLookup(Type,false.B)(Seq(
       Inst_Type_Enum.R_Type -> (io.lsu_w_addr===rs1||io.lsu_w_addr===rs2),
       Inst_Type_Enum.I_Type -> (io.lsu_w_addr===rs1),
       Inst_Type_Enum.S_Type -> (io.lsu_w_addr===rs2),
