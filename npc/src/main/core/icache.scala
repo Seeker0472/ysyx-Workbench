@@ -12,6 +12,11 @@ import scala.math
 // +---------+---------+--------+
 //
 
+object ICACHE_Const{
+  val BLOCK_SIZE = 8
+  val BLOCK_NUM = 8
+}
+
 class icache extends Module {
   val io = IO(new Bundle {
     val axi        = Flipped(new AXIReadIO())
@@ -19,10 +24,11 @@ class icache extends Module {
     val inst_valid = Output(Bool())
     val addr       = Input(UInt(32.W))
     val addr_valid = Input(Bool())
+    val flush  = Input(Bool())
   })
 
-  val block_size = 8
-  val block_num  = 8
+  val block_size = ICACHE_Const.BLOCK_SIZE
+  val block_num  = ICACHE_Const.BLOCK_NUM
 
   //calc the len
   val offset_len = (math.log(block_size) / math.log(2)).toInt
@@ -34,6 +40,10 @@ class icache extends Module {
   //Tag and cache
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
   val cache    = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size * 8).W))))
+  //flush
+  when(io.flush){
+    cachetag := VecInit(Seq.fill(block_num)(0.U))
+  }
 
   // split the tag, index, offset from addr
   val addr_tag    = io.addr(31, 31 - tag_len + 1)

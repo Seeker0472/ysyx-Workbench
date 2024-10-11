@@ -13,8 +13,7 @@ class WBU extends Module {
     val CSR_write  = (new CSRWriteIO)
     val out        = Decoupled(new WBU_O)
   })
-  io.in.ready := io.out.ready
-  // io.out.valid:=true.B
+  io.in.ready  := io.out.ready
   io.out.valid := io.in.valid
 
   io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
@@ -37,9 +36,8 @@ class WBU extends Module {
     ) //内存读取/csr操作/算数运算结果
   val pc_plus4 = io.in.bits.pc + 4.U
 
-  // val next_pc = Mux(io.in.bits.pc_jump || (io.in.bits.is_branch && go_branch), result, pc_plus4)
   val next_pc = Mux(
-    io.in.bits.pc_jump || (io.in.bits.is_branch && io.in.bits.go_branch),
+    io.in.bits.pc_jump || io.in.bits.go_branch,
     result,
     Mux(io.in.bits.ecall, io.csr_mstvec, pc_plus4)
   ) //跳转指令/ecall/正常pc+4
@@ -48,6 +46,5 @@ class WBU extends Module {
   io.Rwrite.write_enable := io.in.bits.reg_w_enable && io.in.valid
 
   io.out.bits.n_pc := Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
-  // TODO：这个地方感觉会延迟很高？
 
 }
