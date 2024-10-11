@@ -39,11 +39,11 @@ class IFU extends Module {
 
   // in
   io.in.ready := true.B
-  val in_regbits  = RegNext(io.in.bits)
-  val in_regvalid = RegNext(io.in.valid)
+  // val in_regbits  = RegNext(io.in.bits)
+  // val in_regvalid = RegNext(io.in.valid)
 
-  when(in_regvalid) {
-    pc := Mux(state === s_error, 0.U, in_regbits.n_pc)
+  when(io.in.valid) {
+    pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
   }
   when(io.rwerr) {
     state := s_error
@@ -51,7 +51,7 @@ class IFU extends Module {
 
   state := MuxLookup(state, s_idle)(
     Seq(
-      s_idle -> Mux(in_regvalid, s_fetching, s_idle),
+      s_idle -> Mux(io.in.valid, s_fetching, s_idle),
       s_fetching -> Mux(icache.io.inst_valid, s_valid, s_fetching),
       s_valid -> Mux(io.out.ready, s_idle, s_valid),
       s_error -> s_error
