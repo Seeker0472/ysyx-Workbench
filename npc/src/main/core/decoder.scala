@@ -243,11 +243,21 @@ class Decoder extends Module {
     val flush  = Output(Bool())
     val out    = Decoupled(new DecoderO)
   })
+  //state_machine
+  val s_idle :: s_valid :: Nil = Enum(2)
+
+  val state = RegInit(s_idle)
+
+  state := MuxLookup(state,s_idle)(Seq(
+    s_idle -> Mux(io.in.valid,s_valid,s_idle),
+    s_valid -> Mux(io.in.ready,s_idle,s_valid)
+  ))
+
   //in
-  io.in.ready := true.B
+  io.in.ready := state === s_idle
   val in_regbits  = RegNext(io.in.bits)
-  val in_regvalid = RegNext(io.in.valid)
-  io.out.valid := in_regvalid
+  // val in_regvalid = RegNext(io.in.valid)
+  io.out.valid := state === s_valid
 
   //pass_through
   io.out.bits.pc := in_regbits.pc
@@ -326,9 +336,9 @@ class Decoder extends Module {
   io.out.bits.pc_jump          := decodedResults(Is_Jump)
   io.out.bits.reg_write_enable := decodedResults(R_Write_Enable)
 
-  io.ebreak := decodedResults(Is_Ebreak) && in_regvalid
+  io.ebreak := decodedResults(Is_Ebreak) && state === s_valid
 
-  io.flush := decodedResults(Is_fenceI) && in_regvalid
+  io.flush := decodedResults(Is_fenceI) && state === s_valid
 
   io.out.bits.mem_read_enable := decodedResults(Read_En)
 
@@ -351,7 +361,7 @@ class Decoder extends Module {
   trace_decoder.io.mem_W := decodedResults(Write_En) //MEM_Write
   trace_decoder.io.calc  := decodedResults(ALUOp_Gen) =/= ALU_Op.inv //calc instr
   trace_decoder.io.csr   := decodedResults(CSRRW) //scrrw/scrrs/mert/ecall
-  trace_decoder.io.valid := in_regvalid //valid
+  trace_decoder.io.valid := state === s_valid //valid
 
 }
 //DONE:译码出来的指令类型

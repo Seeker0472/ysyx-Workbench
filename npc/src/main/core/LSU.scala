@@ -18,7 +18,7 @@ class LSU extends Module {
   val sig_arvalid                                      = RegInit(false.B)
   val sig_wvalid                                       = RegInit(false.B)
   //
-  io.in.ready := true.B
+  io.in.ready := state === s_idle
   val in_regbits  = Reg(new EXU_O)
   val in_regvalid = RegNext(io.in.valid)
   when(io.in.valid) {
