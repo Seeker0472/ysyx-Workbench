@@ -2,8 +2,8 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 BUILD_DIR = ./build
 PRJ = npc
 SED_CMD = sed -i "s/^.*\.v$$//"
-NXDC_FILE = ${NPC_HOME}/csrc/nvb/soc.nxdc
-SRC_AUTO_BIND = ${NPC_HOME}/csrc/nvb/bind.cpp
+NXDC_FILE = ${NPC_HOME}/nvboardbind/soc.nxdc
+SRC_AUTO_BIND = ${NPC_HOME}/nvboardbind/bind.cpp
 YSYXSOC_V := $(YSYXSOC_HOME)/build/ysyxSoCFull.v
 
 ARGS ?=
@@ -112,7 +112,7 @@ clean:
 
 sim: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  ${FLAGS_SOC} 
+	@verilator -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS} SRC_AUTO_BIND ${FLAGS_SOC} 
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
 	./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 
@@ -128,7 +128,7 @@ gdbnpc:$(TARGETRaw)
 
 gdb: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
 # 这里的－Ｏ１是避免编译器过度优化导致无法正常ｇｄｂ调试
-	@verilator  -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS}  --CFLAGS -g ${FLAGS_SOC} -O1 
+	@verilator  -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS} SRC_AUTO_BIND --CFLAGS -g ${FLAGS_SOC} -O1 
 	
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
 	gdb --args ./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
