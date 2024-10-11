@@ -46,7 +46,7 @@ class ypc extends Module {
   StageConnect(wbu.io.out, ifu.io.in, "pipeline")
 
   //pipeline sig
-  decoder.io.lsu_w_addr<>lsu.io.lsu_w_addr
+  decoder.io.lsu_w_addr<>lsu.io.reg_addr
   ifu.io.decoder_pc<>decoder.io.decoder_pc
 
   // axi_connection_master
