@@ -32,7 +32,7 @@ class ypc extends Module {
   br_han.io.halt := decoder.io.ebreak
   ifu.io.flush := decoder.io.flush
 //exc
-  StageConnect(decoder.io.out, exu.io.in,"multi")
+  StageConnect(decoder.io.out, exu.io.in,"pipeline")
   exu.io.reg1 <> reg.io.Rread1
   exu.io.reg2 <> reg.io.Rread2
   exu.io.csr <> reg.io.CSRread
