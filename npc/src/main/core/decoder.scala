@@ -136,10 +136,10 @@ class Decoder extends Module {
   io.out.bits.mret  := decodedResults(Is_Mret)
   //TODO
   val conflict = MuxLookUp(Type,false.B)(Seq(
-      Inst_Type_Enum.R_Type -> io.lsu_w_addr===rs1||io.lsu_w_addr===rs2,
-      Inst_Type_Enum.I_Type -> io.lsu_w_addr===rs1,
-      Inst_Type_Enum.S_Type -> io.lsu_w_addr===rs2,
-      Inst_Type_Enum.B_Type -> io.lsu_w_addr===rs1||io.lsu_w_addr===rs2,
+      Inst_Type_Enum.R_Type -> (io.lsu_w_addr===rs1||io.lsu_w_addr===rs2),
+      Inst_Type_Enum.I_Type -> (io.lsu_w_addr===rs1),
+      Inst_Type_Enum.S_Type -> (io.lsu_w_addr===rs2),
+      Inst_Type_Enum.B_Type -> (io.lsu_w_addr===rs1||io.lsu_w_addr===rs2),
       // Inst_Type_Enum.U_Type -> immU,
       // Inst_Type_Enum.J_Type -> immJ
   ))
