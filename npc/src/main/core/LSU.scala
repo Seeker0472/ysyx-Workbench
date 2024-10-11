@@ -17,13 +17,8 @@ class LSU extends Module {
   val sig_awvalid                                      = RegInit(false.B)
   val sig_arvalid                                      = RegInit(false.B)
   val sig_wvalid                                       = RegInit(false.B)
-  //
+
   io.in.ready := state === s_idle
-  // val n_regbits  = Reg(new EXU_O)
-  // // val in_regvalid = RegNext(io.in.valid)
-  // when(io.in.valid) {
-  //   io.in.bits := io.in.bits
-  // }
 
   io.out.valid := state === s_valid
   //pass_throughs
@@ -40,7 +35,7 @@ class LSU extends Module {
   io.out.bits.reg_w_enable    := io.in.bits.reg_w_enable
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
-  //状态机不打拍？
+  //state
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
@@ -53,7 +48,7 @@ class LSU extends Module {
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
-  //TODO!!!!
+
   sig_awvalid := MuxLookup(sig_awvalid, false.B) {
     Seq(
       false.B -> Mux(state === s_idle && io.in.bits.mem_write_enable && io.in.valid, true.B, false.B),
@@ -84,7 +79,7 @@ class LSU extends Module {
   val mrres = io.axi.RD.bits.data
 
   val mrrm = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
-  //vv注意符号拓展！！！
+  //vv 符号拓展！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.func3, 0.S)(
     Seq(
       "b000".U -> mrrm(7, 0).asSInt, //lb

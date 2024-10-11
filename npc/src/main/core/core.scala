@@ -9,7 +9,6 @@ import bus.AXI_Lite_Arbiter
 
 class ypc extends Module {
   val io = IO(new Bundle {
-    // val inst_now = Output(UInt(CVAL.DLEN.W))
     val master    = (new master_io)
     val slave     = Flipped(new master_io)
     val interrupt = Input(Bool()) // TODO
@@ -24,29 +23,27 @@ class ypc extends Module {
   val wbu         = Module(new WBU())
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
 
-  // io.inst_now := ifu.io.inst_now //输出当前指令到Debugger环境---可能以后需要Debug
-
   ifu.io.axi <> axi_arbiter.io.c1
 //decode_stage
-  StageConnect(ifu.io.out, decoder.io.in,"pipeline")
+  StageConnect(ifu.io.out, decoder.io.in, "pipeline")
   br_han.io.halt := decoder.io.ebreak
-  ifu.io.flush := decoder.io.flush
+  ifu.io.flush   := decoder.io.flush
 //exc
-  StageConnect(decoder.io.out, exu.io.in,"pipeline")
+  StageConnect(decoder.io.out, exu.io.in, "multi")
   exu.io.reg1 <> reg.io.Rread1
   exu.io.reg2 <> reg.io.Rread2
   exu.io.csr <> reg.io.CSRread
 //lsu
   lsu.io.axi <> axi_arbiter.io.c2
-  StageConnect(exu.io.out, lsu.io.in,"pipeline")
+  StageConnect(exu.io.out, lsu.io.in, "pipeline")
 
 //wb
-  StageConnect(lsu.io.out, wbu.io.in,"multi")
+  StageConnect(lsu.io.out, wbu.io.in, "multi")
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
 //ifu
-  StageConnect(wbu.io.out, ifu.io.in,"pipeline")
+  StageConnect(wbu.io.out, ifu.io.in, "pipeline")
 
   // axi_connection_master
   axi_arbiter.io.out.WA.ready := io.master.awready
@@ -63,7 +60,6 @@ class ypc extends Module {
   io.master.wstrb             := axi_arbiter.io.out.WD.bits.wstrb
   io.master.wlast             := true.B
 
-  // io.master.bready                 := axi_arbiter.io.out.WR.ready
   io.master.bready                 := true.B
   axi_arbiter.io.out.WR.valid      := io.master.bvalid
   axi_arbiter.io.out.WR.bits.bresp := io.master.bresp
@@ -80,8 +76,8 @@ class ypc extends Module {
   axi_arbiter.io.out.RD.valid      := io.master.rvalid
   axi_arbiter.io.out.RD.bits.data  := io.master.rdata
   axi_arbiter.io.out.RD.bits.rresp := io.master.rresp
-  axi_arbiter.io.out.RD.bits.id   := io.master.rid
-  axi_arbiter.io.out.RD.bits.last   := io.master.rlast
+  axi_arbiter.io.out.RD.bits.id    := io.master.rid
+  axi_arbiter.io.out.RD.bits.last  := io.master.rlast
 
   // slave
   io.slave.awready := 0.U
@@ -95,8 +91,6 @@ class ypc extends Module {
   io.slave.rdata   := 0.U
   io.slave.rlast   := 0.U
   io.slave.rid     := 0.U
-
-  // axi_arbiter.out<>
 
   ifu.io.rwerr := (io.master.bresp =/= 0.U && io.master.bvalid) || (io.master.rresp =/= 0.U && io.master.rvalid) // 出错跳转到0=
 

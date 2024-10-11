@@ -9,10 +9,9 @@ import Constants_Val.CVAL.DLEN
 //存放PC，负责取出指令
 class IFU extends Module {
   val io = IO(new Bundle {
-    val in = Flipped(Decoupled(new WBU_O))
-    // val inst_now = Output(UInt(CVAL.DLEN.W))
+    val in    = Flipped(Decoupled(new WBU_O))
     val out   = Decoupled(new IFUO())
-    val flush  = Input(Bool())
+    val flush = Input(Bool())
     val axi   = Flipped(new AXIReadIO())
     val rwerr = Input(Bool())
   })
@@ -22,7 +21,7 @@ class IFU extends Module {
 
   // icache
   val icache = Module(new icache)
-  icache.io.flush:=io.flush
+  icache.io.flush := io.flush
   icache.io.axi <> io.axi
 
   // pc
@@ -39,8 +38,6 @@ class IFU extends Module {
 
   // in
   io.in.ready := true.B
-  // val in_regbits  = RegNext(io.in.bits)
-  // val in_regvalid = RegNext(io.in.valid)
 
   when(io.in.valid) {
     pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
