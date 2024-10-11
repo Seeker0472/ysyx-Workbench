@@ -28,7 +28,7 @@ class ypc extends Module {
 
   ifu.io.axi <> axi_arbiter.io.c1
 //decode_stage
-  StageConnect(ifu.io.out, decoder.io.in)
+  StageConnect(ifu.io.out, decoder.io.in,"pipeline")
   br_han.io.halt := decoder.io.ebreak
   ifu.io.flush := decoder.io.flush
 //exc
@@ -38,7 +38,7 @@ class ypc extends Module {
   exu.io.csr <> reg.io.CSRread
 //mem_access
   lsu.io.axi <> axi_arbiter.io.c2
-  StageConnect(exu.io.out, lsu.io.in)
+  StageConnect(exu.io.out, lsu.io.in,"pipeline")
 
 //wb
   StageConnect(lsu.io.out, wbu.io.in)
@@ -46,7 +46,7 @@ class ypc extends Module {
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
 
-  StageConnect(wbu.io.out, ifu.io.in)
+  StageConnect(wbu.io.out, ifu.io.in,"pipeline")
 
   // axi_connection_master
   axi_arbiter.io.out.WA.ready := io.master.awready
