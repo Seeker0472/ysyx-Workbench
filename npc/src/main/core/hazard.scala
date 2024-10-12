@@ -17,5 +17,5 @@ class HazardUnit extends Module {
   io.decoder_pc.ready := true.B
   io.wbu.ready := true.B
 
-  flush := Mux(io.decoder_pc.valid,lsu_hazard,ifu_hazard)
+  io.flush := Mux(io.decoder_pc.valid,decoder_hazard,ifu_hazard)
 }
