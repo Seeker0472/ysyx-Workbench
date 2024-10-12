@@ -50,9 +50,13 @@ class IFU extends Module {
   // in
   io.in.ready := true.B
 
-  when(io.in.valid) {
-    pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
+  // when(io.in.valid) {
+  //   pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
+  // }
+  when(io.out.ready&&state===s_valid){
+    pc := pc+4.U//简单分支预测
   }
+
   when(io.rwerr) {
     state := s_error
   }
@@ -61,10 +65,13 @@ class IFU extends Module {
     Seq(
       s_idle -> Mux(io.in.valid, s_fetching, s_idle),
       s_fetching -> Mux(icache.io.inst_valid, s_valid, s_fetching),
-      s_valid -> Mux(io.out.ready, s_idle, s_valid),
+      s_valid -> Mux(io.out.ready, s_fetching, s_valid),//stays on fetching
       s_error -> s_error
     )
   )
+  when(io.flush_pipeline){
+    state:=s_idle
+  }
 
   //TRACE_IFU
   val trace_ifu = Module(new TRACE_IFU)
