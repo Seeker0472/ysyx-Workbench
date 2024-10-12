@@ -9,28 +9,27 @@ import Constants_Val.CVAL.DLEN
 //存放PC，负责取出指令
 class IFU extends Module {
   val io = IO(new Bundle {
-    val in    = Flipped(Decoupled(new WBU_O))
-    val out   = Decoupled(new IFUO())
-    val flush = Input(Bool())
-    val axi   = Flipped(new AXIReadIO())
-    val rwerr = Input(Bool())
-    val ifu_pc = (Decoupled(UInt(CVAL.DLEN.W)))//TODO!!!!!
+    val in             = Flipped(Decoupled(new WBU_O))
+    val out            = Decoupled(new IFUO())
+    val flush_icache          = Input(Bool())
+    val axi            = Flipped(new AXIReadIO())
+    val rwerr          = Input(Bool())
+    val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W))) //TODO!!!!!
+    val flush_pipeline = Input(Bool())
   })
   // states
   val s_idle :: s_fetching :: s_valid :: s_error :: Nil = Enum(4)
   val state                                             = RegInit(s_fetching)
-  
-  
 
   // io.decoder_pc.ready := true.B
   // decoder_pc.bits
   //TODO:How To Use???
-  //check decoder(EXU) First 
+  //check decoder(EXU) First
   // if not valid check lsu
 
   // icache
   val icache = Module(new icache)
-  icache.io.flush := io.flush
+  icache.io.flush := io.flush_icache
   icache.io.axi <> io.axi
 
   // pc
@@ -40,7 +39,7 @@ class IFU extends Module {
   icache.io.addr       := pc
   icache.io.addr_valid := state === s_fetching
 
-  io.ifu_pc.bits := pc
+  io.ifu_pc.bits  := pc
   io.ifu_pc.valid := true.B //TODO
 
   //out

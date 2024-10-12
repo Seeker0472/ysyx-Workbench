@@ -15,24 +15,24 @@ object Inst_Type_Enum extends ChiselEnum {
 
 class Decoder extends Module {
   val io = IO(new Bundle {
-    val in     = Flipped(Decoupled(new IFUO))
-    val lsu_w_addr = Input(UInt(CVAL.REG_ADDR_LEN.W))
-    val decoder_pc = Decoupled(UInt(CVAL.DLEN.W))
-    val ebreak = Output(Bool())
-    val flush  = Output(Bool())
-    val out    = Decoupled(new DecoderO)
+    val in             = Flipped(Decoupled(new IFUO))
+    val lsu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
+    val decoder_pc     = Decoupled(UInt(CVAL.DLEN.W))
+    val ebreak         = Output(Bool())
+    val flush_icache   = Output(Bool())
+    val flush_pipeline = Input(Bool())
+    val out            = Decoupled(new DecoderO)
   })
   //state_machine
   val s_idle :: s_valid :: Nil = Enum(2)
 
   val state = RegInit(s_idle)
 
-
-  io.decoder_pc.bits := io.in.bits.pc
+  io.decoder_pc.bits  := io.in.bits.pc
   io.decoder_pc.valid := io.in.valid
 
   //in
-  io.in.ready  := state === s_idle
+  io.in.ready := state === s_idle
   // io.out.valid := state === s_valid//TODO!!
 
   //pass_through
@@ -114,7 +114,7 @@ class Decoder extends Module {
 
   io.ebreak := decodedResults(Is_Ebreak) && state === s_valid
 
-  io.flush := decodedResults(Is_fenceI) && state === s_valid
+  io.flush_icache := decodedResults(Is_fenceI) && state === s_valid
 
   io.out.bits.mem_read_enable := decodedResults(Read_En)
 
@@ -130,23 +130,24 @@ class Decoder extends Module {
   io.out.bits.ecall := decodedResults(Is_Ecall)
   io.out.bits.mret  := decodedResults(Is_Mret)
   //TODO
-  val conflict = MuxLookup(Type,false.B)(Seq(
-      Inst_Type_Enum.R_Type -> ((io.lsu_w_addr===rs1||io.lsu_w_addr===rs2)&&rs1=/=0.U&&rs2=/=0.U),
-      Inst_Type_Enum.I_Type -> ((io.lsu_w_addr===rs1)&&rs1=/=0.U),
-      Inst_Type_Enum.S_Type -> ((io.lsu_w_addr===rs2)&&rs2=/=0.U),
-      Inst_Type_Enum.B_Type -> ((io.lsu_w_addr===rs1||io.lsu_w_addr===rs2)&&rs1=/=0.U&&rs2=/=0.U),
+  val conflict = MuxLookup(Type, false.B)(
+    Seq(
+      Inst_Type_Enum.R_Type -> ((io.lsu_w_addr === rs1 || io.lsu_w_addr === rs2) && rs1 =/= 0.U && rs2 =/= 0.U),
+      Inst_Type_Enum.I_Type -> ((io.lsu_w_addr === rs1) && rs1 =/= 0.U),
+      Inst_Type_Enum.S_Type -> ((io.lsu_w_addr === rs2) && rs2 =/= 0.U),
+      Inst_Type_Enum.B_Type -> ((io.lsu_w_addr === rs1 || io.lsu_w_addr === rs2) && rs1 =/= 0.U && rs2 =/= 0.U)
       // Inst_Type_Enum.U_Type -> immU,
       // Inst_Type_Enum.J_Type -> immJ
-  ))
+    )
+  )
   //TODO
   io.out.valid := state === s_valid && ~conflict
-    state := MuxLookup(state, s_idle)(
+  state := MuxLookup(state, s_idle)(
     Seq(
       s_idle -> Mux(io.in.valid && ~conflict, s_valid, s_idle),
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
-  
 
   //Trace
   val trace_decoder = Module(new TRACE_DECODER)
