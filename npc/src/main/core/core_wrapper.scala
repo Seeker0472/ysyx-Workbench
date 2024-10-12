@@ -70,11 +70,11 @@ class raw_core extends Module {
 
   when(state === s_fetching && ypc.io.master.rready) {
     rlen  := rlen - 1.U
-    waddr := waddr + 4.U
+    raddr := raddr + 4.U
   }
 
   //ypc.io.master.rdata  := rdata
-  ypc.io.master.rvalid := state === s_fetching
+  ypc.io.master.rvalid := (state === s_fetching)
   ypc.io.master.rlast  := state === s_r_fin
   val memrw = Module(new DPIC_MEMRW)
   memrw.io.raddr      := raddr
