@@ -12,7 +12,7 @@ class WBU extends Module {
     val Rwrite     = (new RegWriteIO)
     val CSR_write  = (new CSRWriteIO)
     val out        = Decoupled(new WBU_O)
-    val wbu_pc        = Decoupled(new WBU_O)
+    val wbu_pc        = Decoupled(UInt(CVAL.DLEN.W))
   })
   io.in.ready  := io.out.ready
   io.out.valid := io.in.valid
