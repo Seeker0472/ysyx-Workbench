@@ -12,10 +12,10 @@ class HazardUnit extends Module {
     val flush  = Output(Bool())
   })
   val ifu_hazard = (io.ifu_pc.bits =/= io.wbu.bits) && io.ifu_pc.valid
-  val lsu_hazard = (io.lsu_pc.bits =/= io.wbu.bits) && io.lsu_pc.valid
+  val decoder_hazard = (io.decoder_pc.bits =/= io.wbu.bits) && io.decoder_pc.valid
   io.ifu_pc.ready := true.B
-  io.lsu_pc.ready := true.B
+  io.decoder_pc.ready := true.B
   io.wbu.ready := true.B
 
-  flush := Mux(io.lsu_pc.valid,lsu_hazard,ifu_hazard)
+  flush := Mux(io.decoder_pc.valid,lsu_hazard,ifu_hazard)
 }

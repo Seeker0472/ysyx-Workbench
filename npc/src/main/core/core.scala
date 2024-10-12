@@ -51,7 +51,7 @@ class ypc extends Module {
 
   //pipeline sig
   decoder.io.lsu_w_addr <> lsu.io.reg_addr
-  ifu.io.decoder_pc <> decoder.io.decoder_pc
+  // ifu.io.decoder_pc <> decoder.io.decoder_pc
 
   // axi_connection_master
   axi_arbiter.io.out.WA.ready := io.master.awready
