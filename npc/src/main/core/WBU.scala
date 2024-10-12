@@ -47,9 +47,9 @@ class WBU extends Module {
   io.Rwrite.addr         := io.in.bits.reg_w_addr
   io.Rwrite.write_enable := io.in.bits.reg_w_enable && io.in.valid
 
-  val next_pc = Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
+  val n_pc = Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
 
-  io.out.bits.n_pc := next_pc
-  io.wbu_pc.bits:= next_pc
+  io.out.bits.n_pc := n_pc
+  io.wbu_pc.bits:= n_pc
 
 }
