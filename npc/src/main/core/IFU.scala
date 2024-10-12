@@ -53,6 +53,7 @@ class IFU extends Module {
   // when(io.in.valid) {
   //   pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
   // }
+
   when(io.out.ready&&state===s_valid){
     pc := pc+4.U//简单分支预测
   }
@@ -71,6 +72,7 @@ class IFU extends Module {
   )
   when(io.flush_pipeline){
     state:=s_idle
+    // pc:=io.in.bits.n_pc
   }
 
   //TRACE_IFU
