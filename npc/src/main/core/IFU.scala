@@ -14,10 +14,17 @@ class IFU extends Module {
     val flush = Input(Bool())
     val axi   = Flipped(new AXIReadIO())
     val rwerr = Input(Bool())
+    val decoder_pc = Flipped(Decoupled(UInt(CVAL.DLEN.W)))//TODO!!!!!
   })
   // states
   val s_idle :: s_fetching :: s_valid :: s_error :: Nil = Enum(4)
   val state                                             = RegInit(s_fetching)
+
+  io.decoder_pc.ready := true.B
+  // decoder_pc.bits
+  //TODO:How To Use???
+  //check decoder(EXU) First 
+  // if not valid check lsu
 
   // icache
   val icache = Module(new icache)
