@@ -10,7 +10,7 @@
 #define paddr_t uint32_t 
 #define vaddr_t uint32_t
 
-//TODO:寄存器的数量！！
+
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   vaddr_t pc;

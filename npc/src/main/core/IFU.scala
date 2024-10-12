@@ -14,13 +14,15 @@ class IFU extends Module {
     val flush = Input(Bool())
     val axi   = Flipped(new AXIReadIO())
     val rwerr = Input(Bool())
-    val decoder_pc = Flipped(Decoupled(UInt(CVAL.DLEN.W)))//TODO!!!!!
+    val ifu_pc = (Decoupled(UInt(CVAL.DLEN.W)))//TODO!!!!!
   })
   // states
   val s_idle :: s_fetching :: s_valid :: s_error :: Nil = Enum(4)
   val state                                             = RegInit(s_fetching)
+  
+  
 
-  io.decoder_pc.ready := true.B
+  // io.decoder_pc.ready := true.B
   // decoder_pc.bits
   //TODO:How To Use???
   //check decoder(EXU) First 
@@ -37,6 +39,9 @@ class IFU extends Module {
   val pc       = RegInit(PC_VALUE)
   icache.io.addr       := pc
   icache.io.addr_valid := state === s_fetching
+
+  io.ifu_pc.bits := pc
+  io.ifu_pc.valid := true.B //TODO
 
   //out
   io.out.valid      := state === s_valid

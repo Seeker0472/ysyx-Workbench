@@ -174,7 +174,6 @@ static bool make_token(char *e)
 //返回值word_t!
 
 word_t expr(char *e, bool *success) {
-  //TODO：要不要先检查括号是否匹配？
   if (!make_token(e)) {
     *success = false;
     return 0;

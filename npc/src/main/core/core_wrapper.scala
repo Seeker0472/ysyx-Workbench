@@ -77,8 +77,8 @@ class raw_core extends Module {
   ypc.io.master.rvalid := (state === s_fetching)
   ypc.io.master.rlast  := state === s_r_fin
   val memrw = Module(new DPIC_MEMRW)
-  memrw.io.raddr      := raddr
-  memrw.io.waddr      := waddr
+  memrw.io.raddr      := Mux(ypc.io.master.arvalid,ypc.io.master.araddr,raddr)
+  memrw.io.waddr      := Mux(ypc.io.master.awvalid,ypc.io.master.awaddr,waddr)
   memrw.io.wdata      := ypc.io.master.wdata
   memrw.io.wmask      := ypc.io.master.wstrb
   memrw.io.read       := state === s_fetching

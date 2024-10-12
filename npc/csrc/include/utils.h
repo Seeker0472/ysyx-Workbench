@@ -72,7 +72,6 @@ uint64_t get_time();
 //       fflush(log_fp); \
 //     } \
 //   } while (0) \
-//TODO!!!
 
 #define log_write(...)  \
   do { \

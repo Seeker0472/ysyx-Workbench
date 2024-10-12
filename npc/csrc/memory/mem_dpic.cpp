@@ -55,8 +55,6 @@ extern "C" int pmem_read(int raddr) {
   return mem_read(aligned_addr);
 }
 extern "C" void pmem_write(int waddr, int wdata, char wmask) {
-  printf("w:wmask:%xwdata:%x\n", 
-         wmask, wdata);
   int aligned_addr = waddr & ~0x3u; // 对齐地址
   int offset = waddr & 0x3u;
   if (aligned_addr == 0xa00003f8) {

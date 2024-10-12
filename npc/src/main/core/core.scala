@@ -22,12 +22,15 @@ class ypc extends Module {
   val lsu         = Module(new LSU())
   val wbu         = Module(new WBU())
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
+  val hazard_unit = Module(new HazardUnit())
 
   ifu.io.axi <> axi_arbiter.io.c1
+  hazard_unit.io.ifu_pc <> ifu.io.ifu_pc
 //decode_stage
   StageConnect(ifu.io.out, decoder.io.in, "pipeline")
   br_han.io.halt := decoder.io.ebreak
   ifu.io.flush   := decoder.io.flush
+  hazard_unit.io.decoder_pc <> decoder.io.decoder_pc
 //exc
   StageConnect(decoder.io.out, exu.io.in, "multi")
   exu.io.reg1 <> reg.io.Rread1
@@ -42,12 +45,13 @@ class ypc extends Module {
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
+  hazard_unit.io.wbu <> wbu.io.wbu_pc
 //ifu
   StageConnect(wbu.io.out, ifu.io.in, "pipeline")
 
   //pipeline sig
-  decoder.io.lsu_w_addr<>lsu.io.reg_addr
-  ifu.io.decoder_pc<>decoder.io.decoder_pc
+  decoder.io.lsu_w_addr <> lsu.io.reg_addr
+  ifu.io.decoder_pc <> decoder.io.decoder_pc
 
   // axi_connection_master
   axi_arbiter.io.out.WA.ready := io.master.awready
