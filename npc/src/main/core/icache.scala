@@ -74,7 +74,7 @@ class icache extends Module {
         Mux(io.addr_valid, s_fetching, s_idle)
       ),
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching),
-      s_wait_data -> Mux(io.axi.RD.bits.last, s_valid, s_wait_data),
+      s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data),//TODO???
       s_valid -> s_idle // Didn't stay
     )
   )

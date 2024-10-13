@@ -57,6 +57,9 @@ class IFU extends Module {
   when(io.out.ready&&state===s_valid){
     pc := pc+4.U//简单分支预测
   }
+  when(state===s_idle&&io.in.valid){
+    pc := io.in.bits.n_pc
+  }
 
   when(io.rwerr) {
     state := s_error

@@ -144,8 +144,8 @@ class Decoder extends Module {
   io.out.valid := state === s_valid && ~conflict
   state := MuxLookup(state, s_idle)(
     Seq(
-      s_idle -> Mux(io.in.valid && ~conflict, s_valid, s_idle),
-      s_valid -> Mux(io.out.ready|| io.flush_pipeline, s_idle, s_valid)
+      s_idle -> Mux(io.in.valid && ~conflict && ~io.flush_pipeline, s_valid, s_idle),
+      s_valid -> Mux(io.out.ready || io.flush_pipeline, s_idle, s_valid)
     )
   )
 
