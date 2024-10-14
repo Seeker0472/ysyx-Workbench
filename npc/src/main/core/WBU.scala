@@ -12,9 +12,11 @@ class WBU extends Module {
     val Rwrite     = (new RegWriteIO)
     val CSR_write  = (new CSRWriteIO)
     val out        = Decoupled(new WBU_O)
+    val wbu_pc     = Decoupled(UInt(CVAL.DLEN.W))
   })
-  io.in.ready  := io.out.ready
-  io.out.valid := io.in.valid
+  io.in.ready     := io.out.ready
+  io.out.valid    := io.in.valid
+  io.wbu_pc.valid := io.in.valid
 
   io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
 //TODO:其实可以临时抽取？
@@ -45,6 +47,9 @@ class WBU extends Module {
   io.Rwrite.addr         := io.in.bits.reg_w_addr
   io.Rwrite.write_enable := io.in.bits.reg_w_enable && io.in.valid
 
-  io.out.bits.n_pc := Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
+  val n_pc = Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
+
+  io.out.bits.n_pc := n_pc
+  io.wbu_pc.bits   := n_pc
 
 }

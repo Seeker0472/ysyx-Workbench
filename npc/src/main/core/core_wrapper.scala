@@ -9,39 +9,7 @@ class raw_core extends Module {
     // val outout = Output(Bool())
   })
   val ypc = Module(new ypc())
-  ypc.io.slave.awvalid := 0.U
-  ypc.io.slave.awaddr  := 0.U
-  ypc.io.slave.awid    := 0.U
-  ypc.io.slave.awlen   := 0.U
-  ypc.io.slave.awsize  := 0.U
-  ypc.io.slave.awburst := 0.U
-  ypc.io.slave.wvalid  := 0.U
-  ypc.io.slave.wdata   := 0.U
-  ypc.io.slave.wstrb   := 0.U
-  ypc.io.slave.wlast   := 0.U
-  ypc.io.slave.bready  := 0.U
-  ypc.io.slave.arvalid := 0.U
-  ypc.io.slave.araddr  := 0.U
-  ypc.io.slave.arid    := 0.U
-  ypc.io.slave.arlen   := 0.U
-  ypc.io.slave.arsize  := 0.U
-  ypc.io.slave.arburst := 0.U
-  ypc.io.slave.rready  := 0.U
 
-  ypc.io.master.awready := 1.U
-  ypc.io.master.wready  := 1.U
-  ypc.io.master.bvalid  := 1.U
-  ypc.io.master.bresp   := 0.U
-  ypc.io.master.bid     := 0.U
-  ypc.io.master.arready := 1.U
-  // ypc.io.master.rvalid  := 0.U
-  ypc.io.master.rresp := 0.U
-  // ypc.io.master.rdata   := 0.U
-  //ypc.io.master.rlast := 0.U //TODO!!!
-  ypc.io.master.rid := 0.U //TODO!!!
-
-  ypc.io.interrupt := 0.U
-  //应该可以不用管地址通道的valid
   val s_idle :: s_fetching :: s_r_fin :: s_w_fin :: Nil = Enum(4)
 
   val state = RegInit(s_idle)
@@ -74,11 +42,44 @@ class raw_core extends Module {
   }
 
   //ypc.io.master.rdata  := rdata
-  ypc.io.master.rvalid := (state === s_fetching)
-  ypc.io.master.rlast  := state === s_r_fin
+  ypc.io.master.rvalid := RegNext(state === s_fetching)
+  ypc.io.master.rlast  := RegNext(rlen === 0.U && state === s_fetching)
+
+  ypc.io.slave.awvalid := 0.U
+  ypc.io.slave.awaddr  := 0.U
+  ypc.io.slave.awid    := 0.U
+  ypc.io.slave.awlen   := 0.U
+  ypc.io.slave.awsize  := 0.U
+  ypc.io.slave.awburst := 0.U
+  ypc.io.slave.wvalid  := 0.U
+  ypc.io.slave.wdata   := 0.U
+  ypc.io.slave.wstrb   := 0.U
+  ypc.io.slave.wlast   := 0.U
+  ypc.io.slave.bready  := 0.U
+  ypc.io.slave.arvalid := 0.U
+  ypc.io.slave.araddr  := 0.U
+  ypc.io.slave.arid    := 0.U
+  ypc.io.slave.arlen   := 0.U
+  ypc.io.slave.arsize  := 0.U
+  ypc.io.slave.arburst := 0.U
+  ypc.io.slave.rready  := 0.U
+
+  ypc.io.master.awready := state === s_idle
+  ypc.io.master.wready  := 1.U
+  ypc.io.master.bvalid  := 1.U
+  ypc.io.master.bresp   := 0.U
+  ypc.io.master.bid     := 0.U
+  ypc.io.master.arready := state === s_idle
+  ypc.io.master.rresp   := 0.U
+
+  ypc.io.master.rid := 0.U //TODO!!!
+
+  ypc.io.interrupt := 0.U
+  //应该可以不用管地址通道的valid
+
   val memrw = Module(new DPIC_MEMRW)
-  memrw.io.raddr      := Mux(ypc.io.master.arvalid,ypc.io.master.araddr,raddr)
-  memrw.io.waddr      := Mux(ypc.io.master.awvalid,ypc.io.master.awaddr,waddr)
+  memrw.io.raddr      := Mux(ypc.io.master.arvalid, ypc.io.master.araddr, raddr)
+  memrw.io.waddr      := Mux(ypc.io.master.awvalid, ypc.io.master.awaddr, waddr)
   memrw.io.wdata      := ypc.io.master.wdata
   memrw.io.wmask      := ypc.io.master.wstrb
   memrw.io.read       := state === s_fetching
@@ -113,7 +114,7 @@ class DPIC_MEMRW extends BlackBox with HasBlackBoxInline {
       |  output reg [31:0] data,
       |  input clock
       |);
-      |always @(negedge clock) begin
+      |always @(posedge clock) begin
       |  if (read) begin
       |      // Read operation
       |      data <= pmem_read(raddr);
@@ -121,7 +122,6 @@ class DPIC_MEMRW extends BlackBox with HasBlackBoxInline {
       |  if (write) begin
       |      // Write operation
       |      pmem_write(waddr, wdata, wmask);
-      |      data <=32'h0;
       |  end
       |end
       |endmodule

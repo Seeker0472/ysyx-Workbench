@@ -35,8 +35,8 @@ void print_inst_asm(paddr_t pc, word_t inst) {
   char *pbuf = buf;
   pbuf += snprintf(buf, 14, "0x%08x : ", pc);
   disassemble(pbuf, pbuf - buf + sizeof(buf), pc, (uint8_t *)(&inst),
-              8); // 反编译？
-  printf("%s\n", buf); // TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++====
+              8); // 反编译
+  printf("%s\n", buf); 
 }
 int prev_state = 0;
 static bool state_valid() //检测从状态valid->fetching
