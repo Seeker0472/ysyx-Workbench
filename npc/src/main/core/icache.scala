@@ -24,7 +24,7 @@ class icache extends Module {
     val inst_valid = Output(Bool())
     val addr       = Input(UInt(32.W))
     val addr_valid = Input(Bool())
-    val flush  = Input(Bool())
+    val flush_icache  = Input(Bool())
   })
 
   val block_size = ICACHE_Const.BLOCK_SIZE
@@ -37,15 +37,25 @@ class icache extends Module {
 
   println(s"offset_len: $offset_len, index_len: $index_len, tag_len: $tag_len")
 
+  // the state machine
+  val s_idle :: s_fetching :: s_wait_data :: s_valid :: s_error :: Nil = Enum(5)
+  val state                                                            = RegInit(s_idle)
+
   //Tag and cache
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
   val cache    = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size * 8).W))))
   //flush
-  when(io.flush){
+  when(io.flush_icache){
     cachetag := VecInit(Seq.fill(block_num)(0.U))
   }
 
   // split the tag, index, offset from addr
+  val fetch_addr = RegEnable(io.addr, 0.U,state===s_idle)
+  // val fetch_addr = io.addr
+
+  val fetch_tag = fetch_addr(31, 31 - tag_len + 1)
+  val fetch_index = fetch_addr(31 - tag_len, 31 - tag_len - index_len + 1)
+
   val addr_tag    = io.addr(31, 31 - tag_len + 1)
   val addr_index  = io.addr(31 - tag_len, 31 - tag_len - index_len + 1)
   val addr_offset = io.addr(offset_len - 1, 0) << 3
@@ -64,8 +74,7 @@ class icache extends Module {
   io.inst := data
 
   // the state machine
-  val s_idle :: s_fetching :: s_wait_data :: s_valid :: s_error :: Nil = Enum(5)
-  val state                                                            = RegInit(s_idle)
+
   state := MuxLookup(state, s_idle)(
     Seq(
       s_idle -> Mux(
@@ -80,7 +89,7 @@ class icache extends Module {
   )
   // axi
   io.axi.RA.valid     := state === s_fetching
-  io.axi.RA.bits.addr := io.addr & ~(((1 << offset_len) - 1).U(32.W))
+  io.axi.RA.bits.addr := fetch_addr & ~(((1 << offset_len) - 1).U(32.W))
   io.axi.RA.bits.size := "b010".U
   io.axi.RD.ready     := true.B
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
@@ -90,8 +99,8 @@ class icache extends Module {
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
-    target_block_tag  := Cat(1.U(1.W), addr_tag)
-    cache(addr_index) := Cat(data_read, cache(addr_index)(block_size * 8 - 1, 32))
+    cachetag(fetch_index)  := Cat(1.U(1.W), fetch_tag)
+    cache(fetch_index) := Cat(data_read, cache(fetch_index)(block_size * 8 - 1, 32))
   }
 
   //Trace hit

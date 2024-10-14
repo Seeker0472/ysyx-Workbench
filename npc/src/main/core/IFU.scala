@@ -29,7 +29,7 @@ class IFU extends Module {
 
   // icache
   val icache = Module(new icache)
-  icache.io.flush := io.flush_icache
+  icache.io.flush_icache := io.flush_icache
   icache.io.axi <> io.axi
 
   // pc
