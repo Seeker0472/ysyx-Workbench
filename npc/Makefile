@@ -122,13 +122,13 @@ simnpc:$(TARGETRaw)
 	./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
 gdbnpc:$(TARGETRaw)
-	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS} --CFLAGS -g ${FLAGS} -Wno-WIDTHEXPAND -O1 
+	@verilator -cc --top raw_core $(TARGETRaw) --trace --exe  ${C_CPP_ABS} --CFLAGS -g ${FLAGS} -Wno-WIDTHEXPAND -O1 --autoflush
 	@make -j -C build/npc_build -f Vraw_core.mk Vraw_core
 	gdb   --args ./build/npc_build/Vraw_core $(ARGS) $(IMG)
 
 gdb: $(TARGET) $(YSYXSOC_V) $(SRC_AUTO_BIND)
 # 这里的－Ｏ１是避免编译器过度优化导致无法正常ｇｄｂ调试
-	@verilator  -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS} ${SRC_AUTO_BIND} --CFLAGS -g ${FLAGS_SOC} -O1 
+	@verilator  -cc --top ysyxSoCFull $(ALL_V_ABS) --trace --exe  ${C_CPP_ABS} ${SRC_AUTO_BIND} --CFLAGS -g ${FLAGS_SOC} -O1 --autoflush
 	@make -j -C build/soc_build -f VysyxSoCFull.mk VysyxSoCFull
 	gdb --args ./build/soc_build/VysyxSoCFull $(ARGS) $(IMG)
 

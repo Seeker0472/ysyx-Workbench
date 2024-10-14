@@ -67,9 +67,12 @@ void single_cycle(bool check_pc) {
     dut->clock = 0;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+    IFDEF(CONFIG_WAVE_FORM, tfp->flush();)          // flush
     dut->clock = 1;
     dut->eval();
     IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+    IFDEF(CONFIG_WAVE_FORM, tfp->flush();)          // flush
+
     now_pc = PC_STRUCT;
     if (unlikely(i % 7000 == 0)) {
       nemu_state.state= NEMU_STOP;
