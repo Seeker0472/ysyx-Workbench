@@ -21,6 +21,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctime>
 
 #include "generated/autoconf.h"
 #include "macro.h"
