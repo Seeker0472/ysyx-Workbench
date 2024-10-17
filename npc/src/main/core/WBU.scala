@@ -67,7 +67,7 @@ class TRACE_WBU extends BlackBox with HasBlackBoxInline {
   setInline(
     "trace_wbu.v",
     """import "DPI-C" function void trace_wbu();
-      |module TRACE_ICache(
+      |module TRACE_WBU(
       |  input valid,
       |  input clock
       |); 
