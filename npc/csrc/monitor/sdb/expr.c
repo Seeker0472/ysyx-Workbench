@@ -13,7 +13,8 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 //expr.c 解析表达式
-#include "../../include/isa.h"
+#include "isa.h"
+#include "common.h"
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -111,7 +112,7 @@ static bool make_token(char *e)
 
         position += substr_len;
 
-        /* TODO: Now a new token is recognized with rules[i]. Add codes
+        /* Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
@@ -125,7 +126,6 @@ static bool make_token(char *e)
           strncpy(tokens[nr_token].str, substr_start, substr_len);
           (tokens[nr_token].str)[substr_len] = '\0';
           nr_token++;
-          // printf("%s\n",tokens[nr_token-1].str);
           break;
         case TK_NOTYPE:
           break;
@@ -174,13 +174,12 @@ static bool make_token(char *e)
 //返回值word_t!
 
 word_t expr(char *e, bool *success) {
-  //TODO：要不要先检查括号是否匹配？
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
+  /* : Insert codes to evaluate the expression. */
   word_t result=eval(0,nr_token-1);
   *success = true;
   return result;
@@ -213,7 +212,6 @@ long eval(int p,int q) {
     if(tokens[p].type!=TK_NUM)
       assert(0);
     long val;
-    // char* str;
     //TODO:溢出怎么办？
     sscanf(tokens[p].str,"%lu",&val);
     return val;
@@ -243,7 +241,7 @@ long eval(int p,int q) {
       case TK_EQ :return val1==val2;
       case TK_NOTEQ :return val1!=val2;
       case TK_AND: return val1&&val2;
-      case TK_DEREFENCE: return mem_read(val2);//TODO!-读出一个整数
+      case TK_DEREFENCE: return mem_read(val2);
       // case 
       default: assert(0);
     }

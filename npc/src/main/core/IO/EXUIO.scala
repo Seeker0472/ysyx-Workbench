@@ -22,10 +22,4 @@ class EXU_O extends Bundle {
   val reg_w_enable = Output(Bool())
   val mret         = Output(Bool())
   val imm          = Output(UInt(CVAL.DLEN.W))
-  //old
-  // val reg_out = UInt(CVAL.DLEN.W)
-  // val n_pc    = UInt(CVAL.DLEN.W)
-  // val csr_res = UInt(CVAL.DLEN.W)
-  //TODO:Write_ENABLE!!
-
 }

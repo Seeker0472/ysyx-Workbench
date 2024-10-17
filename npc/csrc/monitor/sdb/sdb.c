@@ -15,6 +15,7 @@
 // sdb.c-主要处理与用户的交互
 
 // #include <cpu/cpu.h>
+#include "common.h"
 #include "sdb.h"
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -229,7 +230,7 @@ static struct {
     {"t", "t", (int (*)(char *))test_pr},
     {"u", "Update Reg state.", (int (*)(char *))update_reg_state},
     {"b", "Set break point", (int (*)(char *))set_break_point},
-    /* TODO: Add more commands */
+    /*  Add more commands */
 
 };
 

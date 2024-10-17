@@ -14,7 +14,7 @@
 ***************************************************************************************/
 #define CONFIG_TIMER_GETTIMEOFDAY
 
-#include "../include/common.h"
+#include "common.h"
 // #include MUXDEF(CONFIG_TIMER_GETTIMEOFDAY, <sys/time.h>, <time.h>)
 #include <sys/time.h>
 IFDEF(CONFIG_TIMER_CLOCK_GETTIME,
@@ -39,7 +39,7 @@ static uint64_t get_time_internal() {
   return us;
 }
 
-uint64_t get_time() {
+uint64_t get_time_local() {
   if (boot_time == 0) boot_time = get_time_internal();
   uint64_t now = get_time_internal();
   return now - boot_time;

@@ -11,30 +11,33 @@ class AXI_Lite_Arbiter extends Module {
     val c2  = (new AXIIO)
     val out = Flipped(new AXIIO)
   })
-  val s_idle :: s_c1_busy :: s_c2_busy :: Nil = Enum(3)
-  val state                                   = RegInit(s_idle)
-  val xbar                                    = Module(new XBAR)
+  val s_idle :: s_c1_wait :: s_c2_wait :: s_c1_busy :: s_c2_busy :: Nil = Enum(5)
+  val state                                                             = RegInit(s_idle)
+  val xbar                                                              = Module(new XBAR)
   //TODO:使用事物id来实现arbitor
+  //c2 first!
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
-        io.c2.RA.valid && xbar.io.in.RA.ready,
-        s_c2_busy,
-        Mux(io.c1.RA.valid && xbar.io.in.RA.ready, s_c1_busy, s_idle)
+        io.c2.RA.valid,
+        s_c2_wait,
+        Mux(io.c1.RA.valid, s_c1_wait, s_idle)
       ),
-      s_c1_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c1_busy), //TODO!!
+      s_c1_wait -> Mux(xbar.io.in.RA.ready, s_c1_busy, s_c1_wait),
+      s_c2_wait -> Mux(xbar.io.in.RA.ready, s_c2_busy, s_c2_wait),
+      s_c1_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c1_busy), 
       s_c2_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c2_busy)
     )
   )
 
   //Read Channels
-  io.c1.RA.ready := state === s_idle && xbar.io.in.RA.ready
-  io.c2.RA.ready := state === s_idle && xbar.io.in.RA.ready
+  io.c1.RA.ready := state === s_c1_wait && xbar.io.in.RA.ready
+  io.c2.RA.ready := state === s_c2_wait && xbar.io.in.RA.ready
 
-  xbar.io.in.RA.valid := io.c1.RA.valid || io.c2.RA.valid
-  xbar.io.in.RA.bits  := Mux(io.c1.RA.valid, io.c1.RA.bits, io.c2.RA.bits)
+  xbar.io.in.RA.valid := Mux(state === s_c2_wait, io.c2.RA.valid, Mux(state === s_c1_wait, io.c1.RA.valid, false.B))
+  xbar.io.in.RA.bits  := Mux(state === s_c2_wait, io.c2.RA.bits, io.c1.RA.bits)
 
-  xbar.io.in.RD.ready := Mux(state === s_c1_busy, io.c1.RD.ready, io.c2.RD.ready)
+  xbar.io.in.RD.ready := Mux(state === s_c1_busy || state === s_c1_wait, io.c1.RD.ready, io.c2.RD.ready)
 
   io.c1.RD.bits := xbar.io.in.RD.bits
   io.c2.RD.bits := xbar.io.in.RD.bits

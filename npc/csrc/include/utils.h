@@ -39,7 +39,7 @@ extern NEMUState nemu_state;
 
 // ----------- timer -----------
 
-uint64_t get_time();
+uint64_t get_time_local();
 
 // ----------- log -----------
 
@@ -72,7 +72,6 @@ uint64_t get_time();
 //       fflush(log_fp); \
 //     } \
 //   } while (0) \
-//TODO!!!
 
 #define log_write(...)  \
   do { \

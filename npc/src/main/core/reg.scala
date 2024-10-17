@@ -20,7 +20,7 @@ class REG extends Module {
   val regs = RegInit(VecInit(Seq.fill(15)(0.U(CVAL.DLEN.W))))
   val csrs = RegInit(VecInit(Seq.fill(4)(0.U(CVAL.DLEN.W))))
 
-  //TODO:暂时简化实现，这两个寄存器的值保持不动
+  //:暂时简化实现，这两个寄存器的值保持不动
   csrs(1.U) := 0xb.U; //mcause
   csrs(2.U) := 0x1800.U; //mstatus
 

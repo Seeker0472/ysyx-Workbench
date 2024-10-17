@@ -10,6 +10,7 @@ class LSU extends Module {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
     val axi = Flipped(new AXIIO())
+    val reg_addr = Output(UInt(CVAL.REG_ADDR_LEN.W))
   })
   //sigs and status
   val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
@@ -17,6 +18,8 @@ class LSU extends Module {
   val sig_awvalid                                      = RegInit(false.B)
   val sig_arvalid                                      = RegInit(false.B)
   val sig_wvalid                                       = RegInit(false.B)
+  //reg_w_addr depends on valid/write?
+  io.reg_addr := Mux(io.in.bits.reg_w_enable&&io.in.valid,io.in.bits.reg_w_addr,0.U)
 
   io.in.ready := state === s_idle
 
@@ -44,7 +47,7 @@ class LSU extends Module {
         Mux(io.in.valid, s_valid, s_idle)
       ),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
-      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),
+      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),//TODO:Maybe don't need to wait error result?
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
@@ -79,7 +82,7 @@ class LSU extends Module {
   val mrres = io.axi.RD.bits.data
 
   val mrrm = mrres >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
-  //vv 符号拓展！！！
+  //vv sign extension！！！
   val mem_read_result_sint = MuxLookup(io.in.bits.func3, 0.S)(
     Seq(
       "b000".U -> mrrm(7, 0).asSInt, //lb
@@ -173,8 +176,8 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
   )
 }
 //判断input改变
-//TODO:LSU 取到数据/写入数据--使用valid
-//TODO:LSU 延迟
+//:LSU 取到数据/写入数据--使用valid
+//:LSU 延迟
 /*
   addr,w/wfin,r/rfin
   RW--R-True/W-False

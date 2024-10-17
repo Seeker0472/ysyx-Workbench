@@ -28,4 +28,7 @@ static inline bool difftest_check_reg(const char *name, vaddr_t pc, word_t ref, 
   return true;
 }
 
+void difftest_check_state();
+void difftest_copy_regs();
+
 #endif

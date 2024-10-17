@@ -1,5 +1,5 @@
-#include "../include/ydb_all.h"
-#include "../monitor/sdb/sdb.h"
+#include "common.h"
+#include "sdb.h"
 
 #include <elf.h>
 
