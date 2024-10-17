@@ -14,7 +14,7 @@ class IFU extends Module {
     val flush_icache   = Input(Bool())
     val axi            = Flipped(new AXIReadIO())
     val rwerr          = Input(Bool())
-    val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W))) //TODO!!!!!
+    val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W))) 
     val flush_pipeline = Input(Bool())
   })
   // states
@@ -23,7 +23,6 @@ class IFU extends Module {
 
   // io.decoder_pc.ready := true.B
   // decoder_pc.bits
-  //TODO:How To Use???
   //check decoder(EXU) First
   // if not valid check lsu
 

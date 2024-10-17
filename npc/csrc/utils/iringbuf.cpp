@@ -1,4 +1,4 @@
-#include "../include/ydb_all.h"
+#include "common.h"
 #ifdef CONFIG_IRINGBUF
 typedef struct
 {
@@ -24,22 +24,18 @@ void write_iringbuf(paddr_t pc, word_t inst){
 void print_inst(paddr_t pc, word_t inst,bool wrong){
     char logbuf[128];
     char *p=logbuf;
-    // memset(p,' ',3);
     if(wrong){
         p+=snprintf(p, 4, "-->");
     }else{
         p+=snprintf(p, 4, "   ");
         
     }
-    // p+=3;
     p += snprintf(p, sizeof(logbuf)-3, FMT_WORD ": ", (vaddr_t)pc);//打印地址
     MUXDEF(CONFIG_RV64,p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08lx\t", inst);,p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08x\t", inst);)
-    // p += snprintf(p, sizeof(logbuf) - (p-logbuf)-3,  "  0x%08lx\t", inst);//打印十六进制指令
 
-    int ilen=4;//TODO:HOW?
+    int ilen=4;
     //打印接下的东西
     #ifndef CONFIG_ISA_loongarch32r
-    // void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
     disassemble(p, logbuf + sizeof(logbuf) - p-3,
         pc, (uint8_t *)&inst, ilen);//反
     #else

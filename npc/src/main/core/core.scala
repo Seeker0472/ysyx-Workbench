@@ -138,6 +138,6 @@ class master_io extends Bundle {
   val rvalid = Input(Bool())
   val rresp  = Input(UInt(2.W))
   val rdata  = Input(UInt(CVAL.DLEN.W))
-  val rlast  = Input(Bool()) // for arbiter TODO！！！！
+  val rlast  = Input(Bool()) // for arbiter 
   val rid    = Input(UInt(4.W))
 }

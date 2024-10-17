@@ -16,7 +16,7 @@
 #ifndef __SDB_H__
 #define __SDB_H__
 
-#include "../../include/ydb_all.h"
+#include <isa.h>
 
 word_t expr(char *e, bool *success);
 

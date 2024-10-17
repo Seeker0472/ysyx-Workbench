@@ -20,5 +20,8 @@ word_t isa_reg_str2val(const char *s, bool *success);
 int run(int step);
 void isa_reg_display();
 uint32_t mem_read(uint32_t addr);
+extern uint32_t dpic_pc;
+extern uint32_t dpic_n_pc;
+extern word_t inst;//TODO!!
 
 #endif
