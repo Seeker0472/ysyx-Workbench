@@ -1,6 +1,5 @@
 // #define NPC
 #include "../include/regs.h"
-
 #include "../include/ydb_all.h"
 #ifndef NPC
   #include "VysyxSoCFull.h"
@@ -135,6 +134,7 @@ void init_runtime() {
 }
 
 word_t inst=0;
+extern uint32_t dpic_pc;
 
 int run(int step) {
   int now = step;
@@ -150,13 +150,13 @@ int run(int step) {
     default:
       nemu_state.state = NEMU_RUNNING;
     }
-    uint32_t pc = PC_STRUCT;
+    // uint32_t pc = PC_STRUCT;
     single_inst();
     tfp->flush();
     g_nr_guest_inst++;
     if (unlikely(step < PRINT_INST_MIN && step >= 0))
-      print_inst_asm(pc, inst);
-    trace_and_difftest(pc, inst);
+      print_inst_asm(dpic_pc, inst);
+    trace_and_difftest(dpic_pc, inst);
 #ifdef CONFIG_WAVE_FORM
     if (unlikely(g_nr_guest_inst == 800000)){
       Warn("Waveform Enabled!May result in a very large file!");
