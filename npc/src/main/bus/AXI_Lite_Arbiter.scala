@@ -21,8 +21,8 @@ class AXI_Lite_Arbiter extends Module {
     List(
       s_idle -> Mux(
         io.c2.RA.valid  ,
-        Mux(xbar.io.in.RA.ready,s_c2_busy,s_c2_wait),
-        Mux(io.c1.RA.valid , Mux( xbar.io.in.RA.ready,s_c1_busy,s_c1_wait), s_idle)
+        s_c2_wait,
+        Mux(io.c1.RA.valid ,s_c1_wait, s_idle)
       ),
       s_c1_wait -> Mux(xbar.io.in.RA.ready,s_c1_busy,s_c1_wait),
       s_c2_wait -> Mux(xbar.io.in.RA.ready,s_c2_busy,s_c2_wait),
@@ -32,14 +32,11 @@ class AXI_Lite_Arbiter extends Module {
   )
 
   //Read Channels
-  val idle_ready = state === s_idle && xbar.io.in.RA.ready
-  io.c1.RA.ready := (idle_ready && ~io.c2.RA.valid)||(state===s_c1_wait&&xbar.io.in.RA.ready)
-  io.c2.RA.ready := idle_ready ||(state===s_c2_wait&&xbar.io.in.RA.ready)
+  io.c1.RA.ready := state===s_c1_wait && xbar.io.in.RA.ready
+  io.c2.RA.ready := state===s_c2_wait && xbar.io.in.RA.ready
 
-  xbar.io.in.RA.valid := state === s_idle && (io.c1.RA.valid || io.c2.RA.valid)
-  // xbar.io.in.RA.bits  := Mux((state === s_idle && (io.c1.RA.valid) || state === s_c2_busy), io.c1.RA.bits, io.c2.RA.bits)
-  xbar.io.in.RA.bits  := Mux((state === s_idle && (io.c2.RA.valid) || state === s_c2_wait), io.c2.RA.bits, io.c1.RA.bits)
-
+  xbar.io.in.RA.valid := Mux(state===s_c2_wait,io.c2.RA.valid,io.c1.RA.valid)
+  xbar.io.in.RA.bits  := Mux(state===s_c2_wait, io.c2.RA.bits, io.c1.RA.bits)
 
   xbar.io.in.RD.ready := Mux(state === s_c1_busy||state===s_c1_wait, io.c1.RD.ready, io.c2.RD.ready)
 
