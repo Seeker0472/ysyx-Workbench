@@ -131,6 +131,4 @@ extern word_t inst;
 
 extern "C" void trace_inst(unsigned int inst_now) { inst = inst_now; }
 
-extern "C" void trace_hit() {
-  printf("writeback!\n");
-}
+extern "C" void trace_wbu() { printf("writeback!\n"); }
