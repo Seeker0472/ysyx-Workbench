@@ -15,7 +15,6 @@
 #define CONFIG_TIMER_GETTIMEOFDAY
 
 #include "common.h"
-#include <ctime>
 // #include MUXDEF(CONFIG_TIMER_GETTIMEOFDAY, <sys/time.h>, <time.h>)
 #include <sys/time.h>
 IFDEF(CONFIG_TIMER_CLOCK_GETTIME,
