@@ -1,21 +1,11 @@
 // #define NPC
-#include "../include/regs.h"
+#include "verilator_wrapper.h"
+#include "regs.h"
 
-#include "../include/diftest.h"
-#include "../include/ydb_all.h"
-#ifndef NPC
-#include "VysyxSoCFull.h"
-#include "VysyxSoCFull__Dpi.h"
-#include "VysyxSoCFull___024root.h"
-extern VysyxSoCFull *dut;
-#else
-#include "Vraw_core.h"
-#include "Vraw_core___024root.h"
-#include "Vraw_core__Dpi.h"
-extern Vraw_core *dut;
+#include "diftest.h"
+#include "ydb_all.h"
+#include "mem.h"
 
-#endif
-#include "svdpi.h"
 #include <cstdint>
 #include <cstdio>
 #include <verilated.h>
@@ -44,28 +34,15 @@ extern "C" void call_ebreak() {
       ((regs_2_value == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
                           : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
       pc);
-  // printf("%x\n", regs_2_value);
 
   tfp->flush(); // not-关闭VCD文件
   // delete tfp;
   nemu_state.state = NEMU_END;
   nemu_state.halt_ret = regs_2_value;
-  // exit(0);
 }
 
-#define MROM_BASE 0x20000000
-#define MROM_TOP 0x20000fff
-#define SRAM_BASE 0x0f000000
-#define SRAM_TOP 0x0fffffff
-#define FLASH_BASE 0x30000000
-#define FLASH_TOP 0x3fffffff
-#define SDRAM_BASE 0xa0000000
-#define SDRAM_TOP 0xbfffffff
-#define PSRAM_BASE 0x80000000
-#define PSRAM_TOP 0x9fffffff
-#define MEM_IN(addr, start, end) ((addr >= (start)) && (addr <= (end)))
 
-// TODO:加入更多设备的地址检测，同时用宏定义减少Copy_Paste Code
+
 extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
                            uint32_t wdata, uint32_t len) {
 #ifndef NPC
@@ -127,7 +104,7 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
 #endif
 }
 
-extern word_t inst;
+extern word_t inst;//TODO!!
 
 extern "C" void trace_inst(unsigned int inst_now) { inst = inst_now; }
 bool wbu_valid = false;
