@@ -131,7 +131,7 @@ extern word_t inst;
 
 extern "C" void trace_inst(unsigned int inst_now) { inst = inst_now; }
 bool wbu_valid=false;
-extern "C" void trace_wbu() {
-  // printf("writeback!\n");
+extern "C" void trace_wbu(unsigned int pc,unsigned int n_pc) {
+  printf("writeback!pc=%x,,%x\n",pc,n_pc);
   wbu_valid=true;
   }

@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 import core.IO._
 import Constants_Val._
+import javax.swing.InputMap
 
 class WBU extends Module {
   val io = IO(new Bundle {
@@ -56,6 +57,8 @@ class WBU extends Module {
   val wbu_trace = Module(new TRACE_WBU)
   wbu_trace.io.clock := clock
   wbu_trace.io.valid := io.in.valid && io.out.ready
+  wbu_trace.io.pc:=io.in.bits.pc
+  wbu_trace.io.n_pc:=n_pc
 
 }
 
@@ -63,17 +66,21 @@ class TRACE_WBU extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val clock = Input(Clock())
     val valid = Input(Bool())
+    val pc = Input(UInt(CVAL.DLEN.W))
+    val n_pc = Input(UInt(CVAL.DLEN.W))
   })
   setInline(
     "trace_wbu.v",
-    """import "DPI-C" function void trace_wbu();
+    """import "DPI-C" function void trace_wbu(int unsigned pc,int unsigned n_pc);
       |module TRACE_WBU(
       |  input valid,
-      |  input clock
+      |  input clock,
+      |  input [31:0] pc,
+      |  input [31:0] n_pc,
       |); 
       |always @(negedge clock) begin
       |   if (valid) begin
-      |      trace_wbu();
+      |      trace_wbu(pc,n_pc);
       |  end
       | end
       |endmodule
