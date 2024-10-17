@@ -1,25 +1,12 @@
 // #define NPC
-#include "../include/regs.h"
+#include "regs.h"
 
-#include "../include/diftest.h"
-#include "../include/ydb_all.h"
-#include <cstdint>
+#include "diftest.h"
+#include "ydb_all.h"
 
-#ifndef NPC
-#include "VysyxSoCFull.h"
-#include "VysyxSoCFull__Dpi.h"
-#include "VysyxSoCFull___024root.h"
-extern VysyxSoCFull *dut;
-#else
-#include "Vraw_core.h"
-#include "Vraw_core__Dpi.h"
-#include "Vraw_core___024root.h"
-extern Vraw_core *dut;
-#endif
-#include "svdpi.h"
-#include <stdint.h>
-#include <verilated.h>
-#include <verilated_vcd_c.h>
+#include "verilator_wrapper.h"
+
+
 
 extern CPU_state *cpu;
 bool difftest_step = false;

@@ -1,9 +1,8 @@
-#include "../include/ydb_all.h"
-#include <cstdint>
-#include <stdint.h>
-#include <stdio.h>
+// #include "../include/ydb_all.h"
+#include "common.h"
+#include "isa.h"
 
-uint64_t get_time();
+uint64_t get_time();//TODO
 uint64_t time_now = 114514;
 
 uint32_t mem_read(uint32_t pc);

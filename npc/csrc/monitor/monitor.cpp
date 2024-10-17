@@ -1,9 +1,6 @@
 #include <getopt.h>
 #include <stdio.h>
-// #include <iostream>
-// #include "debug.h"
-// #include <common.h>
-#include"../include/ydb_all.h"
+#include <common.h>
 
 static char *img_file = NULL;
 static char *elf_file = NULL;

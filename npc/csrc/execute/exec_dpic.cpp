@@ -1,32 +1,25 @@
 // #define NPC
 #include "verilator_wrapper.h"
 #include "regs.h"
-
+#include "common.h"
 #include "diftest.h"
 #include "ydb_all.h"
 #include "mem.h"
+#include "trace.h"
 
-#include <cstdint>
-#include <cstdio>
-#include <verilated.h>
-#include <verilated_vcd_c.h>
-
-extern VerilatedVcdC *tfp;
 extern bool difftest_step;
+extern word_t inst;//TODO!!
+
 extern "C" void print_char(char w_char) {
   printf("%c", w_char);
   fflush(stdout);
 }
-void record_axi_write(const char *type, paddr_t addr, char wmask, word_t data);
-void record_axi_read(const char *type, paddr_t addr, int len);
 
-// 使用DPI-C机制实现ebreak
 extern "C" void call_ebreak() {
   if (nemu_state.state ==
       NEMU_END) // Prevent_Display_Twice!!!!!
     return;
   Log("Ebreak Called!!");
-  // tfp->
   uint32_t regs_2_value = REG_10_STRUCT;
   uint32_t pc = PC_STRUCT;
 
@@ -40,8 +33,6 @@ extern "C" void call_ebreak() {
   nemu_state.state = NEMU_END;
   nemu_state.halt_ret = regs_2_value;
 }
-
-
 
 extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
                            uint32_t wdata, uint32_t len) {
@@ -104,7 +95,7 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
 #endif
 }
 
-extern word_t inst;//TODO!!
+
 
 extern "C" void trace_inst(unsigned int inst_now) { inst = inst_now; }
 bool wbu_valid = false;

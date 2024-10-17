@@ -1,7 +1,6 @@
-#include "../include/ydb_all.h"
+// #include "../include/ydb_all.h"
+#include <common.h>
 #include "svdpi.h"
-#include <cstdint>
-#include <stdio.h>
 
 #define OK(ITEM) (ITEM ? "True" : "False")
 #define CsPI(ITEM)                                                             \
@@ -11,14 +10,13 @@
 
 #define DIV(ITEM1,ITEM2) (ITEM2!=0?(ITEM1/ITEM2):-1)
 
-extern "C" void trace_decoder(svBit mem_R, svBit mem_W, svBit calc, svBit csr);
-extern "C" void trace_exu();
-extern "C" void trace_ifu(int unsigned addr, svBit start_end);
-extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end);
-extern uint64_t g_cycles;
+// extern "C" void trace_decoder(svBit mem_R, svBit mem_W, svBit calc, svBit csr);
+// extern "C" void trace_exu();
+// extern "C" void trace_ifu(int unsigned addr, svBit start_end);
+// extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end);
+extern uint64_t g_cycles;//TODO!!
 extern uint64_t g_nr_guest_inst;
 extern uint64_t cache_hit_times;
-// count!!
 
 // count inst Type
 typedef struct {

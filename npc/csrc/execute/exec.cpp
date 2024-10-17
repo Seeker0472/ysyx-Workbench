@@ -1,46 +1,46 @@
 // #define NPC
-#include "../include/regs.h"
-#include "../include/ydb_all.h"
+#include "isa.h"
+#include "regs.h"
+#include "common.h"
 #ifndef NPC
-  #include "VysyxSoCFull.h"
-  #include "VysyxSoCFull___024root.h"
-  #include <nvboard.h>
+#include "VysyxSoCFull.h"
+#include "VysyxSoCFull___024root.h"
+#include <nvboard.h>
 #else
-  #include "Vraw_core.h"
-  #include "Vraw_core___024root.h"
+#include "Vraw_core.h"
+#include "Vraw_core___024root.h"
 #endif
-#include "../include/diftest.h"
+#include "diftest.h"
+#include "trace.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
 VerilatedVcdC *tfp; // 用于生成波形的指针
 
-
 #ifndef NPC
-    VysyxSoCFull *dut;
-    void nvboard_bind_all_pins(VysyxSoCFull *dut);
+VysyxSoCFull *dut;
+void nvboard_bind_all_pins(VysyxSoCFull *dut);
 #else
-    Vraw_core *dut;
+Vraw_core *dut;
 #endif
-    uint64_t sim_time = 0;
-    uint64_t g_nr_guest_inst = 0;
-    uint64_t g_cycles = 0;
-    uint64_t g_timer = 0; // unit: us
-    void print_iringbuf();
-
-    void trace_and_difftest(paddr_t pc, word_t inst_in);
-    int update_reg_state();
-    void print_inst_asm(paddr_t pc, word_t inst);
-    void statistic();
-
-    void init_verilator(int argc, char *argv[]) {
-      Verilated::commandArgs(argc, argv);
-    }
-
+uint64_t sim_time = 0;
+uint64_t g_nr_guest_inst = 0;
+uint64_t g_cycles = 0;
+uint64_t g_timer = 0; // unit: us
+// void print_iringbuf();
+//TODO!!
 uint32_t mem_read(uint32_t pc);
 bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
+extern bool wbu_valid;
+
+
+void init_verilator(int argc, char *argv[]) {
+  Verilated::commandArgs(argc, argv);
+}
+
+
 
 #define PRINT_INST_MIN 10
 
@@ -49,7 +49,7 @@ void statistic() {
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
   Log("total cycles = " NUMBERIC_FMT, g_cycles);
-  Log("IPC = %lf", (double)g_nr_guest_inst/g_cycles);
+  Log("IPC = %lf", (double)g_nr_guest_inst / g_cycles);
   if (g_timer > 0)
     Log("simulation frequency = " NUMBERIC_FMT " inst/s",
         g_nr_guest_inst * 1000000 / g_timer);
@@ -71,30 +71,25 @@ void single_cycle() {
 #endif
 }
 
-extern bool wbu_valid;
 
 void single_inst() {
-  // uint32_t prev_pc = PC_STRUCT;
-  // uint32_t now_pc = PC_STRUCT;
+
   int i = 0;
   do {
     g_cycles++;
     i++;
     single_cycle();
-    
-    // now_pc = PC_STRUCT;
     if (unlikely(i % 7000 == 0)) {
-      nemu_state.state= NEMU_STOP;
+      nemu_state.state = NEMU_STOP;
       Info_R("WARN: PC didn't change for 7000 Cycles!\n");
       nemu_state.halt_ret = -1;
       break;
     }
-
-    // } while (likely(prev_pc == now_pc && check_pc));
-    } while (likely(wbu_valid==false));//need to check next cycle of wbu valid!
-    wbu_valid = false;
-    single_cycle();
-    update_reg_state();
+  } while (likely(wbu_valid == false)); // need to check next cycle of wbu
+                                        // valid!
+  wbu_valid = false;
+  single_cycle();
+  update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
   if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
@@ -130,18 +125,17 @@ void init_runtime() {
   nvboard_bind_all_pins(dut);
   nvboard_init();
 #endif
-  reset(20);                        // 复位5个周期
-
+  reset(20); // 复位5个周期
 }
 
-word_t inst=0;
+word_t inst = 0;
 extern uint32_t dpic_pc;
 
 int run(int step) {
   int now = step;
   uint64_t timer_start = get_time();
   while (likely((now) != 0)) {
-    now = now >= 0 ? now - 1 : now;//如果now>0,就正常递减，否则保持原来的值
+    now = now >= 0 ? now - 1 : now; // 如果now>0,就正常递减，否则保持原来的值
     switch (nemu_state.state) {
     case NEMU_ABORT:
     case NEMU_END:
@@ -159,11 +153,11 @@ int run(int step) {
       print_inst_asm(dpic_pc, inst);
     trace_and_difftest(dpic_pc, inst);
 #ifdef CONFIG_WAVE_FORM
-    if (unlikely(g_nr_guest_inst == 800000)){
+    if (unlikely(g_nr_guest_inst == 800000)) {
       Warn("Waveform Enabled!May result in a very large file!");
       nemu_state.state = NEMU_STOP;
     }
-      
+
 #endif
     if (unlikely(nemu_state.state != NEMU_RUNNING))
       break; // 出现异常

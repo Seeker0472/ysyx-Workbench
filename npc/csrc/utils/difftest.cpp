@@ -1,12 +1,11 @@
-// # include <diftest.h>
-// #include <common.h>
-// #include <isa.h>
-#include "../include/diftest.h"
-#include "../include/ydb_all.h"
+
+#include "diftest.h"
+#include "isa.h"
+#include "common.h"
 #include "utils.h"
 
 
-extern CPU_state *cpu;
+extern CPU_state *cpu;//TODO!!
 CPU_state *ref_cpu;
 extern uint32_t *mem;
 extern uint32_t* mrom;
