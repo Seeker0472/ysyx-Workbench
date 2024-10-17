@@ -1,7 +1,7 @@
 #include "mem.h"
 #include "isa.h"
-#include <stdio.h>
-#include <trace.h>
+#include "trace.h"
+#include "common.h"
 
 extern uint64_t time_now;
 // mtrace 使用dpi-c实现
@@ -22,7 +22,7 @@ extern "C" void psram_write(int32_t addr, int32_t data) {
 
 extern "C" int get_time(int raddr) {
   if (raddr == 0x10000048) {
-    time_now = get_time();
+    time_now = get_time_local();
     return (uint32_t)time_now;
   }
   if (raddr == 0x1000004c) {

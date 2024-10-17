@@ -92,7 +92,7 @@ class Branch_comp extends Module {
   )
 }
 
-//TODO:exu完成计算-valid信号
+//:exu完成计算-valid信号
 class TRACE_EXU extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val valid = Input(Bool())

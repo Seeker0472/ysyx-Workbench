@@ -1,16 +1,13 @@
 
 #include "diftest.h"
 #include "isa.h"
+#include "mem.h"
 #include "common.h"
 #include "utils.h"
 
 
 extern CPU_state *cpu;//TODO!!
 CPU_state *ref_cpu;
-extern uint32_t *mem;
-extern uint32_t* mrom;
-extern uint32_t* flash;
-extern word_t mem_size;
 void reg_display_diff(CPU_state* nemu);
 
 extern const char *regs[];

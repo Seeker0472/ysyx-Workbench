@@ -1,5 +1,6 @@
 // #define NPC
 #include "regs.h"
+#include "isa.h"
 #include "common.h"
 #include "diftest.h"
 #include "ydb_all.h"
@@ -31,7 +32,6 @@ static bool state_valid() //检测从状态valid->fetching
   // if(dut->rootp->ysyxSoCFull__DOT__asic__DOT__cpu__DOT__cpu__DOT__ifu__DOT__state==2)
   //     return true;
 }
-extern uint32_t dpic_n_pc;
 int update_reg_state() {
   cpu->pc = dpic_n_pc;
   cpu->gpr[0] = REG_0_STRUCT;

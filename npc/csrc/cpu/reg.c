@@ -1,4 +1,4 @@
-#include <isa.h>
+#include "isa.h"
 #include "common.h"
 
 CPU_state* cpu;

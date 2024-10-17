@@ -1,6 +1,7 @@
 // #include "../include/ydb_all.h"
-#include <common.h>
+#include "common.h"
 #include "svdpi.h"
+#include "trace.h"
 
 #define OK(ITEM) (ITEM ? "True" : "False")
 #define CsPI(ITEM)                                                             \
@@ -14,9 +15,7 @@
 // extern "C" void trace_exu();
 // extern "C" void trace_ifu(int unsigned addr, svBit start_end);
 // extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end);
-extern uint64_t g_cycles;//TODO!!
-extern uint64_t g_nr_guest_inst;
-extern uint64_t cache_hit_times;
+
 
 // count inst Type
 typedef struct {
@@ -63,7 +62,6 @@ extern "C" void trace_exu() {
 
 uint64_t last_cycle = 0;
 extern "C" void trace_ifu(int unsigned addr, svBit start_end) {
-  // Log("IFU:addr = %x,start=%s",addr,OK(start_end));
   if (start_end) {
     //ifu-start上一条指令结束--TODO:多周期失效？？
     if (last_cycle != 0)

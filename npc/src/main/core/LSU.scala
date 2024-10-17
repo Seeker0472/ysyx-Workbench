@@ -176,8 +176,8 @@ class DPI_C_CHECK extends BlackBox with HasBlackBoxInline {
   )
 }
 //判断input改变
-//TODO:LSU 取到数据/写入数据--使用valid
-//TODO:LSU 延迟
+//:LSU 取到数据/写入数据--使用valid
+//:LSU 延迟
 /*
   addr,w/wfin,r/rfin
   RW--R-True/W-False

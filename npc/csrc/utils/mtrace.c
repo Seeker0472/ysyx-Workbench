@@ -1,4 +1,5 @@
 #include "isa.h"
+#include "common.h"
 
 void record_pread(paddr_t addr, int len)
 {

@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <isa.h>
 #define MROM_BASE 0x20000000
 #define MROM_TOP 0x20000fff
 #define SRAM_BASE 0x0f000000
@@ -16,3 +17,4 @@ extern uint32_t *mrom;
 extern uint32_t *flash;
 extern uint32_t *mem;
 extern uint32_t *psram;
+extern word_t mem_size;

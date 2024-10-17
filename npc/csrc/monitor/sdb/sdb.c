@@ -15,6 +15,7 @@
 // sdb.c-主要处理与用户的交互
 
 // #include <cpu/cpu.h>
+#include "common.h"
 #include "sdb.h"
 #include <readline/history.h>
 #include <readline/readline.h>

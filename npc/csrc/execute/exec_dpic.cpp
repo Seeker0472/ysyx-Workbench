@@ -1,13 +1,13 @@
 // #define NPC
 #include "verilator_wrapper.h"
 #include "regs.h"
+#include "isa.h"
 #include "common.h"
 #include "diftest.h"
 #include "ydb_all.h"
 #include "mem.h"
 #include "trace.h"
 
-extern word_t inst;//TODO!!
 
 extern "C" void print_char(char w_char) {
   printf("%c", w_char);

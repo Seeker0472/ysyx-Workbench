@@ -1,8 +1,8 @@
 // #include "../include/ydb_all.h"
 #include "common.h"
 #include "isa.h"
+#include "time.h"
 
-uint64_t get_time();//TODO
 uint64_t time_now = 114514;
 
 uint32_t mem_read(uint32_t pc);
@@ -21,14 +21,12 @@ uint32_t *mrom;
 uint32_t *flash;
 // 4MB
 uint32_t *psram;
-// TODO:SDRAM
 
 word_t mem_size = 84;
 
 uint32_t mem_read(uint32_t pc) {
   if (pc == 0xa0000048) {
-    time_now = get_time();
-    // printf("%lx\n", time);
+    time_now = get_time_local();
     return (uint32_t)time_now;
   }
   if (pc == 0xa000004c) {
@@ -70,7 +68,7 @@ void init_flash_img(char *img_file) {
 }
 void init_mem() {
   mrom = (uint32_t *)malloc(4 * 1024 * sizeof(uint8_t));
-  flash = (uint32_t *)malloc(128 * 1024 * 1024 * sizeof(uint8_t));//TODO:FLASH so small
+  flash = (uint32_t *)malloc(128 * 1024 * 1024 * sizeof(uint8_t));
   psram = (uint32_t *)malloc(4 * 1024 * 1024 * sizeof(uint8_t));
   mem = (uint32_t *)malloc(16 * 1024 * 1024 * sizeof(uint8_t));
 }
