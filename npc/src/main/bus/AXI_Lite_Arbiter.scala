@@ -15,6 +15,7 @@ class AXI_Lite_Arbiter extends Module {
   val state                                   = RegInit(s_idle)
   val xbar                                    = Module(new XBAR)
   //TODO:使用事物id来实现arbitor
+  //优先给c2？
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
@@ -28,11 +29,14 @@ class AXI_Lite_Arbiter extends Module {
   )
 
   //Read Channels
-  io.c1.RA.ready := state === s_idle && xbar.io.in.RA.ready
-  io.c2.RA.ready := state === s_idle && xbar.io.in.RA.ready
+  val c1_ready = state === s_idle && xbar.io.in.RA.ready
+  val c2_ready = state === s_idle && xbar.io.in.RA.ready
+  io.c1.RA.ready := c1_ready && ~c2_ready
+  io.c2.RA.ready := c2_ready
 
   xbar.io.in.RA.valid := state === s_idle && (io.c1.RA.valid || io.c2.RA.valid)
-  xbar.io.in.RA.bits  := Mux((state === s_idle && (io.c1.RA.valid) || state === s_c2_busy), io.c1.RA.bits, io.c2.RA.bits)
+  // xbar.io.in.RA.bits  := Mux((state === s_idle && (io.c1.RA.valid) || state === s_c2_busy), io.c1.RA.bits, io.c2.RA.bits)
+  xbar.io.in.RA.bits  := Mux((state === s_idle && (io.c2.RA.valid) || state === s_c2_busy), io.c2.RA.bits, io.c1.RA.bits)
 
   xbar.io.in.RD.ready := Mux(state === s_c1_busy, io.c1.RD.ready, io.c2.RD.ready)
 
