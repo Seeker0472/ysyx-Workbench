@@ -135,7 +135,7 @@ uint32_t dpic_pc;
 uint32_t dpic_n_pc;
 
 extern "C" void trace_wbu(unsigned int pc,unsigned int n_pc) {
-  printf("writeback!pc=%x,,%x\n",pc,n_pc);
+  // printf("writeback!pc=%x,,%x\n",pc,n_pc);
   wbu_valid = true;
   dpic_pc = pc;
   dpic_n_pc=n_pc;

@@ -19,8 +19,7 @@ void sdb_set_batch_mode();
 void read_func_info(char *filepath);
 void difftest_init_all();
 void init_verilator(int argc, char *argv[]);
-
-
+void init_reg_state();
 
 char * log_file =NULL;
 
@@ -81,6 +80,8 @@ void init_monitor(int argc, char *argv[]){
     init_reg();
     init_img(img_file);
     init_runtime();
+    init_reg_state();
+
     // 初始化反汇编
     init_disasm((MUXDEF(CONFIG_RV64, "riscv64","riscv32")"-pc-linux-gnu"));
     IFDEF(CONFIG_FTRACE,read_func_info(elf_file););
