@@ -66,6 +66,9 @@ void single_cycle() {
   dut->eval();
   IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
   IFDEF(CONFIG_WAVE_FORM, tfp->flush();)          // flush
+#ifndef NPC
+  nvboard_update();
+#endif
 }
 
 extern bool wbu_valid;
@@ -86,9 +89,7 @@ void single_inst() {
       nemu_state.halt_ret = -1;
       break;
     }
-#ifndef NPC
-    nvboard_update();
-#endif
+
     // } while (likely(prev_pc == now_pc && check_pc));
     } while (likely(wbu_valid==false));//need to check next cycle of wbu valid!
     wbu_valid = false;
