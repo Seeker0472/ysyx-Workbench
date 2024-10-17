@@ -1,7 +1,7 @@
 // #include "../include/ydb_all.h"
 #include "common.h"
 #include "isa.h"
-#include "time.h"
+#include "utils.h"
 
 uint64_t time_now = 114514;
 
