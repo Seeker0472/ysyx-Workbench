@@ -57,8 +57,8 @@ class WBU extends Module {
   val wbu_trace = Module(new TRACE_WBU)
   wbu_trace.io.clock := clock
   wbu_trace.io.valid := io.in.valid && io.out.ready
-  wbu_trace.io.pc:=io.in.bits.pc
-  wbu_trace.io.n_pc:=n_pc
+  wbu_trace.io.pc    := io.in.bits.pc
+  wbu_trace.io.n_pc  := n_pc
 
 }
 
@@ -66,8 +66,8 @@ class TRACE_WBU extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val clock = Input(Clock())
     val valid = Input(Bool())
-    val pc = Input(UInt(CVAL.DLEN.W))
-    val n_pc = Input(UInt(CVAL.DLEN.W))
+    val pc    = Input(UInt(CVAL.DLEN.W))
+    val n_pc  = Input(UInt(CVAL.DLEN.W))
   })
   setInline(
     "trace_wbu.v",
