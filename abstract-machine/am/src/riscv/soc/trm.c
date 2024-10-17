@@ -90,7 +90,7 @@ void print_welcome(){
 void _trm_init() {
   init_uart();
   // _bootloader();
-  // print_welcome();
+  print_welcome();
   // int ret = main(mainargs);
   int ret = main(mainargs);
   halt(ret);
