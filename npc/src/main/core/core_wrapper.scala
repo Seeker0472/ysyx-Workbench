@@ -43,7 +43,7 @@ class raw_core extends Module {
 
   //ypc.io.master.rdata  := rdata
   ypc.io.master.rvalid := RegNext(state === s_fetching)
-  ypc.io.master.rlast  := RegNext(rlen === 0.U&&state === s_fetching)
+  ypc.io.master.rlast  := RegNext(rlen === 0.U && state === s_fetching)
 
   ypc.io.slave.awvalid := 0.U
   ypc.io.slave.awaddr  := 0.U
@@ -64,25 +64,22 @@ class raw_core extends Module {
   ypc.io.slave.arburst := 0.U
   ypc.io.slave.rready  := 0.U
 
-  ypc.io.master.awready := state===s_idle
+  ypc.io.master.awready := state === s_idle
   ypc.io.master.wready  := 1.U
   ypc.io.master.bvalid  := 1.U
   ypc.io.master.bresp   := 0.U
   ypc.io.master.bid     := 0.U
-  ypc.io.master.arready := state===s_idle
-  ypc.io.master.rresp := 0.U
+  ypc.io.master.arready := state === s_idle
+  ypc.io.master.rresp   := 0.U
 
   ypc.io.master.rid := 0.U //TODO!!!
 
   ypc.io.interrupt := 0.U
   //应该可以不用管地址通道的valid
 
-
-
-
   val memrw = Module(new DPIC_MEMRW)
-  memrw.io.raddr      := Mux(ypc.io.master.arvalid,ypc.io.master.araddr,raddr)
-  memrw.io.waddr      := Mux(ypc.io.master.awvalid,ypc.io.master.awaddr,waddr)
+  memrw.io.raddr      := Mux(ypc.io.master.arvalid, ypc.io.master.araddr, raddr)
+  memrw.io.waddr      := Mux(ypc.io.master.awvalid, ypc.io.master.awaddr, waddr)
   memrw.io.wdata      := ypc.io.master.wdata
   memrw.io.wmask      := ypc.io.master.wstrb
   memrw.io.read       := state === s_fetching

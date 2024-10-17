@@ -11,7 +11,7 @@ class IFU extends Module {
   val io = IO(new Bundle {
     val in             = Flipped(Decoupled(new WBU_O))
     val out            = Decoupled(new IFUO())
-    val flush_icache          = Input(Bool())
+    val flush_icache   = Input(Bool())
     val axi            = Flipped(new AXIReadIO())
     val rwerr          = Input(Bool())
     val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W))) //TODO!!!!!
@@ -54,10 +54,10 @@ class IFU extends Module {
   //   pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
   // }
 
-  when(io.out.ready&&state===s_valid){
-    pc := pc+4.U//简单分支预测
+  when(io.out.ready && state === s_valid) {
+    pc := pc + 4.U //简单分支预测
   }
-  when(state===s_idle&&io.in.valid){
+  when(state === s_idle && io.in.valid) {
     pc := io.in.bits.n_pc
   }
 
@@ -69,12 +69,12 @@ class IFU extends Module {
     Seq(
       s_idle -> Mux(io.in.valid, s_fetching, s_idle),
       s_fetching -> Mux(icache.io.inst_valid, s_valid, s_fetching),
-      s_valid -> Mux(io.out.ready, s_fetching, s_valid),//stays on fetching
+      s_valid -> Mux(io.out.ready, s_fetching, s_valid), //stays on fetching
       s_error -> s_error
     )
   )
-  when(io.flush_pipeline){
-    state:=s_idle
+  when(io.flush_pipeline) {
+    state := s_idle
     // pc:=io.in.bits.n_pc
   }
 

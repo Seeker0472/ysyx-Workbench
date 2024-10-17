@@ -12,19 +12,19 @@ import scala.math
 // +---------+---------+--------+
 //
 
-object ICACHE_Const{
+object ICACHE_Const {
   val BLOCK_SIZE = 8
-  val BLOCK_NUM = 8
+  val BLOCK_NUM  = 8
 }
 
 class icache extends Module {
   val io = IO(new Bundle {
-    val axi        = Flipped(new AXIReadIO())
-    val inst       = Output(UInt(32.W))
-    val inst_valid = Output(Bool())
-    val addr       = Input(UInt(32.W))
-    val addr_valid = Input(Bool())
-    val flush_icache  = Input(Bool())
+    val axi          = Flipped(new AXIReadIO())
+    val inst         = Output(UInt(32.W))
+    val inst_valid   = Output(Bool())
+    val addr         = Input(UInt(32.W))
+    val addr_valid   = Input(Bool())
+    val flush_icache = Input(Bool())
   })
 
   val block_size = ICACHE_Const.BLOCK_SIZE
@@ -45,15 +45,15 @@ class icache extends Module {
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
   val cache    = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size * 8).W))))
   //flush
-  when(io.flush_icache){
+  when(io.flush_icache) {
     cachetag := VecInit(Seq.fill(block_num)(0.U))
   }
 
   // split the tag, index, offset from addr
-  val fetch_addr = RegEnable(io.addr, 0.U,state===s_idle)
+  val fetch_addr = RegEnable(io.addr, 0.U, state === s_idle)
   // val fetch_addr = io.addr
 
-  val fetch_tag = fetch_addr(31, 31 - tag_len + 1)
+  val fetch_tag   = fetch_addr(31, 31 - tag_len + 1)
   val fetch_index = fetch_addr(31 - tag_len, 31 - tag_len - index_len + 1)
 
   val addr_tag    = io.addr(31, 31 - tag_len + 1)
@@ -83,7 +83,7 @@ class icache extends Module {
         Mux(io.addr_valid, s_fetching, s_idle)
       ),
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching),
-      s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data),//TODO???
+      s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data), //TODO???
       s_valid -> s_idle // Didn't stay
     )
   )
@@ -99,8 +99,8 @@ class icache extends Module {
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
-    cachetag(fetch_index)  := Cat(1.U(1.W), fetch_tag)
-    cache(fetch_index) := Cat(data_read, cache(fetch_index)(block_size * 8 - 1, 32))
+    cachetag(fetch_index) := Cat(1.U(1.W), fetch_tag)
+    cache(fetch_index)    := Cat(data_read, cache(fetch_index)(block_size * 8 - 1, 32))
   }
 
   //Trace hit

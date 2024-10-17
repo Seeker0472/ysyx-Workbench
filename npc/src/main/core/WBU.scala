@@ -12,10 +12,10 @@ class WBU extends Module {
     val Rwrite     = (new RegWriteIO)
     val CSR_write  = (new CSRWriteIO)
     val out        = Decoupled(new WBU_O)
-    val wbu_pc        = Decoupled(UInt(CVAL.DLEN.W))
+    val wbu_pc     = Decoupled(UInt(CVAL.DLEN.W))
   })
-  io.in.ready  := io.out.ready
-  io.out.valid := io.in.valid
+  io.in.ready     := io.out.ready
+  io.out.valid    := io.in.valid
   io.wbu_pc.valid := io.in.valid
 
   io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
@@ -50,6 +50,33 @@ class WBU extends Module {
   val n_pc = Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
 
   io.out.bits.n_pc := n_pc
-  io.wbu_pc.bits:= n_pc
+  io.wbu_pc.bits   := n_pc
 
+  //trace
+  val wbu_trace = Module(new TRACE_WBU)
+  wbu_trace.io.clock := clock
+  wbu_trace.io.valid := io.in.valid && io.out.ready
+
+}
+
+class TRACE_WBU extends BlackBox with HasBlackBoxInline {
+  val io = IO(new Bundle {
+    val clock = Input(Clock())
+    val valid = Input(Bool())
+  })
+  setInline(
+    "trace_wbu.v",
+    """import "DPI-C" function void trace_wbu();
+      |module TRACE_ICache(
+      |  input valid,
+      |  input clock
+      |); 
+      |always @(negedge clock) begin
+      |   if (valid) begin
+      |      trace_wbu();
+      |  end
+      | end
+      |endmodule
+    """.stripMargin
+  )
 }

@@ -27,9 +27,6 @@ uint32_t *psram;
 word_t mem_size = 84;
 
 uint32_t mem_read(uint32_t pc) {
-  printf("%x,%x\n", pc, mem[(pc - 0x80000000) / 4]);
-  if (pc == 0)
-    return 0;
   if (pc == 0xa0000048) {
     time_now = get_time();
     // printf("%lx\n", time);
