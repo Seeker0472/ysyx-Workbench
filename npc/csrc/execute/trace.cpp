@@ -1,6 +1,5 @@
 // #define NPC
 #include "regs.h"
-#include <ctime>
 #include "isa.h"
 #include "common.h"
 #include "diftest.h"
