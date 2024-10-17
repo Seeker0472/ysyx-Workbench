@@ -92,6 +92,7 @@ void single_inst() {
 #endif
     // } while (likely(prev_pc == now_pc && check_pc));
     } while (likely(wbu_valid==false));//need to check next cycle of wbu valid!
+    wbu_valid = false;
     single_cycle();
     update_reg_state();
 
