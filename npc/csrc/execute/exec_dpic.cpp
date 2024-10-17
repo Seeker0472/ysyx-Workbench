@@ -130,5 +130,8 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
 extern word_t inst;
 
 extern "C" void trace_inst(unsigned int inst_now) { inst = inst_now; }
-
-extern "C" void trace_wbu() { printf("writeback!\n"); }
+bool wbu_valid=false;
+extern "C" void trace_wbu() {
+  // printf("writeback!\n");
+  wbu_valid=true;
+  }

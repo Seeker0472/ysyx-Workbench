@@ -14,7 +14,9 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
-    VerilatedVcdC *tfp; // 用于生成波形的指针
+VerilatedVcdC *tfp; // 用于生成波形的指针
+
+
 #ifndef NPC
     VysyxSoCFull *dut;
     void nvboard_bind_all_pins(VysyxSoCFull *dut);
@@ -34,7 +36,7 @@
 
     void init_verilator(int argc, char *argv[]) {
       Verilated::commandArgs(argc, argv);
-}
+    }
 
 uint32_t mem_read(uint32_t pc);
 bool check_watch_point();
@@ -56,24 +58,29 @@ void statistic() {
     Log("Finish running in less than 1 us and can not calculate the simulation "
         "frequency");
 }
+void single_cycle() {
+  dut->clock = 0;
+  dut->eval();
+  IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+  IFDEF(CONFIG_WAVE_FORM, tfp->flush();)          // flush
+  dut->clock = 1;
+  dut->eval();
+  IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
+  IFDEF(CONFIG_WAVE_FORM, tfp->flush();)          // flush
+}
 
-void single_cycle(bool check_pc) {
-  uint32_t prev_pc = PC_STRUCT;
-  uint32_t now_pc = PC_STRUCT;
+extern bool wbu_valid;
+
+void single_inst() {
+  // uint32_t prev_pc = PC_STRUCT;
+  // uint32_t now_pc = PC_STRUCT;
   int i = 0;
   do {
     g_cycles++;
     i++;
-    dut->clock = 0;
-    dut->eval();
-    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
-    IFDEF(CONFIG_WAVE_FORM, tfp->flush();)          // flush
-    dut->clock = 1;
-    dut->eval();
-    IFDEF(CONFIG_WAVE_FORM, tfp->dump(sim_time++);) // Dump波形信息
-    IFDEF(CONFIG_WAVE_FORM, tfp->flush();)          // flush
-
-    now_pc = PC_STRUCT;
+    single_cycle();
+    
+    // now_pc = PC_STRUCT;
     if (unlikely(i % 7000 == 0)) {
       nemu_state.state= NEMU_STOP;
       Info_R("WARN: PC didn't change for 7000 Cycles!\n");
@@ -83,8 +90,10 @@ void single_cycle(bool check_pc) {
 #ifndef NPC
     nvboard_update();
 #endif
-  } while (likely(prev_pc == now_pc && check_pc));
-  update_reg_state();
+    // } while (likely(prev_pc == now_pc && check_pc));
+    } while (likely(wbu_valid==false));//need to check next cycle of wbu valid!
+    single_cycle();
+    update_reg_state();
 
 #ifdef CONFIG_WATCHPOINT
   if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
@@ -101,7 +110,7 @@ void reset(int n) {
   dut->clock = 1;
   dut->eval();
   while (n-- > 0)
-    single_cycle(false);
+    single_cycle();
   dut->reset = 0;
 }
 
@@ -141,7 +150,7 @@ int run(int step) {
       nemu_state.state = NEMU_RUNNING;
     }
     uint32_t pc = PC_STRUCT;
-    single_cycle(true);
+    single_inst();
     tfp->flush();
     g_nr_guest_inst++;
     if (unlikely(step < PRINT_INST_MIN && step >= 0))
