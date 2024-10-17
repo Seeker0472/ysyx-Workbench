@@ -76,7 +76,7 @@ class TRACE_WBU extends BlackBox with HasBlackBoxInline {
       |  input valid,
       |  input clock,
       |  input [31:0] pc,
-      |  input [31:0] n_pc,
+      |  input [31:0] n_pc
       |); 
       |always @(negedge clock) begin
       |   if (valid) begin
