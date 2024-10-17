@@ -27,20 +27,13 @@ uint64_t sim_time = 0;
 uint64_t g_nr_guest_inst = 0;
 uint64_t g_cycles = 0;
 uint64_t g_timer = 0; // unit: us
-// void print_iringbuf();
-//TODO!!
-uint32_t mem_read(uint32_t pc);
-bool check_watch_point();
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
 extern bool wbu_valid;
 
-
 void init_verilator(int argc, char *argv[]) {
   Verilated::commandArgs(argc, argv);
 }
-
-
 
 #define PRINT_INST_MIN 10
 
@@ -95,8 +88,6 @@ void single_inst() {
   if (check_watch_point() && nemu_state.state == NEMU_RUNNING)
     nemu_state.state = NEMU_STOP;
 #endif
-
-  // printf("%x\n", dut->io_instr);
 }
 
 void reset(int n) {

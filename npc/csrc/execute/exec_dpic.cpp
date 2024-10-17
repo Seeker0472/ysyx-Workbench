@@ -7,7 +7,6 @@
 #include "mem.h"
 #include "trace.h"
 
-extern bool difftest_step;
 extern word_t inst;//TODO!!
 
 extern "C" void print_char(char w_char) {
@@ -80,13 +79,10 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
   if (access_type) {
     record_axi_read("Other", addr, len);
   } else {
-    //TODO:Mask not correct?
     record_axi_write("Other", addr, wmask, wdata);
   }
 
   difftest_step = true;
-  // printf("STEP\n");
-  // sleep(1);
 #else
   //run with npc
   record_axi_write("NPC", addr, wmask, wdata);

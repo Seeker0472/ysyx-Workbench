@@ -1,19 +1,13 @@
 // #define NPC
 #include "regs.h"
-
+#include "common.h"
 #include "diftest.h"
 #include "ydb_all.h"
-
 #include "verilator_wrapper.h"
-
-
+#include "trace.h"
 
 extern CPU_state *cpu;
 bool difftest_step = false;
-void ftrace_check_inst(paddr_t pc_now, word_t inst);
-void difftest_check_state();
-void difftest_copy_regs();
-void write_iringbuf(paddr_t pc, word_t inst);
 
 extern "C" void disassemble(char *str, int size, uint64_t pc, uint8_t *code,
                             int nbyte);
