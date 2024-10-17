@@ -13,7 +13,7 @@ import scala.math
 //
 
 object ICACHE_Const {
-  val BLOCK_SIZE = 8
+  val BLOCK_SIZE = 16
   val BLOCK_NUM  = 8
 }
 
