@@ -52,9 +52,6 @@ static bool state_valid() //检测从状态valid->fetching
 }
 extern uint32_t dpic_n_pc;
 int update_reg_state() {
-  // if (unlikely(init))
-  //   cpu->pc = PC_STRUCT;
-  // else
   cpu->pc = dpic_n_pc;
   cpu->gpr[0] = REG_0_STRUCT;
   cpu->gpr[1] = REG_1_STRUCT;

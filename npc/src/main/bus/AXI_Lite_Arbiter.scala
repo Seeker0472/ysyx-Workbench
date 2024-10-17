@@ -18,9 +18,9 @@ class AXI_Lite_Arbiter extends Module {
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(
-        io.c2.RA.valid && xbar.io.in.RA.ready,
+        io.c2.RA.valid ,
         s_c2_busy,
-        Mux(io.c1.RA.valid && xbar.io.in.RA.ready, s_c1_busy, s_idle)
+        Mux(io.c1.RA.valid , s_c1_busy, s_idle)
       ),
       s_c1_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c1_busy), //TODO!!
       s_c2_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c2_busy)
