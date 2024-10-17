@@ -1,7 +1,7 @@
 // #include "../include/ydb_all.h"
 #include "common.h"
 #include "isa.h"
-#include "time.h"
+#include "utils.h"
 
 uint64_t time_now = 114514;
 
@@ -26,7 +26,7 @@ word_t mem_size = 84;
 
 uint32_t mem_read(uint32_t pc) {
   if (pc == 0xa0000048) {
-    time_now = get_time();
+    time_now = get_time_local();
     return (uint32_t)time_now;
   }
   if (pc == 0xa000004c) {

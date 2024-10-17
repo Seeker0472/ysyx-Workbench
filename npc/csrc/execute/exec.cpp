@@ -124,7 +124,7 @@ word_t inst = 0;
 
 int run(int step) {
   int now = step;
-  uint64_t timer_start = get_time();
+  uint64_t timer_start = get_time_local();
   while (likely((now) != 0)) {
     now = now >= 0 ? now - 1 : now; // 如果now>0,就正常递减，否则保持原来的值
     switch (nemu_state.state) {
@@ -153,7 +153,7 @@ int run(int step) {
     if (unlikely(nemu_state.state != NEMU_RUNNING))
       break; // 出现异常
   }
-  uint64_t timer_end = get_time();
+  uint64_t timer_end = get_time_local();
   g_timer += timer_end - timer_start;
   return 0;
 }
