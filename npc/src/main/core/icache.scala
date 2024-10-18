@@ -77,7 +77,7 @@ class icache extends Module {
 
   state := MuxLookup(state, s_idle)(
     Seq(
-      s_idle -> (io.addr_valid&&~hit, s_fetching, s_idle),
+      s_idle -> Mux(io.addr_valid && ~hit , s_fetching, s_idle),
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching),
       s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data), 
       s_valid -> s_idle // Didn't stay
