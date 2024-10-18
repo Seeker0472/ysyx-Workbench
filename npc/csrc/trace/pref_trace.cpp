@@ -1,4 +1,3 @@
-// #include "../include/ydb_all.h"
 #include "common.h"
 #include "svdpi.h"
 #include "trace.h"
