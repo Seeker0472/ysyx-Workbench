@@ -110,7 +110,7 @@ class icache extends Module {
   hit_trace.io.hit := state === s_idle && hit
   hit_trace.io.reset := reset
   hit_trace.io.inst:=data
-  hit_trace.io.addr:=fetch_addr
+  hit_trace.io.addr:=io.addr
 
 }
 
