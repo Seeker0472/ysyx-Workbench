@@ -5,7 +5,7 @@ typedef struct {
   paddr_t addr;
   word_t inst;
 } icache_Node;
-#define BUF_SIZE 20
+#define BUF_SIZE 50
 icache_Node ibuf[BUF_SIZE];
 int ptail = 0;
 bool full= false;
