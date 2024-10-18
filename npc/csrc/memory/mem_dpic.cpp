@@ -1,5 +1,6 @@
 #include "mem.h"
 #include "isa.h"
+#include "svdpi.h"
 #include "trace.h"
 #include "common.h"
 
@@ -58,6 +59,10 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
 uint64_t cache_hit_times=0;
-extern "C" void trace_hit(int waddr, int wdata, char wmask) {
+extern "C" void trace_hit(svBit hit) {
+  if (hit)
+    printf("Hit!");
+  else
+   printf("Miss!\n");
   cache_hit_times+=1;
 }

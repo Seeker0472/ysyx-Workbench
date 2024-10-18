@@ -70,7 +70,7 @@ class EXU extends Module {
   //Trace
   val trace_exu = Module(new TRACE_EXU)
   trace_exu.io.clock := clock
-  trace_exu.io.valid := io.in.valid
+  trace_exu.io.valid := io.in.valid && io.out.ready
 }
 
 class Branch_comp extends Module {
@@ -105,13 +105,10 @@ class TRACE_EXU extends BlackBox with HasBlackBoxInline {
       |  input valid,
       |  input clock
       |);
-      | reg prev;
-      | initial prev=1'b0;
       |always @(negedge clock) begin
-      |   if (valid&&prev==1'b0) begin
+      |   if (valid) begin
       |      trace_exu();
       |  end
-      | prev = valid;
       | end
       |endmodule
     """.stripMargin
