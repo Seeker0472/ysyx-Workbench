@@ -120,7 +120,7 @@ void init_runtime() {
   reset(20); // 复位5个周期
 }
 
-word_t inst = 0;
+word_t inst=0;
 
 int run(int step) {
   int now = step;

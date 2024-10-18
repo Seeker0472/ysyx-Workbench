@@ -151,7 +151,7 @@ class Decoder extends Module {
   trace_decoder.io.mem_W := decodedResults(Write_En) //MEM_Write
   trace_decoder.io.calc  := decodedResults(ALUOp_Gen) =/= ALU_Op.inv //calc instr
   trace_decoder.io.csr   := decodedResults(CSRRW) //scrrw/scrrs/mert/ecall
-  trace_decoder.io.valid := state === s_valid //valid
+  trace_decoder.io.valid := state === s_valid && (io.out.ready || io.flush_pipeline)
 
 }
 //DONE:译码出来的指令类型
@@ -180,14 +180,10 @@ class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
       |  input valid,
       |  input clock
       |); 
-      | reg last_stat;
-      | initial
-      | last_stat = 1'b0;
       |always @(negedge clock) begin
-      |   if (valid && !last_stat) begin
+      |   if (valid) begin
       |      trace_decoder(mem_R,mem_W,calc,csr);
       |  end
-      | last_stat = valid;
       | end
       |endmodule
     """.stripMargin

@@ -4,7 +4,7 @@
 #include "isa.h"
 #include "common.h"
 #include "diftest.h"
-#include "ydb_all.h"
+// #include "ydb_all.h"
 #include "mem.h"
 #include "trace.h"
 
@@ -93,7 +93,9 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
 
 
 
-extern "C" void trace_inst(unsigned int inst_now) { inst = inst_now; }
+extern "C" void trace_inst(unsigned int inst_now) {
+//   inst = inst_now; 
+}
 bool wbu_valid = false;
 uint32_t dpic_pc;
 uint32_t dpic_n_pc;
@@ -102,5 +104,6 @@ extern "C" void trace_wbu(unsigned int pc,unsigned int n_pc) {
   // printf("writeback!pc=%x,,%x\n",pc,n_pc);
   wbu_valid = true;
   dpic_pc = pc;
-  dpic_n_pc=n_pc;
+  dpic_n_pc = n_pc;
+  inst = find_inst(pc);
 }

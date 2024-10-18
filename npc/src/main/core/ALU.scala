@@ -11,13 +11,6 @@ class ALU extends Module {
     val in     = Input(new ALU_I)
     val result = Output(UInt(Constants_Val.CVAL.DLEN.W))
   })
-// // 默认情况下，dst 输出为 0
-//   io.dst := 0.U
-
-//   // 当 addi 信号为高时，执行加法运算
-//   when(io.addi) {
-//     io.dst := io.src1 + io.imm
-//   }
   val add_val  = io.in.src1.asSInt + io.in.src2.asSInt
   val sub_val  = io.in.src1.asSInt - io.in.src2.asSInt
   val xor      = io.in.src1 ^ io.in.src2
