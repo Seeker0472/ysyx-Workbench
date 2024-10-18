@@ -108,6 +108,8 @@ class icache extends Module {
   hit_trace.io.clock := clock
   hit_trace.io.valid := state === s_idle && io.addr_valid 
   hit_trace.io.hit := state === s_idle && hit
+  hit_trace.io.reset := reset
+
 }
 
 class TRACE_ICache extends BlackBox with HasBlackBoxInline {
@@ -115,6 +117,7 @@ class TRACE_ICache extends BlackBox with HasBlackBoxInline {
     val clock = Input(Clock())
     val valid = Input(Bool())
     val hit = Input(Bool())
+    val reset = Input(Reset())
   })
   setInline(
     "trace_hit.v",
@@ -122,7 +125,8 @@ class TRACE_ICache extends BlackBox with HasBlackBoxInline {
       |module TRACE_ICache(
       |  input valid,
       |  input clock,
-      |  input hit
+      |  input hit,
+      |  input reset
       |); 
       |always @(negedge clock) begin
       |   if (valid) begin
