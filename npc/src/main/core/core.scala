@@ -34,7 +34,7 @@ class ypc extends Module {
   hazard_unit.io.decoder_pc <> decoder.io.decoder_pc
   hazard_unit.io.flush <> decoder.io.flush_pipeline
 //exc
-  StageConnect(decoder.io.out, exu.io.in, "pipeline")
+  StageConnect(decoder.io.out, exu.io.in, "multi")
   exu.io.reg1 <> reg.io.Rread1
   exu.io.reg2 <> reg.io.Rread2
   exu.io.csr <> reg.io.CSRread
