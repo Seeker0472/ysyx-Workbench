@@ -58,14 +58,6 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   }
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
-uint64_t cache_hit_times=0;
-extern "C" void trace_hit(svBit hit) {
-  if (hit)
-    printf("Hit!\n");
-  else
-   printf("Miss!\n");
-  cache_hit_times+=1;
-}
 extern "C" void record_inst(int unsigned addr, int unsigned inst) {
-  printf("addr=%xinst=%x",addr,inst);
+  printf("addr=%xinst=%x", addr, inst);
 }
