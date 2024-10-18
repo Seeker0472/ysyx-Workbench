@@ -129,7 +129,7 @@ class TRACE_ICache extends BlackBox with HasBlackBoxInline {
       |  input reset
       |); 
       |always @(negedge clock) begin
-      |   if (valid) begin
+      |   if (valid&&~reset) begin
       |      trace_hit(hit);
       |  end
       | end
