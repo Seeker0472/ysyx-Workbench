@@ -66,6 +66,6 @@ extern "C" void trace_hit(svBit hit) {
    printf("Miss!\n");
   cache_hit_times+=1;
 }
-void record_inst(int unsigned addr, int unsigned inst) {
+extern "C" void record_inst(int unsigned addr, int unsigned inst) {
   printf("addr=%xinst=%x",addr,inst);
 }
