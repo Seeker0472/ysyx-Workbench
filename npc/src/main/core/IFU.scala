@@ -14,7 +14,7 @@ class IFU extends Module {
     val flush_icache   = Input(Bool())
     val axi            = Flipped(new AXIReadIO())
     val rwerr          = Input(Bool())
-    val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W))) 
+    val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W)))
     val flush_pipeline = Input(Bool())
   })
   // states
