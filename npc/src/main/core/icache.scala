@@ -38,8 +38,8 @@ class icache extends Module {
   println(s"offset_len: $offset_len, index_len: $index_len, tag_len: $tag_len")
 
   // the state machine
-  val s_idle :: s_fetching :: s_wait_data :: s_valid :: s_error :: Nil = Enum(5)
-  val state                                                            = RegInit(s_idle)
+  val s_idle :: s_fetching :: s_wait_data :: s_error :: Nil = Enum(4)
+  val state                                                 = RegInit(s_idle)
 
   //Tag and cache
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
@@ -79,8 +79,7 @@ class icache extends Module {
     Seq(
       s_idle -> Mux(io.addr_valid && ~hit, s_fetching, s_idle),
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching),
-      s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data),
-      s_valid -> s_idle // Didn't stay
+      s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data)
     )
   )
   // axi

@@ -122,7 +122,7 @@ class LSU extends Module {
   io.axi.WR.ready      := true.B
   //暂时忽略错误处理
 
-  val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值
+  val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值//TODO:directly link into mem_read result to Reduce the use of reg??!
   io.out.bits.mem_read_result := read_res
   read_res                    := mem_read_result
 
