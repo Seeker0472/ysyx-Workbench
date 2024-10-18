@@ -77,11 +77,7 @@ class icache extends Module {
 
   state := MuxLookup(state, s_idle)(
     Seq(
-      s_idle -> Mux(
-        io.addr_valid && hit,
-        s_valid,
-        Mux(io.addr_valid, s_fetching, s_idle)
-      ),
+      s_idle -> (io.addr_valid&&~hit, s_fetching, s_idle),
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching),
       s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data), 
       s_valid -> s_idle // Didn't stay
@@ -95,7 +91,7 @@ class icache extends Module {
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
   io.axi.RA.bits.len  := (block_size / 4 - 1).U
 
-  io.inst_valid := state === s_valid//TODO : return the hit data instantly!!!!!!!
+  io.inst_valid := io.addr_valid&&hit//TODO : return the hit data instantly!!!!!!!
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
