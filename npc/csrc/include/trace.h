@@ -17,4 +17,3 @@ word_t find_inst(vaddr_t addr);
 extern uint64_t g_cycles;
 extern uint64_t g_nr_guest_inst;
 extern uint64_t cache_hit_times;
-extern word_t inst;

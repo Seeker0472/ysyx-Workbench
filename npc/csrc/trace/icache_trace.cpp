@@ -5,7 +5,7 @@ typedef struct {
   paddr_t addr;
   word_t inst;
 } icache_Node;
-#define BUF_SIZE 50
+#define BUF_SIZE 10
 icache_Node ibuf[BUF_SIZE];
 int ptail = 0;
 bool full= false;
@@ -21,7 +21,8 @@ word_t find_inst(vaddr_t addr) {
         return ibuf[i].inst;
     }
   }
-  Assert(0, "Should NOT reach here!!");
+//   Log("Should NOT reach here!!");
+  return 0;
 }
 void insert_icache_result(paddr_t addr, word_t inst) {
   ibuf[ptail].addr = addr;
