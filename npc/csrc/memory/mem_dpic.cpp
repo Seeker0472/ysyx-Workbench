@@ -61,7 +61,7 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
 uint64_t cache_hit_times=0;
 extern "C" void trace_hit(svBit hit) {
   if (hit)
-    printf("Hit!");
+    printf("Hit!\n");
   else
    printf("Miss!\n");
   cache_hit_times+=1;

@@ -38,8 +38,7 @@ latency memLatency = {0, 0, 0};
 uint64_t last_inst = INS_O;
 //记录当前指令类型和指令总数
 extern "C" void trace_decoder(svBit mem_R, svBit mem_W, svBit calc, svBit csr) {
-  // Log("Decoded_result:
-  // MEMR:%s,MEMW:%s,calc:%s,csr:%s\n",OK(mem_R),OK(mem_W),OK(calc),OK(csr));
+  Log("Decoded_result:MEMR:%s,MEMW:%s,calc:%s,csr:%s\n",OK(mem_R),OK(mem_W),OK(calc),OK(csr));
   if (mem_R) {
     instTypeCount.memr++;
     last_inst = INS_MR;
