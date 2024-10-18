@@ -83,7 +83,7 @@ class icache extends Module {
         Mux(io.addr_valid, s_fetching, s_idle)
       ),
       s_fetching -> Mux(io.axi.RA.ready, s_wait_data, s_fetching),
-      s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data), //TODO???
+      s_wait_data -> Mux(io.axi.RD.bits.last, s_idle, s_wait_data), 
       s_valid -> s_idle // Didn't stay
     )
   )
@@ -95,7 +95,7 @@ class icache extends Module {
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
   io.axi.RA.bits.len  := (block_size / 4 - 1).U
 
-  io.inst_valid := state === s_valid
+  io.inst_valid := state === s_valid//TODO : return the hit data instantly!!!!!!!
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
@@ -109,6 +109,8 @@ class icache extends Module {
   hit_trace.io.valid := state === s_idle && io.addr_valid 
   hit_trace.io.hit := state === s_idle && hit
   hit_trace.io.reset := reset
+  hit_trace.io.inst:=data
+  hit_trace.io.addr:=fetch_addr
 
 }
 
@@ -118,19 +120,27 @@ class TRACE_ICache extends BlackBox with HasBlackBoxInline {
     val valid = Input(Bool())
     val hit = Input(Bool())
     val reset = Input(Reset())
+    val addr = Input(UInt(32.W))
+    val inst = Input(UInt(32.W))
   })
   setInline(
     "trace_hit.v",
     """import "DPI-C" function void trace_hit(bit hit);
+      |import "DPI-C" function void record_inst(int unsigned addr,int unsigned inst);
       |module TRACE_ICache(
       |  input valid,
       |  input clock,
       |  input hit,
-      |  input reset
+      |  input reset,
+      |  input[31:0] addr,
+      |  input[31:0] inst
       |); 
       |always @(negedge clock) begin
       |   if (valid&&~reset) begin
       |      trace_hit(hit);
+      |   if (hit) begin
+      |      record_inst(addr,inst);
+      |   end
       |  end
       | end
       |endmodule

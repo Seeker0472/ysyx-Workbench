@@ -117,5 +117,4 @@ void print_perf_statistics() {
          DIV(memLatency.lsuw, instTypeCount.memw),
          DIV(memLatency.ifu, g_nr_guest_inst));
   printf("Cache Hit times:%ld\t,Hit rate:%.2lf%%", cache_hit_times, DIV((double)cache_hit_times,g_nr_guest_inst));
-  //   printf("")
 }
