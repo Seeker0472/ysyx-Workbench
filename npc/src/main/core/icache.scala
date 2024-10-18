@@ -91,7 +91,7 @@ class icache extends Module {
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
   io.axi.RA.bits.len  := (block_size / 4 - 1).U
 
-  io.inst_valid := io.addr_valid&&hit//TODO : return the hit data instantly!!!!!!!
+  io.inst_valid := io.addr_valid&&state===s_idle&&hit//TODO : return the hit data instantly!!!!!!!
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
   when(io.axi.RD.valid && state === s_wait_data) {
