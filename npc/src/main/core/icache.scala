@@ -106,7 +106,7 @@ class icache extends Module {
   //Trace hit
   val hit_trace = Module(new TRACE_ICache)
   hit_trace.io.clock := clock
-  hit_trace.io.valid := state === s_idle && io.addr_valid && !reset
+  hit_trace.io.valid := state === s_idle && io.addr_valid 
   hit_trace.io.hit := state === s_idle && hit
 }
 
