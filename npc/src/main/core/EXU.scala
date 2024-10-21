@@ -34,7 +34,7 @@ class EXU extends Module {
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
 
-  io.reg_addr:=io.in.bits.rd
+  io.reg_addr:=Mux(io.in.valid,io.in.bits.rd,0.U)
   io.pc.bits:=io.in.bits.pc
   io.pc.valid:=io.in.valid
 
