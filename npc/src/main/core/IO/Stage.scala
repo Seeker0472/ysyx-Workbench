@@ -4,7 +4,7 @@ import chisel3.util._
 import chisel3._
 
 object StageConnect {
-  def apply[T <: Data](left: DecoupledIO[T], right: DecoupledIO[T], arch: String = "single"): Unit = {
+  def apply[T <: Data](left: DecoupledIO[T], right: DecoupledIO[T],flush: Bool, arch: String = "single"): Unit = {
     arch match {
       case "single" =>
         right.bits  := left.bits
@@ -19,7 +19,7 @@ object StageConnect {
       case "pipeline" =>
         right.bits <> RegEnable(left.bits, left.valid && right.ready)
         left.ready := right.ready
-        right.valid := RegEnable(left.valid , right.ready)//Problem?
+        right.valid := RegEnable(left.valid , right.ready||flush)//Problem?
         // right.valid := RegNext(left.valid && right.ready)//Problem?
 
       // case "ooo" =>

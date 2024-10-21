@@ -24,37 +24,39 @@ class ypc extends Module {
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
   val hazard_unit = Module(new HazardUnit())
 
+  val flush = hazard_unit.io.flush
+
   ifu.io.axi <> axi_arbiter.io.c1
   hazard_unit.io.ifu_pc <> ifu.io.ifu_pc
   hazard_unit.io.exu_pc <> exu.io.pc
-  hazard_unit.io.flush <> ifu.io.flush_pipeline
+  flush <> ifu.io.flush_pipeline
 //decode_stage
-  StageConnect(ifu.io.out, decoder.io.in, "pipeline")
+  StageConnect(ifu.io.out, decoder.io.in,flush, "pipeline")
   br_han.io.halt      := decoder.io.ebreak
   ifu.io.flush_icache := decoder.io.flush_icache
   decoder.io.reg1 <> reg.io.Rread1
   decoder.io.reg2 <> reg.io.Rread2
   decoder.io.csr <> reg.io.CSRread
   hazard_unit.io.decoder_pc <> decoder.io.decoder_pc
-  hazard_unit.io.flush <> decoder.io.flush_pipeline
+  flush <> decoder.io.flush_pipeline
 //exc
-  StageConnect(decoder.io.out, exu.io.in, "pipeline")
-  hazard_unit.io.flush <> exu.io.flush_pipeline
+  StageConnect(decoder.io.out, exu.io.in,flush, "pipeline")
+  flush <> exu.io.flush_pipeline
   // decoder.io.reg0 <> reg.io.Rread1
   // decoder.io.reg1 <> reg.io.Rread2
   // decoder.io.csr <> reg.io.CSRread
 //lsu
   lsu.io.axi <> axi_arbiter.io.c2
-  StageConnect(exu.io.out, lsu.io.in, "pipeline")
+  StageConnect(exu.io.out, lsu.io.in,flush, "pipeline")
 
 //wb
-  StageConnect(lsu.io.out, wbu.io.in, "multi")
+  StageConnect(lsu.io.out, wbu.io.in,flush, "multi")
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
   hazard_unit.io.wbu <> wbu.io.wbu_pc
 //ifu
-  StageConnect(wbu.io.out, ifu.io.in, "pipeline")
+  StageConnect(wbu.io.out, ifu.io.in,flush, "pipeline")
 
   //pipeline sig
   decoder.io.lsu_w_addr <> lsu.io.reg_addr
