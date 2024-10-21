@@ -11,6 +11,7 @@ import chisel3.util.MuxLookup
 class EXU extends Module {
   val io = IO(new Bundle {
     val in   = Flipped(Decoupled(new DecoderO))
+    val reg_addr = Output(UInt(5.W))
     // val reg1 = (new RegReadIO)
     // val reg2 = (new RegReadIO)
     // val csr  = (new CSRReadIO)
@@ -30,6 +31,8 @@ class EXU extends Module {
   io.out.bits.mret             := io.in.bits.mret
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
+
+  io.out.reg_addr:=io.in.bits.rd
 
 
   // val src1 = io.reg1.data

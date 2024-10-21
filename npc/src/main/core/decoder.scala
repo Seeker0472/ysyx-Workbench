@@ -17,6 +17,7 @@ class Decoder extends Module {
   val io = IO(new Bundle {
     val in             = Flipped(Decoupled(new IFUO))
     val lsu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
+    val exu_w_addr = Input(UInt(CVAL.REG_ADDR_LEN.W))
     val decoder_pc     = Decoupled(UInt(CVAL.DLEN.W))
     val ebreak         = Output(Bool())
     val flush_icache   = Output(Bool())
@@ -138,14 +139,24 @@ class Decoder extends Module {
 
   io.out.bits.ecall := decodedResults(Is_Ecall)
   io.out.bits.mret  := decodedResults(Is_Mret)
+  // reg conflict whith EXU/(LS+WB) 
   val conflict = MuxLookup(Type, false.B)(
     Seq(
-      Inst_Type_Enum.R_Type -> ((io.lsu_w_addr === rs1 || io.lsu_w_addr === rs2) && rs1 =/= 0.U && rs2 =/= 0.U),
-      Inst_Type_Enum.I_Type -> ((io.lsu_w_addr === rs1) && rs1 =/= 0.U),
-      Inst_Type_Enum.S_Type -> ((io.lsu_w_addr === rs2) && rs2 =/= 0.U),
-      Inst_Type_Enum.B_Type -> ((io.lsu_w_addr === rs1 || io.lsu_w_addr === rs2) && rs1 =/= 0.U && rs2 =/= 0.U)
+      Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1&&rs1 =/= 0.U) || (io.lsu_w_addr === rs2&&rs2 =/= 0.U)) || ((io.exu_w_addr === rs1&&rs1 =/= 0.U) || (io.exu_w_addr === rs2&&rs2 =/= 0.U))  ),
+      Inst_Type_Enum.I_Type -> ((io.lsu_w_addr === rs1) && rs1 =/= 0.U)||((io.exu_w_addr === rs1) && rs1 =/= 0.U),
+      Inst_Type_Enum.S_Type -> ((io.lsu_w_addr === rs2) && rs2 =/= 0.U)||((io.exu_w_addr === rs2) && rs2 =/= 0.U),
+      Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1&&rs1 =/= 0.U) || (io.lsu_w_addr === rs2&&rs2 =/= 0.U)) || ((io.exu_w_addr === rs1&&rs1 =/= 0.U) || (io.exu_w_addr === rs2&&rs2 =/= 0.U))  ),
     )
   )
+  // val conflict = MuxLookup(Type, false.B)(
+  //   Seq(
+  //     Inst_Type_Enum.R_Type -> ((io.lsu_w_addr === rs1 || io.lsu_w_addr === rs2) && rs1 =/= 0.U && rs2 =/= 0.U),
+  //     Inst_Type_Enum.I_Type -> ((io.lsu_w_addr === rs1) && rs1 =/= 0.U),
+  //     Inst_Type_Enum.S_Type -> ((io.lsu_w_addr === rs2) && rs2 =/= 0.U),
+  //     Inst_Type_Enum.B_Type -> ((io.lsu_w_addr === rs1 || io.lsu_w_addr === rs2) && rs1 =/= 0.U && rs2 =/= 0.U)
+  //   )
+  // )
+  
   io.out.valid := state === s_valid && ~conflict
   state := MuxLookup(state, s_idle)(
     Seq(
