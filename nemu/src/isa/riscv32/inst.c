@@ -19,7 +19,7 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 #pragma GCC diagnostic ignored "-Wnarrowing"
-
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 //my_func
 void write_iringbuf(paddr_t pc, word_t inst);
 void ftrace_func_call(paddr_t pc_now,paddr_t target);
