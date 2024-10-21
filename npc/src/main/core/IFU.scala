@@ -42,7 +42,7 @@ class IFU extends Module {
   io.ifu_pc.valid := true.B
 
   //out
-  io.out.valid      := state === s_valid
+  io.out.valid      := state === s_valid && ~io.flush_pipeline
   io.out.bits.pc    := pc
   io.out.bits.instr := icache.io.inst
 
