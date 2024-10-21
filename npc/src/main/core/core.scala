@@ -26,6 +26,7 @@ class ypc extends Module {
 
   ifu.io.axi <> axi_arbiter.io.c1
   hazard_unit.io.ifu_pc <> ifu.io.ifu_pc
+  hazard_unit.io.exu_pc <> exu.io.pc
   hazard_unit.io.flush <> ifu.io.flush_pipeline
 //decode_stage
   StageConnect(ifu.io.out, decoder.io.in, "pipeline")
