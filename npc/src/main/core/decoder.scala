@@ -28,7 +28,7 @@ class Decoder extends Module {
     val out            = Decoupled(new DecoderO)
   })
   //state_machine
-  val s_idle :: s_valid :: Nil = Enum(2)
+  val s_idle :: s_valid :: s_conflict :: Nil = Enum(3)//TODO:del valid
 
   val state = RegInit(s_idle)
 
@@ -160,7 +160,8 @@ class Decoder extends Module {
   io.out.valid := state === s_valid && ~conflict
   state := MuxLookup(state, s_idle)(
     Seq(
-      s_idle -> Mux(io.in.valid && ~conflict && ~io.flush_pipeline, s_valid, s_idle),
+      s_idle -> Mux(io.in.valid  && ~io.flush_pipeline, Mux(conflict,s_conflict,s_valid), s_idle),//TODO:这里有bug，如果一直conflict，会一直ready
+      s_conflict -> Mux(io.flush_pipeline,s_idle,Mux(conflict,s_conflict,s_valid)),
       s_valid -> Mux(io.out.ready || io.flush_pipeline, s_idle, s_valid)
     )
   )
