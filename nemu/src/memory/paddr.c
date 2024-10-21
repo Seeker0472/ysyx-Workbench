@@ -58,8 +58,9 @@ uint8_t *guest_to_host(paddr_t paddr)
     return psram + paddr - PSRAM_BASE;
   #endif
   if (MEM_IN(paddr, CONFIG_MBASE, CONFIG_MBASE + CONFIG_MSIZE)) {
-    Log("Warning:assessing rubbish area!!!!");
-    return pmem + paddr - CONFIG_MBASE;}
+    return pmem + paddr - CONFIG_MBASE;
+  }
+  Log("Warning:assessing rubbish area!!!!");
   return rubbish;
 }
 paddr_t host_to_guest(uint8_t *haddr)
