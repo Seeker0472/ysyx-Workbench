@@ -28,15 +28,15 @@ class Decoder extends Module {
     val out            = Decoupled(new DecoderO)
   })
   //state_machine
-  val s_idle :: s_valid :: s_conflict :: Nil = Enum(3)//TODO:del valid
+  // val s_idle :: s_valid :: s_conflict :: Nil = Enum(3)//TODO:del valid
 
-  val state = RegInit(s_idle)
+  // val state = RegInit(s_idle)
 
   io.decoder_pc.bits  := io.in.bits.pc
   io.decoder_pc.valid := io.in.valid
 
   //in
-  io.in.ready := state === s_idle
+  // io.in.ready := state === s_idle
 
   //pass_through
   io.out.bits.pc := io.in.bits.pc
@@ -122,9 +122,11 @@ class Decoder extends Module {
   io.out.bits.pc_jump          := decodedResults(Is_Jump)
   io.out.bits.reg_write_enable := decodedResults(R_Write_Enable)
 
-  io.ebreak := decodedResults(Is_Ebreak) && state === s_valid
+  // io.ebreak := decodedResults(Is_Ebreak) && state === s_valid
+  io.ebreak := decodedResults(Is_Ebreak) && io.in.valid
 
-  io.flush_icache := decodedResults(Is_fenceI) && state === s_valid
+  // io.flush_icache := decodedResults(Is_fenceI) && state === s_valid
+  io.flush_icache := decodedResults(Is_fenceI) && io.in.valid
 
   io.out.bits.mem_read_enable := decodedResults(Read_En)
 
@@ -156,15 +158,19 @@ class Decoder extends Module {
   //     Inst_Type_Enum.B_Type -> ((io.lsu_w_addr === rs1 || io.lsu_w_addr === rs2) && rs1 =/= 0.U && rs2 =/= 0.U)
   //   )
   // )
+
+  io.out.valid := io.in.valid && ~conflict
+  io.in.ready := io.out.ready && ~conflict
+
   
-  io.out.valid := state === s_valid && ~conflict
-  state := MuxLookup(state, s_idle)(
-    Seq(
-      s_idle -> Mux(io.in.valid  && ~io.flush_pipeline, Mux(conflict,s_conflict,s_valid), s_idle),//TODO:这里有bug，如果一直conflict，会一直ready
-      s_conflict -> Mux(io.flush_pipeline,s_idle,Mux(conflict,s_conflict,s_valid)),
-      s_valid -> Mux(io.out.ready || io.flush_pipeline, s_idle, s_valid)
-    )
-  )
+  // io.out.valid := state === s_valid && ~conflict
+  // state := MuxLookup(state, s_idle)(
+  //   Seq(
+  //     s_idle -> Mux(io.in.valid  && ~io.flush_pipeline, Mux(conflict,s_conflict,s_valid), s_idle),//TODO:这里有bug，如果一直conflict，会一直ready
+  //     s_conflict -> Mux(io.flush_pipeline,s_idle,Mux(conflict,s_conflict,s_valid)),
+  //     s_valid -> Mux(io.out.ready || io.flush_pipeline, s_idle, s_valid)
+  //   )
+  // )
 
   //Trace
   val trace_decoder = Module(new TRACE_DECODER)
