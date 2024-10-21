@@ -12,6 +12,7 @@ class EXU extends Module {
   val io = IO(new Bundle {
     val in   = Flipped(Decoupled(new DecoderO))
     val reg_addr = Output(UInt(5.W))
+    val pc = (Decoupled(UInt(CVAL.DLEN.W)))
     // val reg1 = (new RegReadIO)
     // val reg2 = (new RegReadIO)
     // val csr  = (new CSRReadIO)
@@ -33,6 +34,7 @@ class EXU extends Module {
   io.out.bits.csrrw            := io.in.bits.csrrw
 
   io.reg_addr:=io.in.bits.rd
+  io.pc.bits:=io.in.bits.pc
 
 
   // val src1 = io.reg1.data
