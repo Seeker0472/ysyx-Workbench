@@ -145,7 +145,7 @@ class Decoder extends Module {
       Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1&&rs1 =/= 0.U) || (io.lsu_w_addr === rs2&&rs2 =/= 0.U)) || ((io.exu_w_addr === rs1&&rs1 =/= 0.U) || (io.exu_w_addr === rs2&&rs2 =/= 0.U))  ),
       Inst_Type_Enum.I_Type -> ((io.lsu_w_addr === rs1) && rs1 =/= 0.U)||((io.exu_w_addr === rs1) && rs1 =/= 0.U),
       Inst_Type_Enum.S_Type -> ((io.lsu_w_addr === rs2) && rs2 =/= 0.U)||((io.exu_w_addr === rs2) && rs2 =/= 0.U),
-      Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1&&rs1 =/= 0.U) || (io.lsu_w_addr === rs2&&rs2 =/= 0.U)) || ((io.exu_w_addr === rs1&&rs1 =/= 0.U) || (io.exu_w_addr === rs2&&rs2 =/= 0.U))  ),
+      Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1&&rs1 =/= 0.U) || (io.lsu_w_addr === rs2&&rs2 =/= 0.U)) || ((io.exu_w_addr === rs1&&rs1 =/= 0.U) || (io.exu_w_addr === rs2&&rs2 =/= 0.U))  )
     )
   )
   // val conflict = MuxLookup(Type, false.B)(
