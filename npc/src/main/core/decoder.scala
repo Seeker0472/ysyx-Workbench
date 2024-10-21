@@ -21,6 +21,9 @@ class Decoder extends Module {
     val ebreak         = Output(Bool())
     val flush_icache   = Output(Bool())
     val flush_pipeline = Input(Bool())
+    val reg1 = (new RegReadIO)
+    val reg2 = (new RegReadIO)
+    val csr  = (new CSRReadIO)
     val out            = Decoupled(new DecoderO)
   })
   //state_machine
@@ -98,8 +101,15 @@ class Decoder extends Module {
     )
   )
   //数据
-  io.out.bits.rs1 := rs1
-  io.out.bits.rs2 := rs2
+  // io.out.bits.rs1 := rs1
+  // io.out.bits.rs2 := rs2
+  io.reg1.addr := rs1
+  io.reg2.addr := rs2
+  io.csr.addr  := imm
+  io.out.bits.src1:= io.reg1.data
+  io.out.bits.src2:=io.reg2.data
+  io.out.bits.csr_data:=io.csr.data
+
   io.out.bits.rd  := rd
   io.out.bits.imm := imm
 

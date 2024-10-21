@@ -11,9 +11,9 @@ import chisel3.util.MuxLookup
 class EXU extends Module {
   val io = IO(new Bundle {
     val in   = Flipped(Decoupled(new DecoderO))
-    val reg1 = (new RegReadIO)
-    val reg2 = (new RegReadIO)
-    val csr  = (new CSRReadIO)
+    // val reg1 = (new RegReadIO)
+    // val reg2 = (new RegReadIO)
+    // val csr  = (new CSRReadIO)
     val out  = (Decoupled(new EXU_O))
   })
   io.in.ready  := io.out.ready
@@ -31,11 +31,15 @@ class EXU extends Module {
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
 
-  io.reg1.addr := io.in.bits.rs1
-  io.reg2.addr := io.in.bits.rs2
-  io.csr.addr  := io.in.bits.imm
-  val src1 = io.reg1.data
-  val src2 = io.reg2.data
+  // io.reg1.addr := io.in.bits.rs1
+  // io.reg2.addr := io.in.bits.rs2
+  // io.csr.addr  := io.in.bits.imm
+  // val src1 = io.reg1.data
+  // val src2 = io.reg2.data
+  // val csr_data = io.csr.data
+  val src1 = io.in.bits.src1
+  val src2 = io.in.bits.src2
+  val csr_data = io.in.bits.csr_data
 
   val alu_val1 = Mux(io.in.bits.alu_use_pc, io.in.bits.pc, src1)
   val alu_val2 = Mux(io.in.bits.alu_use_Imm_2, io.in.bits.imm, src2)
@@ -54,7 +58,7 @@ class EXU extends Module {
   alu.io.in.alu_op_type := io.in.bits.alu_op_type
 
   //csrr_alu
-  val or = io.csr.data | src1
+  val or = csr_data | src1
   val csr_alu_res = MuxLookup(io.in.bits.csr_alu_type, or)(
     Seq(
       CSRALU_Type.or -> or,
@@ -64,7 +68,7 @@ class EXU extends Module {
   io.out.bits.alu_result  := alu.io.result //alu的运算结果
   io.out.bits.src2        := src2
   io.out.bits.csr_alu_res := csr_alu_res
-  io.out.bits.csr_val     := io.csr.data
+  io.out.bits.csr_val     := csr_data
   io.out.bits.go_branch   := go_branch && io.in.bits.is_branch
 
   //Trace

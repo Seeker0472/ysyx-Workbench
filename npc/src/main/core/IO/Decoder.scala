@@ -24,8 +24,11 @@ object CSRALU_Type extends ChiselEnum {
 class DecoderO extends Bundle {
   val pc = Output(UInt(CVAL.DLEN.W))
 
-  val rs1   = Output(UInt(5.W))
-  val rs2   = Output(UInt(5.W))
+  // val rs1   = Output(UInt(5.W))
+  // val rs2   = Output(UInt(5.W))
+  val src1   = Output(UInt(32.W))
+  val src2   = Output(UInt(32.W))
+  val csr_data   = Output(UInt(32.W))
   val rd    = Output(UInt(5.W))
   val func3 = Output(UInt(3.W))
   val imm   = Output(UInt(CVAL.DLEN.W))
