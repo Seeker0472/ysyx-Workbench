@@ -16,6 +16,7 @@ class HazardUnit extends Module {
   val decoder_hazard = (io.decoder_pc.bits =/= io.wbu.bits) && io.decoder_pc.valid
   val exu_hazard =(io.exu_pc.bits=/= io.wbu.bits)&& io.exu_pc.valid
   io.ifu_pc.ready     := true.B
+  io.exu_pc.ready     := true.B
   io.decoder_pc.ready := true.B
   io.wbu.ready        := true.B
 
