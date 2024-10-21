@@ -62,7 +62,9 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_J:                   immJ(); break;
     case TYPE_R: src1R(); src2R();         break;
     case TYPE_B: src1R(); src2R(); immB(); break;
-  }
+    }
+    void trace_pc(uint32_t pc);
+    IFDEF(CONFIG_PC_TRACE, trace_pc(s->pc););
 }
 
 int32_t mulh(int32_t src1, int32_t src2) {
