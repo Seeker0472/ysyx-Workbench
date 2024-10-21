@@ -32,7 +32,7 @@ class EXU extends Module {
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
 
-  io.out.reg_addr:=io.in.bits.rd
+  io.reg_addr:=io.in.bits.rd
 
 
   // val src1 = io.reg1.data
