@@ -31,8 +31,8 @@ class ypc extends Module {
   StageConnect(ifu.io.out, decoder.io.in, "pipeline")
   br_han.io.halt      := decoder.io.ebreak
   ifu.io.flush_icache := decoder.io.flush_icache
-  decoder.io.reg0 <> reg.io.Rread1
-  decoder.io.reg1 <> reg.io.Rread2
+  decoder.io.reg1 <> reg.io.Rread1
+  decoder.io.reg2 <> reg.io.Rread2
   decoder.io.csr <> reg.io.CSRread
   hazard_unit.io.decoder_pc <> decoder.io.decoder_pc
   hazard_unit.io.flush <> decoder.io.flush_pipeline
