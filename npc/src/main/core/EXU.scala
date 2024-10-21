@@ -16,11 +16,11 @@ class EXU extends Module {
     // val reg1 = (new RegReadIO)
     // val reg2 = (new RegReadIO)
     // val csr  = (new CSRReadIO)
-    val flush = Input(Bool())
+    val flush_pipeline = Input(Bool())
     val out  = (Decoupled(new EXU_O))
   })
   io.in.ready  := io.out.ready
-  io.out.valid := io.in.valid
+  io.out.valid := io.in.valid&&~io.flush_pipeline
   //pass_throughs
   io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
   io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
