@@ -35,6 +35,7 @@ class EXU extends Module {
 
   io.reg_addr:=io.in.bits.rd
   io.pc.bits:=io.in.bits.pc
+  io.pc.valid:=io.in.valid
 
 
   // val src1 = io.reg1.data
