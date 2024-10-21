@@ -20,7 +20,7 @@ class EXU extends Module {
     val out  = (Decoupled(new EXU_O))
   })
   io.in.ready  := io.out.ready
-  io.out.valid := io.in.valid&&~io.flush_pipeline
+  io.out.valid := io.in.valid && ~io.flush_pipeline
   //pass_throughs
   io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
   io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
