@@ -8,9 +8,9 @@ typedef struct {
 #define BUF_SIZE 10
 icache_Node itbuf[BUF_SIZE];
 int ptail = 0;
-bool full= false;
+bool buff_full= false;
 word_t find_inst(vaddr_t addr) {
-  if (likely(full)) {
+  if (likely(buff_full)) {
     for (int i = 0; i < BUF_SIZE - 1; i++) {
       if (itbuf[i].addr == addr)
         return itbuf[i].inst;
@@ -27,7 +27,7 @@ word_t find_inst(vaddr_t addr) {
 void insert_icache_result(paddr_t addr, word_t inst) {
   itbuf[ptail].addr = addr;
   itbuf[ptail].inst = inst;
-  if (unlikely(!full && ptail == BUF_SIZE - 1))
-    full=true;
+  if (unlikely(!buff_full && ptail == BUF_SIZE - 1))
+    buff_full=true;
   ptail=(ptail+1)%BUF_SIZE;
 }
