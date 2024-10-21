@@ -13,6 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "common.h"
 #include "local-include/reg.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
@@ -41,30 +42,36 @@ enum {
   TYPE_B
 };
 
-#define src1R() do { *src1 = R(rs1); } while (0)
-#define src2R() do { *src2 = R(rs2); } while (0)
+#define src1R() do { *src1 = R(rs1);use_rs1=true; } while (0)
+#define src2R() do { *src2 = R(rs2);use_rs2=true; } while (0)
 #define immI() do { *imm = SEXT(BITS(i, 31, 20), 12); } while(0)
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 #define immJ() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 20) | (BITS(i, 19, 12) << 12) | (BITS(i, 20, 20) << 11) | (BITS(i, 30, 21) << 1 ); } while(0)
 #define immB() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 12) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8 ) << 1); } while(0)
+#define useRD() do { use_rd=true; } while (0)
+
 //^^^用于从指令中抽取出立即数W
-//TODO: Set Trace Here-----From Decode can get pc!
+// TODO: Set Trace Here-----From Decode can get pc!
+//TODO: Track what to write/read 
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst.val;
   int rs1 = BITS(i, 19, 15);
   int rs2 = BITS(i, 24, 20);
+  bool use_rs1 = false;
+  bool use_rs2 = false;
+  bool use_rd  = false;
   *rd     = BITS(i, 11, 7);
   switch (type) {
-    case TYPE_I: src1R();          immI(); break;
-    case TYPE_U:                   immU(); break;
-    case TYPE_S: src1R(); src2R(); immS(); break;
-    case TYPE_J:                   immJ(); break;
-    case TYPE_R: src1R(); src2R();         break;
-    case TYPE_B: src1R(); src2R(); immB(); break;
+    case TYPE_I: src1R();          immI(); useRD(); break;
+    case TYPE_U:                   immU(); useRD(); break;
+    case TYPE_S: src1R(); src2R(); immS();          break;
+    case TYPE_J:                   immJ(); useRD(); break;
+    case TYPE_R: src1R(); src2R();         useRD(); break;
+    case TYPE_B: src1R(); src2R(); immB();          break;
     }
-    void trace_pc(uint32_t pc);
-    IFDEF(CONFIG_PC_TRACE, trace_pc(s->pc););
+    void trace_pc(vaddr_t pc,word_t inst,int rs1,int rs2,int rd);
+    IFDEF(CONFIG_PC_TRACE, trace_pc(s->pc,s->isa.inst.val,use_rs1?rs1:0,use_rs2?rs2:0,use_rd?*rd:0););
 }
 
 int32_t mulh(int32_t src1, int32_t src2) {
