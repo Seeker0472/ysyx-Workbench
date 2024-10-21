@@ -16,6 +16,7 @@ class EXU extends Module {
     // val reg1 = (new RegReadIO)
     // val reg2 = (new RegReadIO)
     // val csr  = (new CSRReadIO)
+    val flush = Input(Bool())
     val out  = (Decoupled(new EXU_O))
   })
   io.in.ready  := io.out.ready

@@ -39,7 +39,7 @@ class IFU extends Module {
   icache.io.addr_valid := state === s_fetching
 
   io.ifu_pc.bits  := pc
-  io.ifu_pc.valid := true.B //TODO
+  io.ifu_pc.valid := state === s_valid
 
   //out
   io.out.valid      := state === s_valid
