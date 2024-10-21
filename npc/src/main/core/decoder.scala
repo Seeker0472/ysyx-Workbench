@@ -162,7 +162,7 @@ class Decoder extends Module {
   
   // io.out.valid := state === s_valid && ~conflict
   io.in.ready := io.out.ready && ~conflict
-  io.out.valid := io.in.valid && ~io.flush_pipeline
+  io.out.valid := io.in.valid && ~io.flush_pipeline && ~conflict
 
   // state := MuxLookup(state, s_idle)(
   //   Seq(
