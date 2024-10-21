@@ -179,7 +179,8 @@ class Decoder extends Module {
   trace_decoder.io.mem_W := decodedResults(Write_En) //MEM_Write
   trace_decoder.io.calc  := decodedResults(ALUOp_Gen) =/= ALU_Op.inv //calc instr
   trace_decoder.io.csr   := decodedResults(CSRRW) //scrrw/scrrs/mert/ecall
-  trace_decoder.io.valid := state === s_valid && (io.out.ready || io.flush_pipeline)
+  // trace_decoder.io.valid := state === s_valid && (io.out.ready || io.flush_pipeline)
+  trace_decoder.io.valid := io.in.valid && (io.out.ready || io.flush_pipeline)
 
 }
 //DONE:译码出来的指令类型
