@@ -28,9 +28,9 @@ class Decoder extends Module {
     val out            = Decoupled(new DecoderO)
   })
   //state_machine
-  // val s_idle :: s_valid :: s_conflict :: Nil = Enum(3)//TODO:del valid
+  val s_idle :: s_valid :: s_conflict :: Nil = Enum(3)//TODO:del valid
 
-  // val state = RegInit(s_idle)
+  val state = RegInit(s_idle)
 
   io.decoder_pc.bits  := io.in.bits.pc
   io.decoder_pc.valid := io.in.valid || state =/= s_idle
