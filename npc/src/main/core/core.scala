@@ -35,9 +35,9 @@ class ypc extends Module {
   hazard_unit.io.flush <> decoder.io.flush_pipeline
 //exc
   StageConnect(decoder.io.out, exu.io.in, "multi")
-  exu.io.reg1 <> reg.io.Rread1
-  exu.io.reg2 <> reg.io.Rread2
-  exu.io.csr <> reg.io.CSRread
+  decoder.io.reg1 <> reg.io.Rread1
+  decoder.io.reg2 <> reg.io.Rread2
+  decoder.io.csr <> reg.io.CSRread
 //lsu
   lsu.io.axi <> axi_arbiter.io.c2
   StageConnect(exu.io.out, lsu.io.in, "pipeline")
