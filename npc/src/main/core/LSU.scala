@@ -152,18 +152,18 @@ class LSU extends Module {
 
   val check_mem = Module(new DPI_C_CHECK)
   check_mem.io.addr  := io.in.bits.alu_result
-  check_mem.io.ren   := io.in.bits.mem_read_enable && io.in.valid && state === s_idle
+  check_mem.io.ren   := io.in.bits.mem_read_enable && io.in.valid && state === s_wait_valid
   check_mem.io.wdata := wd_move
   check_mem.io.wmask := mask_move
-  check_mem.io.wen   := io.in.bits.mem_write_enable && io.in.valid && state === s_idle
+  check_mem.io.wen   := io.in.bits.mem_write_enable && io.in.valid && state === s_wait_valid
   check_mem.io.len   := mem_read_size
   check_mem.io.clock := clock
 
   val trace_lsu = Module(new TRACE_LSU)
   trace_lsu.io.addr    := io.in.bits.alu_result
-  trace_lsu.io.w_start := io.in.bits.mem_write_enable && io.in.valid && state === s_idle
+  trace_lsu.io.w_start := io.in.bits.mem_write_enable && io.in.valid && state === s_wait_valid
   trace_lsu.io.w_end   := io.axi.WR.valid
-  trace_lsu.io.r_start := io.in.bits.mem_read_enable && io.in.valid && state === s_idle
+  trace_lsu.io.r_start := io.in.bits.mem_read_enable && io.in.valid && state === s_wait_valid
   trace_lsu.io.r_end   := io.axi.RD.valid
   trace_lsu.io.clock   := clock
 }
