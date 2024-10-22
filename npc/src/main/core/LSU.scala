@@ -19,6 +19,7 @@ class LSU extends Module {
   val sig_awvalid                                      = RegInit(false.B)
   val sig_arvalid                                      = RegInit(false.B)
   val sig_wvalid                                       = RegInit(false.B)
+  //由于四极流水，不用处理flush——pipeline
   // val result_inv_reg = RegInit(false.B)
   // val result_inv = result_inv_reg||io.flush_pipeline
 
