@@ -10,20 +10,34 @@ class LSU extends Module {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
     val axi = Flipped(new AXIIO())
+    val flush_pipeline = Input(Bool())
     val reg_addr = Output(UInt(CVAL.REG_ADDR_LEN.W))
   })
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_valid :: Nil = Enum(4)
+  val s_idle :: s_r_busy :: s_w_busy :: s_wait_valid::s_valid :: Nil = Enum(5)
   val state                                            = RegInit(s_idle)
   val sig_awvalid                                      = RegInit(false.B)
   val sig_arvalid                                      = RegInit(false.B)
   val sig_wvalid                                       = RegInit(false.B)
+  val result_inv_reg = RegInit(false.B)
+  val result_inv = result_inv_reg||io.flush_pipeline
+
+  when(state===s_idle){
+    result_inv_reg:=false.B
+  }
+  when(state=/=s_idle && io.flush_pipeline){
+    result_inv_reg:=true.B
+  }
+
+  val mem_rw = io.in.bits.mem_read_enable||io.in.bits.mem_write_enable
+
   //reg_w_addr depends on valid/write?
-  io.reg_addr := Mux(io.in.bits.reg_w_enable&&io.in.valid,io.in.bits.reg_w_addr,0.U)
+  io.reg_addr := Mux(io.in.bits.reg_w_enable&&state=/=s_idle,io.in.bits.reg_w_addr,0.U)
 
   io.in.ready := state === s_idle
 
-  io.out.valid := state === s_valid
+  io.out.valid := (state === s_valid || (state === s_wait_valid && ~mem_rw)) && ~result_inv
+
   //pass_throughs
   io.out.bits.pc              := io.in.bits.pc
   io.out.bits.ecall           := io.in.bits.ecall
@@ -39,16 +53,25 @@ class LSU extends Module {
   io.out.bits.mret            := io.in.bits.mret
   io.out.bits.imm             := io.in.bits.imm
   //state
+  // state := MuxLookup(state, s_idle)(
+  //   List(
+  //     s_idle -> Mux(
+  //       (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
+  //       Mux(io.in.bits.mem_write_enable, s_w_busy, s_r_busy),
+  //       Mux(io.in.valid, s_valid, s_idle)
+  //     ),
+  //     s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
+  //     s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),//TODO:Maybe don't need to wait error result?
+  //     s_valid -> Mux(io.out.ready, s_idle, s_valid)
+  //   )
+  // )
   state := MuxLookup(state, s_idle)(
     List(
-      s_idle -> Mux(
-        (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
-        Mux(io.in.bits.mem_write_enable, s_w_busy, s_r_busy),
-        Mux(io.in.valid, s_valid, s_idle)
-      ),
+      s_idle -> Mux(io.in.valid,s_wait_valid,s_idle),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
       s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),//TODO:Maybe don't need to wait error result?
-      s_valid -> Mux(io.out.ready, s_idle, s_valid)
+      s_wait_valid -> Mux(io.in.bits.mem_read_enable||io.in.bits.mem_write_enable, Mux(io.in.bits.mem_read_enable,s_r_busy,s_w_busy), Mux(io.out.ready||result_inv,s_idle,s_valid)),
+      s_valid -> Mux(io.out.ready||result_inv, s_idle, s_valid)
     )
   )
 
@@ -122,7 +145,7 @@ class LSU extends Module {
   io.axi.WR.ready      := true.B
   //暂时忽略错误处理
 
-  val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值//TODO:directly link into mem_read result to Reduce the use of reg??!
+  val read_res = Reg(UInt(CVAL.DLEN.W)) //读取的值
   io.out.bits.mem_read_result := read_res
   read_res                    := mem_read_result
 

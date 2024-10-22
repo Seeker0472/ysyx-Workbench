@@ -22,6 +22,12 @@ object StageConnect {
         right.valid := RegEnable(left.valid , right.ready||flush)//Problem?
         // right.valid := RegNext(left.valid && right.ready)//Problem?
 
+      case "pipeline_state" =>
+        right.bits <> RegEnable(left.bits, left.valid && right.ready)
+        left.ready := right.ready
+        right.valid := left.valid && ~flush
+        // right.valid := RegNext(left.valid && right.ready)//Problem?
+
       // case "ooo" =>
       //   right <> Queue(left, 16)
 

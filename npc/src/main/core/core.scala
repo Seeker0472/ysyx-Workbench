@@ -47,7 +47,9 @@ class ypc extends Module {
   // decoder.io.csr <> reg.io.CSRread
 //lsu
   lsu.io.axi <> axi_arbiter.io.c2
-  StageConnect(exu.io.out, lsu.io.in,flush, "pipeline")
+  lsu.io.flush_pipeline <> flush
+  StageConnect(exu.io.out, lsu.io.in,flush, "pipeline_state")
+//pipeline inside the module with state machine
 
 //wb
   StageConnect(lsu.io.out, wbu.io.in,flush, "multi")
