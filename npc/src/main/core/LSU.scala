@@ -78,19 +78,19 @@ class LSU extends Module {
 
   sig_awvalid := MuxLookup(sig_awvalid, false.B) {
     Seq(
-      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable && io.in.valid, true.B, false.B),
+      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable , true.B, false.B),
       true.B -> Mux(io.axi.WA.ready, false.B, true.B)
     )
   }
   sig_arvalid := MuxLookup(sig_arvalid, false.B) {
     Seq(
-      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_read_enable && io.in.valid, true.B, false.B),
+      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_read_enable , true.B, false.B),
       true.B -> Mux(io.axi.RA.ready, false.B, true.B)
     )
   }
   sig_wvalid := MuxLookup(sig_wvalid, false.B) {
     Seq(
-      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable && io.in.valid, true.B, false.B),
+      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable , true.B, false.B),
       true.B -> Mux(io.axi.WD.ready, false.B, true.B)
     )
   }
