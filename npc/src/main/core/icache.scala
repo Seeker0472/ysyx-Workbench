@@ -102,7 +102,7 @@ class icache extends Module {
   when(io.axi.RD.valid && state === s_wait_data) {
     cachetag(fetch_index) := Cat(1.U(1.W), fetch_tag)
     // cache(fetch_index)    := Cat(data_read, cache(fetch_index)(block_size * 8 - 1, 32))
-    cache.io.data_write    := Cat(data_read, cache.io.addr_read(block_size * 8 - 1, 32))
+    cache.io.data_write    := Cat(data_read, (cache.io.addr_read)(block_size * 8 - 1, 32))
     cache.io.wen:=true.B
   }
 
