@@ -99,10 +99,10 @@ class icache extends Module {
   io.inst_valid := io.addr_valid && state === s_idle && hit //TODO : return the hit data instantly!!!!!!!
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
+  cache.io.data_write    := Cat(data_read, (cache.io.data_read)(block_size * 8 - 1, 32))
   when(io.axi.RD.valid && state === s_wait_data) {
     cachetag(fetch_index) := Cat(1.U(1.W), fetch_tag)
     // cache(fetch_index)    := Cat(data_read, cache(fetch_index)(block_size * 8 - 1, 32))
-    cache.io.data_write    := Cat(data_read, (cache.io.data_read)(block_size * 8 - 1, 32))
     cache.io.wen:=true.B
   }
 
