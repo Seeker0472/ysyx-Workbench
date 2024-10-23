@@ -81,7 +81,7 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
   } else {
     record_axi_write("Other", addr, wmask, wdata);
   }
-  Log("Difftest Stepping");
+  // Log("Difftest Stepping");
   difftest_step = true;
 #else
   //run with npc
