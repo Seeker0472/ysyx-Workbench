@@ -6,28 +6,28 @@ typedef struct {
   word_t inst;
 } icache_Node;
 #define BUF_SIZE 10
-icache_Node ibuf[BUF_SIZE];
+icache_Node itbuf[BUF_SIZE];
 int ptail = 0;
-bool full= false;
+bool buff_full= false;
 word_t find_inst(vaddr_t addr) {
-  if (likely(full)) {
+  if (likely(buff_full)) {
     for (int i = 0; i < BUF_SIZE - 1; i++) {
-      if (ibuf[i].addr == addr)
-        return ibuf[i].inst;
+      if (itbuf[i].addr == addr)
+        return itbuf[i].inst;
     }
   } else {
     for (int i = 0; i < ptail; i++) {
-      if (ibuf[i].addr == addr)
-        return ibuf[i].inst;
+      if (itbuf[i].addr == addr)
+        return itbuf[i].inst;
     }
   }
 //   Log("Should NOT reach here!!");
   return 0;
 }
 void insert_icache_result(paddr_t addr, word_t inst) {
-  ibuf[ptail].addr = addr;
-  ibuf[ptail].inst = inst;
-  if (unlikely(!full && ptail == BUF_SIZE - 1))
-    full=true;
+  itbuf[ptail].addr = addr;
+  itbuf[ptail].inst = inst;
+  if (unlikely(!buff_full && ptail == BUF_SIZE - 1))
+    buff_full=true;
   ptail=(ptail+1)%BUF_SIZE;
 }

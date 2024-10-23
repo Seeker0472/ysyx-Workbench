@@ -46,7 +46,7 @@ paddr_t host_to_guest(uint8_t *haddr);
 #define PHY_IN(haddr,phy_addr, start, end) ((haddr-phy_addr >= 0) && (haddr-phy_addr <= (end)-(start)))
 
 static inline bool in_pmem(paddr_t addr) {
-// #ifdef TARGET_SHARE
+#ifdef CONFIG_TARGET_SHARE
   if (MEM_IN(addr, MROM_BASE, MROM_TOP)) // mrom
     return true;
   if (MEM_IN(addr, SRAM_BASE, SRAM_TOP)) // sram
@@ -57,7 +57,7 @@ static inline bool in_pmem(paddr_t addr) {
     return true;
   if (MEM_IN(addr, PSRAM_BASE, PSRAM_TOP)) // psram
     return true;
-// #endif
+#endif
   return addr - CONFIG_MBASE < CONFIG_MSIZE;
 }
 

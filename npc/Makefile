@@ -44,7 +44,7 @@ NPC_LDFLAGS += -lreadline #readline
 
 NPC_LDFLAGS_SOC += $(NPC_LDFLAGS) -L${NVBOARD_HOME}/build/ ${NVBOARD_HOME}/build/nvboard.a -lSDL2 -lSDL2_image -lSDL2_ttf #NVBoard
 
-WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd
+WAVEFORM_DIR := ${NPC_HOME}/build/waveform.vcd ${NPC_HOME}/build/wave.gtkw
 
 include $(NPC_HOME)/scripts/conf.mk
 

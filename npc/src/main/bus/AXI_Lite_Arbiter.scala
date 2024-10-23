@@ -25,8 +25,8 @@ class AXI_Lite_Arbiter extends Module {
       ),
       s_c1_wait -> Mux(xbar.io.in.RA.ready, s_c1_busy, s_c1_wait),
       s_c2_wait -> Mux(xbar.io.in.RA.ready, s_c2_busy, s_c2_wait),
-      s_c1_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c1_busy), 
-      s_c2_busy -> Mux(xbar.io.in.RD.bits.last, s_idle, s_c2_busy)
+      s_c1_busy -> Mux(xbar.io.in.RD.bits.last&&xbar.io.in.RD.valid, s_idle, s_c1_busy), 
+      s_c2_busy -> Mux(xbar.io.in.RD.bits.last&&xbar.io.in.RD.valid, s_idle, s_c2_busy)
     )
   )
 
