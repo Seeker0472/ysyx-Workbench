@@ -10,40 +10,48 @@ class raw_core extends Module {
   })
   val ypc = Module(new ypc())
 
-  val s_idle :: s_fetching :: s_r_fin :: s_w_fin :: Nil = Enum(4)
+  val s_r_idle :: s_r_fetching :: s_r_fin  :: Nil = Enum(3)
 
-  val state = RegInit(s_idle)
+  val s_w_idle :: s_w_fin ::Nil = Enum(2)
+
+  val rstate = RegInit(s_r_idle)
+  val wstate = RegInit(s_w_idle)
   val rlen  = Reg(UInt(8.W))
   val rdata = RegInit(0.U(32.W))
   val raddr = RegInit(0.U(32.W))
   val waddr = RegInit(0.U(32.W))
 
-  state := MuxLookup(state, s_idle)(
+  rstate := MuxLookup(rstate, s_r_idle)(
     Seq(
-      s_idle -> Mux(ypc.io.master.awvalid, s_w_fin, Mux(ypc.io.master.arvalid, s_fetching, s_idle)),
-      s_fetching -> Mux(rlen === 0.U, s_r_fin, s_fetching),
-      s_r_fin -> Mux(ypc.io.master.rready, s_idle, s_r_fin),
-      s_w_fin -> Mux(ypc.io.master.wready, s_idle, s_w_fin)
+      s_r_idle ->  Mux(ypc.io.master.arvalid, s_r_fetching, s_r_idle),
+      s_r_fetching -> Mux(rlen === 0.U, s_r_fin, s_r_fetching),
+      s_r_fin -> Mux(ypc.io.master.rready, s_r_idle, s_r_fin),
+    )
+  )
+  wstate := MuxLookup(wstate, s_w_idle)(
+    Seq(
+      s_w_idle ->  Mux(ypc.io.master.awvalid, s_w_fin, s_w_idle),
+      s_w_fin -> Mux(ypc.io.master.bready, s_w_idle, s_w_fin),
     )
   )
 
-  when(state === s_idle && ypc.io.master.arvalid) {
+  when(rstate === s_r_idle && ypc.io.master.arvalid) {
     rlen  := ypc.io.master.arlen
     raddr := ypc.io.master.araddr
   }
 
-  when(state === s_idle && ypc.io.master.awvalid) {
+  when(wstate === s_w_idle && ypc.io.master.awvalid) {
     waddr := ypc.io.master.awaddr
   }
 
-  when(state === s_fetching && ypc.io.master.rready) {
+  when(rstate === s_r_fetching && ypc.io.master.rready) {
     rlen  := rlen - 1.U
     raddr := raddr + 4.U
   }
 
   //ypc.io.master.rdata  := rdata
-  ypc.io.master.rvalid := RegNext(state === s_fetching)
-  ypc.io.master.rlast  := RegNext(rlen === 0.U && state === s_fetching)
+  ypc.io.master.rvalid := RegNext(rstate === s_r_fetching)
+  ypc.io.master.rlast  := RegNext(rlen === 0.U && rstate === s_r_fetching)
 
   ypc.io.slave.awvalid := 0.U
   ypc.io.slave.awaddr  := 0.U
@@ -64,12 +72,12 @@ class raw_core extends Module {
   ypc.io.slave.arburst := 0.U
   ypc.io.slave.rready  := 0.U
 
-  ypc.io.master.awready := state === s_idle
+  ypc.io.master.awready := wstate === s_r_idle
   ypc.io.master.wready  := 1.U
   ypc.io.master.bvalid  := 1.U
   ypc.io.master.bresp   := 0.U
   ypc.io.master.bid     := 0.U
-  ypc.io.master.arready := state === s_idle
+  ypc.io.master.arready := rstate === s_w_idle
   ypc.io.master.rresp   := 0.U
 
   ypc.io.master.rid := 0.U //TODO!!!
@@ -82,7 +90,7 @@ class raw_core extends Module {
   memrw.io.waddr      := Mux(ypc.io.master.awvalid, ypc.io.master.awaddr, waddr)
   memrw.io.wdata      := ypc.io.master.wdata
   memrw.io.wmask      := ypc.io.master.wstrb
-  memrw.io.read       := state === s_fetching
+  memrw.io.read       := rstate === s_r_fetching
   memrw.io.write      := ypc.io.master.wvalid
   memrw.io.clock      := clock
   ypc.io.master.rdata := memrw.io.data

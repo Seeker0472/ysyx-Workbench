@@ -71,7 +71,7 @@ class LSU extends Module {
       s_idle -> Mux(io.in.valid,s_wait_valid,s_idle),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
       s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),//TODO:Maybe don't need to wait error result?
-      s_wait_valid -> Mux(io.in.bits.mem_read_enable||io.in.bits.mem_write_enable, Mux(io.in.bits.mem_read_enable,s_r_busy,s_w_busy), Mux(io.out.ready,s_idle,s_valid)),
+      s_wait_valid -> Mux(mem_rw, Mux(io.in.bits.mem_read_enable,s_r_busy,s_w_busy), Mux(io.out.ready,s_idle,s_valid)),
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
