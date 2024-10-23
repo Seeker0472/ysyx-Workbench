@@ -39,7 +39,8 @@ class icache extends Module {
 
   // the state machine
   val s_idle :: s_fetching :: s_wait_data :: s_error :: Nil = Enum(4)
-  val state                                                 = RegInit(s_idle)
+
+  val state = RegInit(s_idle)
 
   //Tag and cache
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))

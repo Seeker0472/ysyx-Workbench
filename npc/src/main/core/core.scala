@@ -24,46 +24,40 @@ class ypc extends Module {
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
   val hazard_unit = Module(new HazardUnit())
 
-  val flush = hazard_unit.io.flush
-
+  val flush_pipeline = hazard_unit.io.flush
+  //ifu
+  StageConnect(wbu.io.out, ifu.io.in, flush_pipeline, "pipeline")
   ifu.io.axi <> axi_arbiter.io.c1
   hazard_unit.io.ifu_pc <> ifu.io.ifu_pc
-  hazard_unit.io.exu_pc <> exu.io.pc
-  flush <> ifu.io.flush_pipeline
-//decode_stage
-  StageConnect(ifu.io.out, decoder.io.in, flush, "pipeline")
+  flush_pipeline <> ifu.io.flush_pipeline
+  //decode_stage
+  StageConnect(ifu.io.out, decoder.io.in, flush_pipeline, "pipeline")
   br_han.io.halt      := decoder.io.ebreak
   ifu.io.flush_icache := decoder.io.flush_icache
   decoder.io.reg1 <> reg.io.Rread1
   decoder.io.reg2 <> reg.io.Rread2
   decoder.io.csr <> reg.io.CSRread
   hazard_unit.io.decoder_pc <> decoder.io.decoder_pc
-  flush <> decoder.io.flush_pipeline
-//exc
-  StageConnect(decoder.io.out, exu.io.in, flush, "pipeline")
-  flush <> exu.io.flush_pipeline
-  // decoder.io.reg0 <> reg.io.Rread1
-  // decoder.io.reg1 <> reg.io.Rread2
-  // decoder.io.csr <> reg.io.CSRread
-//lsu
+  flush_pipeline <> decoder.io.flush_pipeline
+  //exu
+  StageConnect(decoder.io.out, exu.io.in, flush_pipeline, "pipeline")
+  flush_pipeline <> exu.io.flush_pipeline
+  hazard_unit.io.exu_pc <> exu.io.pc
+  //lsu
   lsu.io.axi <> axi_arbiter.io.c2
-  // lsu.io.flush_pipeline <> flush
-  StageConnect(exu.io.out, lsu.io.in, flush, "pipeline_state")
-//pipeline inside the module with state machine
+  StageConnect(exu.io.out, lsu.io.in, flush_pipeline, "pipeline_state")
+  //pipeline of lsu inside the module with state machine
 
-//wb
-  StageConnect(lsu.io.out, wbu.io.in, flush, "multi")
+  //wbu
+  StageConnect(lsu.io.out, wbu.io.in, flush_pipeline, "multi")
   wbu.io.csr_mstvec := reg.io.csr_mstvec
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
   hazard_unit.io.wbu <> wbu.io.wbu_pc
-//ifu
-  StageConnect(wbu.io.out, ifu.io.in, flush, "pipeline")
 
   //pipeline sig
   decoder.io.lsu_w_addr <> lsu.io.reg_addr
   decoder.io.exu_w_addr <> exu.io.reg_addr
-  // ifu.io.decoder_pc <> decoder.io.decoder_pc
 
   // axi_connection_master
   axi_arbiter.io.out.WA.ready := io.master.awready

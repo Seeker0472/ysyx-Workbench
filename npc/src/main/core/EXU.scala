@@ -10,12 +10,9 @@ import chisel3.util.MuxLookup
 
 class EXU extends Module {
   val io = IO(new Bundle {
-    val in       = Flipped(Decoupled(new DecoderO))
-    val reg_addr = Output(UInt(5.W))
-    val pc       = (Decoupled(UInt(CVAL.DLEN.W)))
-    // val reg1 = (new RegReadIO)
-    // val reg2 = (new RegReadIO)
-    // val csr  = (new CSRReadIO)
+    val in             = Flipped(Decoupled(new DecoderO))
+    val reg_addr       = Output(UInt(5.W))
+    val pc             = (Decoupled(UInt(CVAL.DLEN.W)))
     val flush_pipeline = Input(Bool())
     val out            = (Decoupled(new EXU_O))
   })
@@ -34,13 +31,13 @@ class EXU extends Module {
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
 
+  //reg to write for this inst->pass to decoder to stall
   io.reg_addr := Mux(io.in.valid, io.in.bits.rd, 0.U)
+
+  //pc of this inst pass to hazard_unit
   io.pc.bits  := io.in.bits.pc
   io.pc.valid := io.in.valid
 
-  // val src1 = io.reg1.data
-  // val src2 = io.reg2.data
-  // val csr_data = io.csr.data
   val src1     = io.in.bits.src1
   val src2     = io.in.bits.src2
   val csr_data = io.in.bits.csr_data
@@ -48,15 +45,15 @@ class EXU extends Module {
   val alu_val1 = Mux(io.in.bits.alu_use_pc, io.in.bits.pc, src1)
   val alu_val2 = Mux(io.in.bits.alu_use_Imm_2, io.in.bits.imm, src2)
 
-  val alu = Module(new ALU())
-
+  //compare_unit
   val comp = Module(new Branch_comp())
-//比较单元的输入
   comp.io.src1  := src1
   comp.io.src2  := src2
   comp.io.func3 := io.in.bits.func3
   val go_branch = comp.io.result
-//alu的输入
+
+  //alu_unit
+  val alu = Module(new ALU())
   alu.io.in.src1        := alu_val1
   alu.io.in.src2        := alu_val2
   alu.io.in.alu_op_type := io.in.bits.alu_op_type
@@ -69,6 +66,8 @@ class EXU extends Module {
       CSRALU_Type.passreg -> src1
     )
   )
+
+  //outputs
   io.out.bits.alu_result  := alu.io.result //alu的运算结果
   io.out.bits.src2        := src2
   io.out.bits.csr_alu_res := csr_alu_res

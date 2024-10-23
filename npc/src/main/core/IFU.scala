@@ -19,12 +19,8 @@ class IFU extends Module {
   })
   // states
   val s_idle :: s_fetching :: s_valid :: s_error :: Nil = Enum(4)
-  val state                                             = RegInit(s_fetching)
 
-  // io.decoder_pc.ready := true.B
-  // decoder_pc.bits
-  //check decoder(EXU) First
-  // if not valid check lsu
+  val state = RegInit(s_fetching)
 
   // icache
   val icache = Module(new icache)
@@ -46,18 +42,11 @@ class IFU extends Module {
   io.out.bits.pc    := pc
   io.out.bits.instr := icache.io.inst
 
-  // in
+  // in-always set to ready
   io.in.ready := true.B
-
-  // when(io.in.valid) {
-  //   pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
-  // }
 
   when(io.out.ready && state === s_valid) {
     pc := pc + 4.U //简单分支预测
-  }
-  when(state === s_idle && io.in.valid) {
-    pc := io.in.bits.n_pc
   }
 
   when(io.rwerr) {
@@ -72,9 +61,13 @@ class IFU extends Module {
       s_error -> s_error
     )
   )
+  //flush
   when(io.flush_pipeline) {
     state := s_idle
-    // pc:=io.in.bits.n_pc
+  }
+  //next cycle of flush signal
+  when(state === s_idle && io.in.valid) {
+    pc := io.in.bits.n_pc
   }
 
   //TRACE_IFU

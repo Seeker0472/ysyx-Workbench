@@ -26,7 +26,7 @@ object StageConnect {
         right.bits <> RegEnable(left.bits, left.valid && right.ready)
         left.ready  := right.ready
         right.valid := left.valid && ~flush
-      // right.valid := RegNext(left.valid && right.ready)//Problem?
+        //pipeline of lsu inside the module with state machine
 
       // case "ooo" =>
       //   right <> Queue(left, 16)
