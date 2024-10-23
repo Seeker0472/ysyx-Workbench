@@ -120,13 +120,13 @@ class cache_data extends Module{
   val io = IO(new Bundle{
     val data_read = Output(UInt((ICACHE_Const.BLOCK_SIZE*8).W))
     val data_write = Input(UInt((ICACHE_Const.BLOCK_SIZE*8).W))
-    val addr = Input(UInt(((math.log(ICACHE_Const.BLOCK_NUM) / math.log(2)).toInt)))
+    val addr = Input(UInt(((math.log(ICACHE_Const.BLOCK_NUM) / math.log(2)).toInt).W))
     val wen= Input(Bool())
   })
   val cache=RegInit(VecInit(Seq.fill(ICACHE_Const.BLOCK_NUM)(0.U((ICACHE_Const.BLOCK_SIZE * 8).W))))
-  io.data_read := cache(addr)
+  io.data_read := cache(io.addr)
   when(wen){
-    cache(addr):=io.data_write
+    cache(io.addr):=io.data_write
   }
 }
 
