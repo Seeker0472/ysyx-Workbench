@@ -44,7 +44,7 @@ class icache extends Module {
 
   //Tag and cache
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
-  val cache = Module(new cache_data())
+  val cache = Module(new icache_data())
   // val cache    = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size * 8).W))))
   
   //flush
@@ -116,7 +116,7 @@ class icache extends Module {
   hit_trace.io.addr  := io.addr
 
 }
-class cache_data extends Module{
+class icache_data extends Module{
   val io = IO(new Bundle{
     val data_read = Output(UInt((ICACHE_Const.BLOCK_SIZE*8).W))
     val data_write = Input(UInt((ICACHE_Const.BLOCK_SIZE*8).W))
