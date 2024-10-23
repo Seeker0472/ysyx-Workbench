@@ -10,28 +10,28 @@ class raw_core extends Module {
   })
   val ypc = Module(new ypc())
 
-  val s_r_idle :: s_r_fetching :: s_r_fin  :: Nil = Enum(3)
+  val s_r_idle :: s_r_fetching :: s_r_fin :: Nil = Enum(3)
 
-  val s_w_idle :: s_w_fin ::Nil = Enum(2)
+  val s_w_idle :: s_w_fin :: Nil = Enum(2)
 
   val rstate = RegInit(s_r_idle)
   val wstate = RegInit(s_w_idle)
-  val rlen  = Reg(UInt(8.W))
-  val rdata = RegInit(0.U(32.W))
-  val raddr = RegInit(0.U(32.W))
-  val waddr = RegInit(0.U(32.W))
+  val rlen   = Reg(UInt(8.W))
+  val rdata  = RegInit(0.U(32.W))
+  val raddr  = RegInit(0.U(32.W))
+  val waddr  = RegInit(0.U(32.W))
 
   rstate := MuxLookup(rstate, s_r_idle)(
     Seq(
-      s_r_idle ->  Mux(ypc.io.master.arvalid, s_r_fetching, s_r_idle),
+      s_r_idle -> Mux(ypc.io.master.arvalid, s_r_fetching, s_r_idle),
       s_r_fetching -> Mux(rlen === 0.U, s_r_fin, s_r_fetching),
-      s_r_fin -> Mux(ypc.io.master.rready, s_r_idle, s_r_fin),
+      s_r_fin -> Mux(ypc.io.master.rready, s_r_idle, s_r_fin)
     )
   )
   wstate := MuxLookup(wstate, s_w_idle)(
     Seq(
-      s_w_idle ->  Mux(ypc.io.master.awvalid, s_w_fin, s_w_idle),
-      s_w_fin -> Mux(ypc.io.master.bready, s_w_idle, s_w_fin),
+      s_w_idle -> Mux(ypc.io.master.awvalid, s_w_fin, s_w_idle),
+      s_w_fin -> Mux(ypc.io.master.bready, s_w_idle, s_w_fin)
     )
   )
 

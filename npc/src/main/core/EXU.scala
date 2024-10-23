@@ -10,14 +10,14 @@ import chisel3.util.MuxLookup
 
 class EXU extends Module {
   val io = IO(new Bundle {
-    val in   = Flipped(Decoupled(new DecoderO))
+    val in       = Flipped(Decoupled(new DecoderO))
     val reg_addr = Output(UInt(5.W))
-    val pc = (Decoupled(UInt(CVAL.DLEN.W)))
+    val pc       = (Decoupled(UInt(CVAL.DLEN.W)))
     // val reg1 = (new RegReadIO)
     // val reg2 = (new RegReadIO)
     // val csr  = (new CSRReadIO)
     val flush_pipeline = Input(Bool())
-    val out  = (Decoupled(new EXU_O))
+    val out            = (Decoupled(new EXU_O))
   })
   io.in.ready  := io.out.ready
   io.out.valid := io.in.valid && ~io.flush_pipeline
@@ -34,16 +34,15 @@ class EXU extends Module {
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
 
-  io.reg_addr:=Mux(io.in.valid,io.in.bits.rd,0.U)
-  io.pc.bits:=io.in.bits.pc
-  io.pc.valid:=io.in.valid
-
+  io.reg_addr := Mux(io.in.valid, io.in.bits.rd, 0.U)
+  io.pc.bits  := io.in.bits.pc
+  io.pc.valid := io.in.valid
 
   // val src1 = io.reg1.data
   // val src2 = io.reg2.data
   // val csr_data = io.csr.data
-  val src1 = io.in.bits.src1
-  val src2 = io.in.bits.src2
+  val src1     = io.in.bits.src1
+  val src2     = io.in.bits.src2
   val csr_data = io.in.bits.csr_data
 
   val alu_val1 = Mux(io.in.bits.alu_use_pc, io.in.bits.pc, src1)

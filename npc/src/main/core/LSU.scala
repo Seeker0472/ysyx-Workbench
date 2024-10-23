@@ -10,34 +10,26 @@ class LSU extends Module {
     val in  = Flipped(Decoupled(new EXU_O))
     val out = Decoupled(new MEMA_O)
     val axi = Flipped(new AXIIO())
+    // four-stage pipeline's lsu don't need flush! 
     // val flush_pipeline = Input(Bool())
     val reg_addr = Output(UInt(CVAL.REG_ADDR_LEN.W))
   })
   //sigs and status
-  val s_idle :: s_r_busy :: s_w_busy :: s_wait_valid::s_valid :: Nil = Enum(5)
-  val state                                            = RegInit(s_idle)
-  val sig_awvalid                                      = RegInit(false.B)
-  val sig_arvalid                                      = RegInit(false.B)
-  val sig_wvalid                                       = RegInit(false.B)
-  //由于四极流水，不用处理flush——pipeline
-  // val result_inv_reg = RegInit(false.B)
-  // val result_inv = result_inv_reg||io.flush_pipeline
+  val s_idle :: s_r_busy :: s_w_busy :: s_wait_valid :: s_valid :: Nil = Enum(5)
 
-  // when(state===s_idle){
-  //   result_inv_reg:=false.B
-  // }
-  // when(state=/=s_idle && io.flush_pipeline){
-  //   result_inv_reg:=true.B
-  // }
+  val state       = RegInit(s_idle)
+  val sig_awvalid = RegInit(false.B)
+  val sig_arvalid = RegInit(false.B)
+  val sig_wvalid  = RegInit(false.B)
 
-  val mem_rw = io.in.bits.mem_read_enable||io.in.bits.mem_write_enable
+  val mem_rw = io.in.bits.mem_read_enable || io.in.bits.mem_write_enable
 
   //reg_w_addr depends on valid/write?
-  io.reg_addr := Mux(io.in.bits.reg_w_enable&&state=/=s_idle,io.in.bits.reg_w_addr,0.U)
+  io.reg_addr := Mux(io.in.bits.reg_w_enable && state =/= s_idle, io.in.bits.reg_w_addr, 0.U)
 
   io.in.ready := state === s_idle
 
-  io.out.valid := (state === s_valid || (state === s_wait_valid && ~mem_rw)) 
+  io.out.valid := (state === s_valid || (state === s_wait_valid && ~mem_rw))
 
   //pass_throughs
   io.out.bits.pc              := io.in.bits.pc
@@ -68,29 +60,33 @@ class LSU extends Module {
   // )
   state := MuxLookup(state, s_idle)(
     List(
-      s_idle -> Mux(io.in.valid,s_wait_valid,s_idle),
+      s_idle -> Mux(io.in.valid, s_wait_valid, s_idle),
       s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
-      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),//TODO:Maybe don't need to wait error result?
-      s_wait_valid -> Mux(mem_rw, Mux(io.in.bits.mem_read_enable,s_r_busy,s_w_busy), Mux(io.out.ready,s_idle,s_valid)),
+      s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy), //TODO:Maybe don't need to wait error result?
+      s_wait_valid -> Mux(
+        mem_rw,
+        Mux(io.in.bits.mem_read_enable, s_r_busy, s_w_busy),
+        Mux(io.out.ready, s_idle, s_valid)
+      ),
       s_valid -> Mux(io.out.ready, s_idle, s_valid)
     )
   )
 
   sig_awvalid := MuxLookup(sig_awvalid, false.B) {
     Seq(
-      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable , true.B, false.B),
+      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable, true.B, false.B),
       true.B -> Mux(io.axi.WA.ready, false.B, true.B)
     )
   }
   sig_arvalid := MuxLookup(sig_arvalid, false.B) {
     Seq(
-      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_read_enable , true.B, false.B),
+      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_read_enable, true.B, false.B),
       true.B -> Mux(io.axi.RA.ready, false.B, true.B)
     )
   }
   sig_wvalid := MuxLookup(sig_wvalid, false.B) {
     Seq(
-      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable , true.B, false.B),
+      false.B -> Mux(state === s_wait_valid && io.in.bits.mem_write_enable, true.B, false.B),
       true.B -> Mux(io.axi.WD.ready, false.B, true.B)
     )
   }
@@ -152,16 +148,16 @@ class LSU extends Module {
 
   val check_mem = Module(new DPI_C_CHECK)
   check_mem.io.addr  := io.in.bits.alu_result
-  check_mem.io.ren   := io.in.bits.mem_read_enable  && state === s_wait_valid
+  check_mem.io.ren   := io.in.bits.mem_read_enable && state === s_wait_valid
   check_mem.io.wdata := wd_move
   check_mem.io.wmask := mask_move
-  check_mem.io.wen   := io.in.bits.mem_write_enable  && state === s_wait_valid
+  check_mem.io.wen   := io.in.bits.mem_write_enable && state === s_wait_valid
   check_mem.io.len   := mem_read_size
   check_mem.io.clock := clock
 
   val trace_lsu = Module(new TRACE_LSU)
   trace_lsu.io.addr    := io.in.bits.alu_result
-  trace_lsu.io.w_start := io.in.bits.mem_write_enable  && state === s_wait_valid
+  trace_lsu.io.w_start := io.in.bits.mem_write_enable && state === s_wait_valid
   trace_lsu.io.w_end   := io.axi.WR.valid
   trace_lsu.io.r_start := io.in.bits.mem_read_enable && state === s_wait_valid
   trace_lsu.io.r_end   := io.axi.RD.valid
