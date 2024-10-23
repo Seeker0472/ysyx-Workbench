@@ -124,9 +124,9 @@ class cache_data extends Module{
     val wen= Input(Bool())
   })
   val cache=RegInit(VecInit(Seq.fill(ICACHE_Const.BLOCK_NUM)(0.U((ICACHE_Const.BLOCK_SIZE * 8).W))))
-  data_read := cache(addr)
+  io.data_read := cache(addr)
   when(wen){
-    cache(addr):=data_write
+    cache(addr):=io.data_write
   }
 }
 
