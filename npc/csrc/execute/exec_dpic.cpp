@@ -4,7 +4,7 @@
 #include "isa.h"
 #include "common.h"
 #include "diftest.h"
-#include "ydb_all.h"
+// #include "ydb_all.h"
 #include "mem.h"
 #include "trace.h"
 
@@ -81,11 +81,17 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
   } else {
     record_axi_write("Other", addr, wmask, wdata);
   }
-
+  // Log("Difftest Stepping");
   difftest_step = true;
 #else
   //run with npc
-  record_axi_write("NPC", addr, wmask, wdata);
+  if (access_type) {
+    record_axi_read("NPC", addr, len);
+  } else {
+    record_axi_write("NPC", addr, wmask, wdata);
+  }
+
+  // record_axi_write("NPC", addr, wmask, wdata);
   if (addr >= 0xa0000000 || addr < 0x80000000)
     difftest_step = true;
 #endif
@@ -93,7 +99,9 @@ extern "C" void check_addr(uint32_t addr, svBit access_type, uint32_t wmask,
 
 
 
-extern "C" void trace_inst(unsigned int inst_now) { inst = inst_now; }
+extern "C" void trace_inst(unsigned int inst_now) {
+//   inst = inst_now; 
+}
 bool wbu_valid = false;
 uint32_t dpic_pc;
 uint32_t dpic_n_pc;
@@ -102,5 +110,6 @@ extern "C" void trace_wbu(unsigned int pc,unsigned int n_pc) {
   // printf("writeback!pc=%x,,%x\n",pc,n_pc);
   wbu_valid = true;
   dpic_pc = pc;
-  dpic_n_pc=n_pc;
+  dpic_n_pc = n_pc;
+  inst = find_inst(pc);
 }

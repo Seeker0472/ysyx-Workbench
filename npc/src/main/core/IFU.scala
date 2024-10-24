@@ -14,17 +14,13 @@ class IFU extends Module {
     val flush_icache   = Input(Bool())
     val axi            = Flipped(new AXIReadIO())
     val rwerr          = Input(Bool())
-    val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W))) 
+    val ifu_pc         = (Decoupled(UInt(CVAL.DLEN.W)))
     val flush_pipeline = Input(Bool())
   })
   // states
   val s_idle :: s_fetching :: s_valid :: s_error :: Nil = Enum(4)
-  val state                                             = RegInit(s_fetching)
 
-  // io.decoder_pc.ready := true.B
-  // decoder_pc.bits
-  //check decoder(EXU) First
-  // if not valid check lsu
+  val state = RegInit(s_fetching)
 
   // icache
   val icache = Module(new icache)
@@ -39,25 +35,18 @@ class IFU extends Module {
   icache.io.addr_valid := state === s_fetching
 
   io.ifu_pc.bits  := pc
-  io.ifu_pc.valid := true.B //TODO
+  io.ifu_pc.valid := true.B
 
   //out
-  io.out.valid      := state === s_valid
+  io.out.valid      := state === s_valid && ~io.flush_pipeline
   io.out.bits.pc    := pc
   io.out.bits.instr := icache.io.inst
 
-  // in
+  // in-always set to ready
   io.in.ready := true.B
-
-  // when(io.in.valid) {
-  //   pc := Mux(state === s_error, 0.U, io.in.bits.n_pc)
-  // }
 
   when(io.out.ready && state === s_valid) {
     pc := pc + 4.U //简单分支预测
-  }
-  when(state === s_idle && io.in.valid) {
-    pc := io.in.bits.n_pc
   }
 
   when(io.rwerr) {
@@ -72,9 +61,13 @@ class IFU extends Module {
       s_error -> s_error
     )
   )
+  //flush
   when(io.flush_pipeline) {
     state := s_idle
-    // pc:=io.in.bits.n_pc
+  }
+  //next cycle of flush signal
+  when(state === s_idle && io.in.valid) {
+    pc := io.in.bits.n_pc
   }
 
   //TRACE_IFU
@@ -84,10 +77,10 @@ class IFU extends Module {
   trace_ifu.io.f_end   := state === s_valid
   trace_ifu.io.clock   := clock
 
-  //INST_TRACE
-  val inst_trace = Module(new TRACE_INST)
-  inst_trace.io.inst  := icache.io.inst
-  inst_trace.io.clock := clock
+  // //INST_TRACE
+  // val inst_trace = Module(new TRACE_INST)
+  // inst_trace.io.inst  := icache.io.inst
+  // inst_trace.io.clock := clock
 
 }
 //DONE:IFU取到指令-使用AXIRDvalid
@@ -128,22 +121,22 @@ class TRACE_IFU extends BlackBox with HasBlackBoxInline {
     """.stripMargin
   )
 }
-class TRACE_INST extends BlackBox with HasBlackBoxInline {
-  val io = IO(new Bundle {
-    val inst  = Input(UInt(CVAL.DLEN.W))
-    val clock = Input(Clock())
-  })
-  setInline(
-    "trace_inst.v",
-    """import "DPI-C" function void trace_inst(int unsigned inst_now);
-      |module TRACE_INST(
-      |  input [31:0] inst,
-      |  input clock
-      |);
-      |always @(negedge clock) begin
-      |  trace_inst(inst);
-      |end
-      |endmodule
-    """.stripMargin
-  )
-}
+// class TRACE_INST extends BlackBox with HasBlackBoxInline {
+//   val io = IO(new Bundle {
+//     val inst  = Input(UInt(CVAL.DLEN.W))
+//     val clock = Input(Clock())
+//   })
+//   setInline(
+//     "trace_inst.v",
+//     """import "DPI-C" function void trace_inst(int unsigned inst_now);
+//       |module TRACE_INST(
+//       |  input [31:0] inst,
+//       |  input clock
+//       |);
+//       |always @(negedge clock) begin
+//       |  trace_inst(inst);
+//       |end
+//       |endmodule
+//     """.stripMargin
+//   )
+// }

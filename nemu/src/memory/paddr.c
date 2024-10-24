@@ -17,6 +17,7 @@
 #include <memory/paddr.h>
 #include <device/mmio.h>
 #include <isa.h>
+#include <common.h>
 
 // my-func
 void record_pread(paddr_t addr, int len);
@@ -44,7 +45,7 @@ static uint8_t rubbish[0x8] PG_ALIGN = {};
 
 uint8_t *guest_to_host(paddr_t paddr)
 {
-  // #ifdef TARGET_SHARE
+#if defined(CONFIG_TARGET_SHARE) || defined(CONFIG_SOC_DEVICE)
   if (MEM_IN(paddr,MROM_BASE,MROM_TOP)) // mrom
     return mrom + paddr - MROM_BASE;
   if (MEM_IN(paddr, SRAM_BASE, SRAM_TOP)) // sram
@@ -55,15 +56,16 @@ uint8_t *guest_to_host(paddr_t paddr)
     return sdram + paddr - SDRAM_BASE;
   if (MEM_IN(paddr, PSRAM_BASE, PSRAM_TOP)) // psram
     return psram + paddr - PSRAM_BASE;
-  // #endif
+#endif
   if (MEM_IN(paddr, CONFIG_MBASE, CONFIG_MBASE + CONFIG_MSIZE)) {
-    Log("Warning:assessing rubbish area!!!!");
-    return pmem + paddr - CONFIG_MBASE;}
+    return pmem + paddr - CONFIG_MBASE;
+  }
+  Log("Warning:assessing rubbish area!!!!");
   return rubbish;
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
-  // #ifdef TARGET_SHARE
+#if defined(CONFIG_TARGET_SHARE) || defined(CONFIG_SOC_DEVICE)
   if (PHY_IN(haddr, mrom, SRAM_BASE, SRAM_TOP)) // mrom
     return haddr - mrom + MROM_BASE;
   if (PHY_IN(haddr, sram, FLASH_BASE, FLASH_TOP)) // sram
@@ -74,7 +76,7 @@ paddr_t host_to_guest(uint8_t *haddr)
     return haddr - sdram + SDRAM_BASE;
   if (PHY_IN(haddr, psram, PSRAM_BASE, PSRAM_TOP)) // psram
     return haddr - psram + PSRAM_BASE;
-  // #endif
+#endif
   if (PHY_IN(haddr, pmem, CONFIG_MBASE, CONFIG_MBASE + CONFIG_MSIZE))
     return haddr - pmem + CONFIG_MBASE;
   return haddr-rubbish;
@@ -98,12 +100,15 @@ static void pmem_write(paddr_t addr, int len, word_t data)
   host_write(guest_to_host(addr), len, data);
 }
 
-static void out_of_bound(paddr_t addr)
-{
-  // panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-  //       addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
-    Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
+static void out_of_bound(paddr_t addr) {
+#ifdef CONFIG_SOC_DEVICE
+  Log("address = " FMT_PADDR " is out of bound at pc = " FMT_WORD,
+    addr, cpu.pc);
+#else
+  panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
         addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+#endif
+
 }
 
 void init_mem()
@@ -134,6 +139,7 @@ word_t paddr_read(paddr_t addr, int len)
   IFDEF(CONFIG_MTRACE, record_pread(addr, len);)
   if (likely(in_pmem(addr)))
     return pmem_read(addr, len);
+  // IFDEF(CONFIG_SOC_DEVICE, return pmem_read(addr, len));
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 100;
@@ -147,6 +153,7 @@ void paddr_write(paddr_t addr, int len, word_t data)
     pmem_write(addr, len, data);
     return;
   }
+  // IFDEF(CONFIG_SOC_DEVICE, pmem_write(addr, len, data);return;)
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }

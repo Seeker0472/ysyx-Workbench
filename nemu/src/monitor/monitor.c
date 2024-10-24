@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include "debug.h"
+#include "macro.h"
 #include <isa.h>
 #include <memory/paddr.h>
 
@@ -51,7 +52,7 @@ static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static char *elf_file = NULL;
 static int difftest_port = 1234;
-bool soc_img = false;
+MUXDEF(CONFIG_SOC_DEVICE, bool soc_img = true;, bool soc_img = false;);
 
 static long load_img() {
   if (img_file == NULL) {

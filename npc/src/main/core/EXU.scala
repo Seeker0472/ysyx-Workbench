@@ -10,14 +10,14 @@ import chisel3.util.MuxLookup
 
 class EXU extends Module {
   val io = IO(new Bundle {
-    val in   = Flipped(Decoupled(new DecoderO))
-    val reg1 = (new RegReadIO)
-    val reg2 = (new RegReadIO)
-    val csr  = (new CSRReadIO)
-    val out  = (Decoupled(new EXU_O))
+    val in             = Flipped(Decoupled(new DecoderO))
+    val reg_addr       = Output(UInt(5.W))
+    val pc             = (Decoupled(UInt(CVAL.DLEN.W)))
+    val flush_pipeline = Input(Bool())
+    val out            = (Decoupled(new EXU_O))
   })
   io.in.ready  := io.out.ready
-  io.out.valid := io.in.valid
+  io.out.valid := io.in.valid && ~io.flush_pipeline
   //pass_throughs
   io.out.bits.mem_read_enable  := io.in.bits.mem_read_enable
   io.out.bits.mem_write_enable := io.in.bits.mem_write_enable
@@ -31,46 +31,53 @@ class EXU extends Module {
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
 
-  io.reg1.addr := io.in.bits.rs1
-  io.reg2.addr := io.in.bits.rs2
-  io.csr.addr  := io.in.bits.imm
-  val src1 = io.reg1.data
-  val src2 = io.reg2.data
+  //reg to write for this inst->pass to decoder to stall
+  io.reg_addr := Mux(io.in.valid, io.in.bits.rd, 0.U)
+
+  //pc of this inst pass to hazard_unit
+  io.pc.bits  := io.in.bits.pc
+  io.pc.valid := io.in.valid
+
+  val src1     = io.in.bits.src1
+  val src2     = io.in.bits.src2
+  val csr_data = io.in.bits.csr_data
 
   val alu_val1 = Mux(io.in.bits.alu_use_pc, io.in.bits.pc, src1)
   val alu_val2 = Mux(io.in.bits.alu_use_Imm_2, io.in.bits.imm, src2)
 
-  val alu = Module(new ALU())
-
+  //compare_unit
   val comp = Module(new Branch_comp())
-//比较单元的输入
   comp.io.src1  := src1
   comp.io.src2  := src2
   comp.io.func3 := io.in.bits.func3
   val go_branch = comp.io.result
-//alu的输入
+
+  //alu_unit
+  val alu = Module(new ALU())
   alu.io.in.src1        := alu_val1
   alu.io.in.src2        := alu_val2
   alu.io.in.alu_op_type := io.in.bits.alu_op_type
 
   //csrr_alu
-  val or = io.csr.data | src1
+  val or = csr_data | src1
   val csr_alu_res = MuxLookup(io.in.bits.csr_alu_type, or)(
     Seq(
       CSRALU_Type.or -> or,
       CSRALU_Type.passreg -> src1
     )
   )
+
+  //outputs
   io.out.bits.alu_result  := alu.io.result //alu的运算结果
   io.out.bits.src2        := src2
   io.out.bits.csr_alu_res := csr_alu_res
-  io.out.bits.csr_val     := io.csr.data
+  io.out.bits.csr_val     := csr_data
   io.out.bits.go_branch   := go_branch && io.in.bits.is_branch
 
   //Trace
   val trace_exu = Module(new TRACE_EXU)
   trace_exu.io.clock := clock
-  trace_exu.io.valid := io.in.valid
+  trace_exu.io.valid := io.in.valid && io.out.ready
 }
 
 class Branch_comp extends Module {
@@ -92,7 +99,7 @@ class Branch_comp extends Module {
   )
 }
 
-//:exu完成计算-valid信号
+//:exu完成计算-valid信号--not used now
 class TRACE_EXU extends BlackBox with HasBlackBoxInline {
   val io = IO(new Bundle {
     val valid = Input(Bool())
@@ -105,13 +112,10 @@ class TRACE_EXU extends BlackBox with HasBlackBoxInline {
       |  input valid,
       |  input clock
       |);
-      | reg prev;
-      | initial prev=1'b0;
       |always @(negedge clock) begin
-      |   if (valid&&prev==1'b0) begin
+      |   if (valid) begin
       |      trace_exu();
       |  end
-      | prev = valid;
       | end
       |endmodule
     """.stripMargin

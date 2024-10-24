@@ -1,7 +1,7 @@
-// #include "../include/ydb_all.h"
 #include "common.h"
 #include "svdpi.h"
 #include "trace.h"
+#include <cstdint>
 
 #define OK(ITEM) (ITEM ? "True" : "False")
 #define CsPI(ITEM)                                                             \
@@ -32,14 +32,19 @@ typedef struct {
   uint64_t lsur;
   uint64_t lsuw;
   uint64_t ifu;
-} latency;
-latency memLatency = {0, 0, 0};
+} Latency;
+Latency memLatency = {0, 0, 0};
+
+typedef struct {
+  uint64_t total_required;
+  uint64_t total_miss;
+} Icache_count;
+Icache_count icache_count = {0,0};
 
 uint64_t last_inst = INS_O;
 //记录当前指令类型和指令总数
 extern "C" void trace_decoder(svBit mem_R, svBit mem_W, svBit calc, svBit csr) {
-  // Log("Decoded_result:
-  // MEMR:%s,MEMW:%s,calc:%s,csr:%s\n",OK(mem_R),OK(mem_W),OK(calc),OK(csr));
+  // Log("Decoded_result:MEMR:%s,MEMW:%s,calc:%s,csr:%s\n",OK(mem_R),OK(mem_W),OK(calc),OK(csr));
   if (mem_R) {
     instTypeCount.memr++;
     last_inst = INS_MR;
@@ -99,6 +104,13 @@ extern "C" void trace_lsu(int unsigned addr, svBit RW, svBit start_end) {
   }
 }
 
+extern "C" void trace_hit(svBit hit) {
+  if (hit)
+    icache_count.total_required++;
+  else
+    icache_count.total_miss++; 
+}
+
 void print_perf_statistics() {
   printf("YPC's performance statistics as follows:===============\n");
   printf("Instructions:%ld\tIFU Latency=%ld\n", g_nr_guest_inst,
@@ -117,6 +129,8 @@ void print_perf_statistics() {
          DIV(memLatency.lsur, instTypeCount.memr),
          DIV(memLatency.lsuw, instTypeCount.memw),
          DIV(memLatency.ifu, g_nr_guest_inst));
-  printf("Cache Hit times:%ld\t,Hit rate:%.2lf%%", cache_hit_times, DIV((double)cache_hit_times,g_nr_guest_inst));
-  //   printf("")
+  printf("Cache Hit times:%ld\t,Hit rate:%.2lf%%\n",
+         icache_count.total_required - icache_count.total_miss,
+         DIV((double)(icache_count.total_required - icache_count.total_miss),
+             icache_count.total_required)*100);
 }

@@ -73,9 +73,9 @@ void single_inst() {
     g_cycles++;
     i++;
     single_cycle();
-    if (unlikely(i % 7000 == 0)) {
+    if (unlikely(i % 20000 == 0)) {
       nemu_state.state = NEMU_STOP;
-      Info_R("WARN: PC didn't change for 7000 Cycles!\n");
+      Info_R("WARN: PC didn't change for 20000 Cycles!\n");
       nemu_state.halt_ret = -1;
       break;
     }
@@ -120,7 +120,7 @@ void init_runtime() {
   reset(20); // 复位5个周期
 }
 
-word_t inst = 0;
+word_t inst=0;
 
 int run(int step) {
   int now = step;
