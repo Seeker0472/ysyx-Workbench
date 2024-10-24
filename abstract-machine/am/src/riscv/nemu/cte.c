@@ -41,7 +41,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   // Context * con= malloc(sizeof(Context));
   // Context *bottom=(Context *)kstack.end;
   Context *top=(Context *)(((void *)kstack.end)-sizeof(Context));
-  top->gpr[10]=(uint32_t)arg;//TODO
+  top->gpr[10]=(uint32_t)arg;
   top->mepc=(uintptr_t)entry;
   top->mstatus=0x1800;
   top->mcause=0xb;
