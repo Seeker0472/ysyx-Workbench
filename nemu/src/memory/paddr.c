@@ -45,7 +45,7 @@ static uint8_t rubbish[0x8] PG_ALIGN = {};
 
 uint8_t *guest_to_host(paddr_t paddr)
 {
-#ifdef CONFIG_TARGET_SHARE
+#if defined(CONFIG_TARGET_SHARE) || defined(SOC_DEVICE)
   if (MEM_IN(paddr,MROM_BASE,MROM_TOP)) // mrom
     return mrom + paddr - MROM_BASE;
   if (MEM_IN(paddr, SRAM_BASE, SRAM_TOP)) // sram
@@ -65,7 +65,7 @@ uint8_t *guest_to_host(paddr_t paddr)
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
-#ifdef CONFIG_TARGET_SHARE
+#if defined(CONFIG_TARGET_SHARE) || defined(SOC_DEVICE)
   if (PHY_IN(haddr, mrom, SRAM_BASE, SRAM_TOP)) // mrom
     return haddr - mrom + MROM_BASE;
   if (PHY_IN(haddr, sram, FLASH_BASE, FLASH_TOP)) // sram

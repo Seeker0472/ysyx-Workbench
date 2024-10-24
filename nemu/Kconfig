@@ -156,26 +156,32 @@ config ITRACE_COND
   default "true"
 
 config WATCHPOINT
+  depends on TARGET_NATIVE_ELF
   bool "Enable WatchPoint"
   default y
 
 config MTRACE
+  depends on TARGET_NATIVE_ELF
   bool "Enable MemoryTrace"
   default n
 
 config FTRACE
+  depends on TARGET_NATIVE_ELF
   bool "Emable Function call Trace"
   default n
 
 config DTRACE
+  depends on TARGET_NATIVE_ELF
   bool "Emable Device Trace"
   default n
 
 config ETRACE
+  depends on TARGET_NATIVE_ELF
   bool "Emable Exception Trace"
   default n
 
 config PC_TRACE
+  depends on TARGET_NATIVE_ELF
   bool "Emable PC Trace"
   default n
 
