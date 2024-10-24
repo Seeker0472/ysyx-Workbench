@@ -199,6 +199,6 @@ int isa_exec_once(Decode *s) {
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
   // printf("NEMU_INST=%x,PC=%x\n", s->isa.inst.val, s->snpc);
   // 使用指令环形缓冲区记录
-  IFDEF(CONFIG_ITRACE, write_iringbuf(s->pc, s->isa.inst.val));
+  IFDEF(CONFIG_IRING, write_iringbuf(s->pc, s->isa.inst.val)); // TODO!!
   return decode_exec(s);
 }

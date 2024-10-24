@@ -10,7 +10,7 @@ typedef struct
 inst_Node ibuf[BUF_SIZE];
 int pbuf=0;
 bool full=false;
-#ifdef CONFIG_ITRACE
+#ifdef CONFIG_IRING
 
 void write_iringbuf(paddr_t pc, word_t inst){
     ibuf[pbuf].pc=pc;
@@ -19,7 +19,6 @@ void write_iringbuf(paddr_t pc, word_t inst){
         full=true;
     pbuf=(pbuf+1)%BUF_SIZE;
 }
-#endif
 
 void print_inst(paddr_t pc, word_t inst,bool wrong){
     char logbuf[128];
@@ -60,3 +59,11 @@ void print_iringbuf(){
         }
     }
 }
+#else
+void write_iringbuf(paddr_t pc, word_t inst) {
+}
+void print_inst(paddr_t pc, word_t inst, bool wrong) {
+}
+void print_iringbuf() {
+}
+#endif
