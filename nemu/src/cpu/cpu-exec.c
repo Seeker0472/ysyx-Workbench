@@ -51,7 +51,6 @@ if(check_watch_point()&&nemu_state.state==NEMU_RUNNING){
 #endif
 }
 //执行一条指令，其中包含使用snprintf打印Log！
-//TODO:如何限制trace输出时机？
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
@@ -107,7 +106,7 @@ static void statistic() {
 void assert_fail_msg() {
   isa_reg_display();
   //打印iringbuf！
-  IFDEF(CONFIG_ITRACE,print_iringbuf());
+  IFDEF(CONFIG_IRING, print_iringbuf());
   statistic();
 }
 

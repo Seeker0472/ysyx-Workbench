@@ -44,7 +44,9 @@ class icache extends Module {
 
   //Tag and cache
   val cachetag = RegInit(VecInit(Seq.fill(block_num)(0.U((1 + tag_len).W))))
-  val cache    = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size * 8).W))))
+  val cache = Module(new icache_data())
+  // val cache    = RegInit(VecInit(Seq.fill(block_num)(0.U((block_size * 8).W))))
+  
   //flush
   when(io.flush_icache) {
     cachetag := VecInit(Seq.fill(block_num)(0.U))
@@ -71,7 +73,10 @@ class icache extends Module {
   // if miss, firstly load data into cache,next cyc visit cache and resut into a hit.
 
   //get the data
-  val data = (cache(addr_index) >> (addr_offset))(31, 0)
+  // val data = (cache(addr_index) >> (addr_offset))(31, 0)
+  val data = (cache.io.data_read >> (addr_offset))(31, 0)
+  cache.io.addr:=Mux(state===s_idle,addr_index,fetch_index)
+  cache.io.wen:=false.B
   io.inst := data
 
   // the state machine
@@ -94,9 +99,11 @@ class icache extends Module {
   io.inst_valid := io.addr_valid && state === s_idle && hit //TODO : return the hit data instantly!!!!!!!
   // miss,update  cache
   val data_read = io.axi.RD.bits.data
+  cache.io.data_write    := Cat(data_read, (cache.io.data_read)(block_size * 8 - 1, 32))
   when(io.axi.RD.valid && state === s_wait_data) {
     cachetag(fetch_index) := Cat(1.U(1.W), fetch_tag)
-    cache(fetch_index)    := Cat(data_read, cache(fetch_index)(block_size * 8 - 1, 32))
+    // cache(fetch_index)    := Cat(data_read, cache(fetch_index)(block_size * 8 - 1, 32))
+    cache.io.wen:=true.B
   }
 
   //Trace hit
@@ -108,6 +115,19 @@ class icache extends Module {
   hit_trace.io.inst  := data
   hit_trace.io.addr  := io.addr
 
+}
+class icache_data extends Module{
+  val io = IO(new Bundle{
+    val data_read = Output(UInt((ICACHE_Const.BLOCK_SIZE*8).W))
+    val data_write = Input(UInt((ICACHE_Const.BLOCK_SIZE*8).W))
+    val addr = Input(UInt(((math.log(ICACHE_Const.BLOCK_NUM) / math.log(2)).toInt).W))
+    val wen= Input(Bool())
+  })
+  val cache=RegInit(VecInit(Seq.fill(ICACHE_Const.BLOCK_NUM)(0.U((ICACHE_Const.BLOCK_SIZE * 8).W))))
+  io.data_read := cache(io.addr)
+  when(io.wen){
+    cache(io.addr):=io.data_write
+  }
 }
 
 class TRACE_ICache extends BlackBox with HasBlackBoxInline {

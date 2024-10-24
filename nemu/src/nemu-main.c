@@ -14,7 +14,6 @@
 ***************************************************************************************/
 
 #include <common.h>
-// #define TEST_CALC
 
 void init_monitor(int, char *[]);
 void am_init_monitor();
@@ -28,25 +27,6 @@ int main(int argc, char *argv[]) {
   am_init_monitor();
 #else
   init_monitor(argc, argv);
-#endif
-#ifdef TEST_CALC
-  FILE *fp = fopen("/ysyx-workbench/nemu/tools/gen-expr/build/input", "r");
-  int result;
-  char *exp = malloc(700 * sizeof(char));
-  int time=0;
-  while (fscanf(fp, "%d %s\n", &result, exp) != -1)
-  {
-    // printf("%s\n",exp);
-    bool ok = true;
-    int res = (int)expr(exp, &ok);
-    if (ok && result != res){
-      printf("fail! %d/%d %s\n", res, result, exp);
-      assert(0);
-      }
-    else
-      printf("OK:%d\n",time++);
-  }
-
 #endif
   /* Start engine. */
   engine_start();

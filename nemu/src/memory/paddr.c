@@ -45,7 +45,7 @@ static uint8_t rubbish[0x8] PG_ALIGN = {};
 
 uint8_t *guest_to_host(paddr_t paddr)
 {
-#ifdef CONFIG_TARGET_SHARE
+#if defined(CONFIG_TARGET_SHARE) || defined(CONFIG_SOC_DEVICE)
   if (MEM_IN(paddr,MROM_BASE,MROM_TOP)) // mrom
     return mrom + paddr - MROM_BASE;
   if (MEM_IN(paddr, SRAM_BASE, SRAM_TOP)) // sram
@@ -65,7 +65,7 @@ uint8_t *guest_to_host(paddr_t paddr)
 }
 paddr_t host_to_guest(uint8_t *haddr)
 {
-#ifdef CONFIG_TARGET_SHARE
+#if defined(CONFIG_TARGET_SHARE) || defined(CONFIG_SOC_DEVICE)
   if (PHY_IN(haddr, mrom, SRAM_BASE, SRAM_TOP)) // mrom
     return haddr - mrom + MROM_BASE;
   if (PHY_IN(haddr, sram, FLASH_BASE, FLASH_TOP)) // sram
@@ -100,12 +100,15 @@ static void pmem_write(paddr_t addr, int len, word_t data)
   host_write(guest_to_host(addr), len, data);
 }
 
-static void out_of_bound(paddr_t addr)
-{
-  // panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
-  //       addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
-    Log("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
+static void out_of_bound(paddr_t addr) {
+#ifdef CONFIG_SOC_DEVICE
+  Log("address = " FMT_PADDR " is out of bound at pc = " FMT_WORD,
+    addr, cpu.pc);
+#else
+  panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] at pc = " FMT_WORD,
         addr, PMEM_LEFT, PMEM_RIGHT, cpu.pc);
+#endif
+
 }
 
 void init_mem()
@@ -136,6 +139,7 @@ word_t paddr_read(paddr_t addr, int len)
   IFDEF(CONFIG_MTRACE, record_pread(addr, len);)
   if (likely(in_pmem(addr)))
     return pmem_read(addr, len);
+  // IFDEF(CONFIG_SOC_DEVICE, return pmem_read(addr, len));
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 100;
@@ -149,6 +153,7 @@ void paddr_write(paddr_t addr, int len, word_t data)
     pmem_write(addr, len, data);
     return;
   }
+  // IFDEF(CONFIG_SOC_DEVICE, pmem_write(addr, len, data);return;)
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }
