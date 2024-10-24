@@ -136,6 +136,7 @@ word_t paddr_read(paddr_t addr, int len)
   IFDEF(CONFIG_MTRACE, record_pread(addr, len);)
   if (likely(in_pmem(addr)))
     return pmem_read(addr, len);
+  IFDEF(CONFIG_SOC_DEVICE, pmem_read(addr, len));
   IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
   out_of_bound(addr);
   return 100;
