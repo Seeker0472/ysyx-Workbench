@@ -14,7 +14,7 @@
 #**************************************************************************************/
 
 # TODO!改条件！！
-ifneq ($(CONFIG_ITRACE)$(CONFIG_IQUEUE)$(CONFIG_FTRACE),)
+ifneq ($(CONFIG_ITRACE)$(CONFIG_IRING)$(CONFIG_FTRACE),)
 CXXSRC = src/utils/disasm.cc
 CXXFLAGS += $(shell llvm-config --cxxflags) -fPIE
 LIBS += $(shell llvm-config --libs)

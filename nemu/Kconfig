@@ -180,6 +180,11 @@ config ETRACE
   bool "Emable Exception Trace"
   default n
 
+config IRING
+  depends on TARGET_NATIVE_ELF
+  bool "Emable iring buf"
+  default n
+
 config PC_TRACE
   depends on TARGET_NATIVE_ELF
   bool "Emable PC Trace"
