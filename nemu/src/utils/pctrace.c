@@ -23,6 +23,7 @@ struct {
   uint64_t jalr_f;
   uint64_t jalr; //
   uint64_t b;
+  uint64_t b1;
 } inst_count;
 void printInstCount() {
   printf("jal_f: %lu\n", inst_count.jal_f);
@@ -30,9 +31,10 @@ void printInstCount() {
   printf("jalr_f: %lu\n", inst_count.jalr_f);
   printf("jalr: %lu\n", inst_count.jalr);
   printf("b: %lu\n", inst_count.b);
+  printf("b1: %lu\n", inst_count.b1);
 }
 
-void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* name) {
+void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int imm,int type,char* name) {
   // printf("PC: %x, Inst: %x, RS1: %d, RS2: %d, RD: %d\n", pc, inst, rs1, rs2, rd);
 #ifdef FORWARD_CALC
   if (rs1 != 0 && rs1 == last_write) {
@@ -51,8 +53,11 @@ void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* n
     inst_count.jalr_f++;
   else if (strcmp(name, "jalr") == 0)
     inst_count.jalr++;
-  else if (type == TYPE_B)
+  else if (type == TYPE_B){
     inst_count.b++;
+    if (imm > 0)
+      inst_count.b1++;
+  }
   IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
 }
 void init_pc_trace() { fp = fopen("pc_trace", "w"); }

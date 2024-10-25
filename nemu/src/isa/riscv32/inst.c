@@ -68,10 +68,10 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_R: src1R(); src2R();         useRD(); break;
     case TYPE_B: src1R(); src2R(); immB();          break;
     }
-    void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* name);
+    void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int imm,int type,char* name);
     IFDEF(CONFIG_PC_TRACE,
           trace_pc(s->pc, s->isa.inst.val, use_rs1 ? rs1 : 0, use_rs2 ? rs2 : 0,
-                   use_rd ? *rd : 0,type,name););
+                   use_rd ? *rd : 0,*imm,type,name););
 }
 
 int32_t mulh(int32_t src1, int32_t src2) {
