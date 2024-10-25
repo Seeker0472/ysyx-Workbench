@@ -46,9 +46,11 @@ class LSU extends Module {
   io.out.bits.mret         := io.in.bits.mret
   io.out.bits.imm          := io.in.bits.imm
 
+  val exu_result = io.in.bits.exu_result
+
   //result of EXU
   // val result = Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result) //内存读取/csr操作/算数运算结果
-  io.out.bits.exu_result := io.in.bits.exu_result
+  io.out.bits.exu_result := exu_result
   // io.forwarding.bits := result
   // io.forwarding.valid := io.in.valid && ~io.out.bits.mem_read_enable && io.out.bits.reg_w_enable
 
@@ -93,10 +95,10 @@ class LSU extends Module {
   io.axi.RA.bits.id   := 0.U //TODO!!!!!
   io.axi.RA.bits.len  := 0.U
   io.axi.RA.valid     := sig_arvalid
-  io.axi.RA.bits.addr := io.in.bits.alu_result
+  io.axi.RA.bits.addr := exu_result
   io.axi.RD.ready     := true.B
 
-  val mem_read = (io.axi.RD.bits.data) >> ((io.in.bits.alu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
+  val mem_read = (io.axi.RD.bits.data) >> ((exu_result & (0x3.U)) << 3) // 读取内存,不对齐访问!!
   //vv sign extension!
   val mem_read_result_sint = MuxLookup(io.in.bits.func3, 0.S)(
     Seq(
@@ -124,13 +126,13 @@ class LSU extends Module {
       "b010".U -> "b010".U(3.W) //sw
     )
   )
-  val write_data_moved = (io.in.bits.src2) << ((io.in.bits.alu_result(1, 0)) << 3)
+  val write_data_moved = (io.in.bits.src2) << ((exu_result(1, 0)) << 3)
 
-  val mask_moved = mem_write_mask << ((io.in.bits.alu_result)(1, 0))
+  val mask_moved = mem_write_mask << ((exu_result)(1, 0))
 
   //axi_signals_write
   io.axi.WA.valid      := sig_awvalid
-  io.axi.WA.bits.addr  := io.in.bits.alu_result
+  io.axi.WA.bits.addr  := exu_result
   io.axi.WD.bits.data  := write_data_moved
   io.axi.WD.bits.wstrb := mask_moved
   io.axi.WA.bits.size  := mem_write_size //写入数据的大小
@@ -145,7 +147,7 @@ class LSU extends Module {
 
   //signals for mem_trace and difftest
   val check_mem = Module(new DPI_C_CHECK)
-  check_mem.io.addr  := io.in.bits.alu_result
+  check_mem.io.addr  := exu_result
   check_mem.io.ren   := io.in.bits.mem_read_enable && state === s_wait_valid
   check_mem.io.wdata := write_data_moved
   check_mem.io.wmask := mask_moved
@@ -155,7 +157,7 @@ class LSU extends Module {
 
   //latency trace
   val trace_lsu = Module(new TRACE_LSU)
-  trace_lsu.io.addr    := io.in.bits.alu_result
+  trace_lsu.io.addr    := exu_result
   trace_lsu.io.w_start := io.in.bits.mem_write_enable && state === s_wait_valid
   trace_lsu.io.w_end   := io.axi.WR.valid
   trace_lsu.io.r_start := io.in.bits.mem_read_enable && state === s_wait_valid
