@@ -17,8 +17,10 @@ void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* n
   }
   last_write = rd;
 #endif
-  printf("%s\n",name);
-  IFDEF(WRITE,fprintf(fp, "%x\n", pc);)
+  // printf("%s\n",name);
+  if (strcmp(name, "jal"))
+    printf("jal\n");
+  IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
 }
 void init_pc_trace() { fp = fopen("pc_trace", "w"); }
 void close_pc_trace() {
