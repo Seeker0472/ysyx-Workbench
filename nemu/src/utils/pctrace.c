@@ -61,7 +61,7 @@ void trace_prev(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,i
 }
 void trace_after(vaddr_t pc, vaddr_t n_pc,int type,int imm) {
   if (type == TYPE_B) {
-    if (imm > 0 && n_pc == pc + 4)
+    if (imm > 0 && n_pc != pc + 4)
       inst_count.b1++;
   }
 }
