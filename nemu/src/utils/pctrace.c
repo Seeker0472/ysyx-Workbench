@@ -34,7 +34,7 @@ void printInstCount() {
   printf("b1: %lu\n", inst_count.b1);
 }
 
-void trace_pc(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,int imm,int type,char* name) {
+void trace_prev(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,int imm,int type,char* name) {
   // printf("PC: %x, Inst: %x, RS1: %d, RS2: %d, RD: %d\n", pc, inst, rs1, rs2, rd);
 #ifdef FORWARD_CALC
   if (rs1 != 0 && rs1 == last_write) {
@@ -55,10 +55,15 @@ void trace_pc(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,int
     inst_count.jalr++;
   else if (type == TYPE_B){
     inst_count.b++;
-    if (imm > 0 && n_pc==pc+4)
-      inst_count.b1++;
+
   }
   IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
+}
+void trace_after(vaddr_t pc, vaddr_t n_pc,int type,int imm) {
+  if (type == TYPE_B) {
+    if (imm > 0 && n_pc == pc + 4)
+      inst_count.b1++;
+  }
 }
 void init_pc_trace() { fp = fopen("pc_trace", "w"); }
 void close_pc_trace() {
