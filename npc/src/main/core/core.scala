@@ -43,6 +43,7 @@ class ypc extends Module {
   StageConnect(decoder.io.out, exu.io.in, flush_pipeline, "pipeline")
   flush_pipeline <> exu.io.flush_pipeline
   hazard_unit.io.exu_pc <> exu.io.pc
+  decoder.io.forwarding <> exu.io.forwarding
   //lsu
   lsu.io.axi <> axi_arbiter.io.c2
   StageConnect(exu.io.out, lsu.io.in, flush_pipeline, "pipeline_state")
