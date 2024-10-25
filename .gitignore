@@ -19,5 +19,6 @@
 !flake.lock
 !/cachesim/*.py
 !.clangd
+!plog.md
 
 yosys-sta/*
