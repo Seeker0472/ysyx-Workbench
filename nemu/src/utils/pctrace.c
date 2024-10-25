@@ -5,21 +5,31 @@
 FILE *fp;
 // #define WRITE
 // #define FORWARD_CALC
-
+enum {
+  TYPE_I,
+  TYPE_U,
+  TYPE_S,
+  TYPE_N, // none
+  TYPE_J,
+  TYPE_R,
+  TYPE_B
+};
 //TODO:calc the times of each instr ,and the acc of the arg
 int last_write = 0;
 int forward_calc = 0;
 struct {
   uint64_t jal_f;
-  uint64_t jal;
+  uint64_t jal;//直接跳转
   uint64_t jalr_f;
-  uint64_t jalr;
+  uint64_t jalr; //
+  uint64_t b;
 } inst_count;
 void printInstCount() {
   printf("jal_f: %lu\n", inst_count.jal_f);
   printf("jal: %lu\n", inst_count.jal);
   printf("jalr_f: %lu\n", inst_count.jalr_f);
   printf("jalr: %lu\n", inst_count.jalr);
+  printf("b: %lu\n", inst_count.b);
 }
 
 void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* name) {
@@ -41,7 +51,8 @@ void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* n
     inst_count.jalr_f++;
   else if (strcmp(name, "jalr") == 0)
     inst_count.jalr++;
-
+  else if (type == TYPE_B)
+    inst_count.b++;
   IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
 }
 void init_pc_trace() { fp = fopen("pc_trace", "w"); }
