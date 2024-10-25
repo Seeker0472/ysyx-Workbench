@@ -13,7 +13,7 @@ class LSU extends Module {
     // four-stage pipeline's lsu don't need flush!
     // val flush_pipeline = Input(Bool())
     val reg_addr = Output(UInt(CVAL.REG_ADDR_LEN.W))
-    val forwarding = Decoupled(UInt(CVAL.DLEN.W))
+    // val forwarding = Decoupled(UInt(CVAL.DLEN.W))
   })
   //states
   val s_idle :: s_r_busy :: s_w_busy :: s_wait_valid :: s_valid :: Nil = Enum(5)
@@ -47,10 +47,11 @@ class LSU extends Module {
   io.out.bits.imm          := io.in.bits.imm
 
   //result of EXU
-  val result = Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result) //内存读取/csr操作/算数运算结果
-  io.out.bits.exu_result := result
-  io.forwarding.bits := result
-  
+  // val result = Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result) //内存读取/csr操作/算数运算结果
+  io.out.bits.exu_result := io.in.bits.exu_result
+  // io.forwarding.bits := result
+  // io.forwarding.valid := io.in.valid && ~io.out.bits.mem_read_enable && io.out.bits.reg_w_enable
+
   //state
   state := MuxLookup(state, s_idle)(
     List(

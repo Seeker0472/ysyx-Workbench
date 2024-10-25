@@ -46,6 +46,7 @@ class ypc extends Module {
   //lsu
   lsu.io.axi <> axi_arbiter.io.c2
   StageConnect(exu.io.out, lsu.io.in, flush_pipeline, "pipeline_state")
+  // lsu.io.forwarding<>decoder.io.forwarding
   //pipeline of lsu inside the module with state machine
 
   //wbu
