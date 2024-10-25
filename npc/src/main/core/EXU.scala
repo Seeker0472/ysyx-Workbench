@@ -15,7 +15,7 @@ class EXU extends Module {
     val pc             = (Decoupled(UInt(CVAL.DLEN.W)))
     val flush_pipeline = Input(Bool())
     val out            = (Decoupled(new EXU_O))
-    val forwarding = Output(UInt(CVAL.DLEN.W))
+    val forwarding = Decoupled(UInt(CVAL.DLEN.W))
   })
   io.in.ready  := io.out.ready
   io.out.valid := io.in.valid && ~io.flush_pipeline
@@ -69,7 +69,8 @@ class EXU extends Module {
   )
 
   val result = Mux(io.in.bits.csrrw, csr_data, alu.io.result) //内存读取/csr操作/算数运算结果
-  io.forwarding := result
+  io.forwarding.bits := result
+  io.forwarding.valid := io.in.valid && ~io.in.mem_write_enable
 
 
   //outputs
