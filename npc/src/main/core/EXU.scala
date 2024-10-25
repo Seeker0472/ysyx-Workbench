@@ -33,7 +33,7 @@ class EXU extends Module {
   io.out.bits.csrrw            := io.in.bits.csrrw
 
   //reg to write for this inst->pass to decoder to stall
-  io.reg_addr := Mux(io.in.valid && io.in.reg_write_enable , io.in.bits.rd, 0.U)
+  io.reg_addr := Mux(io.in.valid && io.in.bits.reg_write_enable , io.in.bits.rd, 0.U)
 
   //pc of this inst pass to hazard_unit
   io.pc.bits  := io.in.bits.pc
