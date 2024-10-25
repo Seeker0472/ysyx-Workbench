@@ -55,7 +55,7 @@ void trace_pc(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,int
     inst_count.jalr++;
   else if (type == TYPE_B){
     inst_count.b++;
-    if (imm > 0&&n_pc!=pc+4)
+    if (imm > 0 && n_pc==pc+4)
       inst_count.b1++;
   }
   IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
