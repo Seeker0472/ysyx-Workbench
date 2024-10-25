@@ -52,7 +52,7 @@ enum {
 #define useRD() do { use_rd=true; } while (0)
 
 //^^^用于从指令中抽取出立即数W
-static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
+static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type,char* name) {
   uint32_t i = s->isa.inst.val;
   int rs1 = BITS(i, 19, 15);
   int rs2 = BITS(i, 24, 20);
@@ -68,10 +68,10 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_R: src1R(); src2R();         useRD(); break;
     case TYPE_B: src1R(); src2R(); immB();          break;
     }
-    void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type);
+    void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* name);
     IFDEF(CONFIG_PC_TRACE,
           trace_pc(s->pc, s->isa.inst.val, use_rs1 ? rs1 : 0, use_rs2 ? rs2 : 0,
-                   use_rd ? *rd : 0,type););
+                   use_rd ? *rd : 0,type,name););
 }
 
 int32_t mulh(int32_t src1, int32_t src2) {
@@ -87,7 +87,7 @@ static int decode_exec(Decode *s) {
 
 #define INSTPAT_INST(s) ((s)->isa.inst.val)
 #define INSTPAT_MATCH(s, name, type, ... /* execute body */ ) { \
-  decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type)); \
+  decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type),#name); \
   __VA_ARGS__ ; \
 }
 //模式匹配
