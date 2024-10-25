@@ -33,14 +33,14 @@ void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* n
   last_write = rd;
 #endif
   // printf("%s\n",name);
-  if (strcmp(name, "jal_f"))
+  if (strcmp(name, "jal_f") == 0)
     inst_count.jal_f++;
-  else if (strcmp(name, "jal"))
-    inst_count.jal++;
-  else if (strcmp(name, "jalr_f"))
+  else if (strcmp(name, "jalr_f") == 0)
     inst_count.jalr_f++;
-  else if (strcmp(name, "jalr"))
+  else if (strcmp(name, "jalr") == 0)
     inst_count.jalr++;
+  else if (strcmp(name, "jal") == 0)
+    inst_count.jal++;
   IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
 }
 void init_pc_trace() { fp = fopen("pc_trace", "w"); }
