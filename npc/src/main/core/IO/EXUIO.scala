@@ -6,7 +6,8 @@ import Constants_Val._
 class EXU_O extends Bundle {
   val mem_read_enable  = Output(Bool())
   val mem_write_enable = Output(Bool())
-  val alu_result       = Output(UInt(CVAL.DLEN.W))
+  // val alu_result       = Output(UInt(CVAL.DLEN.W))
+  val exu_result       = Output(UInt(CVAL.DLEN.W))
   val src2             = Output(UInt(CVAL.DLEN.W))
   val func3            = Output(UInt(3.W))
 

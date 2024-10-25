@@ -30,12 +30,20 @@ class WBU extends Module {
   ) //ecall的时候保存pc寄存器/正常csr指令保存csr_alu的数据
 
 //wb
+  // //如果是store，Reg_Write_Enable应该是False
+  // val result =
+  //   Mux(
+  //     io.in.bits.mem_read_enable,
+  //     io.in.bits.mem_read_result,
+  //     Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result)
+  //   ) //内存读取/csr操作/算数运算结果
+
   //如果是store，Reg_Write_Enable应该是False
   val result =
     Mux(
       io.in.bits.mem_read_enable,
       io.in.bits.mem_read_result,
-      Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result)
+      io.in.bits.exu_result
     ) //内存读取/csr操作/算数运算结果
   val pc_plus4 = io.in.bits.pc + 4.U
 

@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include "common.h"
 FILE *fp;
-#define WRITE
-#define FORWARD_CALC
+// #define WRITE
+// #define FORWARD_CALC
+
+//TODO:calc the times of each instr ,and the acc of the arg
 int last_write = 0;
 int forward_calc = 0;
-void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type) {
+void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* name) {
   // printf("PC: %x, Inst: %x, RS1: %d, RS2: %d, RD: %d\n", pc, inst, rs1, rs2, rd);
 #ifdef FORWARD_CALC
   if (rs1 != 0 && rs1 == last_write) {
@@ -17,7 +19,10 @@ void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type) {
   }
   last_write = rd;
 #endif
-  IFDEF(WRITE,fprintf(fp, "%x\n", pc);)
+  // printf("%s\n",name);
+  if (strcmp(name, "jal"))
+    printf("jal\n");
+  IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
 }
 void init_pc_trace() { fp = fopen("pc_trace", "w"); }
 void close_pc_trace() {
