@@ -35,11 +35,11 @@ void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* n
   // printf("%s\n",name);
   if (strcmp(name, "jal_f"))
     inst_count.jal_f++;
-  if (strcmp(name, "jal"))
+  else if (strcmp(name, "jal"))
     inst_count.jal++;
-  if (strcmp(name, "jalr_f"))
+  else if (strcmp(name, "jalr_f"))
     inst_count.jalr_f++;
-  if (strcmp(name, "jalr"))
+  else if (strcmp(name, "jalr"))
     inst_count.jalr++;
   IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
 }
