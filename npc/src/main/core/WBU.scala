@@ -17,7 +17,7 @@ class WBU extends Module {
   })
   io.in.ready     := io.out.ready
   io.out.valid    := io.in.valid
-  io.wbu_pc.valid := RegNext(io.in.valid)
+  io.wbu_pc.valid := io.in.valid
 
   io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
 //TODO:其实可以临时抽取？
@@ -30,12 +30,20 @@ class WBU extends Module {
   ) //ecall的时候保存pc寄存器/正常csr指令保存csr_alu的数据
 
 //wb
+  // //如果是store，Reg_Write_Enable应该是False
+  // val result =
+  //   Mux(
+  //     io.in.bits.mem_read_enable,
+  //     io.in.bits.mem_read_result,
+  //     Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result)
+  //   ) //内存读取/csr操作/算数运算结果
+
   //如果是store，Reg_Write_Enable应该是False
   val result =
     Mux(
       io.in.bits.mem_read_enable,
       io.in.bits.mem_read_result,
-      Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result)
+      io.in.bits.exu_result
     ) //内存读取/csr操作/算数运算结果
   val pc_plus4 = io.in.bits.pc + 4.U
 
@@ -51,7 +59,7 @@ class WBU extends Module {
   val n_pc = Mux(io.in.bits.mret, io.in.bits.csr_val, next_pc) //mret恢复pc
 
   io.out.bits.n_pc := n_pc
-  io.wbu_pc.bits   := RegNext(n_pc)
+  io.wbu_pc.bits   := n_pc
 
   //trace
   val wbu_trace = Module(new TRACE_WBU)

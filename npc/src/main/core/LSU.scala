@@ -13,6 +13,7 @@ class LSU extends Module {
     // four-stage pipeline's lsu don't need flush!
     // val flush_pipeline = Input(Bool())
     val reg_addr = Output(UInt(CVAL.REG_ADDR_LEN.W))
+    val forwarding = Decoupled(UInt(CVAL.DLEN.W))
   })
   //states
   val s_idle :: s_r_busy :: s_w_busy :: s_wait_valid :: s_valid :: Nil = Enum(5)
@@ -37,26 +38,20 @@ class LSU extends Module {
   io.out.bits.mem_read_enable := io.in.bits.mem_read_enable //using
   io.out.bits.csrrw           := io.in.bits.csrrw
   io.out.bits.csr_val         := io.in.bits.csr_val
-  io.out.bits.alu_result      := io.in.bits.alu_result //using!
-  io.out.bits.pc_jump         := io.in.bits.pc_jump
-  io.out.bits.go_branch       := io.in.bits.go_branch
-  io.out.bits.reg_w_addr      := io.in.bits.reg_w_addr
-  io.out.bits.reg_w_enable    := io.in.bits.reg_w_enable
-  io.out.bits.mret            := io.in.bits.mret
-  io.out.bits.imm             := io.in.bits.imm
+  // io.out.bits.alu_result      := io.in.bits.alu_result //using!
+  io.out.bits.pc_jump      := io.in.bits.pc_jump
+  io.out.bits.go_branch    := io.in.bits.go_branch
+  io.out.bits.reg_w_addr   := io.in.bits.reg_w_addr
+  io.out.bits.reg_w_enable := io.in.bits.reg_w_enable
+  io.out.bits.mret         := io.in.bits.mret
+  io.out.bits.imm          := io.in.bits.imm
+
+  //result of EXU
+  val result = Mux(io.in.bits.csrrw, io.in.bits.csr_val, io.in.bits.alu_result) //内存读取/csr操作/算数运算结果
+  io.out.bits.exu_result := result
+  io.forwarding.bits := result
+  
   //state
-  // state := MuxLookup(state, s_idle)(
-  //   List(
-  //     s_idle -> Mux(
-  //       (io.in.bits.mem_write_enable || io.in.bits.mem_read_enable) && io.in.valid,
-  //       Mux(io.in.bits.mem_write_enable, s_w_busy, s_r_busy),
-  //       Mux(io.in.valid, s_valid, s_idle)
-  //     ),
-  //     s_r_busy -> Mux(io.axi.RD.valid, s_valid, s_r_busy),
-  //     s_w_busy -> Mux(io.axi.WR.valid, s_valid, s_w_busy),//TODO:Maybe don't need to wait error result?
-  //     s_valid -> Mux(io.out.ready, s_idle, s_valid)
-  //   )
-  // )
   state := MuxLookup(state, s_idle)(
     List(
       s_idle -> Mux(io.in.valid, s_wait_valid, s_idle),
