@@ -31,13 +31,13 @@ class AXI_Lite_Arbiter extends Module {
   )
 
   //Read Channels
-  io.c1.RA.ready := (state === s_c1_wait || state === s_idle) && xbar.io.in.RA.ready
+  io.c1.RA.ready := state === s_c1_wait && xbar.io.in.RA.ready
   io.c2.RA.ready := state === s_c2_wait && xbar.io.in.RA.ready
 
-  xbar.io.in.RA.valid := Mux(state === s_c2_wait, io.c2.RA.valid,io.c1.RA.valid)
+  xbar.io.in.RA.valid := Mux(state === s_c2_wait, io.c2.RA.valid, Mux(state === s_c1_wait, io.c1.RA.valid, false.B))
   xbar.io.in.RA.bits  := Mux(state === s_c2_wait, io.c2.RA.bits, io.c1.RA.bits)
 
-  xbar.io.in.RD.ready := Mux(state === s_c1_busy || state === s_c1_wait || state === s_idle, io.c1.RD.ready, io.c2.RD.ready)
+  xbar.io.in.RD.ready := Mux(state === s_c1_busy || state === s_c1_wait, io.c1.RD.ready, io.c2.RD.ready)
 
   io.c1.RD.bits := xbar.io.in.RD.bits
   io.c2.RD.bits := xbar.io.in.RD.bits
