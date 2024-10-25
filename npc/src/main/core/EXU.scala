@@ -70,7 +70,7 @@ class EXU extends Module {
 
   val result = Mux(io.in.bits.csrrw, csr_data, alu.io.result) //内存读取/csr操作/算数运算结果
   io.forwarding.bits := result
-  io.forwarding.valid := io.in.valid && ~io.in.mem_write_enable
+  io.forwarding.valid := io.in.valid && ~io.in.mem_read_enable
 
 
   //outputs
