@@ -3,7 +3,8 @@
 #include <stdio.h>
 #include "common.h"
 FILE *fp;
-// #define WRITE
+FILE *fp_b;
+// #define WRITE_PC
 // #define FORWARD_CALC
 enum {
   TYPE_I,
@@ -23,7 +24,6 @@ struct {
   uint64_t jalr_f;
   uint64_t jalr; //
   uint64_t b;
-  uint64_t b1;
 } inst_count;
 void printInstCount() {
   printf("jal_f: %lu\n", inst_count.jal_f);
@@ -31,7 +31,6 @@ void printInstCount() {
   printf("jalr_f: %lu\n", inst_count.jalr_f);
   printf("jalr: %lu\n", inst_count.jalr);
   printf("b: %lu\n", inst_count.b);
-  printf("b1: %lu\n", inst_count.b1);
 }
 
 void trace_prev(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,int imm,int type,char* name) {
@@ -55,19 +54,21 @@ void trace_prev(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,i
     inst_count.jalr++;
   else if (type == TYPE_B){
     inst_count.b++;
-
   }
-  IFDEF(WRITE, fprintf(fp, "%x\n", pc);)
+  IFDEF(WRITE_PC, fprintf(fp, "%x\n", pc);)
 }
-void trace_after(vaddr_t pc, vaddr_t n_pc,int type,int imm) {
+void trace_branch(vaddr_t pc, vaddr_t n_pc, int type, int imm,char *name) {
   if (type == TYPE_B) {
-    if ((imm > 0 && n_pc == pc + 4)||(imm<0&&n_pc!=pc+4))
-      inst_count.b1++;
+    fprintf(fp_b, "%x,%x,%x,%s\n",pc,n_pc,imm,"B_Type");
   }
 }
-void init_pc_trace() { fp = fopen("pc_trace", "w"); }
+void init_pc_trace() {
+  fp = fopen("pc_trace", "w");
+  fp_b = fopen("b_trace", "w");
+  }
 void close_pc_trace() {
   printInstCount();
   // printf("forward_times:%d",forward_calc);
   fclose(fp);
+  fclose(fp_b);
 }
