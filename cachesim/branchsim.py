@@ -16,32 +16,42 @@ class FIFOCache:
             self.cache.popitem(last=False)
 
 fifocache = FIFOCache()
+fifocache_pc = FIFOCache()
 success = 0
 fail =0
-
+# TODO!
 def calc_next(pc,n_pc,type,imm):
     global success,fail
-    if(type=="B_Type" or True):
-        if(int(imm,16) & 0x80000000 != 0):
-            # print(imm)
-            if(fifocache.get(pc)!=n_pc):
-                fail+=1
-                fifocache.put(pc,n_pc)
-            else:
-                success+=1
+    next_pc_predict=pc+4
+    if(fifocache.get(pc)!=-1):
+        next_pc_predict=fifocache.get(pc)
+    if(fifocache_pc.get(pc)!=-1):
+        next_pc_predict=fifocache_pc.get(pc)
+    if(imm & 0x80000000 != 0 and type=="B_Type"):# imm<0,record
+        fifocache.put(pc,n_pc)
+    if(type!="B_Type" and type != "ret" ):# imm<0,record
+        print(type)
+        fifocache_pc.put(pc,n_pc)
+    
+
+    if(next_pc_predict==n_pc): #predict
+        success+=1
+    else:
+        fail+=1
 
 def read_file():
     with open("b_trace","r") as branch_trace:
         for line in branch_trace:
             result=line.replace("\n","").split(",")
-            calc_next(result[0],result[1],result[3],result[2])
+            calc_next(int(result[0],16),int(result[1],16),result[3],int(result[2],16))
 
 def sim():
-    global fifocache,success,fail
+    global fifocache,success,fail,fifocache_pc
     for i in range(1,7):
         success=0
         fail=0
         fifocache=FIFOCache(i)
+        fifocache_pc=FIFOCache(i)
         read_file()
         print(i,end="-")
         print(success/(success+fail))
