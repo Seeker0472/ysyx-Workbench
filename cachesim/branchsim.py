@@ -21,7 +21,7 @@ fail =0
 
 def calc_next(pc,n_pc,type,imm):
     global success,fail
-    if(type=="B_Type"):
+    if(type=="B_Type" or True):
         if(int(imm,16) & 0x80000000 != 0):
             # print(imm)
             if(fifocache.get(pc)!=n_pc):

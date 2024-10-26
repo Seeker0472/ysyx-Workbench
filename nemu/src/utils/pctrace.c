@@ -5,6 +5,7 @@
 FILE *fp;
 FILE *fp_b;
 // #define WRITE_PC
+#define WRITE_BRANCH
 // #define FORWARD_CALC
 enum {
   TYPE_I,
@@ -60,13 +61,16 @@ void trace_prev(vaddr_t pc, vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,
   IFDEF(WRITE_PC, fprintf(fp, "%x\n", pc);)
 }
 void trace_branch(vaddr_t pc, vaddr_t n_pc, int type, int imm, char *name) {
+#ifdef WRITE_BRANCH
   if (type == TYPE_B) {
     fprintf(fp_b, "%x,%x,%x,%s\n", pc, n_pc, imm, "B_Type");
   }
   if (strcmp(name, "jal_f") == 0 || strcmp(name, "jal") == 0 ||
-      strcmp(name, "jalr_f") == 0 || strcmp(name, "jalr") == 0) {
+      strcmp(name, "jalr_f") == 0 || strcmp(name, "jalr") == 0 ||
+    strcmp(name, "ret") == 0) {
     fprintf(fp_b, "%x,%x,%x,%s\n", pc, n_pc, imm, name);
   }
+#endif
 }
 void init_pc_trace() {
   fp = fopen("pc_trace", "w");
