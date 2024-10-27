@@ -25,7 +25,7 @@ class IFU extends Module {
   // icache
   val icache = Module(new icache)
   icache.io.flush_icache := io.flush_icache
-  icache.io.axi <> io.axi
+  icache.io.axi          <> io.axi
 
   // pc
   println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE", "Default:h30000000")}")
@@ -47,16 +47,16 @@ class IFU extends Module {
 
   //BPU
   val bpu = Module(new BPU)
-  bpu.io.pc := pc
-  bpu.io.wbu_pc := io.in.bits.pc
-  bpu.io.wbu_n_pc := io.in.bits.n_pc
+  bpu.io.pc         := pc
+  bpu.io.wbu_pc     := io.in.bits.pc
+  bpu.io.wbu_n_pc   := io.in.bits.n_pc
   bpu.io.update_bpu := state === s_idle && io.in.valid
 
   when(state === s_idle && io.in.valid) {
     pc := io.in.bits.n_pc
   }
-  when(io.out.ready && state === s_valid){
-    pc := bpu.io.n_pc_predict 
+  when(io.out.ready && state === s_valid) {
+    pc := bpu.io.n_pc_predict
   }
 
   // when(io.out.ready && state === s_valid) {

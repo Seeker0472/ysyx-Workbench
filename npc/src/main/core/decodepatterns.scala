@@ -13,7 +13,7 @@ case class InsP(
   val rs2:       BitPat = BitPat.dontCare(5),
   val rs1:       BitPat = BitPat.dontCare(5),
   val func3:     BitPat = BitPat.dontCare(3),
-  val rd:     BitPat = BitPat.dontCare(5),
+  val rd:        BitPat = BitPat.dontCare(5),
   val opcode:    BitPat)
     extends DecodePattern {
   // def bitPat: BitPat = func7 ## rs2 ## rs1 ## func3 ## rd ## opcode
@@ -184,7 +184,7 @@ object decodePatterns {
       func7     = BitPat("b0000000"),
       rs1       = BitPat("b00000"),
       rs2       = BitPat("b00000"),
-      rd= BitPat("b00000")
+      rd        = BitPat("b00000")
     )
   )
 }

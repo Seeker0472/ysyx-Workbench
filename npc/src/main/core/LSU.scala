@@ -45,8 +45,8 @@ class LSU extends Module {
   io.out.bits.reg_w_enable := io.in.bits.reg_w_enable
   io.out.bits.mret         := io.in.bits.mret
   io.out.bits.imm          := io.in.bits.imm
-    io.out.bits.flush_icache:=io.in.bits.flush_icache
-  io.out.bits.ebreak:=io.in.bits.ebreak
+  io.out.bits.flush_icache := io.in.bits.flush_icache
+  io.out.bits.ebreak       := io.in.bits.ebreak
 
   val exu_result = io.in.bits.exu_result
 
