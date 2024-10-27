@@ -19,8 +19,8 @@ class Decoder extends Module {
     val lsu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
     val exu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
     val decoder_pc     = Decoupled(UInt(CVAL.DLEN.W))
-    val ebreak         = Output(Bool())
-    val flush_icache   = Output(Bool())
+    // val ebreak         = Output(Bool())
+    // val flush_icache   = Output(Bool())
     val flush_pipeline = Input(Bool())
     val reg1           = (new RegReadIO)
     val reg2           = (new RegReadIO)
@@ -138,8 +138,10 @@ class Decoder extends Module {
   io.out.bits.alu_op_type   := decodedResults(ALUOp_Gen)
 
   //TODO:maybe pass to WBU to take effect?
-  io.ebreak       := decodedResults(Is_Ebreak) && io.in.valid
-  io.flush_icache := decodedResults(Is_fenceI) && io.in.valid
+  // io.ebreak       := decodedResults(Is_Ebreak) && io.in.valid
+  // io.flush_icache := decodedResults(Is_fenceI) && io.in.valid
+  io.out.bits.ebreak       := decodedResults(Is_Ebreak) 
+  io.out.bits.flush_icache := decodedResults(Is_fenceI) 
 
   //mem_sig for lsu
   io.out.bits.mem_read_enable  := decodedResults(Read_En)

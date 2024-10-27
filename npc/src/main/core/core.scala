@@ -32,8 +32,8 @@ class ypc extends Module {
   flush_pipeline <> ifu.io.flush_pipeline
   //decode_stage
   StageConnect(ifu.io.out, decoder.io.in, flush_pipeline, "pipeline")
-  br_han.io.halt      := decoder.io.ebreak
-  ifu.io.flush_icache := decoder.io.flush_icache
+  // br_han.io.halt      := decoder.io.ebreak
+  // ifu.io.flush_icache := decoder.io.flush_icache
   decoder.io.reg1 <> reg.io.Rread1
   decoder.io.reg2 <> reg.io.Rread2
   decoder.io.csr <> reg.io.CSRread
@@ -56,6 +56,8 @@ class ypc extends Module {
   reg.io.Rwrite <> wbu.io.Rwrite
   reg.io.CSRwrite <> wbu.io.CSR_write
   hazard_unit.io.wbu <> wbu.io.wbu_pc
+  br_han.io.halt      := wbu.io.ebreak
+  ifu.io.flush_icache := wbu.io.flush_icache
 
   //pipeline sig
   decoder.io.lsu_w_addr <> lsu.io.reg_addr

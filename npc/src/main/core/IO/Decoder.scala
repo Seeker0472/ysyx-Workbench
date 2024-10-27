@@ -48,5 +48,6 @@ class DecoderO extends Bundle {
 
   val ecall = Output(Bool())
   val mret  = Output(Bool())
-
+  val flush_icache   = Output(Bool())
+   val ebreak         = Output(Bool())
 }
