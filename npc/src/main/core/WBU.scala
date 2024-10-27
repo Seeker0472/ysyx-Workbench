@@ -21,8 +21,8 @@ class WBU extends Module {
   io.out.valid    := io.in.valid
   io.wbu_pc.valid := io.in.valid
 
-  io.ebreak:=io.in.bits.ebreak
-  io.flush_icache:=io.in.bits.flush_icache
+  io.ebreak:=io.in.bits.ebreak&&io.in.valid
+  io.flush_icache:=io.in.bits.flush_icache&&io.in.valid
 
   io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
 //TODO:其实可以临时抽取？

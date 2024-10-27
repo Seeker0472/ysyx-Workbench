@@ -24,7 +24,7 @@ class ypc extends Module {
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
   val hazard_unit = Module(new HazardUnit())
 
-  val flush_pipeline = hazard_unit.io.flush
+  val flush_pipeline = hazard_unit.io.flush || wbu.io.flush_icache
   //ifu
   StageConnect(wbu.io.out, ifu.io.in, flush_pipeline, "pipeline")
   ifu.io.axi <> axi_arbiter.io.c1
