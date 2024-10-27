@@ -51,6 +51,9 @@ enum {
 #define immB() do { *imm = (SEXT(BITS(i, 31, 31), 1) << 12) | (BITS(i, 7, 7) << 11) | (BITS(i, 30, 25) << 5) | (BITS(i, 11, 8 ) << 1); } while(0)
 #define useRD() do { use_rd=true; } while (0)
 
+void trace_prev(vaddr_t pc,vaddr_t n_pc, word_t inst, int rs1, int rs2, int rd,int imm,int type,char* name);
+void trace_branch(vaddr_t pc,vaddr_t n_pc,int type,int imm,char* name);
+
 //^^^用于从指令中抽取出立即数W
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type,char* name) {
   uint32_t i = s->isa.inst.val;
@@ -68,10 +71,9 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     case TYPE_R: src1R(); src2R();         useRD(); break;
     case TYPE_B: src1R(); src2R(); immB();          break;
     }
-    void trace_pc(vaddr_t pc, word_t inst, int rs1, int rs2, int rd,int type,char* name);
     IFDEF(CONFIG_PC_TRACE,
-          trace_pc(s->pc, s->isa.inst.val, use_rs1 ? rs1 : 0, use_rs2 ? rs2 : 0,
-                   use_rd ? *rd : 0,type,name););
+          trace_prev(s->pc, s->dnpc, s->isa.inst.val, use_rs1 ? rs1 : 0,
+                     use_rs2 ? rs2 : 0, use_rd ? *rd : 0, *imm, type, name););
 }
 
 int32_t mulh(int32_t src1, int32_t src2) {
@@ -89,6 +91,7 @@ static int decode_exec(Decode *s) {
 #define INSTPAT_MATCH(s, name, type, ... /* execute body */ ) { \
   decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type),#name); \
   __VA_ARGS__ ; \
+  IFDEF(CONFIG_PC_TRACE,trace_branch(s->pc,s->dnpc,concat(TYPE_, type),imm,#name);) \
 }
 //模式匹配
 //INSTPAT(模式字符串, 指令名称, 指令类型, 指令执行操作);
@@ -101,10 +104,10 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 100 ????? 00000 11", lbu    , I, R(rd) = Mr(src1 + imm, 1));
   INSTPAT("??????? ????? ????? 000 ????? 01000 11", sb     , S, Mw(src1 + imm, 1, src2));
   INSTPAT("??????? ????? ????? 000 ????? 00100 11", addi   , I, R(rd)=(src1+(imm)););
-  INSTPAT("??????? ????? ????? ??? 00001 11011 11", jal1   , J, R(rd)=s->snpc;s->dnpc=s->pc+imm;IFDEF(CONFIG_FTRACE,ftrace_func_call(s->pc,s->dnpc)));//jump and link x1 --- Func Call!!
-  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(rd)=s->snpc;s->dnpc=s->pc+imm);
-  INSTPAT("??????? ????? ????? 000 00001 11001 11", jalr1  , I, R(rd)=s->snpc;s->dnpc=src1+imm;IFDEF(CONFIG_FTRACE,ftrace_func_call(s->pc,s->dnpc)));//jump and link reg x1 --- Func Call!!
   INSTPAT("0000000 00000 00001 000 00000 11001 11", ret    , I, R(rd)=s->snpc;s->dnpc=src1+imm;IFDEF(CONFIG_FTRACE,ftrace_func_ret(s->pc,s->dnpc)));//presudo --- Ret!!
+  INSTPAT("??????? ????? ????? ??? 00001 11011 11", jal_f  , J, R(rd)=s->snpc;s->dnpc=s->pc+imm;IFDEF(CONFIG_FTRACE,ftrace_func_call(s->pc,s->dnpc)));//jump and link x1 --- Func Call!!
+  INSTPAT("??????? ????? ????? ??? ????? 11011 11", jal    , J, R(rd)=s->snpc;s->dnpc=s->pc+imm);
+  INSTPAT("??????? ????? ????? 000 00001 11001 11", jalr_f , I, R(rd)=s->snpc;s->dnpc=src1+imm;IFDEF(CONFIG_FTRACE,ftrace_func_call(s->pc,s->dnpc)));//jump and link reg x1 --- Func Call!!
   INSTPAT("??????? ????? ????? 000 ????? 11001 11", jalr   , I, R(rd)=s->snpc;s->dnpc=src1+imm);
   INSTPAT("??????? ????? ????? 011 ????? 01000 11", sd     , S, Mw(src1 + imm, 8, src2));
 
@@ -176,8 +179,8 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 010 ????? 00100 11", sltiu  , I, MUXDEF(RV64,R(rd)=((int64_t)src1)<((int64_t)(imm)),R(rd)=((int32_t)src1)<((int32_t)(imm))));
   INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , R, R(rd)=(uint32_t)((((uint64_t)src1)*((uint64_t)src2))>>32););
 
-  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw   , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=src1);
-  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs   , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=CSR(imm&0xfff) | src1;);//csrw把rd置0;csrr把rs1置0
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=src1);
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=CSR(imm&0xfff) | src1;);//csrw把rd置0;csrr把rs1置0
 
   // INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall , N, NEMUTRAP(s->pc, R(MUXDEF(CONFIG_RVE,15,17))));
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=isa_raise_intr(R(MUXDEF(CONFIG_RVE,15,17)),s->pc));

@@ -22,7 +22,7 @@ class CLINT extends Module {
   io.RD.bits.data  := Mux(io.RA.bits.addr(2, 2) === 1.U, counter(63, 32), counter(31, 0))
   io.RD.bits.rresp := 0.U
   io.RD.valid      := r_state === s_r_read_data
-  io.RD.bits.id    := 0.U//TODO!!!
+  io.RD.bits.id    := 0.U //TODO!!!
   io.RD.bits.last  := r_state === s_r_read_data
   io.RA.ready      := true.B
 

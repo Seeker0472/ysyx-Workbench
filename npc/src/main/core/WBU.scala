@@ -8,16 +8,21 @@ import javax.swing.InputMap
 
 class WBU extends Module {
   val io = IO(new Bundle {
-    val in         = Flipped(Decoupled(new MEMA_O))
-    val csr_mstvec = Input(UInt(CVAL.DLEN.W))
-    val Rwrite     = (new RegWriteIO)
-    val CSR_write  = (new CSRWriteIO)
-    val out        = Decoupled(new WBU_O)
-    val wbu_pc     = Decoupled(UInt(CVAL.DLEN.W))
+    val in           = Flipped(Decoupled(new MEMA_O))
+    val csr_mstvec   = Input(UInt(CVAL.DLEN.W))
+    val Rwrite       = (new RegWriteIO)
+    val CSR_write    = (new CSRWriteIO)
+    val out          = Decoupled(new WBU_O)
+    val wbu_pc       = Decoupled(UInt(CVAL.DLEN.W))
+    val ebreak       = Output(Bool())
+    val flush_icache = Output(Bool())
   })
   io.in.ready     := io.out.ready
   io.out.valid    := io.in.valid
   io.wbu_pc.valid := io.in.valid
+
+  io.ebreak       := io.in.bits.ebreak && io.in.valid
+  io.flush_icache := io.in.bits.flush_icache && io.in.valid
 
   io.CSR_write.write_enable := io.in.bits.csrrw && io.in.valid
 //TODO:其实可以临时抽取？
@@ -60,6 +65,7 @@ class WBU extends Module {
 
   io.out.bits.n_pc := n_pc
   io.wbu_pc.bits   := n_pc
+  io.out.bits.pc   := io.in.bits.pc
 
   //trace
   val wbu_trace = Module(new TRACE_WBU)

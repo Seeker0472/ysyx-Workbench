@@ -31,6 +31,8 @@ class EXU extends Module {
   io.out.bits.mret             := io.in.bits.mret
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
+  io.out.bits.flush_icache     := io.in.bits.flush_icache
+  io.out.bits.ebreak           := io.in.bits.ebreak
 
   //reg to write for this inst->pass to decoder to stall
   io.reg_addr := Mux(io.in.valid && io.in.bits.reg_write_enable, io.in.bits.rd, 0.U)
