@@ -4,11 +4,11 @@ import javax.xml.transform.OutputKeys
 
 class BPU extends Module {
   val io = IO(new Bundle {
-    val pc           = Input(32.U)
-    val wbu_pc     = Input(32.W)
-    val wbu_n_pc    = Input(32.U)
-    val update_bpu   = Input(Bool)
-    val n_pc_predict = Output(32.U)
+    val pc           = Input(UInt(32.W))
+    val wbu_pc     = Input(UInt(32.W))
+    val wbu_n_pc    = Input(UInt(32.W))
+    val update_bpu   = Input(Bool())
+    val n_pc_predict = Output(UInt(32.W))
   })
   val btb = new Bundle {
     val pc   = RegInit(VecInit(Seq.fill(2)(0.U(32.W))))
@@ -19,7 +19,7 @@ class BPU extends Module {
 
   //match logic
   val match_result = Wire(UInt(32.W))
-  match_result := pc + 4.U
+  match_result := io.pc + 4.U
 
   for (i <- 0 until 2) {
     when(btb.pc(i) === btb.n_pc(i)) {
@@ -33,8 +33,8 @@ class BPU extends Module {
   //replace logic
   val replace_addr = ~tag
   when(io.update_bpu) {
-    btb.pc(replace_addr)   := wbu_pc
-    btb.n_pc(replace_addr) := wbu_n_pc
+    btb.pc(replace_addr)   := io.wbu_pc
+    btb.n_pc(replace_addr) := io.wbu_n_pc
   }
 
 }
