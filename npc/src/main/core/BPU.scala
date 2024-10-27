@@ -9,7 +9,6 @@ class BPU extends Module {
     val wbu_pc     = Input(UInt(32.W))
     val wbu_n_pc    = Input(UInt(32.W))
     val update_bpu   = Input(Bool())
-    val valid   = Input(Bool())
     val n_pc_predict = Output(UInt(32.W))
   })
   val btb = new Bundle {
