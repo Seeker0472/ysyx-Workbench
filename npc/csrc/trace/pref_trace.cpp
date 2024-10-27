@@ -129,7 +129,7 @@ void print_perf_statistics() {
          DIV(memLatency.lsur, instTypeCount.memr),
          DIV(memLatency.lsuw, instTypeCount.memw),
          DIV(memLatency.ifu, g_nr_guest_inst));
-  printf("Cache Hit times:%ld\t,Hit rate:%.2lf%%",
+  printf("Cache Hit times:%ld\t,Hit rate:%.2lf%%\n",
          icache_count.total_required - icache_count.total_miss,
          DIV((double)(icache_count.total_required - icache_count.total_miss),
              icache_count.total_required)*100);
