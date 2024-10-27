@@ -6,7 +6,11 @@ class FIFOCache:
         self.capacity = capacity
 
     def get(self, key: int) -> int:
-        return self.cache.get(key, -1)
+        if key in self.cache:
+            value = self.cache.pop(key)
+            self.cache[key] = value  # Re-insert to move to end
+            return value
+        return -1
 
     def put(self, key: int, value: int) -> None:
         if key in self.cache:
@@ -34,10 +38,10 @@ def calc_next(pc,n_pc,type,imm):
     # if(type=="B_Type" and imm & 0x80000000 != 0 ):
     #     n_pc=pc+imm
     next_pc_predict=pc+4
-    # if(fifocache.get(pc)!=-1):
-    #     next_pc_predict=fifocache.get(pc)
-    if(type=="B_Type" and imm & 0x80000000 != 0):
-        next_pc_predict=pc+to_32bit_signed(imm)
+    if(fifocache.get(pc)!=-1):
+        next_pc_predict=fifocache.get(pc)
+    # if(type=="B_Type" and imm & 0x80000000 != 0):
+    #     next_pc_predict=pc+to_32bit_signed(imm)
     # if(fifocache_pc.get(pc)!=-1):
     #     next_pc_predict=fifocache_pc.get(pc)
     # if(imm & 0x80000000 != 0 and type=="B_Type"):# imm<0,record
@@ -45,8 +49,8 @@ def calc_next(pc,n_pc,type,imm):
     # if(type!="B_Type" and type != "ret" ):# imm<0,record
     #     # print(type)
     #     fifocache_pc.put(pc,n_pc)
-    # if(next_pc_predict!=n_pc):
-    #     fifocache.put(pc,n_pc)
+    if(next_pc_predict!=n_pc):
+        fifocache.put(pc,n_pc)
     # fifocache.put(pc,n_pc)
 
     
