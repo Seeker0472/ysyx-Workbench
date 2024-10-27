@@ -60,6 +60,7 @@ class WBU extends Module {
 
   io.out.bits.n_pc := n_pc
   io.wbu_pc.bits   := n_pc
+  io.out.bits.pc   := pc
 
   //trace
   val wbu_trace = Module(new TRACE_WBU)

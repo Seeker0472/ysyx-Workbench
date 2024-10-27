@@ -19,19 +19,36 @@ fifocache = FIFOCache()
 fifocache_pc = FIFOCache()
 success = 0
 fail =0
+
+def to_32bit_signed(value):
+    # 将值限制在32位范围内
+    value = value & 0xFFFFFFFF
+    # 如果值大于0x7FFFFFFF，则它实际上是一个负数
+    if value > 0x7FFFFFFF:
+        value -= 0x100000000
+    return value
+
 # TODO!
 def calc_next(pc,n_pc,type,imm):
     global success,fail
+    # if(type=="B_Type" and imm & 0x80000000 != 0 ):
+    #     n_pc=pc+imm
     next_pc_predict=pc+4
-    if(fifocache.get(pc)!=-1):
-        next_pc_predict=fifocache.get(pc)
-    if(fifocache_pc.get(pc)!=-1):
-        next_pc_predict=fifocache_pc.get(pc)
-    if(imm & 0x80000000 != 0 and type=="B_Type"):# imm<0,record
-        fifocache.put(pc,n_pc)
-    if(type!="B_Type" and type != "ret" ):# imm<0,record
-        print(type)
-        fifocache_pc.put(pc,n_pc)
+    # if(fifocache.get(pc)!=-1):
+    #     next_pc_predict=fifocache.get(pc)
+    if(type=="B_Type" and imm & 0x80000000 != 0):
+        next_pc_predict=pc+to_32bit_signed(imm)
+    # if(fifocache_pc.get(pc)!=-1):
+    #     next_pc_predict=fifocache_pc.get(pc)
+    # if(imm & 0x80000000 != 0 and type=="B_Type"):# imm<0,record
+        # fifocache.put(pc,n_pc)
+    # if(type!="B_Type" and type != "ret" ):# imm<0,record
+    #     # print(type)
+    #     fifocache_pc.put(pc,n_pc)
+    # if(next_pc_predict!=n_pc):
+    #     fifocache.put(pc,n_pc)
+    # fifocache.put(pc,n_pc)
+
     
 
     if(next_pc_predict==n_pc): #predict
