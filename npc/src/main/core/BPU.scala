@@ -16,7 +16,7 @@ class BPU extends Module {
     val n_pc = RegInit(VecInit(Seq.fill(2)(0.U(32.W))))
   }
   // select whitch block to replace
-  val tag = RegInit(UInt(1.W))
+  val tag = RegInit(0.U(1.W))
 
   //match logic
   val match_result = Wire(UInt(32.W))
