@@ -7,7 +7,7 @@ int main() {
                "li t2, 0x00008067;" // 0x00008067 = ret
                "again:"
                "sb t1, (a1);"
-               "sw t2, 0x14(a2);"
+               "sw t2, 0xc(a2);"
                "fence.i;"
                "j again;");
   return 0;
