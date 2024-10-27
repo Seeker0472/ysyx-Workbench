@@ -23,7 +23,7 @@ class BPU extends Module {
   match_result := io.pc + 4.U
 
   for (i <- 0 until 2) {
-    when(btb.pc(i) === btb.n_pc(i)) {
+    when(btb.pc(i) === io.pc) {
       match_result := btb.n_pc(i)
       tag          := (i).U
     }
