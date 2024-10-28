@@ -22,12 +22,12 @@ class BPU extends Module {
   val match_result = Wire(UInt(32.W))
   match_result := io.pc + 4.U
 
-  // for (i <- 0 until 2) {
-  //   when(btb.pc(i) === io.pc) {
-  //     match_result := btb.n_pc(i)
-  //     tag          := (i).U
-  //   }
-  // }
+  for (i <- 0 until 2) {
+    when(btb.pc(i) === io.pc) {
+      match_result := btb.n_pc(i)
+      tag          := (i).U
+    }
+  }
 
   io.n_pc_predict := match_result
 
