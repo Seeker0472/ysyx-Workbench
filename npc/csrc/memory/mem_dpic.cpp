@@ -60,6 +60,6 @@ extern "C" void pmem_write(int waddr, int wdata, char wmask) {
   mem[(aligned_addr - 0x80000000) / 4] = new_data;
 }
 extern "C" void record_inst(int unsigned addr, int unsigned inst) {
-  printf("addr=%xinst=%x", addr, inst);
+  printf("addr=%xinst=%x\n", addr, inst);
   insert_icache_result(addr,inst);
 }
