@@ -11,7 +11,7 @@ int ptail = 0;
 bool buff_full= false;
 word_t find_inst(vaddr_t addr) {
   if (likely(buff_full)) {
-    for (int i = 0; i < BUF_SIZE - 1; i++) {
+    for (int i = 0; i < BUF_SIZE ; i++) {
       if (itbuf[i].addr == addr)
         return itbuf[i].inst;
     }
