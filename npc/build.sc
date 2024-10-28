@@ -38,6 +38,11 @@ object npc extends SbtModule with ScalafmtModule { m =>
       ivy"edu.berkeley.cs::chiseltest:6.0.0"
     )
   }
+
+  override def scalafmtConfig = T.sources {
+    os.pwd / ".scalafmt.conf"
+    }
+
   def repositoriesTask = T.task { Seq(
     coursier.MavenRepository("https://repo.scala-sbt.org/scalasbt/maven-releases"),
     coursier.MavenRepository("https://oss.sonatype.org/content/repositories/releases"),

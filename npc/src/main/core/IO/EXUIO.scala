@@ -6,9 +6,10 @@ import Constants_Val._
 class EXU_O extends Bundle {
   val mem_read_enable  = Output(Bool())
   val mem_write_enable = Output(Bool())
-  val alu_result       = Output(UInt(CVAL.DLEN.W))
-  val src2             = Output(UInt(CVAL.DLEN.W))
-  val func3            = Output(UInt(3.W))
+  // val alu_result       = Output(UInt(CVAL.DLEN.W))
+  val exu_result = Output(UInt(CVAL.DLEN.W))
+  val src2       = Output(UInt(CVAL.DLEN.W))
+  val func3      = Output(UInt(3.W))
 
   val pc          = Output(UInt(CVAL.DLEN.W))
   val ecall       = Output(Bool())
@@ -22,4 +23,6 @@ class EXU_O extends Bundle {
   val reg_w_enable = Output(Bool())
   val mret         = Output(Bool())
   val imm          = Output(UInt(CVAL.DLEN.W))
+  val flush_icache = Output(Bool())
+  val ebreak       = Output(Bool())
 }

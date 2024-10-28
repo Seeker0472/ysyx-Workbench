@@ -23,7 +23,6 @@ class ebreak_handler extends BlackBox with HasBlackBoxInline {
   )
 }
 
-
 // class ebreak_handler extends Module {
 //   val io = IO(new Bundle {
 //     val halt = Input(Bool())

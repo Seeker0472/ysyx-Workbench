@@ -8,7 +8,7 @@ import core.IO._
 //这个是slave
 //TODO:数据和地址应该可以在同一个周期发送！！！！
 class AXI_Slave extends Module {
-  val io    = IO((new AXIIO))
+  val io = IO((new AXIIO))
   // val raddr = Reg(UInt(CVAL.ILEN.W))
   // val waddr = Reg(UInt(CVAL.ILEN.W))
 
@@ -33,12 +33,12 @@ class AXI_Slave extends Module {
       s_r_idle -> Mux(io.RA.valid, s_r_wait_data, s_r_idle), //等待地址
       // s_r_wait_data -> Mux(true.B, s_r_read_data, s_r_wait_data), //访问存储器
       // s_r_wait_data -> Mux(read_latency===1.U, s_r_read_data, s_r_wait_data), //访问存储器
-      s_r_wait_data -> Mux(true.B, Mux(io.RD.ready,s_r_idle,s_r_read_data), s_r_wait_data), //访问存储器
+      s_r_wait_data -> Mux(true.B, Mux(io.RD.ready, s_r_idle, s_r_read_data), s_r_wait_data), //访问存储器
       s_r_read_data -> Mux(io.RD.ready, s_r_idle, s_r_read_data) //返回数据
     )
   )
   io.RA.ready := r_state === s_r_idle
-  io.RD.valid := r_state === s_r_read_data||r_state ===s_r_wait_data//单周期获取
+  io.RD.valid := r_state === s_r_read_data || r_state === s_r_wait_data //单周期获取
 
   when(io.RA.valid && r_state === s_r_idle) {
     r_addr := io.RA.bits.addr
@@ -47,7 +47,7 @@ class AXI_Slave extends Module {
     List(
       s_w_idle -> Mux(io.WA.valid, s_w_wait_data, s_w_idle), //等待地址
       s_w_wait_data -> Mux(io.WD.valid, s_w_wait_result, s_w_wait_data), //等待数据(在这一周期直接调用DPI-C获取)
-      s_w_wait_result -> Mux(true.B, Mux(io.WR.ready,s_w_idle,s_w_valid), s_w_wait_result), //访问存储器，其实是为了模拟延迟
+      s_w_wait_result -> Mux(true.B, Mux(io.WR.ready, s_w_idle, s_w_valid), s_w_wait_result), //访问存储器，其实是为了模拟延迟
       // s_w_wait_result -> Mux(read_latency===1.U, s_w_valid, s_w_wait_result), //访问存储器，其实是为了模拟延迟
       // s_w_wait_result -> Mux(true.B, s_w_valid, s_w_wait_result), //访问存储器，其实是为了模拟延迟
       s_w_valid -> Mux(io.WR.ready, s_w_idle, s_w_valid) //返回结果
@@ -61,11 +61,11 @@ class AXI_Slave extends Module {
   DPI_C_MEM.io.write_mask   := io.WD.bits.wstrb
   DPI_C_MEM.io.write_enable := w_state === s_w_wait_data && io.WD.valid //(在等待数据直接调用DPI-C获取)
 
-  io.WR.bits.bresp := true.B//假设一直不出错
+  io.WR.bits.bresp := true.B //假设一直不出错
 
   io.WA.ready := w_state === s_w_idle
   io.WD.ready := w_state === s_w_wait_data
-  io.WR.valid := w_state === s_w_valid||w_state===s_w_wait_result
+  io.WR.valid := w_state === s_w_valid || w_state === s_w_wait_result
   //取数据
   DPI_C_MEM.io.clock       := clock
   DPI_C_MEM.io.read_addr   := r_addr
@@ -73,7 +73,6 @@ class AXI_Slave extends Module {
   r_data                   := DPI_C_MEM.io.read_data
 
   io.RD.bits.rresp := false.B //异常-暂时不实现
-  io.RD.bits.data:=Mux(r_state===s_w_wait_result,DPI_C_MEM.io.read_data,r_data)
+  io.RD.bits.data  := Mux(r_state === s_w_wait_result, DPI_C_MEM.io.read_data, r_data)
 
 }
-

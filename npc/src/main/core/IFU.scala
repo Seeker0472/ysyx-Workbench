@@ -25,7 +25,7 @@ class IFU extends Module {
   // icache
   val icache = Module(new icache)
   icache.io.flush_icache := io.flush_icache
-  icache.io.axi <> io.axi
+  icache.io.axi          <> io.axi
 
   // pc
   println(s"PC_VALUE: ${scala.util.Properties.envOrElse("PC_VALUE", "Default:h30000000")}")
@@ -45,9 +45,23 @@ class IFU extends Module {
   // in-always set to ready
   io.in.ready := true.B
 
-  when(io.out.ready && state === s_valid) {
-    pc := pc + 4.U //简单分支预测
+  //BPU
+  val bpu = Module(new BPU)
+  bpu.io.pc         := pc
+  bpu.io.wbu_pc     := io.in.bits.pc
+  bpu.io.wbu_n_pc   := io.in.bits.n_pc
+  bpu.io.update_bpu := state === s_idle && io.in.valid
+
+  when(state === s_idle && io.in.valid) {
+    pc := io.in.bits.n_pc
   }
+  when(io.out.ready && state === s_valid) {
+    pc := bpu.io.n_pc_predict
+  }
+
+  // when(io.out.ready && state === s_valid) {
+  //   pc := pc + 4.U //简单分支预测
+  // }
 
   when(io.rwerr) {
     state := s_error
@@ -66,9 +80,9 @@ class IFU extends Module {
     state := s_idle
   }
   //next cycle of flush signal
-  when(state === s_idle && io.in.valid) {
-    pc := io.in.bits.n_pc
-  }
+  // when(state === s_idle && io.in.valid) {
+  //   pc := io.in.bits.n_pc
+  // }
 
   //TRACE_IFU
   val trace_ifu = Module(new TRACE_IFU)

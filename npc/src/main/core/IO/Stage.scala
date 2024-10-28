@@ -12,21 +12,21 @@ object StageConnect {
         left.ready  := right.ready
 
       case "multi" =>
-        right <> left
+        right       <> left
         right.valid := left.valid
         left.ready  := right.ready
 
       case "pipeline" =>
-        right.bits <> RegEnable(left.bits, left.valid && right.ready)
+        right.bits  <> RegEnable(left.bits, left.valid && right.ready)
         left.ready  := right.ready
         right.valid := RegEnable(left.valid, right.ready || flush) //Problem?
       // right.valid := RegNext(left.valid && right.ready)//Problem?
 
       case "pipeline_state" =>
-        right.bits <> RegEnable(left.bits, left.valid && right.ready)
+        right.bits  <> RegEnable(left.bits, left.valid && right.ready)
         left.ready  := right.ready
         right.valid := left.valid && ~flush
-        //pipeline of lsu inside the module with state machine
+      //pipeline of lsu inside the module with state machine
 
       // case "ooo" =>
       //   right <> Queue(left, 16)

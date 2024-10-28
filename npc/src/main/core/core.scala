@@ -24,36 +24,40 @@ class ypc extends Module {
   val axi_arbiter = Module(new AXI_Lite_Arbiter())
   val hazard_unit = Module(new HazardUnit())
 
-  val flush_pipeline = hazard_unit.io.flush
+  val flush_pipeline = hazard_unit.io.flush || wbu.io.flush_icache
   //ifu
   StageConnect(wbu.io.out, ifu.io.in, flush_pipeline, "pipeline")
-  ifu.io.axi <> axi_arbiter.io.c1
+  ifu.io.axi            <> axi_arbiter.io.c1
   hazard_unit.io.ifu_pc <> ifu.io.ifu_pc
-  flush_pipeline <> ifu.io.flush_pipeline
+  flush_pipeline        <> ifu.io.flush_pipeline
   //decode_stage
   StageConnect(ifu.io.out, decoder.io.in, flush_pipeline, "pipeline")
-  br_han.io.halt      := decoder.io.ebreak
-  ifu.io.flush_icache := decoder.io.flush_icache
-  decoder.io.reg1 <> reg.io.Rread1
-  decoder.io.reg2 <> reg.io.Rread2
-  decoder.io.csr <> reg.io.CSRread
+  // br_han.io.halt      := decoder.io.ebreak
+  // ifu.io.flush_icache := decoder.io.flush_icache
+  decoder.io.reg1           <> reg.io.Rread1
+  decoder.io.reg2           <> reg.io.Rread2
+  decoder.io.csr            <> reg.io.CSRread
   hazard_unit.io.decoder_pc <> decoder.io.decoder_pc
-  flush_pipeline <> decoder.io.flush_pipeline
+  flush_pipeline            <> decoder.io.flush_pipeline
   //exu
   StageConnect(decoder.io.out, exu.io.in, flush_pipeline, "pipeline")
-  flush_pipeline <> exu.io.flush_pipeline
+  flush_pipeline        <> exu.io.flush_pipeline
   hazard_unit.io.exu_pc <> exu.io.pc
+  decoder.io.forwarding <> exu.io.forwarding
   //lsu
   lsu.io.axi <> axi_arbiter.io.c2
   StageConnect(exu.io.out, lsu.io.in, flush_pipeline, "pipeline_state")
+  // lsu.io.forwarding<>decoder.io.forwarding
   //pipeline of lsu inside the module with state machine
 
   //wbu
   StageConnect(lsu.io.out, wbu.io.in, flush_pipeline, "multi")
-  wbu.io.csr_mstvec := reg.io.csr_mstvec
-  reg.io.Rwrite <> wbu.io.Rwrite
-  reg.io.CSRwrite <> wbu.io.CSR_write
-  hazard_unit.io.wbu <> wbu.io.wbu_pc
+  wbu.io.csr_mstvec   := reg.io.csr_mstvec
+  reg.io.Rwrite       <> wbu.io.Rwrite
+  reg.io.CSRwrite     <> wbu.io.CSR_write
+  hazard_unit.io.wbu  <> wbu.io.wbu_pc
+  br_han.io.halt      := wbu.io.ebreak
+  ifu.io.flush_icache := wbu.io.flush_icache
 
   //pipeline sig
   decoder.io.lsu_w_addr <> lsu.io.reg_addr

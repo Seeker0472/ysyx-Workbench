@@ -15,18 +15,22 @@ object Inst_Type_Enum extends ChiselEnum {
 
 class Decoder extends Module {
   val io = IO(new Bundle {
-    val in             = Flipped(Decoupled(new IFUO))
-    val lsu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
-    val exu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
-    val decoder_pc     = Decoupled(UInt(CVAL.DLEN.W))
-    val ebreak         = Output(Bool())
-    val flush_icache   = Output(Bool())
+    val in         = Flipped(Decoupled(new IFUO))
+    val lsu_w_addr = Input(UInt(CVAL.REG_ADDR_LEN.W))
+    val exu_w_addr = Input(UInt(CVAL.REG_ADDR_LEN.W))
+    val decoder_pc = Decoupled(UInt(CVAL.DLEN.W))
+    // val ebreak         = Output(Bool())
+    // val flush_icache   = Output(Bool())
     val flush_pipeline = Input(Bool())
     val reg1           = (new RegReadIO)
     val reg2           = (new RegReadIO)
     val csr            = (new CSRReadIO)
     val out            = Decoupled(new DecoderO)
+    val forwarding     = Flipped(Decoupled(UInt(CVAL.DLEN.W)))
   })
+  //TODO
+  io.forwarding.ready := true.B
+
   //sig pass to hazard_unit
   io.decoder_pc.bits  := io.in.bits.pc
   io.decoder_pc.valid := io.in.valid
@@ -95,12 +99,32 @@ class Decoder extends Module {
     )
   )
   //data
+  // reg conflict whith EXU/(LS+WB)
+  // val conflict = MuxLookup(Type, false.B)(
+  //   Seq(
+  //     Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U))),
+  //     Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U)),
+  //     Inst_Type_Enum.S_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) ),
+  //     Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) )
+  //   )
+  // )
+  val conflict = MuxLookup(Type, false.B)(
+    Seq(
+      Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || (((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)) && ~io.forwarding.valid)),
+      Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid)),
+      Inst_Type_Enum.S_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || (((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)) && ~io.forwarding.valid)),
+      Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || (((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)) && ~io.forwarding.valid))
+    )
+  )
+  val use_forwarding_1 = (io.exu_w_addr === rs1 && rs1 =/= 0.U) && io.forwarding.valid
+  val use_forwarding_2 = (io.exu_w_addr === rs2 && rs2 =/= 0.U) && io.forwarding.valid
+
   //fetch data in decode stage to inc freq
   io.reg1.addr         := rs1
   io.reg2.addr         := rs2
   io.csr.addr          := imm
-  io.out.bits.src1     := io.reg1.data
-  io.out.bits.src2     := io.reg2.data
+  io.out.bits.src1     := Mux(use_forwarding_1, io.forwarding.bits, io.reg1.data)
+  io.out.bits.src2     := Mux(use_forwarding_2, io.forwarding.bits, io.reg2.data)
   io.out.bits.csr_data := io.csr.data
 
   io.out.bits.rd    := rd
@@ -114,8 +138,10 @@ class Decoder extends Module {
   io.out.bits.alu_op_type   := decodedResults(ALUOp_Gen)
 
   //TODO:maybe pass to WBU to take effect?
-  io.ebreak       := decodedResults(Is_Ebreak) && io.in.valid
-  io.flush_icache := decodedResults(Is_fenceI) && io.in.valid
+  // io.ebreak       := decodedResults(Is_Ebreak) && io.in.valid
+  // io.flush_icache := decodedResults(Is_fenceI) && io.in.valid
+  io.out.bits.ebreak       := decodedResults(Is_Ebreak)
+  io.out.bits.flush_icache := decodedResults(Is_fenceI)
 
   //mem_sig for lsu
   io.out.bits.mem_read_enable  := decodedResults(Read_En)
@@ -133,14 +159,14 @@ class Decoder extends Module {
   io.out.bits.mret             := decodedResults(Is_Mret)
 
   // reg conflict whith EXU/(LS+WB)
-  val conflict = MuxLookup(Type, false.B)(
-    Seq(
-      Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U))),
-      Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U)),
-      Inst_Type_Enum.S_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U))),
-      Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)))
-    )
-  )
+  // val conflict = MuxLookup(Type, false.B)(
+  //   Seq(
+  //     Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U))),
+  //     Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U)),
+  //     Inst_Type_Enum.S_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U))),
+  //     Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)))
+  //   )
+  // )
 
   //ready/valid sig
   io.in.ready  := io.out.ready && ~conflict

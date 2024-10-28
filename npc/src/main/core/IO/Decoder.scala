@@ -46,7 +46,8 @@ class DecoderO extends Bundle {
   val csrrw        = Output(Bool())
   val csr_alu_type = Output(CSRALU_Type())
 
-  val ecall = Output(Bool())
-  val mret  = Output(Bool())
-
+  val ecall        = Output(Bool())
+  val mret         = Output(Bool())
+  val flush_icache = Output(Bool())
+  val ebreak       = Output(Bool())
 }

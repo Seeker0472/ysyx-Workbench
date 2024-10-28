@@ -142,6 +142,7 @@ sta: $(TARGET)
 	mv build/ypc_nodpic.sv ../yosys-sta/ypc/ypc.sv
 	cd ../yosys-sta/ && make sta
 	cd ./tools/py && python3 update_freq.py
+	cd ./tools/py && python3 get_area.py
 
 
 -include ../Makefile

@@ -15,6 +15,7 @@ class EXU extends Module {
     val pc             = (Decoupled(UInt(CVAL.DLEN.W)))
     val flush_pipeline = Input(Bool())
     val out            = (Decoupled(new EXU_O))
+    val forwarding     = Decoupled(UInt(CVAL.DLEN.W))
   })
   io.in.ready  := io.out.ready
   io.out.valid := io.in.valid && ~io.flush_pipeline
@@ -30,9 +31,11 @@ class EXU extends Module {
   io.out.bits.mret             := io.in.bits.mret
   io.out.bits.imm              := io.in.bits.imm
   io.out.bits.csrrw            := io.in.bits.csrrw
+  io.out.bits.flush_icache     := io.in.bits.flush_icache
+  io.out.bits.ebreak           := io.in.bits.ebreak
 
   //reg to write for this inst->pass to decoder to stall
-  io.reg_addr := Mux(io.in.valid, io.in.bits.rd, 0.U)
+  io.reg_addr := Mux(io.in.valid && io.in.bits.reg_write_enable, io.in.bits.rd, 0.U)
 
   //pc of this inst pass to hazard_unit
   io.pc.bits  := io.in.bits.pc
@@ -67,8 +70,13 @@ class EXU extends Module {
     )
   )
 
+  val result = Mux(io.in.bits.csrrw, csr_data, alu.io.result) //内存读取/csr操作/算数运算结果
+  io.forwarding.bits  := result
+  io.forwarding.valid := io.in.valid && ~io.in.bits.mem_read_enable
+
   //outputs
-  io.out.bits.alu_result  := alu.io.result //alu的运算结果
+  // io.out.bits.alu_result  := alu.io.result //alu的运算结果
+  io.out.bits.exu_result  := result
   io.out.bits.src2        := src2
   io.out.bits.csr_alu_res := csr_alu_res
   io.out.bits.csr_val     := csr_data
