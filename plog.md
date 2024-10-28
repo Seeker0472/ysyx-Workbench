@@ -39,3 +39,26 @@ LSUr: 9 LSUw: 10        IFU: 9
 
 Cache Hit times:199159917       ,Hit rate:84.45%
 ```
+
+
+```
+[/home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec_dpic.cpp:21 call_ebreak] Ebreak Called!!
+[/home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec_dpic.cpp:25 call_ebreak] YDB: HIT GOOD TRAP at pc = 0xa0005528
+[/home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec.cpp:43 statistic] host time spent = 6798286921 us
+[/home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec.cpp:44 statistic] total guest instructions = 196274308
+[/home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec.cpp:45 statistic] total cycles = 5417302122
+[/home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec.cpp:46 statistic] IPC = 0.036231
+[/home/seeker/Develop/ysyx-workbench/npc/csrc/execute/exec.cpp:48 statistic] simulation frequency = 28871 inst/s
+YPC's performance statistics as follows:===============
+Instructions:196274308  IFU Latency=11
+Calc: 1574862924        Cycles: 2       percent:802.38%
+MEMr: 289416994 Cycles: 2       percent:147.46%
+MEMw: 69930491  Cycles: 13      percent:35.63%
+CSR : 57        Cycles:1        percent:0.00%
+
+Latency:
+LSUr: 9 LSUw: 10        IFU: 11
+
+Cache Hit times:199154867       ,Hit rate:84.45%
+
+```
