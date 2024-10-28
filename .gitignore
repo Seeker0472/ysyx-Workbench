@@ -20,5 +20,6 @@
 !/cachesim/*.py
 !.clangd
 !plog.md
+!npc.png
 
 yosys-sta/*
