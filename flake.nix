@@ -57,6 +57,7 @@
             # 指定verilator版本为5.008
             my-verilator
             # verilator
+            pkgs.ffmpeg
 
             #build-essential
             pkgs.man

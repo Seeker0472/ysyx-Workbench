@@ -26,9 +26,6 @@ image: $(IMAGE).elf
     
 
 run: image
-	# @$(info NEMU_HOME = $(NEMU_HOME))
-	# @$(info NEMUFLAGS = $(NEMUFLAGS))
-	# @$(info IMAGE = $(IMAGE))
 	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
 
 gdb: image
