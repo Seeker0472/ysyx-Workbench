@@ -15,7 +15,7 @@ int print_num_long(char *out, size_t out_offset, long val);
 
 int printf(const char *fmt, ...)
 {
-  char out[50];
+  char out[3000];
   va_list args;
   va_start(args, fmt);
   int len = vsprintf(out, fmt, args);
