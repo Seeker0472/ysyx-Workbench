@@ -17,6 +17,7 @@ class raw_core extends Module {
   val rdata  = RegInit(0.U(32.W))
   val raddr  = RegInit(0.U(32.W))
   val waddr  = RegInit(0.U(32.W))
+  val memrw = Module(new DPIC_MEMRW)
 
   //split the write_state and read_state to support write and read at same cycle!
   //states
@@ -87,7 +88,6 @@ class raw_core extends Module {
   ypc.io.slave.arburst := 0.U
   ypc.io.slave.rready  := 0.U
 
-  val memrw = Module(new DPIC_MEMRW)
   memrw.io.raddr := Mux(ypc.io.master.arvalid, ypc.io.master.araddr, raddr)
   memrw.io.waddr := Mux(ypc.io.master.awvalid, ypc.io.master.awaddr, waddr)
   memrw.io.wdata := ypc.io.master.wdata
