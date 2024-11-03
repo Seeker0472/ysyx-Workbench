@@ -3,13 +3,16 @@
 #include <klib.h>
 
 static Context* (*user_handler)(Event, Context*) = NULL;
-
+//AM的Wrapper-Func,根据mcause 选择event
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
       // default: ; ev.event = EVENT_YIELD; break;
-      case 0xb:  c->mepc+=4;ev.event = EVENT_YIELD; break;
+      //TODO:: case 0x0: EVENT_SYSCALL
+      case 0xb: c->mepc+=4;
+        ev.event = c->gpr[15] == -1 ? EVENT_YIELD : EVENT_SYSCALL;
+        break;
       default: ev.event= EVENT_ERROR;break;
     }
 

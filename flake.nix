@@ -94,7 +94,7 @@
             python312Packages.matplotlib
             python312Packages.numpy
           ];
-
+          hardeningDisable = [ "fortify" ];
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
             # 添加需要的库
             pkgs.ncurses
