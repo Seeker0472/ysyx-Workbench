@@ -3,7 +3,7 @@
 #include <klib.h>
 
 static Context* (*user_handler)(Event, Context*) = NULL;
-//根据mcause 选择event
+//AM的Wrapper-Func,根据mcause 选择event
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};

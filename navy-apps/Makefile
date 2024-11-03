@@ -48,8 +48,7 @@ ARCHIVE  = $(WORK_DIR)/build/$(NAME)-$(ISA).a
 ### Add default libraries for ISA != native
 ifneq ($(ISA), native)
 LIBS += libc libos
-# CFLAGS += -U_FORTIFY_SOURCE  # fix compile error in Newlib on ubuntu
-CFLAGS += -D_FORTIFY_SOURCE=0  # fix compile error in Newlib on ubuntu
+CFLAGS += -U_FORTIFY_SOURCE  # fix compile error in Newlib on ubuntu
 CFLAGS += -save-temps #fordebug
 else
 WL = -Wl,

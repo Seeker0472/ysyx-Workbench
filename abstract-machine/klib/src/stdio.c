@@ -13,8 +13,8 @@ int vsprintf(char *out, const char *fmt, va_list args);
 int print_num_hex(char *out, size_t out_offset, int val);
 int print_num_long(char *out, size_t out_offset, long val);
 
-int printf(const char *fmt, ...)
-{
+int printf(const char *fmt, ...) {
+  //TODO
   char out[3000];
   va_list args;
   va_start(args, fmt);
