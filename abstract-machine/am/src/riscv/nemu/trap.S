@@ -31,15 +31,25 @@ f(30) f(31)
 #define PUSH(n) STORE concat(x, n), (n * XLEN)(sp);
 #define POP(n)  LOAD  concat(x, n), (n * XLEN)(sp);
 
-#define CONTEXT_SIZE  ((NR_REGS + 3) * XLEN)
+#define CONTEXT_SIZE  ((NR_REGS + 3 + 4) * XLEN)
 #define OFFSET_SP     ( 2 * XLEN)
 #define OFFSET_CAUSE  ((NR_REGS + 0) * XLEN)
 #define OFFSET_STATUS ((NR_REGS + 1) * XLEN)
 #define OFFSET_EPC    ((NR_REGS + 2) * XLEN)
 
+#define OFFSET_EVENT  ((NR_REGS + 3) * XLEN)
+#define OFFSET_CAUSE_E  ((NR_REGS + 4) * XLEN)
+#define OFFSET_REF    ((NR_REGS + 5) * XLEN)
+#define OFFSET_MSG    ((NR_REGS + 6) * XLEN)
+
 # 这里似乎是把寄存器，mcause，mstatus，mepc放在了栈上?
 #### STACK
 ##################
+# msg
+# ref
+# cause
+# event
+################## <-
 #  mepc 
 #  mstatus 
 #  mcause 
@@ -62,13 +72,21 @@ __am_asm_trap:
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
+# make Event Struct!
+  STORE a5, OFFSET_EVENT(sp)
+  STORE a0, OFFSET_CAUSE_E(sp)
+  STORE a1, OFFSET_REF(sp)
+  STORE a2, OFFSET_MSG(sp)
 
   # set mstatus.MPRV to pass difftest
   li a0, (1 << 17)
   or t1, t1, a0
   csrw mstatus, t1
 
-  mv a0, sp
+  mv a1, sp
+  li a0, OFFSET_EVENT
+  add a0,sp,a0
+
   jal __am_irq_handle
   
   mv sp,a0
