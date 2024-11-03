@@ -2,7 +2,7 @@
 #include <common.h>
 void do_syscall(Context *c);
 void trace_event(Event e) {
-  Log("Event Type: %d Cause: %lu Reference: %lu Message: %s\n", e.event,
+  Log("Event Type: %d Cause: %x Reference: %x Message: %s\n", e.event,
          e.cause, e.ref, e.msg?e.msg:"NULL");
 }
 static Context *do_event(Event e, Context *c) {
