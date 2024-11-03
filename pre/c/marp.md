@@ -184,12 +184,32 @@ Programs
 ######## <--
 AM    #
 ######## <--
-NPC/NEMU
+NPC/NEMU <--
 ```
 
 ---
 
-##### AM-REGS
+#### HardWare
+
+```c
+//NEMU
+static int key_queue[KEY_QUEUE_LEN] = {};
+static void key_enqueue(uint32_t am_scancode);//<-send_key
+static uint32_t key_dequeue();//<-am
+void send_key(uint8_t scancode, bool is_keydown);//<-SDL
+//npc+ysyxSoC ===> NVBoard(tx,rx)->Uart->apb->AXI->NPC 
+//AM
+#define KEYDOWN_MASK 0x8000
+void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
+  uint32_t code = inw(KBD_ADDR);
+  kbd->keydown =  (code & KEYDOWN_MASK );
+  kbd->keycode = code & ~KEYDOWN_MASK;
+}
+```
+
+---
+
+#### AM-REGS
 
 AM_TIMER_CONFIG,AM_INPUT_CONFIG,AM_TIMER_UPTIME,AM_GPU_FBDRAW
 这些"抽象寄存器"实际上是一个存放了对应函数指针的跳转表,函数反回值是对应的寄存器的struct
