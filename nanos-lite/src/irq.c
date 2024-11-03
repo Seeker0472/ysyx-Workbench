@@ -8,7 +8,7 @@ void trace_event(Event e) {
 static Context *do_event(Event e, Context *c) {
   // IFDEF(STRACE_ENABLE, trace_event(e););
 #ifdef STRACE_ENABLE
-  // trace_event(e);
+  trace_event(e);
 #endif
   switch (e.event) {
   case EVENT_YIELD:
