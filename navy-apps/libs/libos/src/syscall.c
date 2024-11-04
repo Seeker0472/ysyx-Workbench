@@ -64,9 +64,15 @@ int _open(const char *path, int flags, mode_t mode) {
   _exit(SYS_open);
   return 0;
 }
-
+// TODO
+/*
+from Linux manual page:
+  write() writes up to count bytes from the buffer starting at buf
+       to the file referred to by the file descriptor fd.
+*/
 int _write(int fd, void *buf, size_t count) {
-  _exit(SYS_write);
+  // _exit(SYS_write);
+  _syscall_(SYS_write, fd, (intptr_t)buf, count);
   return 0;
 }
 
