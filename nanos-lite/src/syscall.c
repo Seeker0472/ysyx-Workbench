@@ -1,7 +1,7 @@
 #include <common.h>
 #include "syscall.h"
 void do_syscall(Context *c) {
-  printf("syscall:%d,%d,%d,%d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
+  // printf("syscall:%d,%d,%d,%d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
   uintptr_t a[4];
   a[0] = c->GPR1;
 
