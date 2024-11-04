@@ -1,11 +1,18 @@
 #include "am.h"
 #include <common.h>
 void do_syscall(Context *c);
-static Context* do_event(Event e, Context* c) {
+void trace_event(Event e) {
+  Log("Event Type: %d Cause: %x Reference: %x Message: %s\n", e.event,
+         e.cause, e.ref, e.msg?e.msg:"NULL");
+}
+static Context *do_event(Event e, Context *c) {
+  // IFDEF(STRACE_ENABLE, trace_event(e););
+#ifdef STRACE_ENABLE
+  trace_event(e);
+#endif
   switch (e.event) {
   case EVENT_YIELD:
     printf("YIELD!");
-    // do_syscall(c);
     break;
   case EVENT_SYSCALL:
     // printf("syscall!");

@@ -1,6 +1,9 @@
 #include <common.h>
 #include "syscall.h"
 void do_syscall(Context *c) {
+#ifdef STRACE_ENABLE
+  Log("syscall:%d,%d,%d,%d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
+#endif
   uintptr_t a[4];
   a[0] = c->GPR1;
 
@@ -12,6 +15,13 @@ void do_syscall(Context *c) {
     yield();
     // return 0;
     c->GPRx=0;
+    break;
+  case SYS_write:
+    // temp solution as the write to fs also calls
+    // printf("%s",(char *)c->GPR3);
+    for (int i = 0; i <= c->GPR4; i++)
+      putch(((char *)c->GPR3)[i]);
+  c->GPRx=c->GPR4;
     break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

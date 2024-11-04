@@ -7,6 +7,9 @@
 //#define MULTIPROGRAM
 //#define TIME_SHARING
 
+// configs
+// #define STRACE_ENABLE
+
 #include <am.h>
 #include <klib.h>
 #include <klib-macros.h>
