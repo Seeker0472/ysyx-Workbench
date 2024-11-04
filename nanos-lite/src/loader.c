@@ -39,7 +39,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
          hader.e_ident[EI_MAG1] == ELFMAG1 &&
          hader.e_ident[EI_MAG2] == ELFMAG2 &&
          hader.e_ident[EI_MAG3] == ELFMAG3); // check magic number of elf
-  assert(hader.e_machine == EXPECT_TYPE); // check isa
+  assert(hader.e_machine == EXPECT_TYPE);    // check isa
   // printf("%x\n", &hader);
   // load program
   for (int i = 0; i < hader.e_phnum; i++) {
@@ -47,29 +47,34 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     if (ph.p_type == PT_LOAD) {
       ramdisk_read((void *)ph.p_vaddr, ph.p_offset, ph.p_filesz);
       for (char *empty = (char *)ph.p_vaddr + ph.p_filesz;
-           empty < (char *)ph.p_vaddr + ph.p_memsz;empty++)
-        *empty=0;
+           empty < (char *)ph.p_vaddr + ph.p_memsz; empty++)
+        *empty = 0;
     }
   }
   // find _end symbol
   Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
+  Elf_Shdr *strtab = NULL;
+  Elf_Shdr *symtab = NULL;
   for (int i = 0; i < hader.e_shnum; i++) {
-    
+    if (shdrs[i].sh_type == SHT_STRTAB &&
+        i != hader.e_shstrndx) { // 排除sectionHeader的符号表
+      strtab = &shdrs[i];
+    }
     if (shdrs[i].sh_type == SHT_SYMTAB) {
-      Elf_Shdr sh = shdrs[i];
-      Elf_Sym *sym = (Elf_Sym *)((char *)&ramdisk_start + sh.sh_offset);
-      Log("%x", sym);
-      char *strtab_data = ((char *)&ramdisk_start + hader.e_shstrndx);
-      Log("%x", hader.e_shstrndx);
-      Log("%x", &ramdisk_start);
-      for (int j = 0; j < sh.sh_size / sizeof(Elf_Shdr); j++) {
-        Log("%s",&strtab_data[sym[i].st_name]);
-        if (strcmp("_end", &strtab_data[sym[i].st_name]) == 0) {
-          assert(0);
-        }
-      }
+      symtab = &shdrs[i];
     }
   }
+  Elf_Sym *symbols = (Elf_Sym *)((char *)&ramdisk_start + symtab->sh_offset);
+  char *strtab_data = ((char *)&ramdisk_start + strtab->sh_offset);
+  for (int i = 0; i < symtab->sh_size /sizeof(Elf_Sym) ; i++) {
+    if (symbols[i].st_size != 0) {
+      // add_symbol(symbols[i].st_value, symbols[i].st_size,
+      //            &strtab_data[symbols[i].st_name]);
+      if (strcmp("_end", &strtab_data[symbols[i].st_name]) == 0) {
+        assert(0);
+      }
+    }
+	}
   return hader.e_entry;
 }
 
