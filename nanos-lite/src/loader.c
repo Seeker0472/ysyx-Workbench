@@ -55,13 +55,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
   for (int i = 0; i < hader.e_shnum; i++) {
     if (shdrs[i].sh_type == SHT_SYMTAB) {
-      Elf_Shdr sh = shdrs[i];
-      Elf_Sym* sym=(Elf_Sym*)sh.sh_addr;
-      for (int j = 0; j < sh.sh_size / sizeof(Elf_Shdr); j++) {
-        if (strcmp((void *)sym[i].st_name, "_end")==0) {
-          assert(0);
-        }
-      }
+      // Elf_Shdr sh = shdrs[i];
+      // Elf_Sym* sym=(Elf_Sym*)sh.sh_addr;
+      // for (int j = 0; j < sh.sh_size / sizeof(Elf_Shdr); j++) {
+      //   if (strcmp((void *)sym[i].st_name, "_end")==0) {
+      //     assert(0);
+      //   }
+      // }
     }
   }
   return hader.e_entry;
