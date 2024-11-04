@@ -1,6 +1,7 @@
 #include <common.h>
 #include "syscall.h"
 void do_syscall(Context *c) {
+  // printf("syscall:%d",c->GPR1);
   uintptr_t a[4];
   a[0] = c->GPR1;
 
@@ -15,7 +16,7 @@ void do_syscall(Context *c) {
     break;
   case SYS_write:
     // temp solution as the write to fs also calls
-    printf("%s",(char *)c->GPR1);
+    printf("%s",(char *)c->GPR2);
     break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
