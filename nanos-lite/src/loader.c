@@ -63,6 +63,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       Log("%x", hader.e_shstrndx);
       Log("%x", &ramdisk_start);
       for (int j = 0; j < sh.sh_size / sizeof(Elf_Shdr); j++) {
+        Log("%s",&strtab_data[sym[i].st_name]);
         if (strcmp("_end", &strtab_data[sym[i].st_name]) == 0) {
           assert(0);
         }
