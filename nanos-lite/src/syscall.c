@@ -17,7 +17,7 @@ void do_syscall(Context *c) {
   case SYS_write:
     // temp solution as the write to fs also calls
     // printf("%s",(char *)c->GPR3);
-    for (int i = 0; i < c->GPR4;i++)
+    for (int i = 0; i <= c->GPR4;i++)
       putch(((char*)c->GPR3)[i]);
     break;
     default: panic("Unhandled syscall ID = %d", a[0]);
