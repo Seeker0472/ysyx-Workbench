@@ -1,7 +1,7 @@
 #HAS_NAVY = 1
 RAMDISK_FILE = build/ramdisk.img
 
-COMMAND_FLAGS_BASE += -e build/ramdisk.img
+COMMAND_FLAGS_BASE += -e $(abspath build/ramdisk.img)
 NAME = nanos-lite
 SRCS = $(shell find -L ./src/ -name "*.c" -o -name "*.cpp" -o -name "*.S")
 include $(AM_HOME)/Makefile
