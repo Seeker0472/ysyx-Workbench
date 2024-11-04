@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -64,7 +65,6 @@ int _open(const char *path, int flags, mode_t mode) {
   _exit(SYS_open);
   return 0;
 }
-// TODO
 /*
 from Linux manual page:
   write() writes up to count bytes from the buffer starting at buf
@@ -73,11 +73,14 @@ from Linux manual page:
 int _write(int fd, void *buf, size_t count) {
   // _exit(SYS_write);
   _syscall_(SYS_write, fd, (intptr_t)buf, count);
-  // return 0;
+  // return 0; 不是哥们，居然往代码里面下毒
+  // 当时return 0 没有删掉导致真正的返回值被覆盖，newlib无法获取返回值，导致一直输出第一个字符
 }
-
+extern char end;
 void *_sbrk(intptr_t increment) {
-  return (void *)-1;
+  // return (void *)-1;
+  _syscall_(SYS_brk, 0,(intptr_t)&end, increment);
+  //TODO
 }
 
 int _read(int fd, void *buf, size_t count) {

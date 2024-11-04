@@ -1,14 +1,17 @@
 #include "debug.h"
-// #include <assert.h>
 #include <proc.h>
 #include <elf.h>
 
 #ifdef __LP64__
 # define Elf_Ehdr Elf64_Ehdr
-# define Elf_Phdr Elf64_Phdr
+#define Elf_Phdr Elf64_Phdr
+#define Elf_Shdr Elf64_Shdr
+#define Elf_Sym Elf64_Sym
 #else
 # define Elf_Ehdr Elf32_Ehdr
-# define Elf_Phdr Elf32_Phdr
+#define Elf_Phdr Elf32_Phdr
+#define Elf_Shdr Elf32_Shdr
+#define Elf_Sym Elf32_Sym
 #endif
 
 #if defined(__ISA_AM_NATIVE__)
@@ -23,7 +26,7 @@
 //TODO!!
 #endif
 
-extern Elf_Ehdr ramdisk_start;
+    extern Elf_Ehdr ramdisk_start;
 
 // 从ramdisk中`offset`偏移处的`len`字节读入到`buf`中
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
@@ -32,15 +35,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   // TODO();
   Elf_Ehdr hader = ramdisk_start;
   Elf_Phdr *phdrs = (Elf_Phdr *)((char *)&ramdisk_start + hader.e_phoff);
-  // Assert(hader.e_ident[EI_MAG0] == ELFMAG0 &&
-  //        hader.e_ident[EI_MAG1] == ELFMAG1 &&
-  //        hader.e_ident[EI_MAG2] == ELFMAG2 &&
-  //        hader.e_ident[EI_MAG3] == ELFMAG3,"Magic Number Check Failed! Maybe
-  //        not an ELF File"); // check magic number of elf
-  // Assert(hader.e_machine == EXPECT_TYPE,
-  //        "Elf ISA(%d) Different form os ISA:(%d)", hader.e_machine,
-  //        EXPECT_TYPE); // check isa
-  //
   assert(hader.e_ident[EI_MAG0] == ELFMAG0 &&
          hader.e_ident[EI_MAG1] == ELFMAG1 &&
          hader.e_ident[EI_MAG2] == ELFMAG2 &&
@@ -55,6 +49,19 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       for (char *empty = (char *)ph.p_vaddr + ph.p_filesz;
            empty < (char *)ph.p_vaddr + ph.p_memsz;empty++)
         *empty=0;
+    }
+  }
+  // find _end symbol
+  Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
+  for (int i = 0; i < hader.e_shnum; i++) {
+    if (shdrs[i].sh_type == SHT_SYMTAB) {
+      Elf_Shdr sh = shdrs[i];
+      Elf_Sym* sym=(Elf_Sym*)sh.sh_addr;
+      for (int j = 0; j < sh.sh_size / sizeof(Elf_Shdr); j++) {
+        if (strcmp((void *)sym[i].st_name, "_end")==0) {
+          assert(0);
+        }
+      }
     }
   }
   return hader.e_entry;
