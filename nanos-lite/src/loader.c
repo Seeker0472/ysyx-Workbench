@@ -54,12 +54,14 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   // find _end symbol
   Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
   for (int i = 0; i < hader.e_shnum; i++) {
+    
     if (shdrs[i].sh_type == SHT_SYMTAB) {
       Elf_Shdr sh = shdrs[i];
       Elf_Sym *sym = (Elf_Sym *)((char *)&ramdisk_start + sh.sh_offset);
-      Log("%x",sym);
+      Log("%x", sym);
+      char **strtab_data = ((char **)&ramdisk_start + hader.e_shstrndx);
       for (int j = 0; j < sh.sh_size / sizeof(Elf_Shdr); j++) {
-        if (strcmp((void *)sym[i].st_name, "_end")==0) {
+        if (strcmp("_end", strtab_data[sym[i].st_name]) == 0) {
           assert(0);
         }
       }
