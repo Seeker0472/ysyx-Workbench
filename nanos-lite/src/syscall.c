@@ -16,7 +16,7 @@ void do_syscall(Context *c) {
     break;
   case SYS_write:
     // temp solution as the write to fs also calls
-    printf("%s",(char *)c->GPR2);
+    printf("%s",(char *)c->GPR3);
     break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
