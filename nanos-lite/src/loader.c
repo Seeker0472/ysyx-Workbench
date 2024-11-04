@@ -26,7 +26,7 @@
 //TODO!!
 #endif
 
-    extern Elf_Ehdr ramdisk_start;
+extern Elf_Ehdr ramdisk_start;
 
 // 从ramdisk中`offset`偏移处的`len`字节读入到`buf`中
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
@@ -59,11 +59,11 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       Elf_Shdr sh = shdrs[i];
       Elf_Sym *sym = (Elf_Sym *)((char *)&ramdisk_start + sh.sh_offset);
       Log("%x", sym);
-      char **strtab_data = ((char **)&ramdisk_start + hader.e_shstrndx);
+      char *strtab_data = ((char *)&ramdisk_start + hader.e_shstrndx);
       Log("%x", hader.e_shstrndx);
       Log("%x", &ramdisk_start);
       for (int j = 0; j < sh.sh_size / sizeof(Elf_Shdr); j++) {
-        if (strcmp("_end", strtab_data[sym[i].st_name]) == 0) {
+        if (strcmp("_end", &strtab_data[sym[i].st_name]) == 0) {
           assert(0);
         }
       }
