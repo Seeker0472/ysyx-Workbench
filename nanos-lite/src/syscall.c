@@ -1,5 +1,8 @@
 #include <common.h>
 #include "syscall.h"
+
+// uintptr_t end_symbol;
+
 void do_syscall(Context *c) {
 #ifdef STRACE_ENABLE
   Log("syscall:%d,%d,%d,%d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
@@ -22,6 +25,9 @@ void do_syscall(Context *c) {
     for (int i = 0; i <= c->GPR4; i++)
       putch(((char *)c->GPR3)[i]);
   c->GPRx=c->GPR4;
+  break;
+  case SYS_brk:
+    c->GPRx = 0;
     break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

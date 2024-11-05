@@ -72,12 +72,20 @@ from Linux manual page:
 int _write(int fd, void *buf, size_t count) {
   // _exit(SYS_write);
   _syscall_(SYS_write, fd, (intptr_t)buf, count);
-  // return 0; 不是哥们，你居然往代码里面下毒
+  // return 0; 不是哥们，居然往代码里面下毒
   // 当时return 0 没有删掉导致真正的返回值被覆盖，newlib无法获取返回值，导致一直输出第一个字符
 }
-
+extern char end;
+intptr_t end_pos = (intptr_t)&end; 
 void *_sbrk(intptr_t increment) {
-  return (void *)-1;
+  // return (void *)-1;
+  // _syscall_(SYS_brk, 0,(intptr_t)&end, increment);
+  int ret = _syscall_(SYS_brk, end_pos, increment, 0);
+  if (ret != 0)
+    return (void *)-1;
+  end_pos+=increment;
+  return (void*)end_pos;
+  // TODO
 }
 
 int _read(int fd, void *buf, size_t count) {
