@@ -25,7 +25,7 @@
 // #error Unsupported ISA
 //TODO!!
 #endif
-
+extern uintptr_t end_symbol;
 extern Elf_Ehdr ramdisk_start;
 
 // 从ramdisk中`offset`偏移处的`len`字节读入到`buf`中
@@ -67,14 +67,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Sym *symbols = (Elf_Sym *)((char *)&ramdisk_start + symtab->sh_offset);
   char *strtab_data = ((char *)&ramdisk_start + strtab->sh_offset);
   for (int i = 0; i < symtab->sh_size /sizeof(Elf_Sym) ; i++) {
-    // if (symbols[i].st_size != 0) {
-    // add_symbol(symbols[i].st_value, symbols[i].st_size,
-    //            &strtab_data[symbols[i].st_name]);
-    Log("%s",&strtab_data[symbols[i].st_name]);
+    // Log("%s", &strtab_data[symbols[i].st_name]);
     if (strcmp("_end", &strtab_data[symbols[i].st_name]) == 0) {
-      assert(0);
-      }
-    // }
+      // assert(0);
+      // TODO!!!
+      // end_symbol =
+      Log("%x", symbols[i].st_value);
+    }
 	}
   return hader.e_entry;
 }

@@ -1,5 +1,8 @@
 #include <common.h>
 #include "syscall.h"
+
+uintptr_t end_symbol;
+
 void do_syscall(Context *c) {
 #ifdef STRACE_ENABLE
   Log("syscall:%d,%d,%d,%d\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
