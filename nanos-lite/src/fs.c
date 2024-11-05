@@ -39,7 +39,8 @@ static Finfo file_table[] __attribute__((used)) = {
 #include "files.h"
 };
 
-extern char *ramdisk_start;
+extern char ramdisk_start;
+
 //TODO:flags mode
 int fs_open(const char *pathname, int flags, int mode) {
   for (int i = 0; i < sizeof(file_table) / sizeof(Finfo); i++) {
@@ -55,7 +56,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
   for (int i = 0; i < len; i++) {
     if (i == file_table[fd].size)
       return i;
-    *((char *)buf + i) = ramdisk_start[file_table[fd].open_offset + i];
+    *((char *)buf + i) = (&ramdisk_start)[file_table[fd].open_offset + i];
   }
   file_table[fd].open_offset += len;
   return len;
@@ -64,7 +65,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   for (int i = 0; i < len; i++) {
     if (i == file_table[fd].size)
       return i;
-    ramdisk_start[file_table[fd].open_offset + i] = *((char *)buf + i);
+    (&ramdisk_start)[file_table[fd].open_offset + i] = *((char *)buf + i);
   }
   file_table[fd].open_offset += len;
   return len;
