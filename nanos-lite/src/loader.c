@@ -38,11 +38,11 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Ehdr *hader = malloc(sizeof(Elf_Ehdr));
   int fd = fs_open(filename, 0, 0);
   Log("fd=%d",fd);
-  fs_read(fd, hader, sizeof(Elf_Ehdr));
-  // assert(hader->e_ident[EI_MAG0] == ELFMAG0 &&
-  //        hader->e_ident[EI_MAG1] == ELFMAG1 &&
-  //        hader->e_ident[EI_MAG2] == ELFMAG2 &&
-  //        hader->e_ident[EI_MAG3] == ELFMAG3); // check magic number of elf
+  assert(fs_read(fd, hader, sizeof(Elf_Ehdr))==sizeof(Elf_Ehdr));
+  assert(hader->e_ident[EI_MAG0] == ELFMAG0 &&
+         hader->e_ident[EI_MAG1] == ELFMAG1 &&
+         hader->e_ident[EI_MAG2] == ELFMAG2 &&
+         hader->e_ident[EI_MAG3] == ELFMAG3); // check magic number of elf
   assert(hader->e_machine == EXPECT_TYPE);    // check isa
   Log("reading Phdrs");
   Elf_Phdr *phdrs = malloc(sizeof(Elf_Phdr) * hader->e_phnum);
