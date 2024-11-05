@@ -52,29 +52,29 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     }
   }
   // find _end symbol
-  Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
-  Elf_Shdr *strtab = NULL;
-  Elf_Shdr *symtab = NULL;
-  for (int i = 0; i < hader.e_shnum; i++) {
-    if (shdrs[i].sh_type == SHT_STRTAB &&
-        i != hader.e_shstrndx) { // 排除sectionHeader的符号表
-      strtab = &shdrs[i];
-    }
-    if (shdrs[i].sh_type == SHT_SYMTAB) {
-      symtab = &shdrs[i];
-    }
-  }
-  Elf_Sym *symbols = (Elf_Sym *)((char *)&ramdisk_start + symtab->sh_offset);
-  char *strtab_data = ((char *)&ramdisk_start + strtab->sh_offset);
-  for (int i = 0; i < symtab->sh_size /sizeof(Elf_Sym) ; i++) {
-    // Log("%s", &strtab_data[symbols[i].st_name]);
-    if (strcmp("_end", &strtab_data[symbols[i].st_name]) == 0) {
-      // assert(0);
-      // TODO!!!
-      // end_symbol =
-      Log("%x", symbols[i].st_value);
-    }
-	}
+  // Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
+  // Elf_Shdr *strtab = NULL;
+  // Elf_Shdr *symtab = NULL;
+  // for (int i = 0; i < hader.e_shnum; i++) {
+  //   if (shdrs[i].sh_type == SHT_STRTAB &&
+  //       i != hader.e_shstrndx) { // 排除sectionHeader的符号表
+  //     strtab = &shdrs[i];
+  //   }
+  //   if (shdrs[i].sh_type == SHT_SYMTAB) {
+  //     symtab = &shdrs[i];
+  //   }
+  // }
+  // Elf_Sym *symbols = (Elf_Sym *)((char *)&ramdisk_start + symtab->sh_offset);
+  // char *strtab_data = ((char *)&ramdisk_start + strtab->sh_offset);
+  // for (int i = 0; i < symtab->sh_size /sizeof(Elf_Sym) ; i++) {
+  //   // Log("%s", &strtab_data[symbols[i].st_name]);
+  //   if (strcmp("_end", &strtab_data[symbols[i].st_name]) == 0) {
+  //     // assert(0);
+  //     // TODO!!!
+  //     end_symbol =symbols[i].st_value;
+  //     Log("find symbol_end:%x", symbols[i].st_value);
+  //   }
+	// }
   return hader.e_entry;
 }
 

@@ -1,7 +1,7 @@
 #include <common.h>
 #include "syscall.h"
 
-uintptr_t end_symbol;
+// uintptr_t end_symbol;
 
 void do_syscall(Context *c) {
 #ifdef STRACE_ENABLE
@@ -27,9 +27,10 @@ void do_syscall(Context *c) {
   c->GPRx=c->GPR4;
   break;
   case SYS_brk:
-    c->GPRx = *(char *)c->GPR3;
-    // c->GPR3 = 
-    //TODO
+    c->GPRx = 0;
+    // c->GPRx = *(char *)c->GPR3;
+    // c->GPR3 =
+    // TODO
     break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
