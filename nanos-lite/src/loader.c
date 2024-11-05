@@ -43,6 +43,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
          hader->e_ident[EI_MAG2] == ELFMAG2 &&
          hader->e_ident[EI_MAG3] == ELFMAG3); // check magic number of elf
   assert(hader->e_machine == EXPECT_TYPE);    // check isa
+  Log("reading Phdrs");
   Elf_Phdr *phdrs = malloc(sizeof(Elf_Phdr) * hader->e_phnum);
   fs_lseek(fd, hader->e_phoff, SEEK_SET);
   fs_read(fd, phdrs, sizeof(Elf_Phdr) * hader->e_phnum);
