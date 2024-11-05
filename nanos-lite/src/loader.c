@@ -46,7 +46,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Phdr *phdrs = malloc(sizeof(Elf_Phdr) * hader->e_phnum);
   fs_lseek(fd, hader->e_phoff, SEEK_SET);
   fs_read(fd, phdrs, sizeof(Elf_Phdr) * hader->e_phnum);
-
+  Log("readed Phdrs");
   for (int i = 0; i < hader->e_phnum; i++) {
     Elf_Phdr ph = phdrs[i];
     if (ph.p_type == PT_LOAD) {
