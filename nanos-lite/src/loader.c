@@ -34,7 +34,7 @@
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  // TODO();
+  Log("reading Headers");
   Elf_Ehdr *hader = malloc(sizeof(Elf_Ehdr));
   int fd = fs_open(filename, 0, 0);
   fs_read(fd, hader, sizeof(Elf_Ehdr));
@@ -44,6 +44,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
          hader->e_ident[EI_MAG3] == ELFMAG3); // check magic number of elf
   assert(hader->e_machine == EXPECT_TYPE);    // check isa
   Elf_Phdr *phdrs = malloc(sizeof(Elf_Phdr) * hader->e_phnum);
+  fs_lseek(fd, hader->e_phoff, SEEK_SET);
+  fs_read(fd, phdrs, sizeof(Elf_Phdr) * hader->e_phnum);
 
   for (int i = 0; i < hader->e_phnum; i++) {
     Elf_Phdr ph = phdrs[i];
