@@ -37,6 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Log("reading Headers");
   Elf_Ehdr *hader = malloc(sizeof(Elf_Ehdr));
   int fd = fs_open(filename, 0, 0);
+  Log("fd=%d",fd);
   fs_read(fd, hader, sizeof(Elf_Ehdr));
   assert(hader->e_ident[EI_MAG0] == ELFMAG0 &&
          hader->e_ident[EI_MAG1] == ELFMAG1 &&
