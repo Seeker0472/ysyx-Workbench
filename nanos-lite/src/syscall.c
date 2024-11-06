@@ -33,7 +33,7 @@ void do_syscall(Context *c) {
     fs_read(c->GPR2, (void*)c->GPR3, c->GPR4);
     break;
   case SYS_open:
-    fs_open((const char *)c->GPR2,c->GPR3,c->GPR4);
+    c->GPRx=fs_open((const char *)c->GPR2,c->GPR3,c->GPR4);
     break;
   case SYS_close:
     fs_close(c->GPR2);
