@@ -27,19 +27,19 @@ void do_syscall(Context *c) {
     //  for (int i = 0; i <= c->GPR4; i++)
     //    putch(((char *)c->GPR3)[i]);
     //  c->GPRx=c->GPR4;
-    c->GPRx = fs_write(c->GPR2, (void *)c->GPR3, c->GPR4);
+    fs_write(c->GPR2, (void *)c->GPR3, c->GPR4);
     break;
   case SYS_read:
-    c->GPRx = fs_read(c->GPR2, (void *)c->GPR3, c->GPR4);
+    fs_read(c->GPR2, (void*)c->GPR3, c->GPR4);
     break;
   case SYS_open:
     c->GPRx=fs_open((const char *)c->GPR2,c->GPR3,c->GPR4);
     break;
   case SYS_close:
-    c->GPRx = fs_close(c->GPR2);
+    fs_close(c->GPR2);
     break;
   case SYS_lseek:
-    c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
+    fs_lseek(c->GPR2, c->GPR3, c->GPR4);
     break;
   case SYS_brk:
     c->GPRx = 0;
