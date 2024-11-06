@@ -1,5 +1,8 @@
 #include <fs.h>
 
+size_t ramdisk_read(void *buf, size_t offset, size_t len);
+size_t ramdisk_write(const void *buf, size_t offset, size_t len);
+
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
 // 把目录分隔符/也认为是文件名的一部分
@@ -53,24 +56,21 @@ int fs_open(const char *pathname, int flags, int mode) {
   assert(0);
 }
 size_t fs_read(int fd, void *buf, size_t len) {
-  for (int i = 0; i < len; i++) {
-    if (i == file_table[fd].size)
-      return i;
-    *((char *)buf + i) =
-        (&ramdisk_start)[file_table[fd].disk_offset+file_table[fd].open_offset +
-                         i];
+  if (file_table[fd].open_offset + len < file_table[fd].size) {
+    ramdisk_read(buf, file_table[fd].open_offset, len);
+    file_table[fd].open_offset += len;
+  } else {
+    assert(0);
   }
-  file_table[fd].open_offset += len;
   return len;
 }
 size_t fs_write(int fd, const void *buf, size_t len) {
-  for (int i = 0; i < len; i++) {
-    if (i == file_table[fd].size)
-      return i;
-    (&ramdisk_start)[file_table[fd].disk_offset+file_table[fd].open_offset + i] =
-        *((char *)buf + i);
+  if (file_table[fd].open_offset + len < file_table[fd].size) {
+    ramdisk_write(buf, file_table[fd].open_offset, len);
+    file_table[fd].open_offset += len;
+  } else {
+    assert(0);
   }
-  file_table[fd].open_offset += len;
   return len;
 }
 size_t fs_lseek(int fd, size_t offset, int whence) {

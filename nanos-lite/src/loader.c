@@ -25,26 +25,30 @@
 #else
 #define EXPECT_TYPE EM_RISCV
 // #error Unsupported ISA
-//TODO!!
 #endif
 // extern uintptr_t end_symbol;
 // extern Elf_Ehdr ramdisk_start;
 
 // 从ramdisk中`offset`偏移处的`len`字节读入到`buf`中
-size_t ramdisk_read(void *buf, size_t offset, size_t len);
+// size_t ramdisk_read(void *buf, size_t offset, size_t len);
 
+// loads elf file from fs
 static uintptr_t loader(PCB *pcb, const char *filename) {
+  // read header
   Elf_Ehdr *hader = malloc(sizeof(Elf_Ehdr));
   int fd = fs_open(filename, 0, 0);
-  assert(fs_read(fd, hader, sizeof(Elf_Ehdr))==sizeof(Elf_Ehdr));
+  assert(fs_read(fd, hader, sizeof(Elf_Ehdr)) == sizeof(Elf_Ehdr));
+  // check magic number 
   assert(hader->e_ident[EI_MAG0] == ELFMAG0 &&
          hader->e_ident[EI_MAG1] == ELFMAG1 &&
          hader->e_ident[EI_MAG2] == ELFMAG2 &&
          hader->e_ident[EI_MAG3] == ELFMAG3); // check magic number of elf
   assert(hader->e_machine == EXPECT_TYPE);    // check isa
+  // read phdrs
   Elf_Phdr *phdrs = malloc(sizeof(Elf_Phdr) * hader->e_phnum);
   fs_lseek(fd, hader->e_phoff, SEEK_SET);
   fs_read(fd, phdrs, sizeof(Elf_Phdr) * hader->e_phnum);
+  // load segments
   for (int i = 0; i < hader->e_phnum; i++) {
     Elf_Phdr ph = phdrs[i];
     if (ph.p_type == PT_LOAD) {
@@ -57,7 +61,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
         *empty = 0;
     }
   }
-  // find _end symbol
+  // find _end symbol maybe not the os work
   // Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
   // Elf_Shdr *strtab = NULL;
   // Elf_Shdr *symtab = NULL;
