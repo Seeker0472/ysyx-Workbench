@@ -17,16 +17,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_yield:
     yield();
-    // return 0;
     c->GPRx=0;
     break;
   case SYS_write:
-    // TODO!!!
-    //  temp solution as the write to fs also calls
-    //  printf("%s",(char *)c->GPR3);
-    //  for (int i = 0; i <= c->GPR4; i++)
-    //    putch(((char *)c->GPR3)[i]);
-    //  c->GPRx=c->GPR4;
     c->GPRx = fs_write(c->GPR2, (void *)c->GPR3, c->GPR4);
     break;
   case SYS_read:
