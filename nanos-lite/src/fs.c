@@ -87,6 +87,7 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   return len;
 }
 size_t fs_lseek(int fd, size_t offset, int whence) {
+  Log("fsl");
   switch (whence) {
   case SEEK_SET:
     if (offset > file_table[fd].size)
