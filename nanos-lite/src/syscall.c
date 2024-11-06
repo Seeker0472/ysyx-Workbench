@@ -1,5 +1,6 @@
 #include <common.h>
 #include "syscall.h"
+#include "fs.h"
 
 // uintptr_t end_symbol;
 
@@ -20,12 +21,26 @@ void do_syscall(Context *c) {
     c->GPRx=0;
     break;
   case SYS_write:
-    // temp solution as the write to fs also calls
-    // printf("%s",(char *)c->GPR3);
-    for (int i = 0; i <= c->GPR4; i++)
-      putch(((char *)c->GPR3)[i]);
-  c->GPRx=c->GPR4;
-  break;
+    // TODO!!!
+    //  temp solution as the write to fs also calls
+    //  printf("%s",(char *)c->GPR3);
+    //  for (int i = 0; i <= c->GPR4; i++)
+    //    putch(((char *)c->GPR3)[i]);
+    //  c->GPRx=c->GPR4;
+    fs_write(c->GPR2, (void *)c->GPR3, c->GPR4);
+    break;
+  case SYS_read:
+    fs_read(c->GPR2, (void*)c->GPR3, c->GPR4);
+    break;
+  case SYS_open:
+    fs_open((const char *)c->GPR2,c->GPR3,c->GPR4);
+    break;
+  case SYS_close:
+    fs_close(c->GPR2);
+    break;
+  case SYS_lseek:
+    fs_lseek(c->GPR2, c->GPR3, c->GPR4);
+    break;
   case SYS_brk:
     c->GPRx = 0;
     break;
