@@ -6,7 +6,7 @@
 
 void do_syscall(Context *c) {
 #ifdef STRACE_ENABLE
-  Log("syscall:0x%x,0x%lx,0x%lx,0x%lx\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
+  Log("syscall:0x%x,0x%x,0x%x,0x%x\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
 #endif
   uintptr_t a[4];
   a[0] = c->GPR1;
