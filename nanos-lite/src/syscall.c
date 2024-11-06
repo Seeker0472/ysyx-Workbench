@@ -3,7 +3,7 @@
 #include "fs.h"
 
 // uintptr_t end_symbol;
-extern char * get_filename(int fd);
+extern const char *get_filename(int fd);
 const char *event_names[] = {
     "SYS_exit",  "SYS_yield",  "SYS_open",   "SYS_read",   "SYS_write",
     "SYS_kill",  "SYS_getpid", "SYS_close",  "SYS_lseek",  "SYS_brk",
@@ -18,7 +18,7 @@ void do_syscall(Context *c) {
   case SYS_write:
   case SYS_lseek:
   case SYS_close:
-    Log("Syscall: %s,0x%x,0x%x,0x%x\n", event_names[c->GPR1], c->GPR2, c->GPR3, c->GPR4);
+    Log("Syscall: %s, %s,0x%x,0x%x\n", event_names[c->GPR1], get_filename(c->GPR2), c->GPR3, c->GPR4);
     break;
   default:
     Log("Syscall: %s,0x%x,0x%x,0x%x\n", event_names[c->GPR1], c->GPR2, c->GPR3, c->GPR4);

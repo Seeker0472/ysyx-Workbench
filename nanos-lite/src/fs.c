@@ -105,7 +105,8 @@ int fs_close(int fd) {
   return 0;
 }
 //func for trace
-char *get_filename(int fd) {
+const char *get_filename(int fd) {
+  printf("%d\n",fd);
   return file_table[fd].name;
 }
 
