@@ -18,7 +18,7 @@ void do_syscall(Context *c) {
   case SYS_write:
   case SYS_lseek:
   case SYS_close:
-    Log("Syscall: %s,%s,0x%x,0x%x\n", event_names[c->GPR1], get_filename(c->GPR2), c->GPR3, c->GPR4);
+    Log("Syscall: %s,0x%x,0x%x,0x%x\n", event_names[c->GPR1], c->GPR2, c->GPR3, c->GPR4);
     break;
   default:
     Log("Syscall: %s,0x%x,0x%x,0x%x\n", event_names[c->GPR1], c->GPR2, c->GPR3, c->GPR4);
