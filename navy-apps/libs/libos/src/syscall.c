@@ -62,7 +62,6 @@ void _exit(int status) {
 
 int _open(const char *path, int flags, mode_t mode) {
   _syscall_(SYS_open, (intptr_t)path, flags, mode);
-  // return 0;
 }
 /*
 from Linux manual page:
@@ -70,7 +69,6 @@ from Linux manual page:
        to the file referred to by the file descriptor fd.
 */
 int _write(int fd, void *buf, size_t count) {
-  // _exit(SYS_write);
   _syscall_(SYS_write, fd, (intptr_t)buf, count);
   // return 0; 不是哥们，居然往代码里面下毒
   // 当时return 0 没有删掉导致真正的返回值被覆盖，newlib无法获取返回值，导致一直输出第一个字符
@@ -83,7 +81,6 @@ void *_sbrk(intptr_t increment) {
     return (void *)-1;
   end_pos+=increment;
   return (void*)end_pos;
-  // TODO
 }
 
 int _read(int fd, void *buf, size_t count) {
@@ -99,8 +96,7 @@ off_t _lseek(int fd, off_t offset, int whence) {
 }
 
 int _gettimeofday(struct timeval *tv, struct timezone *tz) {
-  _exit(SYS_gettimeofday);
-  return 0;
+  return _syscall_(SYS_time, (intptr_t)tv, (intptr_t)tz, 0);
 }
 
 int _execve(const char *fname, char * const argv[], char *const envp[]) {
