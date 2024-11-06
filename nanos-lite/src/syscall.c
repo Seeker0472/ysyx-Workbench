@@ -42,7 +42,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_lseek(c->GPR2, c->GPR3, c->GPR4);
     break;
   case SYS_brk:
-    c->GPRx = 10;
+    c->GPRx = 0;
     break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
