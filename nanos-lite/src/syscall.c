@@ -4,9 +4,15 @@
 
 // uintptr_t end_symbol;
 
+const char *syscall_names[] = {
+    "SYS_exit",  "SYS_yield",  "SYS_open",   "SYS_read",   "SYS_write",
+    "SYS_kill",  "SYS_getpid", "SYS_close",  "SYS_lseek",  "SYS_brk",
+    "SYS_fstat", "SYS_time",   "SYS_signal", "SYS_execve", "SYS_fork",
+    "SYS_link",  "SYS_unlink", "SYS_wait",   "SYS_times",  "SYS_gettimeofday"};
+
 void do_syscall(Context *c) {
 #ifdef STRACE_ENABLE
-  Log("syscall:0x%x,0x%x,0x%x,0x%x\n", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
+  Log("syscall:0x%s,0x%x,0x%x,0x%x\n", syscall_names[c->GPR1], c->GPR2, c->GPR3, c->GPR4);
 #endif
   uintptr_t a[4];
   a[0] = c->GPR1;
