@@ -104,6 +104,10 @@ int fs_close(int fd) {
   file_table[fd].open_offset = 0;
   return 0;
 }
+//func for trace
+char *get_filename(int fd) {
+  return file_table[fd].name;
+}
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
