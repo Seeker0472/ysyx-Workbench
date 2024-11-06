@@ -4,7 +4,7 @@
 
 // uintptr_t end_symbol;
 
-const char *syscall_names[] = {
+const char *event_names[] = {
     "SYS_exit",  "SYS_yield",  "SYS_open",   "SYS_read",   "SYS_write",
     "SYS_kill",  "SYS_getpid", "SYS_close",  "SYS_lseek",  "SYS_brk",
     "SYS_fstat", "SYS_time",   "SYS_signal", "SYS_execve", "SYS_fork",
@@ -12,7 +12,7 @@ const char *syscall_names[] = {
 
 void do_syscall(Context *c) {
 #ifdef STRACE_ENABLE
-  Log("syscall:0x%s,0x%x,0x%x,0x%x\n", syscall_names[c->GPR1], c->GPR2, c->GPR3, c->GPR4);
+  Log("Syscall: %s,0x%x,0x%x,0x%x\n", event_names[c->GPR1], c->GPR2, c->GPR3, c->GPR4);
 #endif
   uintptr_t a[4];
   a[0] = c->GPR1;
