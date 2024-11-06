@@ -25,13 +25,7 @@
 #else
 #define EXPECT_TYPE EM_RISCV
 // #error Unsupported ISA
-//TODO!!
 #endif
-// extern uintptr_t end_symbol;
-// extern Elf_Ehdr ramdisk_start;
-
-// 从ramdisk中`offset`偏移处的`len`字节读入到`buf`中
-// size_t ramdisk_read(void *buf, size_t offset, size_t len);
 
 // loads elf file from fs
 static uintptr_t loader(PCB *pcb, const char *filename) {
