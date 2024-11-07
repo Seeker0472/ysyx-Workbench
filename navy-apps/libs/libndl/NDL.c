@@ -18,10 +18,10 @@ uint32_t NDL_GetTicks() {
 }
 
 int NDL_PollEvent(char *buf, int len) {
-  // FILE *fp = fopen("/dev/events", "r");
+  FILE *fp = fopen("/dev/events", "r");
   // return fscanf(fp, "%s", buf);
-  sprintf(buf, "1234");
-  return 1;
+  // sprintf(buf, "1234");
+  return 0;
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
