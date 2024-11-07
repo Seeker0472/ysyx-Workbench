@@ -5,8 +5,9 @@
 #include <BMP.h>
 
 int main() {
-  // NDL_Init(0);
+  NDL_Init(0);
   int w, h;
+  printf("12");
   void *bmp = BMP_Load("/share/pictures/projectn.bmp", &w, &h);
   printf("%d,%d\n",w,h);
   assert(bmp);
