@@ -43,9 +43,9 @@ size_t get_event(void *buf, size_t offset, size_t len) {
   if (ev.keycode == AM_KEY_NONE) {
     return 0;
   } else {
-
+    // printf("%s %s\n", ev.keydown ? "kd" : "ku", am_key_names[ev.keycode]);
     return sprintf(buf,"%s %s", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
-    // printf("%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
+    
     // return 0;
   }
 }

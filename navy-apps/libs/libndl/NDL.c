@@ -22,9 +22,9 @@ int NDL_PollEvent(char *buf, int len) {
   // FILE *fp = fopen("/dev/events", "r");
   // fseek(fp,0,SEEK_SET);
   int fp = open("/dev/events", O_RDONLY);
-  read(fp, buf, sizeof(buf) - 1);
+  return read(fp, buf, sizeof(buf) - 1);
   // sprintf(buf, "1234");
-  return 0;
+  // return 0;
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
