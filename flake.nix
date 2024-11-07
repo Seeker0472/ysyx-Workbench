@@ -83,7 +83,7 @@
             pkgs.mill
             pkgs.pkgsCross.riscv64.buildPackages.gcc
             pkgs.pkgsCross.riscv64.buildPackages.binutils
-        pkgs.bear    
+            pkgs.bear    
 	# TODO:add more!!!
             pkgs.ncurses
             pkgs.clang-tools

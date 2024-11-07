@@ -17,14 +17,15 @@ uint32_t NDL_GetTicks() {
   gettimeofday(&stime, NULL);
   return stime.tv_sec * 1000 + stime.tv_usec/1000;
 }
-
+// todo what the difference between fopen and open????
 int NDL_PollEvent(char *buf, int len) {
   // FILE *fp = fopen("/dev/events", "r");
   // fseek(fp,0,SEEK_SET);
-  int fp = open("/dev/events", O_RDONLY);
-  return read(fp, buf, sizeof(buf) - 1);
   // sprintf(buf, "1234");
   // return 0;
+  int fp = open("/dev/events", O_RDONLY);
+  return read(fp, buf, sizeof(buf) - 1);
+
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
