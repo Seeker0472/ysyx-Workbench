@@ -49,9 +49,7 @@ size_t get_event(void *buf, size_t offset, size_t len) {
 }
 size_t get_disp_info(void *buf, size_t offset, size_t len) {
   // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
-  // return sprintf(buf, "WIDTH : 640\nHEIGHT:480");
-  assert(0);
-  return 0;
+  return sprintf(buf, "WIDTH : 640\nHEIGHT:480");
 }
 size_t display_pixel(const void *buf, size_t offset, size_t len) {
   // TODO
