@@ -45,7 +45,7 @@ size_t get_event(void *buf, size_t offset, size_t len) {
   } else {
 
     // return fprintf(buf,"%s %s", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
-    printf("%s %s", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
+    printf("%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
     return 0;
   }
 }
