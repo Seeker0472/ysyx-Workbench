@@ -33,9 +33,9 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
 }
-size_t get_event() {
-  //TODO
-}
+// size_t get_event() {
+//   //TODO
+// }
 
 size_t serial_write(const void *buf, size_t offset, size_t len);
 

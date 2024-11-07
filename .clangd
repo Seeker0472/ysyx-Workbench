@@ -1,0 +1,26 @@
+# Fragment common to C and C++ source files
+CompileFlags:
+    Add:
+        - "-I/home/seeker/Develop/ysyx-workbench/nemu/include"
+        - "-I/home/seeker/Develop/ysyx-workbench/nemu/src/isa/riscv32/include"
+        - "-I/home/seeker/Develop/ysyx-workbench/abstract-machine/am/include"
+        - "-I/home/seeker/Develop/ysyx-workbench/abstract-machine/klib/include"
+        - "-I/home/seeker/Develop/ysyx-workbench/nvboard/usr/include"
+        - "-I/home/seeker/Develop/ysyx-workbench/nvboard/include"
+        - "-I/usr/include/SDL2"
+        - "-I/home/seeker/Develop/ysyx-workbench/npc/build/npc_build"
+        - "-I/home/seeker/Develop/ysyx-workbench/npc/build/soc_build"
+        - "-I/home/seeker/Develop/ysyx-workbench/abstract-machine/am/src"
+        - "-I/home/seeker/Develop/ysyx-workbench/abstract-machine/am/src/platform/nemu/include/"
+        - "-I/nix/store/a0x4f1y21cb2sfk05s8p4bd9pvrbxg47-verilator-5.008/share/verilator/include/vltstd"
+        - "-I/nix/store/a0x4f1y21cb2sfk05s8p4bd9pvrbxg47-verilator-5.008/share/verilator/include"
+        - "-I/home/seeker/Develop/ysyx-workbench/nanos-lite/include"
+        - "-DARCH_H=\"arch/riscv.h\""
+        - "-DISA_H=\"riscv/riscv.h\""
+        - "-D__GUEST_ISA__=riscv32"
+        - "-include"
+        - "stdint.h"
+        - "-include"
+        - "am.h"
+    Compiler: gcc
+
