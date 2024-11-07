@@ -18,6 +18,7 @@ uint32_t NDL_GetTicks() {
 }
 
 int NDL_PollEvent(char *buf, int len) {
+  //TODO
   return 0;
 }
 
@@ -57,7 +58,7 @@ int NDL_PlayAudio(void *buf, int len) {
 int NDL_QueryAudio() {
   return 0;
 }
-
+//TODO
 int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
