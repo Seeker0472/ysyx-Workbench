@@ -1,6 +1,8 @@
 #include <common.h>
 #include "syscall.h"
 #include "fs.h"
+#include <stdint.h>
+#include <sys/time.h>
 
 // uintptr_t end_symbol;
 extern const char *get_filename(int fd);
@@ -32,7 +34,7 @@ void do_syscall(Context *c) {
   a[1] = c->GPR2;
   a[2] = c->GPR3;
   a[3] = c->GPR4;
-
+  uint64_t time;
   switch (a[0]) {
   case SYS_exit:
     halt(0);
@@ -59,6 +61,12 @@ void do_syscall(Context *c) {
   case SYS_brk:
     c->GPRx = 0;
     break;
-    default: panic("Unhandled syscall ID = %d", a[0]);
-  }
+  case SYS_time:
+    time = io_read(AM_TIMER_UPTIME).us;
+    ((struct timeval *)a[1])->tv_sec = time / 1000000;
+    ((struct timeval *)a[1])->tv_usec = time % 1000000;
+    c->GPRx = 0;
+    break;
+    default : panic("Unhandled syscall ID = %d", a[0]);
+    }
 }
