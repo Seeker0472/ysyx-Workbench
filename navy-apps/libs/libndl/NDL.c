@@ -21,7 +21,7 @@ uint32_t NDL_GetTicks() {
 int NDL_PollEvent(char *buf, int len) {
   // FILE *fp = fopen("/dev/events", "r");
   // fseek(fp,0,SEEK_SET);
-  int fp = open("example.txt", O_RDONLY);
+  int fp = open("/dev/events", O_RDONLY);
   read(fp, buf, sizeof(buf) - 1);
   // sprintf(buf, "1234");
   return 0;
