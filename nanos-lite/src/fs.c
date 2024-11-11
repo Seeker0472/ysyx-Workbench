@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #define NAMEINIT(key) [AM_KEY_##key] = #key,
-static const char *am_key_names[] = {AM_KEYS(NAMEINIT)};
+
 
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
@@ -39,47 +39,50 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
 }
-size_t get_event(void *buf, size_t offset, size_t len) {
-  AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
-  if (ev.keycode == AM_KEY_NONE) {
-    return 0;
-  } else {
-    // printf("%s %s\n", ev.keydown ? "kd" : "ku", am_key_names[ev.keycode]);
-    return sprintf(buf,"%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
-  }
-}
-size_t get_disp_info(void *buf, size_t offset, size_t len) {
-  // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
-  AM_GPU_CONFIG_T gpuconfig;
-  ioe_read(AM_GPU_CONFIG, &gpuconfig);
-  if (gpuconfig.present) {
-    return sprintf(buf,"WIDTH:%d\nHEIGHT:%d\n",gpuconfig.width,gpuconfig.height);
-  }
-  else
-    return sprintf(buf, "WIDTH:640\nHEIGHT:480\n");
-}
-size_t display_pixel(const void *buf, size_t offset, size_t len) {
-  // TODO
-  // AM_GPU_FBDRAW_T gpudraw;
-  // ioe_write(int reg, void *buf)
-  printf("%d",(int)offset);
-  io_write(AM_GPU_FBDRAW, offset/screen_w, offset%screen_w, (void *)buf, len, 1, true);
-  return 0;
-}
+size_t events_read(void *buf, size_t offset, size_t len);
 
 size_t serial_write(const void *buf, size_t offset, size_t len);
+size_t dispinfo_read(void *buf, size_t offset, size_t len);
+size_t display_pixel(const void *buf, size_t offset, size_t len);
 
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
     [FD_STDIN] = {"stdin", 0, 0, invalid_read, invalid_write},
     [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
     [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
-    [FD_EVENTS] = {"/dev/events", 0, 0, get_event, invalid_write},
+    [FD_EVENTS] = {"/dev/events", 0, 0, events_read, invalid_write},
     [FD_FB] = {"/dev/fb", 0, 0, invalid_read, display_pixel},
-    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, get_disp_info, invalid_write},
-    
+    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write},
+
 #include "files.h"
 };
+// size_t get_event(void *buf, size_t offset, size_t len) {
+//   AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
+//   if (ev.keycode == AM_KEY_NONE) {
+//     return 0;
+//   } else {
+//     return sprintf(buf,"%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
+//   }
+// }
+// size_t get_disp_info(void *buf, size_t offset, size_t len) {
+//   // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
+//   AM_GPU_CONFIG_T gpuconfig;
+//   ioe_read(AM_GPU_CONFIG, &gpuconfig);
+//   if (gpuconfig.present) {
+//     return sprintf(buf,"WIDTH:%d\nHEIGHT:%d\n",gpuconfig.width,gpuconfig.height);
+//   }
+//   else
+//     return sprintf(buf, "WIDTH:640\nHEIGHT:480\n");
+// }
+size_t display_pixel(const void *buf, size_t offset, size_t len) {
+  // TODO
+  // AM_GPU_FBDRAW_T gpudraw;
+  // ioe_write(int reg, void *buf)
+  printf("%d\n",(int)offset);
+  io_write(AM_GPU_FBDRAW, offset/screen_w, offset%screen_w, (void *)buf, len, 1, true);
+  file_table[FD_FB].open_offset +=len;
+  return len;
+}
 
 extern char ramdisk_start;
 
