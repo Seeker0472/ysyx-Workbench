@@ -27,7 +27,7 @@ typedef struct {
   size_t open_offset;
 } Finfo;
 
-enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENTS, FD_DISPINFO, FD_FB };
+enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENTS,  FD_FB,FD_DISPINFO };
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -49,7 +49,13 @@ size_t get_event(void *buf, size_t offset, size_t len) {
 }
 size_t get_disp_info(void *buf, size_t offset, size_t len) {
   // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
-  return sprintf(buf, "WIDTH : 640\nHEIGHT:480");
+  AM_GPU_CONFIG_T gpuconfig;
+  ioe_read(AM_GPU_CONFIG, &gpuconfig);
+  if (gpuconfig.present) {
+    return sprintf(buf,"WIDTH:%d\nHEIGHT:%d\n",gpuconfig.width,gpuconfig.height);
+  }
+  else
+    return sprintf(buf, "WIDTH:640\nHEIGHT:480\n");
 }
 size_t display_pixel(const void *buf, size_t offset, size_t len) {
   // TODO
@@ -65,8 +71,9 @@ static Finfo file_table[] __attribute__((used)) = {
     [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
     [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
     [FD_EVENTS] = {"/dev/events", 0, 0, get_event, invalid_write},
-    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, get_disp_info, invalid_write},
     [FD_FB] = {"/dev/fb", 0, 0, invalid_read, invalid_write},
+    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, get_disp_info, invalid_write},
+    
 #include "files.h"
 };
 
@@ -134,4 +141,9 @@ const char *get_filename(int fd) {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+  AM_GPU_CONFIG_T gpuconfig;
+  ioe_read(AM_GPU_CONFIG, &gpuconfig);
+  if (gpuconfig.present) {
+    file_table[FD_FB].size=gpuconfig.height*gpuconfig.width*sizeof(uint32_t);
+  }
 }
