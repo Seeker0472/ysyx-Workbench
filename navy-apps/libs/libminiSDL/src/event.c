@@ -25,8 +25,9 @@ int SDL_WaitEvent(SDL_Event *event) {
         event->type = SDL_KEYDOWN;
       for (int i = 0; i < 256; i++) {
         printf("%s", buffer +3);
-        if (strncmp(buffer + 3, keyname[i],4)==0) {
-          event->key.keysym.sym=i;
+        if (strcmp(buffer + 3, keyname[i])==0) {
+          event->key.keysym.sym = i;
+          return 1;
         }
       }
       // event->key.keysym.sym = SDLK_J;
