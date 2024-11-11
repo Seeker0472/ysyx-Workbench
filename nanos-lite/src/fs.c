@@ -47,7 +47,6 @@ size_t get_event(void *buf, size_t offset, size_t len) {
     return sprintf(buf,"%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
   }
 }
-//认为这个文件不支持lseek,ignore offset
 size_t get_disp_info(void *buf, size_t offset, size_t len) {
   // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
   return sprintf(buf, "WIDTH : 640\nHEIGHT:480");
@@ -105,18 +104,18 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 size_t fs_lseek(int fd, size_t offset, int whence) {
   switch (whence) {
   case SEEK_SET:
-    if (offset > file_table[fd].size)
-      return -1;
+    // if (offset > file_table[fd].size)
+    //   return -1;
     file_table[fd].open_offset = offset;
     break;
   case SEEK_CUR:
-    if (file_table[fd].open_offset + offset > file_table[fd].size)
-      return -1;
+    // if (file_table[fd].open_offset + offset > file_table[fd].size)
+    //   return -1;
     file_table[fd].open_offset += offset;
     break;
   case SEEK_END:
-    if (offset > 0)
-      return -1;
+    // if (offset > 0)
+    //   return -1;
     file_table[fd].open_offset = file_table[fd].size + offset;
     break;
   default:
