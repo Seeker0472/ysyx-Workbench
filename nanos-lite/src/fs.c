@@ -1,5 +1,6 @@
 #include <fs.h>
 #include <am.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #define NAMEINIT(key) [AM_KEY_##key] = #key,
@@ -26,7 +27,7 @@ typedef struct {
   WriteFn write;
   size_t open_offset;
 } Finfo;
-
+int screen_w;
 enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENTS,  FD_FB,FD_DISPINFO };
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
@@ -59,7 +60,9 @@ size_t get_disp_info(void *buf, size_t offset, size_t len) {
 }
 size_t display_pixel(const void *buf, size_t offset, size_t len) {
   // TODO
-  printf("display-pix\n");
+  // AM_GPU_FBDRAW_T gpudraw;
+  // ioe_write(int reg, void *buf)
+  io_write(AM_GPU_FBDRAW, offset%screen_w, offset/screen_w, (void *)buf, len, 1, true);
   return 0;
 }
 
@@ -145,5 +148,6 @@ void init_fs() {
   ioe_read(AM_GPU_CONFIG, &gpuconfig);
   if (gpuconfig.present) {
     file_table[FD_FB].size=gpuconfig.height*gpuconfig.width*sizeof(uint32_t);
+    screen_w=gpuconfig.width*sizeof(uint32_t);
   }
 }
