@@ -56,7 +56,7 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
     off_t offset = ((i + y) * screen_w_h + x) * sizeof(uint32_t);
     lseek(fb, offset, SEEK_SET);
     // write(fb, pixels + (w * i), w * sizeof(uint32_t));
-    write(fb, pixels + (w * i), w);
+    write(fb, pixels + (w * i), w * sizeof(uint32_t));
     // only pass w(not w * sizeof(uint32_t)) as the nemu io_write receive this
     // ==is this UB?
     // TODO
@@ -89,7 +89,7 @@ int NDL_Init(uint32_t flags) {
     dispinfodev = 5;
     read(dispinfodev, buffer, 0);
     sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w_h,&screen_h_h);
-    printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
+    // printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
   // }
   return 0;
 }

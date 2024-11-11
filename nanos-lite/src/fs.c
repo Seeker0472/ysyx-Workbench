@@ -107,6 +107,7 @@ const char *get_filename(int fd) {
   return file_table[fd].name;
 }
 
+//gets the fs info
 void init_fs() {
   AM_GPU_CONFIG_T gpuconfig;
   ioe_read(AM_GPU_CONFIG, &gpuconfig);
