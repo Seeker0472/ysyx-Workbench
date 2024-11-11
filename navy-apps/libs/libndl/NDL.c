@@ -53,7 +53,7 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   // TOOD!!
   FILE*fb=fopen("/dev/fb","w");
   for (int i = 0; i < h; i++) {
-    fseek(fb, (i + y) * screen_w + x, SEEK_SET);
+    fseek(fb, ((i + y) * screen_w + x)*sizeof(uint32_t), SEEK_SET);
     fwrite(pixels+(w*i),sizeof(uint32_t),w,fb);
   }
   fclose(fb);
