@@ -29,9 +29,10 @@ int SDL_WaitEvent(SDL_Event *event) {
         printf("%s----%s----%d\n", buffer + 3, keyname[i], strcmp(buffer + 3, keyname[i]));
         if (strcmp(buffer + 3, keyname[i] )==0) {
           event->key.keysym.sym = i;
+          
         }
-        return 1;
       }
+      return 1;
       // event->key.keysym.sym = SDLK_J;
     }
     return 1;
