@@ -79,7 +79,7 @@ size_t display_pixel(const void *buf, size_t offset, size_t len) {
   // AM_GPU_FBDRAW_T gpudraw;
   // ioe_write(int reg, void *buf)
   printf("%d,%d-%d\n",(int)offset,(int)len,screen_w);
-  io_write(AM_GPU_FBDRAW, offset%screen_w, offset/screen_w, (void *)buf, len/sizeof(uint32_t), 1, true);
+  io_write(AM_GPU_FBDRAW, offset%screen_w, offset/screen_w, (void *)buf, len, 1, true);
   file_table[FD_FB].open_offset +=len;
   return len;
 }
