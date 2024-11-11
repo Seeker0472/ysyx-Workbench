@@ -9,8 +9,7 @@
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
-typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
-typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
+
 // 把目录分隔符/也认为是文件名的一部分
 /*
 约定：
@@ -19,16 +18,9 @@ typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
  - 文件的数量是固定的, 不能创建新文件
  - 没有目录
 */
-typedef struct {
-  char *name;
-  size_t size;
-  size_t disk_offset;
-  ReadFn read;
-  WriteFn write;
-  size_t open_offset;
-} Finfo;
+
 extern int screen_w;
-enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENTS,  FD_FB,FD_DISPINFO };
+
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -39,8 +31,8 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
 }
+// in device.c
 size_t events_read(void *buf, size_t offset, size_t len);
-
 size_t serial_write(const void *buf, size_t offset, size_t len);
 size_t dispinfo_read(void *buf, size_t offset, size_t len);
 size_t display_pixel(const void *buf, size_t offset, size_t len);
@@ -56,29 +48,8 @@ static Finfo file_table[] __attribute__((used)) = {
 
 #include "files.h"
 };
-// size_t get_event(void *buf, size_t offset, size_t len) {
-//   AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
-//   if (ev.keycode == AM_KEY_NONE) {
-//     return 0;
-//   } else {
-//     return sprintf(buf,"%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
-//   }
-// }
-// size_t get_disp_info(void *buf, size_t offset, size_t len) {
-//   // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
-//   AM_GPU_CONFIG_T gpuconfig;
-//   ioe_read(AM_GPU_CONFIG, &gpuconfig);
-//   if (gpuconfig.present) {
-//     return sprintf(buf,"WIDTH:%d\nHEIGHT:%d\n",gpuconfig.width,gpuconfig.height);
-//   }
-//   else
-//     return sprintf(buf, "WIDTH:640\nHEIGHT:480\n");
-// }
+
 size_t display_pixel(const void *buf, size_t offset, size_t len) {
-  // TODO
-  // AM_GPU_FBDRAW_T gpudraw;
-  // ioe_write(int reg, void *buf)
-  // printf("%d,%d-%d\n",(int)offset,(int)len,screen_w);
   io_write(AM_GPU_FBDRAW, offset%screen_w, offset/screen_w, (void *)buf, len, 1, true);
   file_table[FD_FB].open_offset +=len;
   return len;
