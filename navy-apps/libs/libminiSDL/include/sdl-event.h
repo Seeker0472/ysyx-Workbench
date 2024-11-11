@@ -16,7 +16,7 @@ enum SDL_Keys {
   SDLK_NONE = 0,
   _KEYS(enumdef)
 };
-#define NAME(key) [SDLK_##key] = #key,
+#define NAME(key) [SDLK_##key] = #key "\n",
 
 static const char *keyname[256] __attribute__((used)) = {
   [0] = "NONE",
