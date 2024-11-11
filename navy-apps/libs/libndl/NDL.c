@@ -11,6 +11,7 @@ static int evtdev = -1;
 static int fbdev = -1;
 static int dispinfodev=-1;
 static int screen_w = 0, screen_h = 0;
+static int screen_w_h    = 0, screen_h_h = 0;
 
 //returns ms
 uint32_t NDL_GetTicks() {
@@ -53,7 +54,7 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   // TOOD!!
   FILE*fb=fopen("/dev/fb","w");
   for (int i = 0; i < h; i++) {
-    fseek(fb, ((i + y) * screen_w + x)*sizeof(uint32_t), SEEK_SET);
+    fseek(fb, ((i + y) * screen_w_h + x)*sizeof(uint32_t), SEEK_SET);
     fwrite(pixels+(w*i),sizeof(uint32_t),w,fb);
   }
   fclose(fb);
@@ -80,8 +81,8 @@ int NDL_Init(uint32_t flags) {
     fbdev = 4;
     dispinfodev = 5;
     read(dispinfodev, buffer, 0);
-    sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w,&screen_h);
-    printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w,screen_h);
+    sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w_h,&screen_h_h);
+    printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
   // }
   return 0;
 }
