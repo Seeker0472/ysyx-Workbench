@@ -9,7 +9,9 @@
 
 static int evtdev = -1;
 static int fbdev = -1;
+static int dispinfodev=-1;
 static int screen_w = 0, screen_h = 0;
+static int screen_w_h    = 0, screen_h_h = 0;
 
 //returns ms
 uint32_t NDL_GetTicks() {
@@ -49,6 +51,19 @@ void NDL_OpenCanvas(int *w, int *h) {
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  int fb = open("/dev/fb", O_WRONLY);
+  for (int i = 0; i < h; i++) {
+    off_t offset = ((i + y) * screen_w_h + x) * sizeof(uint32_t);
+    lseek(fb, offset, SEEK_SET);
+    // write(fb, pixels + (w * i), w * sizeof(uint32_t));
+    write(fb, pixels + (w * i), w);
+    // only pass w(not w * sizeof(uint32_t)) as the nemu io_write receive this
+    // ==is this UB?
+    // TODO
+    // if use fwrite ,this func don't work---maybe copied to a buffer
+  }
+  close(fb);
+
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
@@ -66,9 +81,16 @@ int NDL_QueryAudio() {
 }
 //TODO
 int NDL_Init(uint32_t flags) {
-  if (getenv("NWM_APP")) {
+  char buffer[128];
+// TODO: What NWM_APP????????
+  // if (getenv("NWM_APP")) {
     evtdev = 3;
-  }
+    fbdev = 4;
+    dispinfodev = 5;
+    read(dispinfodev, buffer, 0);
+    sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w_h,&screen_h_h);
+    // printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
+  // }
   return 0;
 }
 

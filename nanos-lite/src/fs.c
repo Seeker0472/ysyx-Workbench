@@ -1,15 +1,14 @@
 #include <fs.h>
 #include <am.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #define NAMEINIT(key) [AM_KEY_##key] = #key,
-static const char *am_key_names[] = {AM_KEYS(NAMEINIT)};
+
 
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);
-
-typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
-typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
+extern int screen_w;
 // 把目录分隔符/也认为是文件名的一部分
 /*
 约定：
@@ -18,16 +17,6 @@ typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
  - 文件的数量是固定的, 不能创建新文件
  - 没有目录
 */
-typedef struct {
-  char *name;
-  size_t size;
-  size_t disk_offset;
-  ReadFn read;
-  WriteFn write;
-  size_t open_offset;
-} Finfo;
-
-enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENTS, FD_DISPINFO, FD_FB };
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -38,35 +27,22 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
 }
-size_t get_event(void *buf, size_t offset, size_t len) {
-  AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
-  if (ev.keycode == AM_KEY_NONE) {
-    return 0;
-  } else {
-    // printf("%s %s\n", ev.keydown ? "kd" : "ku", am_key_names[ev.keycode]);
-    return sprintf(buf,"%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
-  }
-}
-size_t get_disp_info(void *buf, size_t offset, size_t len) {
-  // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
-  return sprintf(buf, "WIDTH : 640\nHEIGHT:480");
-}
-size_t display_pixel(const void *buf, size_t offset, size_t len) {
-  // TODO
-  printf("display-pix\n");
-  return 0;
-}
 
+// in device.c
+size_t events_read(void *buf, size_t offset, size_t len);
 size_t serial_write(const void *buf, size_t offset, size_t len);
+size_t dispinfo_read(void *buf, size_t offset, size_t len);
+size_t fb_write(const void *buf, size_t offset, size_t len);
 
 /* This is the information about all files in disk. */
-static Finfo file_table[] __attribute__((used)) = {
+Finfo file_table[] __attribute__((used)) = {
     [FD_STDIN] = {"stdin", 0, 0, invalid_read, invalid_write},
     [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
     [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
-    [FD_EVENTS] = {"/dev/events", 0, 0, get_event, invalid_write},
-    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, get_disp_info, invalid_write},
-    [FD_FB] = {"/dev/fb", 0, 0, invalid_read, invalid_write},
+    [FD_EVENTS] = {"/dev/events", 0, 0, events_read, invalid_write},
+    [FD_FB] = {"/dev/fb", 0, 0, invalid_read, fb_write},
+    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write},
+
 #include "files.h"
 };
 
@@ -81,7 +57,6 @@ int fs_open(const char *pathname, int flags, int mode) {
     }
   }
   Log("%s\n",pathname);
-  // return NULL;
   assert(0);
 }
 // the simple fs assume no out-of bound so don't need to check
@@ -104,18 +79,18 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 size_t fs_lseek(int fd, size_t offset, int whence) {
   switch (whence) {
   case SEEK_SET:
-    if (offset > file_table[fd].size)
-      return -1;
+    // if (offset > file_table[fd].size)
+    //   return -1;
     file_table[fd].open_offset = offset;
     break;
   case SEEK_CUR:
-    if (file_table[fd].open_offset + offset > file_table[fd].size)
-      return -1;
+    // if (file_table[fd].open_offset + offset > file_table[fd].size)
+    //   return -1;
     file_table[fd].open_offset += offset;
     break;
   case SEEK_END:
-    if (offset > 0)
-      return -1;
+    // if (offset > 0)
+    //   return -1;
     file_table[fd].open_offset = file_table[fd].size + offset;
     break;
   default:
@@ -132,6 +107,12 @@ const char *get_filename(int fd) {
   return file_table[fd].name;
 }
 
+//gets the fs info
 void init_fs() {
-  // TODO: initialize the size of /dev/fb
+  AM_GPU_CONFIG_T gpuconfig;
+  ioe_read(AM_GPU_CONFIG, &gpuconfig);
+  if (gpuconfig.present) {
+    file_table[FD_FB].size=gpuconfig.height*gpuconfig.width*sizeof(uint32_t);
+    screen_w=gpuconfig.width*sizeof(uint32_t);
+  }
 }
