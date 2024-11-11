@@ -31,6 +31,9 @@ void* BMP_Load(const char *filename, int *width, int *height) {
   if (hdr.compression != 0) return NULL;
   int w = hdr.width;
   int h = hdr.height;
+
+  printf("%d,%d",w,h);
+
   uint32_t *pixels = malloc(w * h * sizeof(uint32_t));
 
   int line_off = (w * 3 + 3) & ~0x3;
