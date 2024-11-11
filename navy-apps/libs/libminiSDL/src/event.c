@@ -1,5 +1,9 @@
+#include "fcntl.h"
+#include "sdl-event.h"
+#include "unistd.h"
 #include <NDL.h>
 #include <SDL.h>
+#include <string.h>
 
 #define keyname(k) #k,
 
@@ -17,7 +21,16 @@ int SDL_PollEvent(SDL_Event *ev) {
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
-  return 1;
+  // return 1;
+  char buffer[100];
+  while (1) {
+    int fd = open("/dev/events", O_RDONLY);
+    if (read(fd, buffer, 100)) {
+      event->key.keysym.sym = SDLK_J;
+      event->type=SDL_KEYDOWN;
+    }
+    return 1;
+  }
 }
 
 int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
