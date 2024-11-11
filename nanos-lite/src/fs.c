@@ -62,7 +62,7 @@ size_t display_pixel(const void *buf, size_t offset, size_t len) {
   // TODO
   // AM_GPU_FBDRAW_T gpudraw;
   // ioe_write(int reg, void *buf)
-  io_write(AM_GPU_FBDRAW, offset%screen_w, offset/screen_w, (void *)buf, len, 1, true);
+  io_write(AM_GPU_FBDRAW, offset/screen_w, offset%screen_w, (void *)buf, len, 1, true);
   return 0;
 }
 
