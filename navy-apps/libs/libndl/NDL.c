@@ -73,14 +73,14 @@ int NDL_QueryAudio() {
 //TODO
 int NDL_Init(uint32_t flags) {
   char buffer[128];
-  if (getenv("NWM_APP")) {
+  // if (getenv("NWM_APP")) {
     evtdev = 3;
     fbdev = 4;
     dispinfodev = 5;
     read(dispinfodev, buffer, 0);
     sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w,&screen_h);
     printf("WIDTH : %d\nHEIGHT:%d" , screen_w,screen_h);
-  }
+  // }
   return 0;
 }
 
