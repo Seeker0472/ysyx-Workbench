@@ -19,13 +19,16 @@ int SDL_WaitEvent(SDL_Event *event) {
   // return 1;
   char buffer[100];
   event->key.keysym.sym = SDLK_NONE;
-
+  event->type = SDL_USEREVENT;
   while (1) {
     int fd = open("/dev/events", O_RDONLY);
     if (read(fd, buffer, 100)) {
       if (strncmp(buffer, "kd", 2)) {
         event->type = SDL_KEYDOWN;
-        }
+      }
+      if (strncmp(buffer, "kd", 2)) {
+        event->type = SDL_KEYUP;
+      }
       for (int i = 0; i < 256; i++) {
         printf("%s----%s----%d\n", buffer + 3, keyname[i], strcmp(buffer + 3, keyname[i]));
         if (keyname[i] &&strcmp(buffer + 3, keyname[i]) == 0) {
