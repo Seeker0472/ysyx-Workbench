@@ -78,7 +78,8 @@ intptr_t end_pos = (intptr_t)&end;
 void *_sbrk(intptr_t increment) {
   int ret = _syscall_(SYS_brk, end_pos, increment, 0);
   if (ret != 0)
-    return (void *)-1;
+    assert(0);
+    // return (void *)-1;
   end_pos+=increment;
   return (void*)end_pos;
 }
