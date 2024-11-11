@@ -4,15 +4,32 @@
 #include <string.h>
 #include <stdlib.h>
 
+// sdl-srcect->rectangle to be copied,NULL to be entire;
+// sdl->dstrect get x and y
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  SDL_Rect src_area = srcrect ? *srcrect : (SDL_Rect){0, 0, src->w, src->h};
+  SDL_Rect dst_area = dstrect ? *dstrect : (SDL_Rect){0, 0, src_area.w, src_area.h};
+  // need clip?
+  int bpp = src->format->BitsPerPixel;
+  for (int y = 0; y < src_area.h; y++) {
+        // calc the source and destination row pointers
+        uint8_t *src_row = (uint8_t *)src->pixels + (src_area.y + y) * src->pitch + src_area.x * bpp;
+        uint8_t *dst_row = (uint8_t *)dst->pixels + (dst_area.y + y) * dst->pitch + dst_area.x * bpp;
+
+        memcpy(dst_row, src_row, dst_area.w * bpp);
+  }
+  
+
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
+  // TODO??
+  NDL_DrawRect(s->pixels, 0,0, s->w, s->h-3);
 }
 
 // APIs below are already implemented.

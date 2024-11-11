@@ -18,6 +18,8 @@ CompileFlags:
         - "-DARCH_H=\"arch/riscv.h\""
         - "-DISA_H=\"riscv/riscv.h\""
         - "-D__GUEST_ISA__=riscv32"
+        - "-I/home/seeker/Develop/ysyx-workbench/navy-apps/libs/libndl/include/"
+        - "-I/home/seeker/Develop/ysyx-workbench/navy-apps/libs/libminiSDL/include"
         - "-include"
         - "stdint.h"
         - "-include"
