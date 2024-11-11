@@ -27,7 +27,7 @@ typedef struct {
   size_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR,FD_EVENTS, FD_FB};
+enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENTS, FD_DISPINFO, FD_FB };
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -45,9 +45,16 @@ size_t get_event(void *buf, size_t offset, size_t len) {
   } else {
     // printf("%s %s\n", ev.keydown ? "kd" : "ku", am_key_names[ev.keycode]);
     return sprintf(buf,"%s %s\n", ev.keydown ?"kd":"ku", am_key_names[ev.keycode]);
-    
-    // return 0;
   }
+}
+size_t get_disp_info(void *buf, size_t offset, size_t len) {
+  // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
+  return sprintf(buf, "WIDTH : 640\nHEIGHT:480");
+}
+size_t display_pixel(const void *buf, size_t offset, size_t len) {
+  // TODO
+  printf("display-pix\n");
+  return 0;
 }
 
 size_t serial_write(const void *buf, size_t offset, size_t len);
@@ -58,6 +65,8 @@ static Finfo file_table[] __attribute__((used)) = {
     [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
     [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
     [FD_EVENTS] = {"/dev/events", 0, 0, get_event, invalid_write},
+    [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, get_disp_info, invalid_write},
+    [FD_FB] = {"/dev/fb", 0, 0, invalid_read, invalid_write},
 #include "files.h"
 };
 

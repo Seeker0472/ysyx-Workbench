@@ -10,7 +10,7 @@ int print_num(char *out, size_t out_offset, int val);
 int print_str(char *out, size_t out_offset, char *val);
 int sprintf(char *out, const char *fmt, ...);
 int vsprintf(char *out, const char *fmt, va_list args);
-int print_num_hex(char *out, size_t out_offset, int val);
+int print_num_hex(char *out, size_t out_offset, int unsigned val);
 int print_num_long(char *out, size_t out_offset, long val);
 
 int printf(const char *fmt, ...) {
@@ -83,16 +83,12 @@ int print_num(char *out, size_t out_offset, int val)
   out[out_offset] = append + '0';
   return out_offset + 1;
 }
-int print_num_hex(char *out, size_t out_offset, int val)
+int print_num_hex(char *out, size_t out_offset, unsigned int val)
 {
-  if (val < 0)
-  {
-    out[out_offset++] = '-';
-    val = -val;
-  }
+
   int append = val % 16;
   if (val / 16 != 0)
-    out_offset = print_num(out, out_offset, val / 16);
+    out_offset = print_num_hex(out, out_offset, val / 16);
   out[out_offset] = append <= 9 ? append + '0' : append - 10 + 'a';
   return out_offset + 1;
 }

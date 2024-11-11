@@ -79,8 +79,9 @@ void *_sbrk(intptr_t increment) {
   int ret = _syscall_(SYS_brk, end_pos, increment, 0);
   if (ret != 0)
     return (void *)-1;
+  intptr_t prev_pos=end_pos;
   end_pos+=increment;
-  return (void*)end_pos;
+  return (void*)prev_pos;
 }
 
 int _read(int fd, void *buf, size_t count) {
