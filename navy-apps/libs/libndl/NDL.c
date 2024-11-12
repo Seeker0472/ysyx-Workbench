@@ -32,7 +32,7 @@ int NDL_PollEvent(char *buf, int len) {
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
-  if (getenv("NWM_APP")) {
+  // if (getenv("NWM_APP")) {
     assert(0);
     int fbctl = 4;
     fbdev = 5;
@@ -57,7 +57,7 @@ void NDL_OpenCanvas(int *w, int *h) {
       if (strcmp(buf, "mmap ok") == 0) break;
     }
     close(fbctl);
-  }
+  // }
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
