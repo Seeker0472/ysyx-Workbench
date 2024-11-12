@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -31,6 +32,8 @@ int NDL_PollEvent(char *buf, int len) {
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
+  // 绘图没有更新的原因是因为canvas的w，h为0，
+  //  TODO：好好看一下什么是NWM_APP!!!!!!
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -47,11 +50,22 @@ void NDL_OpenCanvas(int *w, int *h) {
       if (strcmp(buf, "mmap ok") == 0) break;
     }
     close(fbctl);
+  } else {
+    *w = screen_w_h;
+    *h = screen_h_h;
   }
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   int fb = open("/dev/fb", O_WRONLY);
+  // printf("NDL:x:%xy:%xw:%xh:%x\n",x,y,w,h);
+      // update_all
+  if (x == 0 && y == 0 && w == screen_w_h && h == screen_h_h) {
+    lseek(fb, 0, SEEK_SET);
+    write(fb, pixels, w * h * sizeof(uint32_t));
+    close(fb);
+    return;
+  }
   for (int i = 0; i < h; i++) {
     off_t offset = ((i + y) * screen_w_h + x) * sizeof(uint32_t);
     lseek(fb, offset, SEEK_SET);
@@ -83,13 +97,15 @@ int NDL_QueryAudio() {
 int NDL_Init(uint32_t flags) {
   char buffer[128];
 // TODO: What NWM_APP????????
-  // if (getenv("NWM_APP")) {
+  if (getenv("NWM_APP")) {
+    evtdev = 3;
+  }
     evtdev = 3;
     fbdev = 4;
     dispinfodev = 5;
     read(dispinfodev, buffer, 0);
     sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w_h,&screen_h_h);
-    // printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
+    printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
   // }
   return 0;
 }
