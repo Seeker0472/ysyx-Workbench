@@ -32,19 +32,12 @@ int NDL_PollEvent(char *buf, int len) {
 }
 
 void NDL_OpenCanvas(int *w, int *h) {
-  // if (getenv("NWM_APP")) {
-    // assert(0);
+  // 绘图没有更新的原因是因为canvas的w，h为0，
+  //  TODO：好好看一下什么是NWM_APP!!!!!!
+  if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
-    if(*w!=0&&*h!=0){
-      screen_w = *w;
-      screen_h = *h;
-    } else {
-      *w = screen_w = screen_w_h;
-      *h = screen_h=screen_w_h;
-    }
-    assert(*w != 0 && *h != 0);
-    //TODO!!!
+    screen_w = *w; screen_h = *h;
     char buf[64];
     int len = sprintf(buf, "%d %d", screen_w, screen_h);
     // let NWM resize the window and create the frame buffer
@@ -57,7 +50,10 @@ void NDL_OpenCanvas(int *w, int *h) {
       if (strcmp(buf, "mmap ok") == 0) break;
     }
     close(fbctl);
-  // }
+  } else {
+    *w = screen_w_h;
+    *h = screen_h_h;
+  }
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
