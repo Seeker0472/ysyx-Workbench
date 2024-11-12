@@ -18,6 +18,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
     uint8_t *src_row = (uint8_t *)src->pixels + (src_area.y + y) * src->pitch + src_area.x * bpp;
     uint8_t *dst_row = (uint8_t *)dst->pixels + (dst_area.y + y) * dst->pitch + dst_area.x * bpp;
     memcpy(dst_row, src_row, dst_area.w * bpp);
+    assert(0);
   }
 }
 
