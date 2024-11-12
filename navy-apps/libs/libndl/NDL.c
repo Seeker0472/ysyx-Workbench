@@ -33,7 +33,7 @@ int NDL_PollEvent(char *buf, int len) {
 
 void NDL_OpenCanvas(int *w, int *h) {
   // if (getenv("NWM_APP")) {
-    assert(0);
+    // assert(0);
     int fbctl = 4;
     fbdev = 5;
     if(*w!=0&&*h!=0){
