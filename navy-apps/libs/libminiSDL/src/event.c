@@ -12,6 +12,25 @@ int SDL_PushEvent(SDL_Event *ev) {
 }
 
 int SDL_PollEvent(SDL_Event *ev) {
+  char buffer[100];
+  ev->key.keysym.sym = SDLK_NONE;
+  ev->type = SDL_USEREVENT;
+  int fd = open("/dev/events", O_RDONLY);
+  if (read(fd, buffer, 100)) {
+    if (strncmp(buffer, "kd", 2)) {
+      ev->type = SDL_KEYDOWN;
+    }
+    if (strncmp(buffer, "ku", 2)) {
+      ev->type = SDL_KEYUP;
+    }
+    for (int i = 0; i < 256; i++) {
+      if (keyname[i] && strcmp(buffer + 3, keyname[i]) == 0) {
+        ev->key.keysym.sym = i;
+        break;
+      }
+    }
+    return 1;
+  }
   return 0;
 }
 
