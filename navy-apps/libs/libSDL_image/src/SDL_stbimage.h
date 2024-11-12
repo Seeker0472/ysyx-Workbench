@@ -212,7 +212,6 @@ SDL_STBIMG_DEF SDL_Surface* STBIMG_LoadFromMemory(const unsigned char* buffer, i
 		return NULL;
 	}
 	// no alpha => use RGB, else use RGBA
-assert(0);
 	origin_has_alpha = !(img.format == STBI_grey || img.format == STBI_rgb);
 	bppToUse = STBI_rgb_alpha;
 
