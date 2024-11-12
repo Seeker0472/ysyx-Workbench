@@ -16,14 +16,9 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   assert(bpp == 4);
   for (int y = 0; y < src_area.h; y++) {
     // calc the source and destination row pointers
-    // uint8_t *src_row = (uint8_t *)src->pixels + (src_area.y + y) * src->pitch + src_area.x * bpp;
-    // uint8_t *dst_row = (uint8_t *)dst->pixels + (dst_area.y + y) * dst->pitch + dst_area.x * bpp;
-    // write(1, src_row, 100);
-    // memcpy(dst_row, src_row, dst_area.w * bpp);
     uint8_t *src_row = (uint8_t *)src->pixels + ((src_area.y + y) * src->w + src_area.x)*4 ;
     uint8_t *dst_row = (uint8_t *)dst->pixels + ((dst_area.y + y) * dst->w + dst_area.x)*4 ;
     memcpy(dst_row, src_row, src_area.w * 4);
-    write(1, src_row, 300);
   }
 }
 
