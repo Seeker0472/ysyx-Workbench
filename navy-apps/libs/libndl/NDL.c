@@ -33,6 +33,7 @@ int NDL_PollEvent(char *buf, int len) {
 
 void NDL_OpenCanvas(int *w, int *h) {
   if (getenv("NWM_APP")) {
+    assert(0);
     int fbctl = 4;
     fbdev = 5;
     if(*w!=0&&*h!=0){
@@ -43,6 +44,7 @@ void NDL_OpenCanvas(int *w, int *h) {
       *h = screen_h=screen_w_h;
     }
     assert(*w != 0 && *h != 0);
+    //TODO!!!
     char buf[64];
     int len = sprintf(buf, "%d %d", screen_w, screen_h);
     // let NWM resize the window and create the frame buffer
