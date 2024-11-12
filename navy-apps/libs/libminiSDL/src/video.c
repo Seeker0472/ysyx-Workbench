@@ -12,7 +12,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   SDL_Rect src_area = srcrect ? *srcrect : (SDL_Rect){0, 0, src->w, src->h};
   SDL_Rect dst_area = dstrect ? *dstrect : (SDL_Rect){0, 0, src_area.w, src_area.h};
   // need clip?
-  int bpp = src->format->BitsPerPixel;
+  int bpp = src->format->BytesPerPixel;
   assert(bpp != 0);
   assert(bpp != 1);
   assert(bpp != 2);
