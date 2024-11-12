@@ -14,7 +14,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   // need clip?
   int bpp = src->format->BitsPerPixel;
   for (int y = 0; y < src_area.h; y++) {
-        // calc the source and destination row pointers
+    // calc the source and destination row pointers
+    assert(src->pitch);
         uint8_t *src_row = (uint8_t *)src->pixels + (src_area.y + y) * src->pitch + src_area.x * bpp;
         uint8_t *dst_row = (uint8_t *)dst->pixels + (dst_area.y + y) * dst->pitch + dst_area.x * bpp;
         memcpy(dst_row, src_row, dst_area.w * bpp);
@@ -32,7 +33,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
     for (int x = 0; x < rect.w; x++) {
       // Calculate the position in the pixel array
       uint8_t *p = pixels + ((rect.y + y) * dst->pitch) + ((rect.x + x) * bpp);
-      // *(uint32_t *)p = color;
+      *(uint32_t *)p = color;
       // TODO:Necessary?
       assert(bpp==4);
       // // Set the pixel color
