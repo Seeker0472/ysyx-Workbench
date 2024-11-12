@@ -32,7 +32,7 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
     for (int x = 0; x < rect.w; x++) {
       // Calculate the position in the pixel array
       uint8_t *p = pixels + ((rect.y + y) * dst->pitch) + ((rect.x + x) * bpp);
-      *(uint32_t *)p = color;
+      // *(uint32_t *)p = color;
       // TODO:Necessary?
       assert(bpp==4);
       // // Set the pixel color
