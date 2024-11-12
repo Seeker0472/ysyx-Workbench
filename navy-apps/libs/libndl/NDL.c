@@ -41,7 +41,7 @@ void NDL_OpenCanvas(int *w, int *h) {
       *w = screen_w = screen_w_h;
       *h = screen_h=screen_w_h;
     }
-    printf("NDL_Opw=%d,h=%d",*w,*h);
+    printf("NDL_Opw=%d,h=%d\n",*w,*h);
     char buf[64];
     int len = sprintf(buf, "%d %d", screen_w, screen_h);
     // let NWM resize the window and create the frame buffer
