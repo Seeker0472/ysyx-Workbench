@@ -52,6 +52,7 @@ void NDL_OpenCanvas(int *w, int *h) {
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   int fb = open("/dev/fb", O_WRONLY);
+  //update_all
   if (x == 0 && y == 0 && w == screen_w_h && h == screen_h_h) {
     lseek(fb, 0, SEEK_SET);
     write(fb, pixels, w * h * sizeof(uint32_t));

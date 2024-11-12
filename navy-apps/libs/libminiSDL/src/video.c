@@ -25,23 +25,57 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-}
+  SDL_Rect rect = dstrect ? *dstrect : (SDL_Rect){0, 0, dst->w, dst->h};
 
+  uint8_t *pixels = (uint8_t *)dst->pixels;
+  int bpp = dst->format->BytesPerPixel;
+  for (int y = 0; y < rect.h; y++)
+    for (int x = 0; x < rect.h; x++) {
+      // Calculate the position in the pixel array
+      uint8_t *p = pixels + ((rect.y + y) * dst->pitch) + ((rect.x + x) * bpp);
+      *(uint32_t *)p = color;
+      // TODO:Necessary?
+      assert(bpp==4);
+      // // Set the pixel color
+      // switch (bpp) {
+      // case 1:
+      //   *p = color;
+      //   break;
+      // case 2:
+      //   *(uint16_t *)p = color;
+      //   break;
+      // case 3:
+      //   p[0] = (color >> 16) & 0xff;
+      //   p[1] = (color >> 8) & 0xff;
+      //   p[2] = color & 0xff;
+      //   break;
+      // case 4:
+      //   *(uint32_t *)p = color;
+      //   break;
+      // }
+    }
+}
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   // TODO??
-  NDL_DrawRect(s->pixels, 0,0, s->w, s->h);
+  NDL_DrawRect(s->pixels, 0, 0, s->w, s->h);
 }
 
 // APIs below are already implemented.
 
 static inline int maskToShift(uint32_t mask) {
   switch (mask) {
-    case 0x000000ff: return 0;
-    case 0x0000ff00: return 8;
-    case 0x00ff0000: return 16;
-    case 0xff000000: return 24;
-    case 0x00000000: return 24; // hack
-    default: assert(0);
+  case 0x000000ff:
+    return 0;
+  case 0x0000ff00:
+    return 8;
+  case 0x00ff0000:
+    return 16;
+  case 0xff000000:
+    return 24;
+  case 0x00000000:
+    return 24; // hack
+  default:
+    assert(0);
   }
 }
 

@@ -30,7 +30,6 @@ int SDL_WaitEvent(SDL_Event *event) {
         event->type = SDL_KEYUP;
       }
       for (int i = 0; i < 256; i++) {
-        printf("%s----%s----%d\n", buffer + 3, keyname[i], strcmp(buffer + 3, keyname[i]));
         if (keyname[i] &&strcmp(buffer + 3, keyname[i]) == 0) {
           event->key.keysym.sym = i;
           break;
