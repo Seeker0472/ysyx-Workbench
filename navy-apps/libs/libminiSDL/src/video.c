@@ -16,6 +16,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   assert(bpp != 0);
   assert(bpp != 1);
   assert(bpp != 2);
+  assert(bpp != 3);
   assert(bpp != 4);
   for (int y = 0; y < src_area.h; y++) {
     // calc the source and destination row pointers
