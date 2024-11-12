@@ -20,13 +20,13 @@ SDL_Surface *IMG_Load(const char *filename) {
   uint size = lseek(fd, 0, SEEK_END);
   assert(size);
   // uint size = ftell(fp);
-  uint8_t *buffer = malloc(size);
+  uint8_t *buffer = malloc(size*sizeof(uint8_t));
   lseek(fd, 0, SEEK_SET);
   read(fd, buffer, size);
   close(fd);
   free(buffer);
   SDL_Surface *surface = STBIMG_LoadFromMemory(buffer, size);
-  assert(0);
+  // assert(surface);
   return surface;
 }
 
