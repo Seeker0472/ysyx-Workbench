@@ -50,7 +50,7 @@ void NDL_OpenCanvas(int *w, int *h) {
       if (strcmp(buf, "mmap ok") == 0) break;
     }
     close(fbctl);
-  } else {
+  } else if(*w==0||*h==0) {
     *w = screen_w_h;
     *h = screen_h_h;
   }
