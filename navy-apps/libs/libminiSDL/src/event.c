@@ -5,7 +5,8 @@
 #include <SDL.h>
 #include <string.h>
 
-// #define keyname(k) #k,
+// #define keynames(k) #k,
+static uint8_t keystate[255]={};
 
 int SDL_PushEvent(SDL_Event *ev) {
   return 0;
@@ -26,6 +27,11 @@ int SDL_PollEvent(SDL_Event *ev) {
     for (int i = 0; i < 256; i++) {
       if (keyname[i] && strcmp(buffer + 3, keyname[i]) == 0) {
         ev->key.keysym.sym = i;
+        if (ev->type == SDL_KEYDOWN) {
+          keystate[i] = 1;
+        } else {
+          keystate[i] = 0;
+        }
         break;
       }
     }
@@ -51,6 +57,11 @@ int SDL_WaitEvent(SDL_Event *event) {
       for (int i = 0; i < 256; i++) {
         if (keyname[i] &&strcmp(buffer + 3, keyname[i]) == 0) {
           event->key.keysym.sym = i;
+          if (event->type == SDL_KEYDOWN) {
+            keystate[i] = 1;
+          } else {
+            keystate[i]=0;
+          }
           break;
         }
       }
@@ -65,6 +76,11 @@ int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
   return 0;
 }
 
-uint8_t* SDL_GetKeyState(int *numkeys) {
-  return NULL;
+uint8_t *SDL_GetKeyState(int *numkeys) {
+  SDL_Event sdle;
+  while (SDL_PollEvent(&sdle));
+  if (numkeys) {
+      *numkeys = 255;
+    }
+  return keystate;
 }

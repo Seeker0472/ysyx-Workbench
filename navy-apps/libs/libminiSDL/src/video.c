@@ -1,6 +1,7 @@
 #include <NDL.h>
 #include <sdl-video.h>
 #include <assert.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -55,11 +56,28 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
 }
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   // TODO??
-  // assert(x==0&&y==0&&w==0&&h==0);
-  if (x == 0 && y == 0 && w == 0 && h == 0)
-    NDL_DrawRect(s->pixels, 0, 0, s->w, s->h);
-  else
-    NDL_DrawRect(s->pixels, x, y, w, h);
+  if (s->format->BytesPerPixel == 1) {
+    int totalPixels = s->w * s->h;
+    uint32_t *pixels = malloc(totalPixels * sizeof(uint32_t));
+    uint8_t *pixels8 = (uint8_t *)s->pixels;
+    SDL_Color *colors = s->format->palette->colors;
+    for (int i = 0; i < totalPixels; ++i) {
+      uint8_t index = pixels8[i];
+      SDL_Color color = colors[index];
+      pixels[i] = (255 << 24) | (color.r << 16) | (color.g << 8) | color.b;
+    }
+    if (x == 0 && y == 0 && w == 0 && h == 0)
+      NDL_DrawRect(pixels, 0, 0, s->w, s->h);
+    else
+      NDL_DrawRect(pixels, x, y, w, h);
+    free(pixels);
+  } else {
+    // printf("UPDATE:%d,%d,%d,%d----%d,%d,%d\n",x,y,w,h,s->w,s->h,s->format->BytesPerPixel);
+    if (x == 0 && y == 0 && w == 0 && h == 0)
+      NDL_DrawRect(s->pixels, 0, 0, s->w, s->h);
+    else
+      NDL_DrawRect(s->pixels, x, y, w, h);
+  }
 }
 
 // APIs below are already implemented.
