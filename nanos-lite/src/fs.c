@@ -64,6 +64,8 @@ size_t fs_read(int fd, void *buf, size_t len) {
   if (file_table[fd].read != NULL) {
     return ((size_t(*)(void *buf, size_t offset, size_t len))file_table[fd].read)(buf,file_table[fd].open_offset,len);
   }
+  if (file_table[fd].open_offset + len > file_table[fd].size)
+    len=file_table[fd].size-file_table[fd].open_offset;
   ramdisk_read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
   file_table[fd].open_offset += len;
   return len;
@@ -72,6 +74,8 @@ size_t fs_write(int fd, const void *buf, size_t len) {
   if (file_table[fd].write != NULL) {
         return ((size_t(*)(const void *buf, size_t offset, size_t len))file_table[fd].write)(buf,file_table[fd].open_offset,len);
   }
+  if (file_table[fd].open_offset + len > file_table[fd].size)
+    len=file_table[fd].size-file_table[fd].open_offset; 
   ramdisk_write(buf, file_table[fd].disk_offset +file_table[fd].open_offset, len);
   file_table[fd].open_offset += len;
   return len;
