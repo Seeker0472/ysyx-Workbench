@@ -6,6 +6,7 @@ html:
 .PHONY: html
 
 ## 1. Basic Setup and Checks
+CFLAGS +=-I${AM_HOME}/include #不想修改，直接创建了一个空文件，参见https://ysyx.oscc.cc/docs/ics-pa/2.2.html#%E8%BF%90%E8%A1%8C%E7%AC%AC%E4%B8%80%E4%B8%AAc%E7%A8%8B%E5%BA%8F
 
 ### Default to build an application
 ifeq ($(MAKECMDGOALS),)
@@ -167,8 +168,8 @@ $(CLEAN_ALL):
 .PHONY: clean-all $(CLEAN_ALL)
 
 ### Build fsimg and ramdisk for Nanos-lite
-APPS = nslider menu nterm
-TESTS = 
+APPS = bird
+TESTS =  file-test
 
 fsimg: $(addprefix apps/, $(APPS)) $(addprefix tests/, $(TESTS))
 	-for t in $^; do $(MAKE) -s -C $(NAVY_HOME)/$$t install; done
