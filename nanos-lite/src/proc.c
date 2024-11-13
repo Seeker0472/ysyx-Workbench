@@ -24,7 +24,7 @@ void init_proc() {
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/bird");
-  naive_uload(NULL, "/bin/file-test");
+  naive_uload(NULL, "/bin/nterm");
   // load program here
 }
 
