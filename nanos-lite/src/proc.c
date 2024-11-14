@@ -24,7 +24,7 @@ void init_proc() {
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
-  naive_uload(NULL, "/bin/pal");
+  naive_uload(NULL, "/bin/coremark");
   // load program here
 }
 
