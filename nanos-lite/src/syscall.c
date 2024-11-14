@@ -1,9 +1,9 @@
-#include <common.h>
 #include "syscall.h"
 #include "fs.h"
+#include <common.h>
+#include <proc.h>
 #include <stdint.h>
 #include <sys/time.h>
-
 // uintptr_t end_symbol;
 extern const char *get_filename(int fd);
 const char *event_names[] = {
@@ -11,7 +11,7 @@ const char *event_names[] = {
     "SYS_kill",  "SYS_getpid", "SYS_close",  "SYS_lseek",  "SYS_brk",
     "SYS_fstat", "SYS_time",   "SYS_signal", "SYS_execve", "SYS_fork",
     "SYS_link",  "SYS_unlink", "SYS_wait",   "SYS_times",  "SYS_gettimeofday"};
-
+void naive_uload(PCB *pcb, const char *filename);
 void do_syscall(Context *c) {
 #ifdef STRACE_ENABLE
   switch (c->GPR1) {
@@ -37,7 +37,8 @@ void do_syscall(Context *c) {
   uint64_t time;
   switch (a[0]) {
   case SYS_exit:
-    halt(0);
+    // halt(0);
+    naive_uload(NULL, "/bin/menu");
     break;
   case SYS_yield:
     yield();
@@ -67,6 +68,9 @@ void do_syscall(Context *c) {
     ((struct timeval *)a[1])->tv_usec = time % 1000000;
     c->GPRx = 0;
     break;
-    default : panic("Unhandled syscall ID = %d", a[0]);
+  case SYS_execve:
+    naive_uload(NULL,(const char*)a[1]);
+    break;
+        default : panic("Unhandled syscall ID = %d", a[0]);
     }
 }

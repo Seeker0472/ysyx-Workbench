@@ -42,9 +42,8 @@ void __am_gpu_status(AM_GPU_STATUS_T *stat) {
   stat->ready=true;
 }
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *frame) {
-  printf("%d,%d\n", frame->w, frame->h);
-
-  NDL_DrawRect(frame->pixels, 0, 0, frame->w, frame->h);
+  //TODO:WHY/4??
+  NDL_DrawRect(frame->pixels, frame->x/4, frame->y, frame->w, frame->h);
 }
 
 
@@ -84,5 +83,6 @@ void ioe_write(int reg, void *buf) { ((handler_t)lut[reg])(buf); }
 bool ioe_init() {
   heap.start = malloc(HEAP_SIZE);
   heap.end = heap.start + HEAP_SIZE;
+  NDL_Init(0);
   return true;
 }

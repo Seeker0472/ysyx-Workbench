@@ -18,6 +18,7 @@ void hello_fun(void *arg) {
     yield();
   }
 }
+void context_uload(PCB *pcb,const char *filename);
 void naive_uload(PCB *pcb, const char *filename);
 void init_proc() {
   switch_boot_pcb();
@@ -25,7 +26,7 @@ void init_proc() {
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
-  naive_uload(NULL, "/bin/fceux");
+  context_uload(NULL, "/bin/menu");
   // load program here
 }
 

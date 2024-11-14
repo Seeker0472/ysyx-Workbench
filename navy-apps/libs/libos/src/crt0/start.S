@@ -29,6 +29,7 @@ _start:
   jal call_main
 
 #elif defined(__riscv)
+  mv sp, a0 #set stack pointer
   mv s0, zero
   jal call_main
 
