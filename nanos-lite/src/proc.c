@@ -23,8 +23,8 @@ void init_proc() {
   switch_boot_pcb();
 
   Log("Initializing processes...");
-  // naive_uload(NULL, "/bin/bird");
-  naive_uload(NULL, "/bin/file-test");
+  // naive_uload(NULL, "/bin/float");
+  naive_uload(NULL, "/bin/pal");
   // load program here
 }
 

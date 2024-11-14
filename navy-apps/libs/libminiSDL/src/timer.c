@@ -1,5 +1,6 @@
 #include <NDL.h>
 #include <sdl-timer.h>
+#include <stdint.h>
 #include <stdio.h>
 
 uint32_t sdl_init_time=0;
@@ -18,4 +19,6 @@ uint32_t SDL_GetTicks() {
 }
 
 void SDL_Delay(uint32_t ms) {
+  uint32_t now_time = NDL_GetTicks();
+  while(now_time-NDL_GetTicks()<=0);
 }

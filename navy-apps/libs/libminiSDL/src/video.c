@@ -1,6 +1,7 @@
 #include <NDL.h>
 #include <sdl-video.h>
 #include <assert.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -12,51 +13,71 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   SDL_Rect src_area = srcrect ? *srcrect : (SDL_Rect){0, 0, src->w, src->h};
   SDL_Rect dst_area = dstrect ? *dstrect : (SDL_Rect){0, 0, src_area.w, src_area.h};
   // need clip?
+  assert(dst_area.x >= 0 && dst_area.y >= 0);
+  assert(dst_area.x+dst_area.w<=dst->w&&dst_area.y+dst_area.h<=dst->h);
   int bpp = src->format->BytesPerPixel;
-  assert(bpp == 4);
   for (int y = 0; y < src_area.h; y++) {
     // calc the source and destination row pointers
-    uint8_t *src_row = (uint8_t *)src->pixels + ((src_area.y + y) * src->w + src_area.x)*4 ;
-    uint8_t *dst_row = (uint8_t *)dst->pixels + ((dst_area.y + y) * dst->w + dst_area.x)*4 ;
-    memcpy(dst_row, src_row, src_area.w * 4);
+    uint8_t *src_row = (uint8_t *)src->pixels + ((src_area.y + y) * src->w + src_area.x)*bpp ;
+    uint8_t *dst_row = (uint8_t *)dst->pixels + ((dst_area.y + y) * dst->w + dst_area.x)*bpp ;
+    memcpy(dst_row, src_row, src_area.w * bpp);
   }
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   SDL_Rect rect = dstrect ? *dstrect : (SDL_Rect){0, 0, dst->w, dst->h};
-
   uint8_t *pixels = (uint8_t *)dst->pixels;
   int bpp = dst->format->BytesPerPixel;
   for (int y = 0; y < rect.h; y++)
     for (int x = 0; x < rect.w; x++) {
       // Calculate the position in the pixel array
       uint8_t *p = pixels + ((rect.y + y) * dst->pitch) + ((rect.x + x) * bpp);
-      *(uint32_t *)p = color;
+      // *(uint32_t *)p = color;
       // TODO:Necessary?
-      assert(bpp==4);
+      // assert(bpp==4);
       // // Set the pixel color
-      // switch (bpp) {
-      // case 1:
-      //   *p = color;
-      //   break;
-      // case 2:
-      //   *(uint16_t *)p = color;
-      //   break;
-      // case 3:
-      //   p[0] = (color >> 16) & 0xff;
-      //   p[1] = (color >> 8) & 0xff;
-      //   p[2] = color & 0xff;
-      //   break;
-      // case 4:
-      //   *(uint32_t *)p = color;
-      //   break;
-      // }
+      switch (bpp) {
+      case 1:
+        *p = color;
+        break;
+      case 2:
+        *(uint16_t *)p = color;
+        break;
+      case 3:
+        p[0] = (color >> 16) & 0xff;
+        p[1] = (color >> 8) & 0xff;
+        p[2] = color & 0xff;
+        break;
+      case 4:
+        *(uint32_t *)p = color;
+        break;
+      }
     }
 }
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   // TODO??
-  assert(x==0&&y==0&&w==0&&h==0);
-  NDL_DrawRect(s->pixels, 0, 0, s->w, s->h);
+  if (s->format->BytesPerPixel == 1) {
+    int totalPixels = s->w * s->h;
+    uint32_t *pixels = malloc(totalPixels * sizeof(uint32_t));
+    uint8_t *pixels8 = (uint8_t *)s->pixels;
+    SDL_Color *colors = s->format->palette->colors;
+    for (int i = 0; i < totalPixels; ++i) {
+      uint8_t index = pixels8[i];
+      SDL_Color color = colors[index];
+      pixels[i] = (255 << 24) | (color.r << 16) | (color.g << 8) | color.b;
+    }
+    if (x == 0 && y == 0 && w == 0 && h == 0)
+      NDL_DrawRect(pixels, 0, 0, s->w, s->h);
+    else
+      NDL_DrawRect(pixels, x, y, w, h);
+    free(pixels);
+  } else {
+    // printf("UPDATE:%d,%d,%d,%d----%d,%d,%d\n",x,y,w,h,s->w,s->h,s->format->BytesPerPixel);
+    if (x == 0 && y == 0 && w == 0 && h == 0)
+      NDL_DrawRect(s->pixels, 0, 0, s->w, s->h);
+    else
+      NDL_DrawRect(s->pixels, x, y, w, h);
+  }
 }
 
 // APIs below are already implemented.
