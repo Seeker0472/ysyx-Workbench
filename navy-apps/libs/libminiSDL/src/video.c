@@ -13,8 +13,8 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_
   SDL_Rect src_area = srcrect ? *srcrect : (SDL_Rect){0, 0, src->w, src->h};
   SDL_Rect dst_area = dstrect ? *dstrect : (SDL_Rect){0, 0, src_area.w, src_area.h};
   // need clip?
-  assert(dst_area.x > 0 && dst_area.y > 0);
-  assert(dst_area.x+dst_area.w<dst->w&&dst_area.y+dst_area.h<dst->h);
+  assert(dst_area.x >= 0 && dst_area.y >= 0);
+  assert(dst_area.x+dst_area.w<=dst->w&&dst_area.y+dst_area.h<=dst->h);
   int bpp = src->format->BytesPerPixel;
   for (int y = 0; y < src_area.h; y++) {
     // calc the source and destination row pointers
