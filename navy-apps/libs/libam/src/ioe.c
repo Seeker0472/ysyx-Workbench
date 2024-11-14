@@ -42,9 +42,9 @@ void __am_gpu_status(AM_GPU_STATUS_T *stat) {
   stat->ready=true;
 }
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *frame) {
-  printf("%d,%d\n", frame->x, frame->y);
+  printf("%d,%d\n", frame->w, frame->h);
 
-  NDL_DrawRect(frame->pixels, frame->x, frame->y, 70, 70);
+  NDL_DrawRect(frame->pixels, frame->x, frame->y, frame->w, frame->h);
 }
 
 
