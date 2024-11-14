@@ -24,6 +24,7 @@ void init_proc() {
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
+  // "/share/games/nes/mario.nes"
   naive_uload(NULL, "/bin/fceux");
   // load program here
 }

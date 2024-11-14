@@ -9,6 +9,7 @@
 
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   kbd->keydown = false;
+  kbd->keycode = AM_KEY_NONE;
   // TODO:KBD!!
   // 草，不是很想写了
   
