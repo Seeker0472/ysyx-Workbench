@@ -13,7 +13,14 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   // 草，不是很想写了
   
 }
-void __am_timer_rtc(AM_TIMER_RTC_T *) {}
+void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
+  rtc->second = 0;
+  rtc->minute = 0;
+  rtc->hour = 0;
+  rtc->day = 0;
+  rtc->month = 0;
+  rtc->year = 1900;
+}
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
   struct timeval stime;
   gettimeofday(&stime, NULL);
@@ -37,13 +44,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *frame) {
   NDL_DrawRect(frame->pixels, frame->x, frame->y, frame->w, frame->h);
 }
 
-void __am_audio_config(AM_AUDIO_CONFIG_T *) {}
-void __am_audio_ctrl(AM_AUDIO_CTRL_T *) {}
-void __am_audio_status(AM_AUDIO_STATUS_T *) {}
-void __am_audio_play(AM_AUDIO_PLAY_T *) {}
-void __am_disk_config(AM_DISK_CONFIG_T *cfg) {}
-void __am_disk_status(AM_DISK_STATUS_T *stat) {}
-void __am_disk_blkio(AM_DISK_BLKIO_T *io) {}
+
 
 static void __am_timer_config(AM_TIMER_CONFIG_T *cfg) {
   cfg->present = true;
@@ -63,13 +64,13 @@ static void *lut[128] = {
     [AM_GPU_FBDRAW] = __am_gpu_fbdraw,
     [AM_GPU_STATUS] = __am_gpu_status,
     [AM_UART_CONFIG] = __am_uart_config,
-    [AM_AUDIO_CONFIG] = __am_audio_config,
-    [AM_AUDIO_CTRL] = __am_audio_ctrl,
-    [AM_AUDIO_STATUS] = __am_audio_status,
-    [AM_AUDIO_PLAY] = __am_audio_play,
-    [AM_DISK_CONFIG] = __am_disk_config,
-    [AM_DISK_STATUS] = __am_disk_status,
-    [AM_DISK_BLKIO] = __am_disk_blkio,
+    [AM_AUDIO_CONFIG] = NULL,
+    [AM_AUDIO_CTRL] = NULL,
+    [AM_AUDIO_STATUS] = NULL,
+    [AM_AUDIO_PLAY] = NULL,
+    [AM_DISK_CONFIG] = NULL,
+    [AM_DISK_STATUS] = NULL,
+    [AM_DISK_BLKIO] = NULL,
     [AM_NET_CONFIG] = __am_net_config,
 };
 
