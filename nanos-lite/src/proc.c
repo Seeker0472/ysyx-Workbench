@@ -26,7 +26,7 @@ void init_proc() {
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
-  context_uload(NULL, "/bin/menu");
+  context_uload(&pcb[0], "/bin/menu");
   // load program here
 }
 
