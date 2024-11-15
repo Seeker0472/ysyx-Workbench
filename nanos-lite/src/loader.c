@@ -116,7 +116,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     envp_num++;
   Log("argc:%d,envp:%d,entry:%x",argc,envp_num,pcb->cp->mepc);
   // seems to be a simple solution to put args on the bottom of stack area?
-  // pcb->stack[0]=argc;
+  *(uint32_t*)(pcb->stack)=argc;
   uint32_t* table_base = (uint32_t *)pcb->stack + 1;
   char *string_base = (char *)((uintptr_t)pcb->stack + envp_num + argc + 3);
   //copy argvs
