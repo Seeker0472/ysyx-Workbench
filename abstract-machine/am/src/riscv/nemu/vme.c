@@ -1,6 +1,7 @@
 #include <am.h>
 #include <nemu.h>
 #include <klib.h>
+#include <stdint.h>
 
 static AddrSpace kas = {};
 static void* (*pgalloc_usr)(int) = NULL;
@@ -74,6 +75,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // entry则是用户进程的入口.
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *top = (Context *)(((void *)kstack.end) - sizeof(Context));
+  top->gpr[10]=(uintptr_t)kstack.end;
   top->mepc = (uintptr_t)entry;
   top->mstatus = 0x0;//set to user mode
   top->mcause = 0xb;// 0xb is external interrupt
