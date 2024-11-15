@@ -4,6 +4,7 @@
 #include <proc.h>
 #include <elf.h>
 #include <stdint.h>
+#include <string.h>
 
 
 #ifdef __LP64__
@@ -90,18 +91,56 @@ void naive_uload(PCB *pcb, const char *filename) {
   Log("Jump to entry = %p", entry);
   ((void(*)())entry) ();
 }
+char *copy_str(char *dst, const char *src) {
+  do {
+    *dst = *src;
+    src++;
+  } while (*src != '\0');
+  return (char *)src+1;
+}
 // load,yeld?
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
-void context_uload(PCB *pcb,const char *filename) {
+void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
-  //init an Context struct on top of stack
-  pcb->cp = ucontext(
-      &(AddrSpace){.area={},.pgsize=0,.ptr=0}, (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
-      (void *)entry);
+  // init an Context struct on top of stack
+  pcb->cp =
+      ucontext(&(AddrSpace){.area = {}, .pgsize = 0, .ptr = 0},
+               (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
+               (void *)entry);
+  int argc = 0;//TODO need to contain exec_name?
+  int envp_num=0;
+  for (int i = 0; argv[i] != NULL; i++)
+    argc++;
+  for (int i = 0; envp[i] != NULL; i++)
+    envp_num++;
+
+  // seems to be a simple solution to put args on the bottom of stack area?
+  pcb->stack[0]=argc;
+  uint32_t* table_base = (uint32_t *)pcb->stack + 1;
+  char *string_base = (char *)((uintptr_t)pcb->stack + envp_num + argc + 3);
+  //copy argvs
+  for (int i = 0; i < argc; i++) {
+    *table_base = (uintptr_t)string_base;
+    table_base += 1;
+    string_base = copy_str(string_base, argv[i]);
+    // string_base=stpcpy(string_base,argv[i])+1;
+  }
+  // set NULL
+  *table_base = 0;
+  table_base += 1;
+  // copy envp
+  for (int i = 0; i < envp_num; i++) {
+    *table_base = (uintptr_t)string_base;
+    table_base += 1;
+    string_base = copy_str(string_base, envp[i]);
+    // string_base = stpcpy(string_base, envp[i]) + 1;
+  }
+  // set NULL
+  *table_base = 0;
+  table_base += 1;
+  pcb->cp->GPR1=(uintptr_t)pcb->stack;
+  // pcb->cp->GPR1=1;
   // pcb->cp->pdir=pcb;
-  // Log("About to Yield!");
-  // yield();//TODO:调度
-  // assert(0);
 }
 void context_kload(PCB *pcb, void *func,void *args) {
   pcb->cp = kcontext((Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, func, args);
