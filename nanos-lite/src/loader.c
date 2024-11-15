@@ -1,7 +1,9 @@
+#include "am.h"
 #include "debug.h"
 #include "fs.h"
 #include <proc.h>
 #include <elf.h>
+#include <stdint.h>
 
 
 #ifdef __LP64__
@@ -80,11 +82,27 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   //     Log("find symbol_end:%x", symbols[i].st_value);
   //   }
 	// }
-  return hader->e_entry;
+  return hader->e_entry; //这里的entry就是在libos/crt0/start.S里面定义的_start 
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void(*)())entry) ();
+}
+// load,yeld?
+// _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
+void context_uload(PCB *pcb,const char *filename) {
+  uintptr_t entry = loader(pcb, filename);
+  //init an Context struct on top of stack
+  pcb->cp = ucontext(
+      &(AddrSpace){.area={},.pgsize=0,.ptr=0}, (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
+      (void *)entry);
+  // pcb->cp->pdir=pcb;
+  // Log("About to Yield!");
+  // yield();//TODO:调度
+  // assert(0);
+}
+void context_kload(PCB *pcb, void *func,void *args) {
+  pcb->cp = kcontext((Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, func, args);
 }

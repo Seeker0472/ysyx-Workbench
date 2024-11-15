@@ -132,7 +132,8 @@ Context* ucontext(AddrSpace *as, Area kstack, void *entry) {
   c->vm_head = as->ptr;
 
   c->ksp = (uintptr_t)kstack.end;
-
+  c->GPRx=(uintptr_t)kstack.end;//pass the stack addr,seems OKEY for native--ARCH-spec
+  
   return c;
 }
 
