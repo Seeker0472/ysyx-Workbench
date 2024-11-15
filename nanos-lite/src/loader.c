@@ -94,7 +94,7 @@ void naive_uload(PCB *pcb, const char *filename) {
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
 void context_uload(PCB *pcb,const char *filename) {
   uintptr_t entry = loader(pcb, filename);
-
+  //init an Context struct on top of stack
   pcb->cp = ucontext(
       &(AddrSpace){.area={},.pgsize=0,.ptr=0}, (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
       (void *)entry);

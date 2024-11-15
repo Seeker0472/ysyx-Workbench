@@ -26,7 +26,7 @@ void init_proc() {
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
-  context_uload(&pcb[0], "/bin/hello");
+  context_uload(&pcb[0], "/bin/menu");
   // load program here
 }
 
@@ -59,7 +59,7 @@ Context *schedule(Context *prev) {
       }
     }
   }
-  Log("Going to %x",(uint32_t)pcb[robin].cp->mepc);
+  // Log("Going to %x",(uint32_t)pcb[robin].cp->mepc);
   if (!find)
     assert(0);
     // return prev;
