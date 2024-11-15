@@ -32,7 +32,7 @@ void init_proc() {
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
   // context_uload(&pcb[1], "/bin/env", empty, empty); // sig-fault!!
-    context_uload(&pcb[1], "/bin/pal",empty,empty);//sig-fault!!
+  context_uload(&pcb[1], "/bin/env",empty,empty);//sig-fault!!
   switch_boot_pcb();
   Log("GO!");
   // context_uload(&pcb[2], "/bin/pal");
@@ -41,7 +41,7 @@ void init_proc() {
 }
 
 Context *schedule(Context *prev) {
-  // Log("SHEDULE");
+  Log("SHEDULE");
   int robin = 0;
   bool find=false;
   // find context,start robin
@@ -56,6 +56,8 @@ Context *schedule(Context *prev) {
       find=true;
       break;
     }
+    // if(i==robin)
+    
   }
   Log("goto:%d",robin);
   if (!find) {

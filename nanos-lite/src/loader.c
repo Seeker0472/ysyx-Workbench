@@ -107,18 +107,20 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
       ucontext(&(AddrSpace){.area = {}, .pgsize = 0, .ptr = 0},
                (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
                (void *)entry);
-  pcb->cp->GPR1=(uintptr_t)pcb->stack;
-  int argc = 0;//TODO need to contain exec_name?
+
+  uintptr_t base_offseted = (uintptr_t)(pcb->stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t));
+  pcb->cp->GPR1 = base_offseted;
+  int argc = 0; // TODO need to contain exec_name?
   int envp_num=0;
   for (int i = 0; argv[i] != NULL; i++)
     argc++;
   for (int i = 0; envp[i] != NULL; i++)
     envp_num++;
-  Log("argc:%d,envp:%d,entry:%x",argc,envp_num,pcb->cp->mepc);
+  // Log("argc:%d,envp:%d,entry:%x",argc,envp_num,pcb->cp->mepc);
   // seems to be a simple solution to put args on the bottom of stack area?
-  *(uint32_t*)(pcb->stack)=argc;
-  uint32_t* table_base = (uint32_t *)pcb->stack + 1;
-  char *string_base = (char *)((uintptr_t)pcb->stack + envp_num + argc + 3);
+  *(uint32_t *)(base_offseted) = argc;
+  uint32_t *table_base = (uint32_t *)base_offseted + 1;
+  char *string_base = (char *)((uintptr_t)base_offseted + envp_num + argc + 3);
   //copy argvs
   for (int i = 0; i < argc; i++) {
     *table_base = (uintptr_t)string_base;
@@ -139,7 +141,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // set NULL
   *table_base = 0;
   table_base += 1;
-  
   // pcb->cp->GPR1=1;
   // pcb->cp->pdir=pcb;
 }
