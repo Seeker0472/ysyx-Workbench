@@ -99,9 +99,9 @@ void context_uload(PCB *pcb,const char *filename) {
       &(AddrSpace){.area={},.pgsize=0,.ptr=0}, (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
       (void *)entry);
   // pcb->cp->pdir=pcb;
-  Log("About to Yield!");
-  yield();//TODO:调度
-  assert(0);
+  // Log("About to Yield!");
+  // yield();//TODO:调度
+  // assert(0);
 }
 void context_kload(PCB *pcb, void *func,void *args) {
   pcb->cp = kcontext((Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, func, args);
