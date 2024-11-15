@@ -52,6 +52,7 @@ Context *schedule(Context *prev) {
       break;
     }
   }
+  Log("goto:%d",robin);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
     current=&pcb_boot;
