@@ -30,6 +30,7 @@ void init_proc() {
   // load program here
 }
 
-Context* schedule(Context *prev) {
+Context *schedule(Context *prev) {
+  Log("SHEDULE");
   return prev;
 }
