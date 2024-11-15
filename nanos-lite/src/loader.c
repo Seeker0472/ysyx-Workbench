@@ -97,6 +97,6 @@ void context_uload(PCB *pcb,const char *filename) {
 
   pcb->cp=ucontext(NULL,(Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, (void*)entry);
   Log("About to Yield!");
-  yield();
+  yield();//TODO:调度
   assert(0);
 }

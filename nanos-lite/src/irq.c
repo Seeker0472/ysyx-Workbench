@@ -7,6 +7,7 @@ char *syscall_names[] = {
 };
 
 void do_syscall(Context *c);
+Context* schedule(Context *prev);
 void trace_event(Event e) {
   Log("Event Type: %s Cause: %x Reference: %x Message: %s",syscall_names[e.event] , e.cause,
       e.ref, e.msg ? e.msg : "NULL");
@@ -18,7 +19,8 @@ static Context *do_event(Event e, Context *c) {
 #endif
   switch (e.event) {
   case EVENT_YIELD:
-    printf("YIELD!");
+    printf("YIELD!\n");
+    schedule(c);
     break;
   case EVENT_SYSCALL:
     // printf("syscall!");

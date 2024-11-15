@@ -31,5 +31,5 @@ void init_proc() {
 }
 
 Context* schedule(Context *prev) {
-  return NULL;
+  return prev;
 }
