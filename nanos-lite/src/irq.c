@@ -12,6 +12,7 @@ void trace_event(Event e) {
   Log("Event Type: %s Cause: %x Reference: %x Message: %s",syscall_names[e.event] , e.cause,
       e.ref, e.msg ? e.msg : "NULL");
 }
+
 static Context *do_event(Event e, Context *c) {
   // IFDEF(STRACE_ENABLE, trace_event(e););
 #ifdef STRACE_ENABLE

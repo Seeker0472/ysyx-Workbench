@@ -41,6 +41,7 @@ Context *schedule(Context *prev) {
   int robin = 0;
   bool find=false;
   // find context,start robin
+  current->cp=prev;
   if (current != &pcb_boot) {
     robin=current-pcb;
   }
