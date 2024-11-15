@@ -30,7 +30,7 @@ void init_proc() {
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
   context_kload(&pcb[0], hello_fun, 0);
-  context_kload(&pcb[1], hello_fun, (void *)1);
+  context_kload(&pcb[1], hello_fun, (void *)4);
   switch_boot_pcb();
   // context_uload(&pcb[0], "/bin/menu");
   // load program here
