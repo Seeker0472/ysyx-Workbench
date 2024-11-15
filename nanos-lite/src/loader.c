@@ -107,6 +107,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
       ucontext(&(AddrSpace){.area = {}, .pgsize = 0, .ptr = 0},
                (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
                (void *)entry);
+  pcb->cp->GPR1=(uintptr_t)pcb->stack;
   int argc = 0;//TODO need to contain exec_name?
   int envp_num=0;
   for (int i = 0; argv[i] != NULL; i++)
@@ -138,7 +139,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // set NULL
   *table_base = 0;
   table_base += 1;
-  pcb->cp->GPR1=(uintptr_t)pcb->stack;
+  
   // pcb->cp->GPR1=1;
   // pcb->cp->pdir=pcb;
 }
