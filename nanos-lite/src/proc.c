@@ -33,7 +33,7 @@ void init_proc() {
   // context_kload(&pcb[1], hello_fun, "BBB");
   context_uload(&pcb[1], "/bin/env",empty,empty);//sig-fault!!
   switch_boot_pcb();
-
+  Log("GO!");
   // context_uload(&pcb[2], "/bin/pal");
   yield();
   // load program here
