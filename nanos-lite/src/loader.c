@@ -95,8 +95,9 @@ char *copy_str(char *dst, const char *src) {
   do {
     *dst = *src;
     src++;
+    dst++;
   } while (*src != '\0');
-  return (char *)src+1;
+  return dst+1;
 }
 // load,yeld?
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
@@ -116,11 +117,14 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     argc++;
   for (int i = 0; envp[i] != NULL; i++)
     envp_num++;
-  Log("argc:%d,envp:%d,entry:%x",argc,envp_num,pcb->cp->mepc);
+
+
+
   // seems to be a simple solution to put args on the bottom of stack area?
   *(uint32_t *)(base_offseted) = argc;
   uint32_t *table_base = (uint32_t *)base_offseted + 1;
-  char *string_base = (char *)((uintptr_t)base_offseted + envp_num + argc + 3);
+  char *string_base = (char *)((uint32_t *)base_offseted + envp_num + argc + 3);
+
   //copy argvs
   for (int i = 0; i < argc; i++) {
     *table_base = (uintptr_t)string_base;
@@ -128,6 +132,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     string_base = copy_str(string_base, argv[i]);
     // string_base=stpcpy(string_base,argv[i])+1;
   }
+
+
   // set NULL
   *table_base = 0;
   table_base += 1;
@@ -138,11 +144,11 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     string_base = copy_str(string_base, envp[i]);
     // string_base = stpcpy(string_base, envp[i]) + 1;
   }
+
+
   // set NULL
   *table_base = 0;
   table_base += 1;
-  // pcb->cp->GPR1=1;
-  // pcb->cp->pdir=pcb;
 }
 void context_kload(PCB *pcb, void *func,void *args) {
   pcb->cp = kcontext((Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, func, args);
