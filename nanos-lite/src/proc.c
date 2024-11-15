@@ -29,17 +29,18 @@ void init_proc() {
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
-  context_kload(&pcb[0], hello_fun, "aaa");
-  context_kload(&pcb[1], hello_fun, "BBB");
+  // context_kload(&pcb[0], hello_fun, "aaa");
+  // context_kload(&pcb[1], hello_fun, "BBB");
+  context_uload(&pcb[1], "/bin/hello");
   switch_boot_pcb();
 
-  context_uload(&pcb[2], "/bin/menu");
+  context_uload(&pcb[2], "/bin/pal");
   yield();
   // load program here
 }
 
 Context *schedule(Context *prev) {
-  Log("SHEDULE");
+  // Log("SHEDULE");
   int robin = 0;
   bool find=false;
   // find context,start robin
@@ -55,10 +56,10 @@ Context *schedule(Context *prev) {
       break;
     }
   }
-  Log("goto:%d",robin);
+  // Log("goto:%d",robin);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
-switch_boot_pcb(); 
+    switch_boot_pcb(); 
     // current=&pcb_boot;
     return pcb_boot.cp;
   }

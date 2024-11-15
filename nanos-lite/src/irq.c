@@ -20,7 +20,7 @@ static Context *do_event(Event e, Context *c) {
 #endif
   switch (e.event) {
   case EVENT_YIELD:
-    printf("YIELD!\n");
+    // printf("YIELD!\n");
     c = schedule(c);
     break;
   case EVENT_SYSCALL:

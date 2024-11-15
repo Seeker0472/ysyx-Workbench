@@ -49,9 +49,7 @@ bool cte_init(Context *(*handler)(Event, Context *)) {
 }
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  // DONE:是不是要在栈上放置点什么东西(是应该把内容保存在栈上吗)
-  //  Context * con= malloc(sizeof(Context));
-  //  Context *bottom=(Context *)kstack.end;
+  // store data and args as Context Struct on top of the stack
   Context *top = (Context *)(((void *)kstack.end) - sizeof(Context));
   top->gpr[10] = (uint32_t)arg;
   top->mepc = (uintptr_t)entry;
