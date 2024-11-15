@@ -59,6 +59,7 @@ Context *schedule(Context *prev) {
       }
     }
   }
+  Log("Going to %x",(uint32_t)pcb[robin].cp->mepc);
   if (!find)
     assert(0);
     // return prev;
