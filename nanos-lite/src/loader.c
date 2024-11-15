@@ -95,7 +95,10 @@ void naive_uload(PCB *pcb, const char *filename) {
 void context_uload(PCB *pcb,const char *filename) {
   uintptr_t entry = loader(pcb, filename);
 
-  pcb->cp=ucontext(NULL,(Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, (void*)entry);
+  pcb->cp = ucontext(
+      NULL, (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
+      (void *)entry);
+  pcb->cp->pdir=pcb;
   Log("About to Yield!");
   yield();//TODO:调度
   assert(0);
