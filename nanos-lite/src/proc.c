@@ -1,3 +1,4 @@
+#include "am.h"
 #include <proc.h>
 
 #define MAX_NR_PROC 4
@@ -8,6 +9,7 @@ PCB *current = NULL;
 
 void switch_boot_pcb() {
   current = &pcb_boot;
+  yield();
 }
 
 void hello_fun(void *arg) {
@@ -18,15 +20,19 @@ void hello_fun(void *arg) {
     yield();
   }
 }
-void context_uload(PCB *pcb,const char *filename);
+void context_uload(PCB *pcb, const char *filename);
+void context_kload(PCB *pcb, void *func,void*args);
 void naive_uload(PCB *pcb, const char *filename);
 void init_proc() {
-  switch_boot_pcb();
+
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
-  context_uload(&pcb[0], "/bin/menu");
+  context_kload(&pcb[1], hello_fun, 0);
+  context_kload(&pcb[1], hello_fun, (void *)1);
+  switch_boot_pcb();
+  // context_uload(&pcb[0], "/bin/menu");
   // load program here
 }
 
@@ -35,33 +41,22 @@ Context *schedule(Context *prev) {
   int robin = 0;
   bool find=false;
   // find context,start robin
-  //TODO:will not enter as pcb_boot.cp is NULL !!
-  if (prev == pcb_boot.cp) {
-    // first-boot
-    for (int i = 0; i < MAX_NR_PROC; i++) {
-      if (pcb[i].cp !=NULL) {
-        robin = i;
-        break;
-      }
-    }
-  } else {
-    for (int i = 0; i < MAX_NR_PROC; i++) {
-      if (pcb[i].cp == prev) {
-        robin = i;
-        break;
-      }
-    }
-    for (int i = (robin+1)%MAX_NR_PROC; true; i = (i + 1)%MAX_NR_PROC) {
-      if (pcb[i].cp != NULL) {
-        robin = i;
-        find=true;
-        break;
-      }
+  if (current != &pcb_boot) {
+    robin=current-pcb;
+  }
+  for (int i = (robin+1)%MAX_NR_PROC; true; i = (i + 1)%MAX_NR_PROC) {
+    if (pcb[i].cp != NULL) {
+      robin = i;
+      current=&pcb[i];
+      find=true;
+      break;
     }
   }
-  // Log("Going to %x",(uint32_t)pcb[robin].cp->mepc);
-  if (!find)
-    assert(0);
+  if (!find) {
+    Log("INFO:NoThread Found,return TO Main");
+    current=&pcb_boot;
+    return pcb_boot.cp;
+  }
     // return prev;
   return pcb[robin].cp;
 }
