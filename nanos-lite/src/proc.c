@@ -37,6 +37,7 @@ void init_proc() {
   Log("GO!");
   // context_uload(&pcb[2], "/bin/pal");
   yield();
+  assert(0);
   // load program here
 }
 
