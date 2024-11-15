@@ -32,8 +32,10 @@ void init_proc() {
 
 Context *schedule(Context *prev) {
   Log("SHEDULE");
-  int robin =-1;
-  //find context,start robin
+  int robin = 0;
+  bool find=false;
+  // find context,start robin
+  //TODO:will not enter as pcb_boot.cp is NULL !!
   if (prev == pcb_boot.cp) {
     // first-boot
     for (int i = 0; i < MAX_NR_PROC; i++) {
@@ -51,11 +53,13 @@ Context *schedule(Context *prev) {
     }
     for (int i = (robin+1)%MAX_NR_PROC; true; i = (i + 1)%MAX_NR_PROC) {
       if (pcb[i].cp != NULL) {
-        robin=i;
+        robin = i;
+        find=true;
+        break;
       }
     }
   }
-  if(robin==-1)
+  if(!find)
     return prev;
   return pcb[robin].cp;
 }
