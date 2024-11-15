@@ -24,14 +24,14 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 void context_kload(PCB *pcb, void *func,void*args);
 void naive_uload(PCB *pcb, const char *filename);
 void init_proc() {
-
+  char *empty[] =  {NULL };
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  context_uload(&pcb[1], "/bin/env",NULL,NULL);//sig-fault!!
+  context_uload(&pcb[1], "/bin/env",empty,empty);//sig-fault!!
   switch_boot_pcb();
 
   // context_uload(&pcb[2], "/bin/pal");
