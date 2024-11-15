@@ -24,7 +24,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 void context_kload(PCB *pcb, void *func,void*args);
 void naive_uload(PCB *pcb, const char *filename);
 void init_proc() {
-  char *empty[] =  {NULL };
+  char *empty[] =  {"Test1","Test2",NULL };
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");

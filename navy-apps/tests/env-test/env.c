@@ -8,9 +8,9 @@ int main(int argc, char *argv[], char *envp[]) {
     }
 
     printf("\nenvp:\n");
-    // for (char **env = envp; *env != 0; env++) {
-    //     printf("%s\n", *env);
-    // }
+    for (char **env = envp; *env != 0; env++) {
+        printf("%s\n", *env);
+    }
 
     return 0;
 }
