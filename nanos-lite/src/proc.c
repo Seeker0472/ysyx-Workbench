@@ -59,7 +59,8 @@ Context *schedule(Context *prev) {
       }
     }
   }
-  if(!find)
-    return prev;
+  if (!find)
+    assert(0);
+    // return prev;
   return pcb[robin].cp;
 }
