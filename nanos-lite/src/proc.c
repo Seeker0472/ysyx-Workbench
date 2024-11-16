@@ -86,7 +86,7 @@ Context *schedule(Context *prev) {
       break;
     }
   }
-  Log("goto:%d-%x",robin,pcb[robin].cp);
+  // Log("goto:%d",robin);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
     switch_boot_pcb(); 
