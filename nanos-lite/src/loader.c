@@ -132,9 +132,9 @@ uintptr_t cp
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
-  // new_page(8);
-  // uint8_t *stack = new_page(8);
-  uint8_t *stack = pcb->stack;
+  new_page(88);
+  uint8_t *stack = new_page(8);
+  // uint8_t *stack = pcb->stack;
   Log("NEW_PAGE:%x",stack);
   // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
