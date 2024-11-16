@@ -135,7 +135,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // new_page(10);
   uint8_t *stack = new_page(8);
   // uint8_t *stack = pcb->stack;
-  Log("NEW_PAGE:%x",stack);
   // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
   //the cp pointer stores at the bottom of stack
@@ -144,7 +143,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
                (Area){.start = stack, .end = stack + 8*PGSIZE},
                (void *)entry);
   pcb->active=true;
-  
+  Log("NEW_PAGE:%x-%x", stack,pcb->cp->mepc);
+
   //calc addr and num
   uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
   pcb->cp->GPR3 = base_offseted;
