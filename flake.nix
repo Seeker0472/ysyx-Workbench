@@ -99,8 +99,8 @@
             # pkgs.glibc
             # pkgs.glibc.dev
           ];
-          # hardeningDisable = [ "fortify" ];
-          hardeningDisable = [ "all" ];
+          hardeningDisable = [ "fortify" ];
+          # hardeningDisable = [ "all" ];
           
           LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.glibc}/bin";
 
