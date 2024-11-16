@@ -121,13 +121,14 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 
   // seems to be a simple solution to put args on the bottom of stack area?
-  *(uint32_t *)(base_offseted) = argc;
-  uint32_t *table_base = (uint32_t *)base_offseted + 1;
-  char *string_base = (char *)((uint32_t *)base_offseted + envp_num + argc + 3);
+  *(char* *)(base_offseted) = (char *) argc;
+  //这里应该是char**！！！！！
+  char* *table_base = (char* *)base_offseted + 1;
+  char * string_base = (char*)((char* *)base_offseted + envp_num + argc + 3);
 
   //copy argvs
   for (int i = 0; i < argc; i++) {
-    *table_base = (uintptr_t)string_base;
+    *table_base = (char*)string_base;
     table_base += 1;
     string_base = copy_str(string_base, argv[i]);
     // string_base=stpcpy(string_base,argv[i])+1;
@@ -139,7 +140,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   table_base += 1;
   // copy envp
   for (int i = 0; i < envp_num; i++) {
-    *table_base = (uintptr_t)string_base;
+    *table_base = (char*)string_base;
     table_base += 1;
     string_base = copy_str(string_base, envp[i]);
     // string_base = stpcpy(string_base, envp[i]) + 1;

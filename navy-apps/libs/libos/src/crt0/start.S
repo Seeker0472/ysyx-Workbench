@@ -10,9 +10,10 @@ _start:
 
   #no point to set the first argument!!
   movq %rax,%rsp# set stack pointer
-  movq %rdi,%rdx # TODO
+
+  movq %rdx,%rdi # TODO
   andq $0xfffffffffffffff0, %rsp
-  movq %rax, %rdi
+
   call call_main
 
 #elif defined(__ISA_X86_64__)
