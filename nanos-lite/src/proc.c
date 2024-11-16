@@ -31,7 +31,7 @@ void init_proc() {
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
   // context_uload(&pcb[1], "/bin/env", empty, empty);
-  context_uload(&pcb[0], "/bin/exec-test", test, test);
+  context_uload(&pcb[0], "/bin/env-test", test, test);
   switch_boot_pcb();
   // context_uload(&pcb[2], "/bin/pal");
   yield();  
