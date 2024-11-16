@@ -20,38 +20,53 @@ void hello_fun(void *arg) {
     yield();
   }
 }
-void context_uload(PCB *pcb, const char *filename);
+void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]);
 void context_kload(PCB *pcb, void *func,void*args);
 void naive_uload(PCB *pcb, const char *filename);
 void init_proc() {
-
+  char *test[] =  {"Test","Test",NULL };
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
-  context_kload(&pcb[0], hello_fun, "aaa");
-  context_kload(&pcb[1], hello_fun, "BBB");
+  // context_kload(&pcb[0], hello_fun, "aaa");
+  // context_kload(&pcb[1], hello_fun, "BBB");
+  // context_uload(&pcb[1], "/bin/env", empty, empty); // sig-fault!!
+  context_uload(&pcb[1], "/bin/env",test,test);//sig-fault!!
   switch_boot_pcb();
-
-  context_uload(&pcb[2], "/bin/pal");
+  // context_uload(&pcb[2], "/bin/pal");
   yield();
+  assert(0);
   // load program here
 }
-
+//when program calls Sys_Exit
+void handle_exit() {
+  current->active=false;
+  Log("EXIT!");
+  yield();
+  // TODO: menu
+}
 Context *schedule(Context *prev) {
   // Log("SHEDULE");
   int robin = 0;
   bool find=false;
   // find context,start robin
+  // update Context *
   current->cp=prev;
   if (current != &pcb_boot) {
     robin=current-pcb;
   }
-  for (int i = (robin+1)%MAX_NR_PROC; true; i = (i + 1)%MAX_NR_PROC) {
-    if (pcb[i].cp != NULL) {
+  for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
+    //find any thread available
+    if (pcb[i].active) {
       robin = i;
       current=&pcb[i];
       find=true;
+      break;
+    }
+    // if not found any thread available
+    if (robin++ > MAX_NR_PROC) {
+      robin=0;
       break;
     }
   }

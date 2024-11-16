@@ -3,6 +3,7 @@
 
 #include <common.h>
 #include <memory.h>
+#include <stdint.h>
 
 #define STACK_SIZE (8 * PGSIZE)
 
@@ -13,6 +14,7 @@ typedef union {
     AddrSpace as;
     // we do not free memory, so use `max_brk' to determine when to call _map()
     uintptr_t max_brk;
+    uintptr_t active;//wheather the thread alive
   };
 } PCB;
 
