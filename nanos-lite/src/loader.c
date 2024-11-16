@@ -133,7 +133,7 @@ uintptr_t cp
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
   // new_page(8);
-  uint8_t *stack = new_page(2);
+  uint8_t *stack = new_page(4);
   // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
   //the cp pointer stores at the bottom of stack
