@@ -6,6 +6,7 @@
 #include <sys/time.h>
 // uintptr_t end_symbol;
 extern const char *get_filename(int fd);
+void handle_exit();
 const char *event_names[] = {
     "SYS_exit",  "SYS_yield",  "SYS_open",   "SYS_read",   "SYS_write",
     "SYS_kill",  "SYS_getpid", "SYS_close",  "SYS_lseek",  "SYS_brk",
@@ -37,8 +38,7 @@ void do_syscall(Context *c) {
   uint64_t time;
   switch (a[0]) {
   case SYS_exit:
-    halt(0);//TODO!!
-    // naive_uload(NULL, "/bin/menu");
+    handle_exit();
     break;
   case SYS_yield:
     yield();
