@@ -41,7 +41,8 @@ void init_proc() {
 }
 //when program calls Sys_Exit
 void handle_exit() {
-  current->cp=NULL;
+  current->cp = NULL;
+  Log("EXIT!");
   yield();
   // menu
 }
