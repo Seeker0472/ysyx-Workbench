@@ -109,7 +109,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
                (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
                (void *)entry);
 
-  uintptr_t base_offseted = (uintptr_t)(pcb->stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)+10);
+  uintptr_t base_offseted = (uintptr_t)(pcb->stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t));
   pcb->cp->GPR3 = base_offseted;
   int argc = 0; // TODO need to contain exec_name?
   int envp_num=0;
