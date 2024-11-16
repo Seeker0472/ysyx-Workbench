@@ -143,8 +143,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
                (Area){.start = stack, .end = stack + 8*PGSIZE},
                (void *)entry);
   pcb->active=true;
-  // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
-  Log("NEW_PAGE:%x-%x\n", stack,pcb->cp->mepc);
+  Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
+  // Log("NEW_PAGE:%x-%x\n", stack,pcb->cp->mepc);
 
   //calc addr and num
   uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
