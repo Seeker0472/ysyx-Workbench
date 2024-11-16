@@ -11,7 +11,7 @@ _start:
   #no point to set the first argument!!
   movq %rax,%rsp# set stack pointer
 
-  movq %rdx,%rdi # TODO
+  movq %rdx,%rdi # set the argument for call_main(argc addr) 
   andq $0xfffffffffffffff0, %rsp
 
   call call_main

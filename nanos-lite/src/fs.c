@@ -56,7 +56,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       return i;
     }
   }
-  Log("%s\n",pathname);
+  Log("File Not Found-%s-\n",pathname);
   assert(0);
 }
 // the simple fs assume no out-of bound so don't need to check

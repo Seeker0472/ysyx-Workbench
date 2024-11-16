@@ -1,6 +1,7 @@
 #include "am.h"
 #include "debug.h"
 #include "fs.h"
+#include "memory.h"
 #include <proc.h>
 #include <elf.h>
 #include <stdint.h>
@@ -99,7 +100,7 @@ char *copy_str(char *dst, const char *src) {
   } while (*src != '\0');
   return dst+1;
 }
-// load,yeld?
+
 /*
 Data Locations,see ABI at
 https://ysyx.oscc.cc/docs/ics-pa/4.1.html#%E7%94%A8%E6%88%B7%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%8F%82%E6%95%B0
@@ -131,15 +132,17 @@ uintptr_t cp
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
+  void* stack = new_page(8);
   // init an Context struct on top of stack
   //the cp pointer stores at the bottom of stack
   pcb->cp =
       ucontext(&(AddrSpace){.area = {}, .pgsize = 0, .ptr = 0},
-               (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
+               (Area){.start = stack, .end = stack + STACK_SIZE},
                (void *)entry);
+  pcb->active=true;
   
   //calc addr and num
-  uintptr_t base_offseted = (uintptr_t)(pcb->stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t));
+  uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
   pcb->cp->GPR3 = base_offseted;
   int argc = 0; // TODO need to contain exec_name?
   int envp_num=0;
@@ -178,4 +181,5 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 }
 void context_kload(PCB *pcb, void *func,void *args) {
   pcb->cp = kcontext((Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, func, args);
+  pcb->active=true;
 }

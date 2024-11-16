@@ -9,7 +9,6 @@ PCB *current = NULL;
 
 void switch_boot_pcb() {
   current = &pcb_boot;
-
 }
 
 void hello_fun(void *arg) {
@@ -24,48 +23,70 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 void context_kload(PCB *pcb, void *func,void*args);
 void naive_uload(PCB *pcb, const char *filename);
 void init_proc() {
-  char *test[] =  {"Test","Test",NULL };
+  char *test[] =  {"/bin/exec-test","--skip",NULL };
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
   // "/share/games/nes/mario.nes"
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  // context_uload(&pcb[1], "/bin/env", empty, empty); // sig-fault!!
-  context_uload(&pcb[1], "/bin/env",test,test);//sig-fault!!
+  // context_uload(&pcb[1], "/bin/env", empty, empty);
+  context_uload(&pcb[1], "/bin/menu",test,test);
   switch_boot_pcb();
   // context_uload(&pcb[2], "/bin/pal");
-  yield();
+  yield();  
   assert(0);
   // load program here
 }
+void execue_menu() {
+  char *test[] = {"/bin/exec-test", "--skip", NULL};
+  context_uload(&pcb[0], "/bin/menu", test, test);
+  switch_boot_pcb();
+
+  yield();
+}
 //when program calls Sys_Exit
 void handle_exit() {
-  current->cp = NULL;
+  current->active=false;
   Log("EXIT!");
+  execue_menu();
   yield();
-  // menu
+  // TODO: menu
 }
+// 创建B的上下文之后, 通过switch_boot_pcb()修改当前的current指针,
+// 然后调用yield()来强制触发进程调度.
+// 这样以后, A的执行流就不会再被调度, 等到下一次调度的时候, 就可以恢复并执行B了.
+void handle_execve(const char *filename, char *const argv[], char *const envp[]) {
+  context_uload(current, filename, argv, envp);
+  switch_boot_pcb();
+  yield();
+}
+
 Context *schedule(Context *prev) {
-  Log("SHEDULE");
+  // Log("SHEDULE");
   int robin = 0;
   bool find=false;
   // find context,start robin
+  // update Context *
   current->cp=prev;
   if (current != &pcb_boot) {
     robin=current-pcb;
   }
-  for (int i = (robin+1)%MAX_NR_PROC; true; i = (i + 1)%MAX_NR_PROC) {
-    if (pcb[i].cp != NULL) {
+  for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
+    //find any thread available
+    if (pcb[i].active) {
       robin = i;
       current=&pcb[i];
       find=true;
       break;
     }
-    // if(i==robin)
-    
+    // if not found any thread available
+    if (robin++ > MAX_NR_PROC) {
+      robin=0;
+      break;
+    }
   }
-  Log("goto:%d",robin);
+  // Log("goto:%d",robin);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
     switch_boot_pcb(); 

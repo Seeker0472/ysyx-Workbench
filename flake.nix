@@ -94,8 +94,16 @@
             python312 
             python312Packages.matplotlib
             python312Packages.numpy
+            pkgs.openlibm
+            pkgs.stdenv.cc.cc
+            # pkgs.glibc
+            # pkgs.glibc.dev
           ];
-          hardeningDisable = [ "fortify" ];
+          # hardeningDisable = [ "fortify" ];
+          hardeningDisable = [ "all" ];
+          
+          LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.glibc}/bin";
+
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
             # 添加需要的库
             pkgs.ncurses
@@ -113,9 +121,15 @@
             pkgs.gmp
             pkgs.tcl
             pkgs.libunwind
+            pkgs.openlibm
+            pkgs.stdenv.cc.cc
+            # pkgs.glibc
+
+
           ];
           NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
         };
       }
     );
 }
+
