@@ -132,7 +132,7 @@ uintptr_t cp
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
-  // new_page(10);
+  new_page(10);
   uint8_t *stack = new_page(8);
   // uint8_t *stack = pcb->stack;
   // uint8_t *stack = pcb->stack;
@@ -144,6 +144,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
                (void *)entry);
   pcb->active=true;
   Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
+  // Log("NEW_PAGE:%x-%x\n", stack,pcb->cp->mepc);
 
   //calc addr and num
   uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
