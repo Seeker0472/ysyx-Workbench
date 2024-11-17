@@ -39,8 +39,9 @@ void init_proc() {
   // load program here
 }
 void execue_menu() {
-  char *test[] = {"/bin/exec-test", "--skip", NULL};
-  context_uload(&pcb[0], "/bin/menu", test, test);
+  char *argv[] = {"/bin/exec-test", "--skip", NULL};
+  char *envp[] = {"vpvpvpvpvpvpvpvpvpvpvp", "vvvvvvv1", NULL};
+  context_uload(&pcb[0], "/bin/menu", argv, envp);
   switch_boot_pcb();
 
   yield();
