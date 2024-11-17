@@ -33,7 +33,7 @@ void init_proc() {
   // context_uload(&pcb[1], "/bin/env", empty, empty);
   char *argv[] = {"/bin/exec-test", "--skip", NULL};
   char *envp[] = {"vpvpvpvpvpvpvpvpvpvpvp", "vvvvvvv1", NULL};
-  context_uload(&pcb[0], "/bin/menu", argv, envp);
+  context_uload(&pcb[1], "/bin/menu", argv, envp);
   switch_boot_pcb();
   // context_uload(&pcb[2], "/bin/pal");
   yield();  
