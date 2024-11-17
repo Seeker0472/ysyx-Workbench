@@ -1,6 +1,7 @@
 #include "am.h"
 #include "debug.h"
 #include "fs.h"
+#include "memory.h"
 #include <proc.h>
 #include <elf.h>
 #include <stdint.h>
@@ -92,14 +93,15 @@ void naive_uload(PCB *pcb, const char *filename) {
   ((void(*)())entry) ();
 }
 char *copy_str(char *dst, const char *src) {
-  do {
+  while (*src != '\0') {
     *dst = *src;
     src++;
     dst++;
-  } while (*src != '\0');
+  }
+  *dst='\0';
   return dst+1;
 }
-// load,yeld?
+
 /*
 Data Locations,see ABI at
 https://ysyx.oscc.cc/docs/ics-pa/4.1.html#%E7%94%A8%E6%88%B7%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%8F%82%E6%95%B0
@@ -131,16 +133,19 @@ uintptr_t cp
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
+  uint8_t *stack = new_page(8);
+  // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
   //the cp pointer stores at the bottom of stack
   pcb->cp =
       ucontext(&(AddrSpace){.area = {}, .pgsize = 0, .ptr = 0},
-               (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
+               (Area){.start = stack, .end = stack + 8*PGSIZE},
                (void *)entry);
   pcb->active=true;
-  
+  // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
+
   //calc addr and num
-  uintptr_t base_offseted = (uintptr_t)(pcb->stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
+  uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
   pcb->cp->GPR3 = base_offseted;
   int argc = 0; // TODO need to contain exec_name?
   int envp_num=0;
@@ -154,6 +159,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   char* *table_base = (char* *)base_offseted + 1;
   char * string_base = (char*)((char* *)base_offseted + envp_num + argc + 3);
 
+  // Log("%d,%d",argc,envp_num);
   //copy argvs
   for (int i = 0; i < argc; i++) {
     *table_base = (char*)string_base;
