@@ -27,7 +27,7 @@ static void sh_handle_cmd(const char *cmd) {
     char *empty[] ={NULL };
   sh_printf("goto:%s",cmd);
   char buffer[1000];
-  char *argv[100];
+  char *argv[100]={};
   int argc = 1;
   argv[0]=buffer;
   strncpy(buffer, cmd, 1000);
