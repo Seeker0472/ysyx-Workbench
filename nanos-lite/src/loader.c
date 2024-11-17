@@ -133,9 +133,7 @@ uintptr_t cp
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
   uintptr_t entry = loader(pcb, filename);
-  // new_page(10);
   uint8_t *stack = new_page(8);
-  // uint8_t *stack = pcb->stack;
   // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
   //the cp pointer stores at the bottom of stack
@@ -144,8 +142,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
                (Area){.start = stack, .end = stack + 8*PGSIZE},
                (void *)entry);
   pcb->active=true;
-  Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
-  // Log("NEW_PAGE:%x-%x\n", stack,pcb->cp->mepc);
+  // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
   //calc addr and num
   uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
@@ -162,7 +159,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   char* *table_base = (char* *)base_offseted + 1;
   char * string_base = (char*)((char* *)base_offseted + envp_num + argc + 3);
 
-  Log("%d,%d",argc,envp_num);
+  // Log("%d,%d",argc,envp_num);
   //copy argvs
   for (int i = 0; i < argc; i++) {
     *table_base = (char*)string_base;

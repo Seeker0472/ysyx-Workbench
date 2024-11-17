@@ -27,25 +27,22 @@ void init_proc() {
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
-  // "/share/games/nes/mario.nes"
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  // context_uload(&pcb[1], "/bin/env", empty, empty);
-  char *argv[] = {"/bin/exec-test", "--skip", NULL};
-  char *envp[] = {"vpvpvpvpvpvpvpvpvpvpvp", "vvvvvvv1", NULL};
+  char *argv[] = {"/bin/pal", "--skip", "PATH=/bin:/usr/bin", NULL};
+  char *envp[] = {
+      "PATH=/home/seeker/Develop/ysyx-workbench/navy-apps/fsimg/bin",NULL};
   context_uload(&pcb[1], "/bin/env", argv, envp);
   switch_boot_pcb();
-  // context_uload(&pcb[2], "/bin/pal");
   yield();  
   assert(0);
   // load program here
 }
 void execue_menu() {
-  char *argv[] = {"/bin/exec-test", "--skip", NULL};
-  char *envp[] = {"vpvpvpvpvpvpvpvpvpvpvp", "vvvvvvv1", NULL};
-  context_uload(&pcb[0], "/bin/menu", argv, envp);
+  char *argv[] = {"/bin/menu", NULL};
+  char *envp[] = {"PATH=/bin:/usr/bin", NULL};
+  context_uload(&pcb[0], "/bin/nterm", argv, envp);
   switch_boot_pcb();
-
   yield();
 }
 //when program calls Sys_Exit
@@ -90,7 +87,7 @@ Context *schedule(Context *prev) {
     }
   }
   if(pcb[robin].cp!=prev)
-    Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
+    // Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
     switch_boot_pcb(); 

@@ -96,10 +96,10 @@
             python312Packages.numpy
             pkgs.stdenv.cc.cc
           ];
-          hardeningDisable = [ "fortify" ];
-          # hardeningDisable = [ "all" ];
+          # hardeningDisable = [ "fortify" ];
+          hardeningDisable = [ "all" ];
           
-          LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.glibc}/bin";
+          # LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.glibc}/bin";
 
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
             # 添加需要的库

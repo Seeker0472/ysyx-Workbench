@@ -72,7 +72,10 @@ void do_syscall(Context *c) {
     break;
   case SYS_execve:
     // naive_uload(NULL,(const char*)a[1]);
-    handle_execve((const char *)a[1], (char *const*)a[2], (char * const *)a[3]);
+    if (fs_open((const char *)a[1], 0, 0) == -1)
+      c->GPRx = -2;
+    else
+      handle_execve((const char *)a[1], (char *const*)a[2], (char * const *)a[3]);
     break;
         default : panic("Unhandled syscall ID = %d", a[0]);
     }
