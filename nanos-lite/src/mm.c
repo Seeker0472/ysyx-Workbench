@@ -1,0 +1,34 @@
+#include <memory.h>
+#include <stdlib.h>
+
+static void *pf = NULL;
+// execve calls new_page!!
+// execve 不会 反回原来的控制流，而是在原来的地方创建！
+void *new_page(size_t nr_page) {
+  size_t page_size = nr_page*PGSIZE;
+  return malloc(page_size);
+}
+
+#ifdef HAS_VME
+static void* pg_alloc(int n) {
+  return NULL;
+}
+#endif
+
+void free_page(void *p) {
+  panic("not implement yet");
+}
+
+/* The brk() system call handler. */
+int mm_brk(uintptr_t brk) {
+  return 0;
+}
+
+void init_mm() {
+  pf = (void *)ROUNDUP(heap.start, PGSIZE);//TODO:print %p
+  Log("free physical pages starting from %p", pf);
+
+#ifdef HAS_VME
+  vme_init(pg_alloc, free_page);
+#endif
+}
