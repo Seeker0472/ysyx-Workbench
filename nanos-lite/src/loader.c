@@ -162,6 +162,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   char* *table_base = (char* *)base_offseted + 1;
   char * string_base = (char*)((char* *)base_offseted + envp_num + argc + 3);
 
+  Log("%d,%d",argc,envp_num);
   //copy argvs
   for (int i = 0; i < argc; i++) {
     *table_base = (char*)string_base;
