@@ -93,11 +93,12 @@ void naive_uload(PCB *pcb, const char *filename) {
   ((void(*)())entry) ();
 }
 char *copy_str(char *dst, const char *src) {
-  do {
+  while (*src != '\0') {
     *dst = *src;
     src++;
     dst++;
-  } while (*src != '\0');
+  }
+  *dst='\0';
   return dst+1;
 }
 
