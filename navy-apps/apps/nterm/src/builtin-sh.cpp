@@ -49,7 +49,8 @@ static void sh_handle_cmd(const char *cmd) {
     }
   }
   end_loop:
-  execve(buffer, argv, empty);
+  // execve(buffer, argv, empty);
+  execvp(buffer, argv);
 }
 
 void builtin_sh_run() {

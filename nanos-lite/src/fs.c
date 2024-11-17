@@ -57,7 +57,8 @@ int fs_open(const char *pathname, int flags, int mode) {
     }
   }
   Log("File Not Found-%s-\n",pathname);
-  assert(0);
+  // assert(0);
+  return -1;
 }
 // the simple fs assume no out-of bound so don't need to check
 size_t fs_read(int fd, void *buf, size_t len) {

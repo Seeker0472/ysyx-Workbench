@@ -132,6 +132,10 @@ uintptr_t cp
 */
 // _start之后会调用call_main()，在如果要传递参数，应该把参数相关信息传递给call_main,然后由call_main传递给目标main函数
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
+  assert(envp);
+  assert(argv);
+  assert(filename);
+  assert(pcb);
   uintptr_t entry = loader(pcb, filename);
   uint8_t *stack = new_page(8);
   // uint8_t *stack = pcb->stack;
@@ -151,9 +155,12 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   int envp_num=0;
   for (int i = 0; argv[i] != NULL; i++)
     argc++;
-  for (int i = 0; envp[i] != NULL; i++)
-    envp_num++;
-  // get the addr
+  //seems execvp fails to trans envp
+  // for (int i = 0; envp[i] != NULL; i++)
+  //   envp_num++;
+
+  Log("%d-%d",argc,envp_num);
+  // get the a,ddr
   // don't assume pointer of size 4Bytes
   *(intptr_t *)(base_offseted) = (intptr_t)argc;
   char* *table_base = (char* *)base_offseted + 1;
