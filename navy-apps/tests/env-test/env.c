@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 int main(int argc, char *argv[], char *envp[]) {
-    printf("%d,%lx,%lx\n",argc,*argv,*envp);
-    printf("argv:\n");
-    for (int i = 0; i < argc; i++) {
-        printf("argv[%d]: %s\n", i, argv[i]);
+  setenv("PATH", "/bin:/usr/bin",1);
+  printf("%d,%lx,%lx\n", argc, *argv, *envp);
+  printf("argv:\n");
+  for (int i = 0; i < argc; i++) {
+    printf("argv[%d]: %s\n", i, argv[i]);
     }
 
     printf("\nenvp:\n");
