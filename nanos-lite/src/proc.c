@@ -30,8 +30,7 @@ void init_proc() {
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
   char *argv[] = {"/bin/pal", "--skip", "PATH=/bin:/usr/bin", NULL};
-  char *envp[] = {
-      "PATH=/home/seeker/Develop/ysyx-workbench/navy-apps/fsimg/bin",NULL};
+  char *envp[] = {NULL};
   context_uload(&pcb[1], "/bin/env", argv, envp);
   switch_boot_pcb();
   yield();  
@@ -40,7 +39,7 @@ void init_proc() {
 }
 void execue_menu() {
   char *argv[] = {"/bin/menu", NULL};
-  char *envp[] = {"PATH=/bin:/usr/bin", NULL};
+  char *envp[] = {NULL};
   context_uload(&pcb[0], "/bin/nterm", argv, envp);
   switch_boot_pcb();
   yield();

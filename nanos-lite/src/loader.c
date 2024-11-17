@@ -155,9 +155,11 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   int envp_num=0;
   for (int i = 0; argv[i] != NULL; i++)
     argc++;
-  // for (int i = 0; envp[i] != NULL; i++)
-  //   envp_num++;
-  // get the addr
+  for (int i = 0; envp[i] != NULL; i++)
+    envp_num++;
+
+  Log("%d-%d",argc,envp_num);
+  // get the a,ddr
   // don't assume pointer of size 4Bytes
   *(intptr_t *)(base_offseted) = (intptr_t)argc;
   char* *table_base = (char* *)base_offseted + 1;
