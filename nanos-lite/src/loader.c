@@ -155,8 +155,9 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   int envp_num=0;
   for (int i = 0; argv[i] != NULL; i++)
     argc++;
-  for (int i = 0; envp[i] != NULL; i++)
-    envp_num++;
+  //seems execvp fails to trans envp
+  // for (int i = 0; envp[i] != NULL; i++)
+  //   envp_num++;
 
   Log("%d-%d",argc,envp_num);
   // get the a,ddr
