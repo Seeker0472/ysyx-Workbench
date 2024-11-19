@@ -44,7 +44,7 @@ static inline int get_csr_reg(int idx) {
   case 0xF12: // marchid
     idx = 5;
     break;
-  case 0x180://statp
+  case 0x180: // statp
     idx = 6;
     break;
   default:
