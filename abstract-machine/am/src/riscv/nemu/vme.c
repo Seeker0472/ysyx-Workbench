@@ -5,8 +5,8 @@
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #define PAGE(x) (((uint32_t)(x)) << 12) //get page addr
-#define ADDRM(x) (((uint32_t)(x)) & 0xFFFFF000)//TODO:ERR
-#define PTEM(x) (((uint32_t)(x)) & 0xFFFFFC00)//TODO:ERR
+#define ADDRM(x) (((uint32_t)(x)) & 0xFFFFF000)
+#define PTEM(x) (((uint32_t)(x)) & 0xFFFFFC00)
 
 // for pte |22|10 ;;; for vaddr |10|10|12
 #define PAGE_VALID(x) (((uint32_t)(x)) & 0x1)
@@ -42,7 +42,6 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   pgfree_usr = pgfree_f;
 
   kas.ptr = pgalloc_f(PGSIZE);
-  // TODO:read!
 
   int i;
   for (i = 0; i < LENGTH(segments); i ++) {
@@ -51,7 +50,6 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
       map(&kas, va, va, 0);
     }
   }
-  // assert(0);
   set_satp(kas.ptr);
   vme_enable = 1;
 
@@ -85,27 +83,22 @@ void __am_switch(Context *c) {
 // 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
 // 只用va,pa?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
-  // uint32_t *statp = (uint32_t *)get_satp();
   // printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
-  // assert(0);
   //the root_page should be passed in!!
   uint32_t *root_pt = as->ptr;
   uint32_t vpn1 = (uint32_t)va >> 22;
   uint32_t vpn0 = ((uint32_t)va >> 12) & 0x3FF;
-  // uint32_t ppn = PAGEM(pa);
 
   // if not valid!,allocate page
   if (!PAGE_VALID(*(root_pt + vpn1))) {
     uint32_t *ptea0 = pgalloc_usr(PGSIZE);
     uint32_t pte1 = PTE1(ptea0);
     *(root_pt + vpn1) = pte1;
-    // printf("%x",ptea0);
   }
   // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
   uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2); // TODO!!!
-  // printf("---%x\n",ptea0);
   *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
