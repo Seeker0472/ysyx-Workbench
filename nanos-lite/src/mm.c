@@ -21,7 +21,11 @@ void *new_page(size_t nr_page) {
 #ifdef HAS_VME
 static void *pg_alloc(int n) {
   void *page_prev = pf;
-  pf+=PGSIZE;
+  pf += PGSIZE;
+  for (uint32_t *i = page_prev; i < (uint32_t *)pf; i++) {
+    printf("EE");
+    *i = 0;
+  }
   return page_prev;
 }
 #endif
