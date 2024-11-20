@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include "common.h"
+#include "debug.h"
 #include "sys/types.h"
 #include <isa.h>
 #include <memory/vaddr.h>
@@ -63,7 +64,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   if (offset + len > 0xFFF) {
     return MEM_RET_CROSS_PAGE;
   }
-
+  Log("Translate_result:%x-%x",vaddr,pa);
   return pa;
 
   // | ppn1 | ppn0 | offset
