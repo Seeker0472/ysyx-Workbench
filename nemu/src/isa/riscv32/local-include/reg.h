@@ -25,27 +25,30 @@ static inline int check_reg_idx(int idx) {
 
 static inline int get_csr_reg(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 4096));
-  switch(idx){
-    case 0x305://mtvec
-    idx=0;
+  switch (idx) {
+  case 0x305: // mtvec
+    idx = 0;
     break;
-    case 0x342://mcause
-    idx=1;
+  case 0x342: // mcause
+    idx = 1;
     break;
-    case 0x300://mstatus
-    idx=2;
+  case 0x300: // mstatus
+    idx = 2;
     break;
-    case 0x341: // mepc
-      idx = 3;
-      break;
-    case 0xF11: // mvendorid
-      idx = 4;
-      break;
-    case 0xF12: // marchid
-      idx = 5;
-      break;
-    default:
-      idx=-1;
+  case 0x341: // mepc
+    idx = 3;
+    break;
+  case 0xF11: // mvendorid
+    idx = 4;
+    break;
+  case 0xF12: // marchid
+    idx = 5;
+    break;
+  case 0x180: // statp
+    idx = 6;
+    break;
+  default:
+    idx = -1;
   }
   return idx;
 }

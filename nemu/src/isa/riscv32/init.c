@@ -50,4 +50,5 @@ void init_isa() {
   cpu.csr[2] = 0x1800; // mstatus
   cpu.csr[4] = 0x79737978; // ysyx
   cpu.csr[5] = 0x15fdf65;  // 学号
+  cpu.csr[6] = 0;//statp
 }

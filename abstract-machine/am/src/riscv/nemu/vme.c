@@ -3,15 +3,25 @@
 #include <klib.h>
 #include <stdint.h>
 
-static AddrSpace kas = {};
+#define PAGE(x) (((uint32_t)(x)) << 12) //get page addr
+#define ADDRM(x) (((uint32_t)(x)) & 0xFFFFF000)
+#define PTEM(x) (((uint32_t)(x)) & 0xFFFFFC00)
+// for pte |22|10 ;;; for vaddr |10|10|12
+#define PAGE_VALID(x) (((uint32_t)(x)) & 0x1)
+#define XWR(x) ((((uint32_t)(x)) >> 1) & 0b111)
+
+static AddrSpace kas = {};//for kernel
+// user defined call-back function
 static void* (*pgalloc_usr)(int) = NULL;
-static void (*pgfree_usr)(void*) = NULL;
+static void (*pgfree_usr)(void *) = NULL;
+
 static int vme_enable = 0;
 
 static Area segments[] = {      // Kernel memory mappings
   NEMU_PADDR_SPACE
 };
 
+//TODO:这是用户进程相关的
 #define USER_SPACE RANGE(0x40000000, 0x80000000)
 
 static inline void set_satp(void *pdir) {
@@ -24,7 +34,7 @@ static inline uintptr_t get_satp() {
   asm volatile("csrr %0, satp" : "=r"(satp));
   return satp << 12;
 }
-
+//两个来自操作系统的页面分配回调函数的指针, 让AM在必要的时候通过这两个回调函数来申请/释放一页物理页.
 bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   pgalloc_usr = pgalloc_f;
   pgfree_usr = pgfree_f;
@@ -44,7 +54,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
 
   return true;
 }
-
+// 创建一个默认的地址空间
 void protect(AddrSpace *as) {
   PTE *updir = (PTE*)(pgalloc_usr(PGSIZE));
   as->ptr = updir;
@@ -53,9 +63,10 @@ void protect(AddrSpace *as) {
   // map kernel space
   memcpy(updir, kas.ptr, PGSIZE);
 }
-
+// 销毁指定的地址空间
 void unprotect(AddrSpace *as) {
-}
+  //do nothing for now
+}    // TODO!
 
 void __am_get_cur_as(Context *c) {
   c->pdir = (vme_enable ? (void *)get_satp() : NULL);
@@ -66,13 +77,35 @@ void __am_switch(Context *c) {
     set_satp(c->pdir);
   }
 }
-
+# define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111)<<1)|0b1)
+# define PTE1(pa) PTE(pa,0)
+// 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
+// TODO:只用as.ptr,va,pa? as中其他部分有用吗?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  // printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
+  //the root_page should be passed in!!
+  uint32_t *root_pt = as->ptr;
+  uint32_t vpn1 = (uint32_t)va >> 22;
+  uint32_t vpn0 = ((uint32_t)va >> 12) & 0x3FF;
+
+  // if not valid!,allocate page
+  if (!PAGE_VALID(*(root_pt + vpn1))) {
+    uint32_t *ptea0 = pgalloc_usr(PGSIZE);
+    uint32_t pte1 = PTE1(ptea0);
+    *(root_pt + vpn1) = pte1;
+  }
+  // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
+  // set pte0
+  uint32_t pte1=*(root_pt + vpn1);
+  uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2); // TODO!!!
+  *(ptea0+vpn0)=PTE(pa,prot);
+  // uint32_t pte1 = as->ptr+
 }
 
 // 参数as用于限制用户进程可以访问的内存，Ignore
 // kstack是内核栈,用于分配上下文结构,
 // entry则是用户进程的入口.
+// TODO!! slightly change->set statp and
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *top = (Context *)(((void *)kstack.end) - sizeof(Context));
   top->GPRx=(uintptr_t)kstack.end;//pass the stack addr,seems OKEY for riscv--ARCH-spec
