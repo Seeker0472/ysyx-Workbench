@@ -10,11 +10,11 @@ void *new_page(size_t nr_page) {
   // size_t page_size = nr_page*PGSIZE;
   // return malloc(page_size);
   void *pf_prev = pf;
-  pf_prev += nr_page * PGSIZE;
-  for (uint32_t *i = pf_prev; i < (uint32_t *)pf; i++) {
-    printf("EE");
-    *i=0;  
-  }
+  pf += nr_page * PGSIZE;
+  // for (uint32_t *i = pf_prev; i < (uint32_t *)pf; i++) {
+  //   printf("EE");
+  //   *i=0;  
+  // }
   return pf_prev;
 }
 
