@@ -23,10 +23,10 @@ void free_page(void *p) {
 int mm_brk(uintptr_t brk) {
   return 0;
 }
-
+// THE Kernel should also run in vitural memory,but the pa==va!!
 void init_mm() {
   pf = (void *)ROUNDUP(heap.start, PGSIZE);//TODO:print %p
-  Log("free physical pages starting from %p", pf);
+  Log("free physical pages starting from %x", pf);
 
 #ifdef HAS_VME
   vme_init(pg_alloc, free_page);

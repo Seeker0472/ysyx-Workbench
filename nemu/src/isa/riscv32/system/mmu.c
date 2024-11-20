@@ -31,6 +31,8 @@
 // pte page table entry
 // ptea page table entry address
 // vpn virtual page number
+// 对内存区间为[vaddr, vaddr + len), 类型为type的内存访问进行地址转换
+// TODO:使用assertion检查页目录项和页表项的present/valid位, 如果发现了一个无效的表项, 及时终止NEMU的运行999
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   //extract addr
   vaddr_t pta1 = PAGE(cpu.csr[6] & 0x3FFFFF); // get root_page_table_addr
@@ -67,17 +69,18 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 }
 // Translate/direct/fail!
 /*
-TODO:NOT CORRECT!!! see am/src/riscv/nemu/vme.c
+TODO:NOT CORRECT!!! see am/src/riscv/nemu/vme.c vme_init
 The NEMU Address Table:
 disk: 0x80000000-???
 programs:0x83000000-disk.end<-translate
 device:0xa0000000
 */
+// 检查当前系统状态下对内存区间为[vaddr, vaddr + len), 类型为type的访问是否需要经过地址转换.
 int isa_mmu_check(vaddr_t vaddr, int len, int type) {
   vaddr_t translate= cpu.csr[6]>>31; //enable sv32
   vaddr_t end = vaddr+len;
-  if (vaddr > 0x83000000 && vaddr < 0xa0000000&&translate) {
-    if(end > 0x83000000 && end < 0xa0000000)
+  if (vaddr > 0x80000000 && vaddr < 0xa0000000&&translate) {
+    if(end > 0x80000000 && end < 0xa0000000)
       return MMU_TRANSLATE;
     else
       return MMU_FAIL;
