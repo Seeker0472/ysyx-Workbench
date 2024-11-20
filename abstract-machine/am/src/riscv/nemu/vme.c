@@ -81,7 +81,7 @@ void __am_switch(Context *c) {
 // 只用va,pa?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   // uint32_t *statp = (uint32_t *)get_satp();
-  assert(0);
+  // assert(0);
   //the root_page should be passed in!!
   uint32_t *root_pt = as->ptr;
   uint32_t vpn1 = (uint32_t)va >> 22;
