@@ -86,7 +86,7 @@ void __am_switch(Context *c) {
 // 只用va,pa?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   // uint32_t *statp = (uint32_t *)get_satp();
-  printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
+  // printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
   // assert(0);
   //the root_page should be passed in!!
   uint32_t *root_pt = as->ptr;
@@ -99,13 +99,13 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
     uint32_t *ptea0 = pgalloc_usr(PGSIZE);
     uint32_t pte1 = PTE1(ptea0);
     *(root_pt + vpn1) = pte1;
-    printf("%x",ptea0);
+    // printf("%x",ptea0);
   }
   // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
   uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2); // TODO!!!
-  printf("---%x\n",ptea0);
+  // printf("---%x\n",ptea0);
   *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
