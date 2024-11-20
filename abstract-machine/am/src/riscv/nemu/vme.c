@@ -95,7 +95,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // if not valid!,allocate page
   if (!PAGE_VALID(*(root_pt + vpn1))) {
     uint32_t *ptea0 = pgalloc_usr(PGSIZE);
-    printf("%x--",ptea0);
     uint32_t pte1 = PTE1(ptea0);
     *(root_pt+vpn1)=pte1;
   }
@@ -103,7 +102,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
   uint32_t *ptea0 = (uint32_t *)(PTEM(pte1)<<2); // TODO!!!
-  printf("%x\n",ptea0);
   *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
