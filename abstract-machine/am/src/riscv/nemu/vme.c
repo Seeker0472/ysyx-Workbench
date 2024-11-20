@@ -3,6 +3,7 @@
 #include <klib.h>
 #include <stdint.h>
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #define PAGE(x) (((uint32_t)(x)) << 12) //get page addr
 #define PAGEM(x) (((uint32_t)(x)) & 0xFFFFF000)
 #define PAGE_VALID(x) (((uint32_t)(x)) & 0x1)
@@ -97,7 +98,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
   // set pte0
   uint32_t *ptea0 = (uint32_t *)*(root_pt + vpn1);
-  *(ptea0+vpn0)=PTE(pa,prot);
+  // *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
 
