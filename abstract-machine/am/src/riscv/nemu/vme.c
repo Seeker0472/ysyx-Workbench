@@ -101,7 +101,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
   // set pte0
   uint32_t *ptea0 = (uint32_t *)PTEM(*(root_pt + vpn1));//TODO!!!
-  *(ptea0+vpn0)=PTE(pa,prot);
+  // *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
 
