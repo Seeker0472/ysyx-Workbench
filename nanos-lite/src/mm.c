@@ -5,8 +5,11 @@ static void *pf = NULL;
 // execve calls new_page!!
 // execve 不会 反回原来的控制流，而是在原来的地方创建！
 void *new_page(size_t nr_page) {
-  size_t page_size = nr_page*PGSIZE;
-  return malloc(page_size);
+  // size_t page_size = nr_page*PGSIZE;
+  // return malloc(page_size);
+  void *pf_prev = pf;
+  pf_prev+=nr_page*PGSIZE;
+  return pf_prev;
 }
 
 #ifdef HAS_VME
