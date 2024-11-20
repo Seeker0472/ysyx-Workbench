@@ -118,9 +118,9 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   assert(filename);
   assert(pcb);
   protect(&pcb->as); // create an space whitch inherits kernal mapping! WoW!
-  Log("Loader Finish!");
+  Log("Loader Start!");
   uintptr_t entry = loader(pcb, filename);
-  
+  Log("Loader Finish!");
   uint8_t *stack = new_page(8);
   //map stack
   for (int i = 0; i < 8; i++) {
