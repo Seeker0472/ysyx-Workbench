@@ -21,7 +21,7 @@
 #include <stdint.h>
 
 #define PAGE(x) ((x) << 12) //get page addr
-#define PAGEM(x) ((x) & 0xFFFFF000)
+#define PTEM(x) (((uint32_t)(x)) & 0xFFFFFC00)
 #define PAGE_VALID(x) ((x) & 0x1)
 #define XWR(x) (((x) >> 1) & 0b111)
 
@@ -32,6 +32,7 @@
 // ptea page table entry address
 // vpn virtual page number
 // 对内存区间为[vaddr, vaddr + len), 类型为type的内存访问进行地址转换
+// TODO:edit mem_access pross!!!!
 // TODO:使用assertion检查页目录项和页表项的present/valid位, 如果发现了一个无效的表项, 及时终止NEMU的运行999
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   //extract addr
@@ -43,11 +44,11 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // do page_walk
   uint32_t *ptea1 = (uint32_t*)guest_to_host(pta1 + vpn1*sizeof(uint32_t));//TODO:NOT DEFRENCE ONLY!
   uint32_t pte1 = *ptea1;
-  vaddr_t pta0 = PAGEM(pte1);
+  vaddr_t pta0 = (PTEM(pte1)<<2);
   uint32_t *ptea0 = (uint32_t *)guest_to_host(pta0 + vpn0*sizeof(uint32_t));
   uint32_t pte0 = *ptea0;
   //final page address
-  vaddr_t pa = PAGEM(pte0) | offset;
+  vaddr_t pa = (PTEM(pte0)<<2) | offset;
 
   // check address
   // not valid!
@@ -78,13 +79,17 @@ device:0xa0000000
 // 检查当前系统状态下对内存区间为[vaddr, vaddr + len), 类型为type的访问是否需要经过地址转换.
 int isa_mmu_check(vaddr_t vaddr, int len, int type) {
   vaddr_t translate= cpu.csr[6]>>31; //enable sv32
-  vaddr_t end = vaddr+len;
-  if (vaddr > 0x80000000 && vaddr < 0xa0000000&&translate) {
-    if(end > 0x80000000 && end < 0xa0000000)
-      return MMU_TRANSLATE;
-    else
-      return MMU_FAIL;
-  }
+  // vaddr_t end = vaddr+len;
+  // if (vaddr > 0x80000000 && vaddr < 0xa0000000&&translate) {
+  //   if(end > 0x80000000 && end < 0xa0000000)
+  //     return MMU_TRANSLATE;
+  //   else
+  //     return MMU_FAIL;
+  // }
+  // else
+  //   return MMU_DIRECT;
+  if (translate)
+    return MMU_TRANSLATE;
   else
-    return MMU_DIRECT;
+   return MMU_DIRECT;;
 }
