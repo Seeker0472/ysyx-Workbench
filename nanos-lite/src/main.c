@@ -12,13 +12,11 @@ int main() {
   printf("%s", logo);
   Log("'Hello World!' from Nanos-lite");
   Log("Build time: %s, %s", __TIME__, __DATE__);
-  Log("Init mm");
+
   init_mm();
 
-  Log("Init dev");
   init_device();
 
-  Log("Init ram");
   init_ramdisk();
 
 #ifdef HAS_CTE
