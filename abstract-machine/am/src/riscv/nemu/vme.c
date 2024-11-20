@@ -99,13 +99,15 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   if (!PAGE_VALID(*(root_pt + vpn1))) {
     uint32_t *ptea0 = pgalloc_usr(PGSIZE);
     uint32_t pte1 = PTE1(ptea0);
-    *(root_pt+vpn1)=pte1;
+    *(root_pt + vpn1) = pte1;
+    printf("%x",ptea0);
   }
   // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
-  uint32_t *ptea0 = (uint32_t *)(PTEM(pte1)<<2); // TODO!!!
-  // *(ptea0+vpn0)=PTE(pa,prot);
+  uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2); // TODO!!!
+  printf("---%x\n",ptea0);
+  *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
 
