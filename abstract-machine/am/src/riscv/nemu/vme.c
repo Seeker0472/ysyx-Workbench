@@ -3,11 +3,9 @@
 #include <klib.h>
 #include <stdint.h>
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
 #define PAGE(x) (((uint32_t)(x)) << 12) //get page addr
 #define ADDRM(x) (((uint32_t)(x)) & 0xFFFFF000)
 #define PTEM(x) (((uint32_t)(x)) & 0xFFFFFC00)
-
 // for pte |22|10 ;;; for vaddr |10|10|12
 #define PAGE_VALID(x) (((uint32_t)(x)) & 0x1)
 #define XWR(x) ((((uint32_t)(x)) >> 1) & 0b111)
@@ -50,6 +48,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
       map(&kas, va, va, 0);
     }
   }
+
   set_satp(kas.ptr);
   vme_enable = 1;
 
@@ -81,7 +80,7 @@ void __am_switch(Context *c) {
 # define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111)<<1)|0b1)
 # define PTE1(pa) PTE(pa,0)
 // 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
-// 只用va,pa?
+// TODO:只用as.ptr,va,pa? as中其他部分有用吗?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   // printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
   //the root_page should be passed in!!

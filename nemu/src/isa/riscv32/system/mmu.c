@@ -14,8 +14,6 @@
 ***************************************************************************************/
 
 #include "common.h"
-#include "debug.h"
-#include "sys/types.h"
 #include <isa.h>
 #include <memory/vaddr.h>
 #include <memory/paddr.h>
@@ -33,7 +31,6 @@
 // ptea page table entry address
 // vpn virtual page number
 // 对内存区间为[vaddr, vaddr + len), 类型为type的内存访问进行地址转换
-// TODO:edit mem_access pross!!!!
 // TODO:使用assertion检查页目录项和页表项的present/valid位, 如果发现了一个无效的表项, 及时终止NEMU的运行999
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // extract addr
@@ -72,7 +69,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 }
 // Translate/direct/fail!
 /*
-TODO:NOT CORRECT!!! see am/src/riscv/nemu/vme.c vme_init
+TODO:is this okey?
 The NEMU Address Table:
 disk: 0x80000000-???
 programs:0x83000000-disk.end<-translate

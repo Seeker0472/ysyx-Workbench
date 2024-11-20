@@ -18,7 +18,6 @@
 #include <memory/paddr.h>
 
 // TODO-TYPE
-// TODO: Finish
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
   paddr_t paddr=addr;

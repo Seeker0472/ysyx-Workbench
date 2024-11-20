@@ -33,6 +33,4 @@ typedef struct {
 
 // #define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
-// paddr_t isa_mmu_check(vaddr_t vaddr, int len, int type);
-
 #endif
