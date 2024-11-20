@@ -48,7 +48,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   for (i = 0; i < LENGTH(segments); i ++) {
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
-      printf("MAP:%x,%x\n",va,va);
+      
       map(&kas, va, va, 0);
     }
   }
@@ -87,6 +87,7 @@ void __am_switch(Context *c) {
 // 只用va,pa?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   // uint32_t *statp = (uint32_t *)get_satp();
+  printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
   // assert(0);
   //the root_page should be passed in!!
   uint32_t *root_pt = as->ptr;
