@@ -36,7 +36,8 @@
 // TODO:edit mem_access pross!!!!
 // TODO:使用assertion检查页目录项和页表项的present/valid位, 如果发现了一个无效的表项, 及时终止NEMU的运行999
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
-  //extract addr
+  // extract addr
+  Log("Vaddr:%x",vaddr);
   vaddr_t pta1 = PAGE(cpu.csr[6] & 0x3FFFFF); // get root_page_table_addr
   vaddr_t vpn1 = vaddr >> 22;
   vaddr_t vpn0 = (vaddr >> 12) & 0x3FF;
