@@ -5,7 +5,10 @@
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #define PAGE(x) (((uint32_t)(x)) << 12) //get page addr
-#define PAGEM(x) (((uint32_t)(x)) & 0xFFFFF000)
+#define ADDRM(x) (((uint32_t)(x)) & 0xFFFFF000)//TODO:ERR
+#define PTEM(x) (((uint32_t)(x)) & 0xFFFFFC00)//TODO:ERR
+
+// for pte |22|10 ;;; for vaddr |10|10|12
 #define PAGE_VALID(x) (((uint32_t)(x)) & 0x1)
 #define XWR(x) ((((uint32_t)(x)) >> 1) & 0b111)
 
@@ -76,7 +79,7 @@ void __am_switch(Context *c) {
     set_satp(c->pdir);
   }
 }
-# define PTE(pa,prot) ((PAGEM(pa)>>2)|((prot&0b111)<<1)|0b1)
+# define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111)<<1)|0b1)
 # define PTE1(pa) PTE(pa,0)
 // 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
 // 只用va,pa?
@@ -97,8 +100,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   }
   // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
   // set pte0
-  uint32_t *ptea0 = (uint32_t *)*(root_pt + vpn1);
-  // *(ptea0+vpn0)=PTE(pa,prot);
+  uint32_t *ptea0 = (uint32_t *)PTEM(*(root_pt + vpn1));//TODO!!!
+  *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
 
