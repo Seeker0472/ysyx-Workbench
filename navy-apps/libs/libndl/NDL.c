@@ -104,7 +104,6 @@ int NDL_Init(uint32_t flags) {
     sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w_h,&screen_h_h);
     // printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
     // }
-assert(0);
   return 0;
 }
 
