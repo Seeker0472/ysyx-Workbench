@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include <am.h>
 #include <nemu.h>
 #include <klib.h>
@@ -75,6 +76,7 @@ void __am_get_cur_as(Context *c) {
 void __am_switch(Context *c) {
   if (vme_enable && c->pdir != NULL) {
     set_satp(c->pdir);
+    printf("STATP:%x\n",c->pdir);
   }
 }
 # define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111)<<1)|0b1)

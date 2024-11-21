@@ -153,7 +153,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp =
       ucontext(&pcb->as, (Area){.start = stack, .end = stack + 8 * PGSIZE},
                (void *)entry);
-  pcb->cp->pdir=pcb->as.ptr;
+  pcb->cp->pdir = pcb->as.ptr;
+  Log("PDIR:%x",pcb->cp->pdir);
   pcb->active=true;
   // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
