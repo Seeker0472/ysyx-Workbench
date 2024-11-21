@@ -65,6 +65,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
         //        offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);//这个vaddr好像有问题!!!!
         map(&pcb->as, (void *)ph.p_vaddr + offset, page,0b111);
       }
+      Log("exit!");
       for (char *empty = (char *)ph.p_vaddr + ph.p_filesz;
            empty < (char *)ph.p_vaddr + ph.p_memsz; empty++)
         *empty = 0;
