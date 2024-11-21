@@ -58,10 +58,14 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       // Log("%x--%x",ph.p_vaddr,);
       void *page;
       int offset=0;
-      for (offset = 0; offset < ph.p_filesz; offset=offset + PGSIZE < ph.p_filesz ? offset+PGSIZE : ph.p_filesz) {
+      for (offset = 0; offset < ph.p_memsz;) {
         page = new_page(1);
-        Log("%x,%x,%x,%s",page,offset,ph.p_filesz,filename);
-        fs_read(fd, page, offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);
+        Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
+        if(ph.p_filesz>offset){
+          fs_read(fd, page, offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);
+          offset=offset + PGSIZE < ph.p_filesz ? PGSIZE+offset : ph.p_filesz;
+          }
+        if(ph.p_memsz)
         
         // memcpy(page, (void *)ph.p_vaddr + offset,
         //        offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);//这个vaddr好像有问题!!!!
