@@ -54,10 +54,14 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       // read the data
       fs_lseek(fd, ph.p_offset, SEEK_SET);
       // fs_read(fd, (void *)ph.p_vaddr, ph.p_filesz);//todo:change!
+      //不对，这里应该应该调用fs_read而不是memcpy！！！
+      // Log("%x--%x",ph.p_vaddr,);
       for (int offset = 0; offset < ph.p_filesz; offset += PGSIZE) {
-        void *page=new_page(PGSIZE);
-        memcpy(page, (void *)ph.p_vaddr + offset,
-               offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);//这个vaddr好像有问题!!!!
+        void *page = new_page(PGSIZE);
+        fs_read(fd, page, offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);
+        
+        // memcpy(page, (void *)ph.p_vaddr + offset,
+        //        offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);//这个vaddr好像有问题!!!!
         map(&pcb->as, (void *)ph.p_vaddr + offset, page,0b111);
       }
       for (char *empty = (char *)ph.p_vaddr + ph.p_filesz;
