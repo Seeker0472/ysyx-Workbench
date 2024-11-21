@@ -29,11 +29,11 @@ void init_proc() {
   // naive_uload(NULL, "/bin/float");
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  char *argv[] = {"/bin/pal", "--skip", NULL};
+  char *argv[] = {"/bin/mem-test", "--skip", NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[1], "/bin/nterm", argv, envp);
   switch_boot_pcb();
-  yield();  
+  // yield();  
   // assert(0);
   // load program here
 }
