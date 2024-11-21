@@ -99,6 +99,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
   uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2); // TODO!!!
+  assert(!PAGE_VALID(*(ptea0+vpn0)));
   *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
