@@ -138,8 +138,8 @@ pid_t _fork() {
 }
 
 pid_t vfork() {
-  assert(0);
-  return -1;
+  // assert(0);
+  return 0;
 }
 
 int _link(const char *d, const char *n) {
