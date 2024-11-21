@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include "common.h"
+#include "utils.h"
 #include <isa.h>
 #include <memory/vaddr.h>
 #include <memory/paddr.h>
@@ -52,7 +53,8 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // check address
   // not valid!
   if (!(PAGE_VALID(pte0) && PAGE_VALID(pte1))) {
-    Log("UNVALID:%x,%x,%x",vaddr,PAGE_VALID(pte0),PAGE_VALID(pte1));
+    Log("INVALID:%x,%x,%x", vaddr, PAGE_VALID(pte0), PAGE_VALID(pte1));
+    nemu_state.state=NEMU_ABORT;
     return MEM_RET_FAIL;
   }
   // check RWX (TODO)
