@@ -77,7 +77,7 @@ int _write(int fd, void *buf, size_t count) {
 extern char end;
 intptr_t end_pos = (intptr_t)&end; 
 void *_sbrk(intptr_t increment) {
-  int ret = _syscall_(SYS_brk, end_pos, increment, 0);
+  int ret = _syscall_(SYS_brk, end_pos+increment, 0, 0);//TODO！！
   if (ret != 0)
     return (void *)-1;
   intptr_t prev_pos=end_pos;

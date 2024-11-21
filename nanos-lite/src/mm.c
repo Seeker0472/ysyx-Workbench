@@ -1,4 +1,6 @@
 // #include <assert.h>
+#include "proc.h"
+// #include <assert.h>
 #include <memory.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -35,6 +37,15 @@ void free_page(void *p) {
 
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
+  if (current->max_brk == 0) {
+    // exit(1);
+    assert(0);
+    current->max_brk = brk;
+    return 0;
+  }
+  if (current->max_brk < brk) {
+    current->max_brk = brk;
+  }
   return 0;
 }
 // THE Kernel should also run in vitural memory,but the pa==va!!

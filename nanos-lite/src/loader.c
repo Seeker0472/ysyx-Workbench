@@ -56,15 +56,18 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       void *page;
       int offset=0;
       for (offset = 0; offset < ph.p_memsz;) {
+        //alloc a new page and map
         page = new_page(1);
         map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
         // Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
-        int len=0;
+        int len = 0;
+        //copy data
         if (ph.p_filesz > offset) {
           len=offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset;
           fs_read(fd, page, len);
           offset+=len;
         }
+        //empty out 
         if (ph.p_memsz > offset && ph.p_filesz <= offset && len < PGSIZE) {
           while(len<PGSIZE&&ph.p_memsz>offset){
             ((char *)page)[len] = 0;
