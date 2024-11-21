@@ -58,7 +58,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       // Log("%x--%x",ph.p_vaddr,);
       for (int offset = 0; offset < ph.p_filesz; offset += PGSIZE) {
         void *page = new_page(1);
-        Log("%x,%x",page,offset);
+        Log("%x,%x,%x",page,offset,ph.p_filesz);
         fs_read(fd, page, offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);
         
         // memcpy(page, (void *)ph.p_vaddr + offset,
