@@ -60,6 +60,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       int offset=0;
       for (offset = 0; offset < ph.p_memsz;) {
         page = new_page(1);
+        map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
         Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
         int len=0;
         if (ph.p_filesz > offset) {
@@ -77,7 +78,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
         
         // memcpy(page, (void *)ph.p_vaddr + offset,
         //        offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);//这个vaddr好像有问题!!!!
-        map(&pcb->as, (void *)ph.p_vaddr + offset, page,0b111);
+        
       }
       Log("exit!");
       // for (char *empty = (char *)page + ph.p_filesz;empty < (char *)page + ph.p_memsz; empty++)
