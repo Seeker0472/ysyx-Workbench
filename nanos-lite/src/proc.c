@@ -29,10 +29,12 @@ void init_proc() {
   // naive_uload(NULL, "/bin/float");
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  char *argv[] = {"/bin/pal", "--skip", NULL};
+  char *argv[] = {"/bin/pal", NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[1], "/bin/dummy", argv, envp);
+  context_uload(&pcb[1], "/bin/pal", argv, envp);
+  // context_uload(&pcb[1], "/bin/pal", argv, envp);
   switch_boot_pcb();
+
   // yield();  
   // assert(0);
   // load program here

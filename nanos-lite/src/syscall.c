@@ -5,9 +5,12 @@
 #include <stdint.h>
 #include <sys/time.h>
 // uintptr_t end_symbol;
+int mm_brk(uintptr_t brk);
+
 extern const char *get_filename(int fd);
 void handle_execve(const char *filename, char *const argv[], char *const envp[]);
 void handle_exit();
+
 const char *event_names[] = {
     "SYS_exit",  "SYS_yield",  "SYS_open",   "SYS_read",   "SYS_write",
     "SYS_kill",  "SYS_getpid", "SYS_close",  "SYS_lseek",  "SYS_brk",
@@ -64,7 +67,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_lseek(a[1], a[2], a[3]);
     break;
   case SYS_brk:
-    c->GPRx = 0;
+    c->GPRx = mm_brk(a[1]);
     break;
   case SYS_time:
     time = io_read(AM_TIMER_UPTIME).us;

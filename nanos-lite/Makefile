@@ -2,7 +2,7 @@ HAS_NAVY = 1
 RAMDISK_FILE = build/ramdisk.img
 
 # COMMAND_FLAGS_BASE += -e $(abspath build/ramdisk.img)
-# COMMAND_FLAGS_BASE += -e $(abspath build/fceux-riscv32)
+# COMMAND_FLAGS_BASE += -e $(abspath build/pal-rv32)
 # TODO!
 NAME = nanos-lite
 SRCS = $(shell find -L ./src/ -name "*.c" -o -name "*.cpp" -o -name "*.S")

@@ -98,7 +98,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // the pte0 should be 0b|2*D|20*?|6*D|3*0|1*1
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
-  uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2); // TODO!!!
+  uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2);
+  assert(!PAGE_VALID(*(ptea0+vpn0))); // assert if the target pte already exists
   *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }

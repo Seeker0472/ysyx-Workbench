@@ -54,23 +54,26 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       // read the data
       fs_lseek(fd, ph.p_offset, SEEK_SET);
       void *page;
-      int offset=0;
+      int offset = 0;
       for (offset = 0; offset < ph.p_memsz;) {
         //alloc a new page and map
         page = new_page(1);
         map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
-        // Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
+        // Log("page=%x,offset=%x,vaddr=%x,%s", page, offset, (void *)ph.p_vaddr + offset, filename);
         int len = 0;
-        //copy data
+        
+        // The entry of the segement may not aligened to (PGSIZE)!
+        uint32_t seg_offset = (ph.p_vaddr + offset)&(PGSIZE-1); // Important!! 
+        // copy data
         if (ph.p_filesz > offset) {
-          len=offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset;
-          fs_read(fd, page, len);
+          len=offset + PGSIZE < ph.p_filesz ? PGSIZE - seg_offset : ph.p_filesz - offset;
+          fs_read(fd, page+seg_offset, len);
           offset+=len;
         }
         //empty out 
-        if (ph.p_memsz > offset && ph.p_filesz <= offset && len < PGSIZE) {
-          while(len<PGSIZE&&ph.p_memsz>offset){
-            ((char *)page)[len] = 0;
+        if (ph.p_memsz > offset && ph.p_filesz <= offset && len + seg_offset < PGSIZE) {
+          while (len + seg_offset < PGSIZE && ph.p_memsz > offset) {
+            ((char *)(page+seg_offset))[len] = 0;
             offset++;
             len++;
           }
