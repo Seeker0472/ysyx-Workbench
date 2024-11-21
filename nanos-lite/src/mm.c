@@ -38,8 +38,6 @@ void free_page(void *p) {
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
   if (current->max_brk == 0) {
-    // exit(1);
-    assert(0);
     current->max_brk = brk;
     return 0;
   }
