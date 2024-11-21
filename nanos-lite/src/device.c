@@ -22,14 +22,14 @@ int screen_w=0;
 extern Finfo file_table[];
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
-  yield();
+  // yield();
   for (int i = 0; i < len; i++)
     putch(((const char *)buf)[i]);
   return len;
 }
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  yield();
+  // yield();
    AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
   if (ev.keycode == AM_KEY_NONE) {
     return 0;
@@ -39,7 +39,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  yield();
+  // yield();
   // snprintf("WIDTH : 640\nHEIGHT:480", unsigned long, const char *, ...)
   AM_GPU_CONFIG_T gpuconfig;
   ioe_read(AM_GPU_CONFIG, &gpuconfig);
@@ -51,7 +51,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  yield();
+  // yield();
   io_write(AM_GPU_FBDRAW, offset%screen_w, offset/screen_w, (void *)buf, len/sizeof(uint32_t), 1, true);
   file_table[FD_FB].open_offset +=len;
 
