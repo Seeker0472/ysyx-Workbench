@@ -168,8 +168,8 @@ int pipe(int pipefd[2]) {
 }
 
 int dup(int oldfd) {
-  assert(0);
-  return -1;
+  // assert(0);
+  return 0;
 }
 
 int dup2(int oldfd, int newfd) {
