@@ -27,7 +27,7 @@ void init_proc() {
 
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/float");
-  // context_kload(&pcb[0], hello_fun, "aaa");
+  context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
   char *argv[] = {"/bin/pal", NULL};
   char *envp[] = {NULL};

@@ -40,12 +40,14 @@ void free_page(void *p) {
 
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
+  // init the max_brk (in crt0.c/call_main)
   if (current->max_brk == 0) {
     current->max_brk = brk;
     return 0;
   }
   if (current->max_brk < brk) {
-    uintptr_t prevbrk = current->max_brk+PAGE_SIZE;
+    uintptr_t prevbrk = current->max_brk + PAGE_SIZE;
+    //allocate new page
     while ((prevbrk & PAGE_NUMBER_MASK) <= (brk & PAGE_NUMBER_MASK)) {
       void *page = new_page(1);
       map(&current->as, (void *)(prevbrk & PAGE_NUMBER_MASK), page, 0b111);
