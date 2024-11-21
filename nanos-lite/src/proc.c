@@ -29,9 +29,9 @@ void init_proc() {
   // naive_uload(NULL, "/bin/float");
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  // char *argv[] = {"/bin/pal", "--skip", NULL};
-  // char *envp[] = {NULL};
-  // context_uload(&pcb[1], "/bin/nterm", argv, envp);
+  char *argv[] = {"/bin/pal", "--skip", NULL};
+  char *envp[] = {NULL};
+  context_uload(&pcb[1], "/bin/nterm", argv, envp);
   // context_uload(&pcb[1], "/bin/pal", argv, envp);
   switch_boot_pcb();
 
@@ -87,7 +87,7 @@ Context *schedule(Context *prev) {
       break;
     }
   }
-  // if(pcb[robin].cp!=prev)
+  if(pcb[robin].cp!=prev)
     Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
