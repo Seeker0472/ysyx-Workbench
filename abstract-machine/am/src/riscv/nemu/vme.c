@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include <am.h>
 #include <nemu.h>
 #include <klib.h>
@@ -45,7 +46,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   for (i = 0; i < LENGTH(segments); i ++) {
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
-      map(&kas, va, va, 0);
+      map(&kas, va, va, 0b111);//TODO:prot need?
     }
   }
 

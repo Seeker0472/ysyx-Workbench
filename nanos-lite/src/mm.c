@@ -6,14 +6,15 @@
 static void *pf = NULL;
 // execve calls new_page!!
 // execve 不会 反回原来的控制流，而是在原来的地方创建！
+// new_page 为用户进程创建空间，所以并不需要置0?
 void *new_page(size_t nr_page) {
   // size_t page_size = nr_page*PGSIZE;
   // return malloc(page_size);
   void *pf_prev = pf;
   pf += nr_page * PGSIZE;
-  for (uint32_t *i = pf_prev; i < (uint32_t *)pf; i++) {
-    *i=0;  
-  }
+  // for (uint32_t *i = pf_prev; i < (uint32_t *)pf; i++) {
+  //   *i=0;  
+  // }
   return pf_prev;
 }
 

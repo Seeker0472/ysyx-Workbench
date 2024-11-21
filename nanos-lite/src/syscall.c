@@ -31,6 +31,7 @@ void do_syscall(Context *c) {
     break;
   }
 #endif
+  // Log("%x,%x,%x,%x", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
   uintptr_t a[4];
   a[0] = c->GPR1;
   a[1] = c->GPR2;
@@ -40,7 +41,8 @@ void do_syscall(Context *c) {
   switch (a[0]) {
   case SYS_exit:
     // exit_handler in proc.c
-    handle_exit();
+    halt(a[1]);
+    // handle_exit();
     break;
   case SYS_yield:
     yield();
@@ -77,6 +79,6 @@ void do_syscall(Context *c) {
     else
       handle_execve((const char *)a[1], (char *const*)a[2], (char * const *)a[3]);
     break;
-        default : panic("Unhandled syscall ID = %d", a[0]);
+        default : panic("Unhandled syscall ID = 0x%x", a[0]);
     }
 }
