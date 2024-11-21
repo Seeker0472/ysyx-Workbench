@@ -137,7 +137,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   assert(filename);
   assert(pcb);
   protect(&pcb->as); // create an space whitch inherits kernal mapping! WoW!
-  pcb->cp->pdir=pcb->as.ptr;
+
   Log("Loader Start!");
   uintptr_t entry = loader(pcb, filename);
   Log("Loader Finish!");
@@ -153,7 +153,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp = ucontext(&(AddrSpace){.area = {}, .pgsize = 0, .ptr = 0},
                      (Area){.start = stack, .end = stack + 8 * PGSIZE},
                      (void *)entry);
-  
+  pcb->cp->pdir=pcb->as.ptr;
   pcb->active=true;
   // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
