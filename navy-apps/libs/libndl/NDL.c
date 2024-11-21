@@ -102,7 +102,7 @@ int NDL_Init(uint32_t flags) {
     dispinfodev = 5;
     read(dispinfodev, buffer, 0);
     sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w_h,&screen_h_h);
-    // printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
+    printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
     // }
   return 0;
 }
