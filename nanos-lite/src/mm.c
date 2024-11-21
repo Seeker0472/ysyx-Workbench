@@ -1,6 +1,4 @@
-// #include <assert.h>
 #include "proc.h"
-// #include <assert.h>
 #include <memory.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -35,6 +33,11 @@ void free_page(void *p) {
   panic("not implement yet");
 }
 
+#define PAGE_SIZE (0x1000)
+#define PAGE_OFF_MASK ((PAGE_SIZE)-1)
+#define PAGE_NUMBER_MASK (~(PAGE_OFF_MASK))
+
+
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk) {
   if (current->max_brk == 0) {
@@ -42,6 +45,11 @@ int mm_brk(uintptr_t brk) {
     return 0;
   }
   if (current->max_brk < brk) {
+    uintptr_t prevbrk = current->max_brk+PAGE_SIZE;
+    while ((prevbrk & PAGE_NUMBER_MASK) <= (brk & PAGE_NUMBER_MASK)) {
+      void *page = new_page(1);
+      map(&current->as,(void *)(prevbrk&PAGE_NUMBER_MASK),page,0b111);
+    }
     current->max_brk = brk;
   }
   return 0;
