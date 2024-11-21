@@ -68,7 +68,6 @@ void do_syscall(Context *c) {
     break;
   case SYS_brk:
     c->GPRx = mm_brk(a[1]);
-    // c->GPRx = 0;
     break;
   case SYS_time:
     time = io_read(AM_TIMER_UPTIME).us;

@@ -47,7 +47,6 @@ int mm_brk(uintptr_t brk) {
   if (current->max_brk < brk) {
     uintptr_t prevbrk = current->max_brk+PAGE_SIZE;
     while ((prevbrk & PAGE_NUMBER_MASK) <= (brk & PAGE_NUMBER_MASK)) {
-      printf("BRK_NP:%x\n",(prevbrk & PAGE_NUMBER_MASK));
       void *page = new_page(1);
       map(&current->as, (void *)(prevbrk & PAGE_NUMBER_MASK), page, 0b111);
       prevbrk+=PAGE_SIZE;
