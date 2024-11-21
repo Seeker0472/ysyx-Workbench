@@ -54,10 +54,11 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       // read the data
       fs_lseek(fd, ph.p_offset, SEEK_SET);
       void *page;
-      int offset=0;
+      int offset = 0;
+      printf("LOAD!!\n");
       for (offset = 0; offset < ph.p_memsz;) {
         //alloc a new page and map
-        page = new_page(1);
+        page = new_page(1);//没有aligen
         map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
         // Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
         int len = 0;
