@@ -113,6 +113,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   top->GPRx=(uintptr_t)kstack.end;//pass the stack addr,seems OKEY for riscv--ARCH-spec
   top->mepc = (uintptr_t)entry;
   top->mstatus = 0x0;//set to user mode
-  top->mcause = 0xb;// 0xb is external interrupt
+  top->mcause = 0xb; // 0xb is external interrupt
+  top->pdir=as->ptr;
   return top;
 }
