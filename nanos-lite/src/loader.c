@@ -75,14 +75,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
             len++;
           }
         }
-        
-        // memcpy(page, (void *)ph.p_vaddr + offset,
-        //        offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);//这个vaddr好像有问题!!!!
-        
       }
-      Log("exit!");
-      // for (char *empty = (char *)page + ph.p_filesz;empty < (char *)page + ph.p_memsz; empty++)
-      //   *empty = 0;
     }
   }
   return hader->e_entry; //这里的entry就是在libos/crt0/start.S里面定义的_start 

@@ -31,6 +31,7 @@ void do_syscall(Context *c) {
     break;
   }
 #endif
+  Log("%x,%x,%x,%x", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
   uintptr_t a[4];
   a[0] = c->GPR1;
   a[1] = c->GPR2;
