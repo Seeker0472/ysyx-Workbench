@@ -53,15 +53,12 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     if (ph.p_type == PT_LOAD) {
       // read the data
       fs_lseek(fd, ph.p_offset, SEEK_SET);
-      // fs_read(fd, (void *)ph.p_vaddr, ph.p_filesz);//todo:change!
-      // 不对，这里应该应该调用fs_read而不是memcpy！！！
-      // Log("%x--%x",ph.p_vaddr,);
       void *page;
       int offset=0;
       for (offset = 0; offset < ph.p_memsz;) {
         page = new_page(1);
         map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
-        Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
+        // Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
         int len=0;
         if (ph.p_filesz > offset) {
           len=offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset;
@@ -132,9 +129,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   assert(pcb);
   protect(&pcb->as); // create an space whitch inherits kernal mapping! WoW!
 
-  Log("Loader Start!");
   uintptr_t entry = loader(pcb, filename);
-  Log("Loader Finish!");
   uint8_t *stack = new_page(8);
   //map stack
   for (int i = 0; i < 8; i++) {
@@ -148,7 +143,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
       ucontext(&pcb->as, (Area){.start = stack, .end = stack + 8 * PGSIZE},
                (void *)entry);
   pcb->cp->pdir = pcb->as.ptr;
-  Log("PDIR:%x",pcb->cp->pdir);
   pcb->active=true;
   // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
