@@ -84,7 +84,7 @@ void __am_switch(Context *c) {
 // 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
 // TODO:只用as.ptr,va,pa? as中其他部分有用吗?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
-  printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
+  // printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
   //the root_page should be passed in!!
   uint32_t *root_pt = as->ptr;
   uint32_t vpn1 = (uint32_t)va >> 22;
