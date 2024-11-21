@@ -57,7 +57,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       //不对，这里应该应该调用fs_read而不是memcpy！！！
       // Log("%x--%x",ph.p_vaddr,);
       for (int offset = 0; offset < ph.p_filesz; offset += PGSIZE) {
-        void *page = new_page(PGSIZE);
+        void *page = new_page(1);
         Log("%x,%x",page,offset);
         fs_read(fd, page, offset + PGSIZE < ph.p_filesz ? PGSIZE : ph.p_filesz - offset);
         
