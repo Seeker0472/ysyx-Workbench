@@ -33,7 +33,7 @@ void init_proc() {
   char *envp[] = {NULL};
   context_uload(&pcb[1], "/bin/nterm", argv, envp);
   switch_boot_pcb();
-  // yield();  
+  yield();  
   // assert(0);
   // load program here
 }
