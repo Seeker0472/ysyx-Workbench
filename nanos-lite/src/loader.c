@@ -60,7 +60,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
         //alloc a new page and map
         page = new_page(1);//没有aligen
         map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
-        // Log("%x,%x,%x,%s", page, offset, ph.p_memsz, filename);
+        Log("page=%x,offset=%x,vaddr=%x,%s", page, offset, (void *)ph.p_vaddr + offset, filename);
         int len = 0;
         //copy data
         if (ph.p_filesz > offset) {
