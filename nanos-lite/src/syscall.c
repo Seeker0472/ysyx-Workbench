@@ -78,6 +78,6 @@ void do_syscall(Context *c) {
     else
       handle_execve((const char *)a[1], (char *const*)a[2], (char * const *)a[3]);
     break;
-        default : panic("Unhandled syscall ID = %d", a[0]);
+        default : panic("Unhandled syscall ID = 0x%x", a[0]);
     }
 }
