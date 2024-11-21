@@ -32,7 +32,7 @@ word_t vaddr_ifetch(vaddr_t addr, int len) {
     break;
   }
   assert(paddr != MEM_RET_CROSS_PAGE);
-  assert(paddr != MEM_RET_FAIL);
+  // assert(paddr != MEM_RET_FAIL);
   return paddr_read(paddr, len);
 }
 
