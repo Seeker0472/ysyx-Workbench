@@ -96,7 +96,7 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
-  assert(0);
+  
     evtdev = 3;
     fbdev = 4;
     dispinfodev = 5;
@@ -104,7 +104,7 @@ int NDL_Init(uint32_t flags) {
     sscanf(buffer,"WIDTH:%d\nHEIGHT:%d" , &screen_w_h,&screen_h_h);
     printf("WIDTH : %d\nHEIGHT:%d\n" , screen_w_h,screen_h_h);
     // }
-
+assert(0);
   return 0;
 }
 
