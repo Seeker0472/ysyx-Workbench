@@ -37,6 +37,7 @@ int vsprintf(char *out, const char *fmt, va_list args)
     {
     case '\\':
       p++;
+      assert(0);
       break;
     case '%':
       p++;
