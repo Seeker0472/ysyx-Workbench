@@ -107,7 +107,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // 参数as用于限制用户进程可以访问的内存，Ignore
 // kstack是内核栈,用于分配上下文结构,
 // entry则是用户进程的入口.
-// TODO!! slightly change->set statp and
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *top = (Context *)(((void *)kstack.end) - sizeof(Context));
   top->GPRx=(uintptr_t)kstack.end;//pass the stack addr,seems OKEY for riscv--ARCH-spec

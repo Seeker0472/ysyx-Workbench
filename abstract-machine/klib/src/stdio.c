@@ -3,7 +3,10 @@
 #include <klib-macros.h>
 #include <stdarg.h>
 // TODO: stdarg是如何实现的?
-
+// TODO: 先完成上面的TODO,再继续完成snprintf
+// TODO:
+// 也许应该修改逻辑了，写入到一个缓冲区中，当有回车或者结束或者缓冲区满的时候刷新缓冲区，不要开3k个字符了!!!!!!
+// TODO:在native/vme.c中调用了snprintf(-----TODO:---WHY????-----------)
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 // #if defined(__NATIVE_USE_KLIB__)
 int print_num(char *out, size_t out_offset, int val);
@@ -127,7 +130,8 @@ int sprintf(char *out, const char *fmt, ...)
 
 int snprintf(char *out, size_t n, const char *fmt, ...)
 {
-  panic("Not implemented1");
+  // panic("Not implemented1");
+  return 0;
 }
 
 int vsnprintf(char *out, size_t n, const char *fmt, va_list ap)
