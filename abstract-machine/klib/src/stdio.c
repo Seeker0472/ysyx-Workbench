@@ -35,8 +35,8 @@ int vsprintf(char *out, const char *fmt, va_list args)
   {
     switch (*p)
     {
-    case '\\':
-      break;
+    // case '\\':
+    //   break;
     case '%':
       p++;
       switch (*(p))
