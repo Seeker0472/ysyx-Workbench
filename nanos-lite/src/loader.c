@@ -58,7 +58,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
       for (offset = 0; offset < ph.p_memsz;) {
         //alloc a new page and map
         page = new_page(1);
-        map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
+        void * va=(void *)((size_t)((void *)ph.p_vaddr + offset) & (~(PGSIZE - 1)));
+        map(&pcb->as,va , page,0b111);
         // Log("page=%x,offset=%x,vaddr=%x,%s", page, offset, (void *)ph.p_vaddr + offset, filename);
         int len = 0;
         
