@@ -60,8 +60,6 @@ int vsprintf(char *out, const char *fmt, va_list args)
           }
       }
       break;
-    // case '':
-    //   break;
     default:
       out[out_offset++] = *p;
       break;
