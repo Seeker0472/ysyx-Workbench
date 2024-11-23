@@ -3,6 +3,9 @@
 #include <klib-macros.h>
 #include <stdarg.h>
 // TODO: stdarg是如何实现的?
+// TODO:
+// 也许应该修改逻辑了，写入到一个缓冲区中，当有回车或者结束或者缓冲区满的时候刷新缓冲区，不要开3k个字符了!!!!!!
+#define BUFFER_LENGH 3000
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 // #if defined(__NATIVE_USE_KLIB__)
@@ -15,7 +18,7 @@ int print_num_long(char *out, size_t out_offset, long val);
 
 int printf(const char *fmt, ...) {
   //TODO
-  char out[3000];
+  char out[BUFFER_LENGH];
   va_list args;
   va_start(args, fmt);
   int len = vsprintf(out, fmt, args);
@@ -48,6 +51,7 @@ int vsprintf(char *out, const char *fmt, va_list args)
           out[out_offset++] = va_arg(args, int);
           break;
         case 'x':
+        case 'p':
           out_offset = print_num_hex(out, out_offset, va_arg(args, int));
           break;
         case 'l':
@@ -57,8 +61,6 @@ int vsprintf(char *out, const char *fmt, va_list args)
           }
       }
       break;
-    // case '':
-    //   break;
     default:
       out[out_offset++] = *p;
       break;
@@ -121,18 +123,28 @@ int sprintf(char *out, const char *fmt, ...)
   va_start(args, fmt);
   int len = vsprintf(out, fmt, args);
   va_end(args);
-  // putstr(out);
   return len;
 }
 
-int snprintf(char *out, size_t n, const char *fmt, ...)
-{
-  panic("Not implemented1");
+int snprintf(char *out, size_t n, const char *fmt, ...) {
+
+  char buffer[BUFFER_LENGH];
+  va_list args;
+  va_start(args, fmt);
+  vsprintf(buffer, fmt, args);
+  va_end(args);
+  strncpy(out, buffer, n);
+  return n;
+  // panic("Not implemented1");
 }
 
 int vsnprintf(char *out, size_t n, const char *fmt, va_list ap)
 {
-  panic("Not implemented2");
+  // panic("Not implemented2");
+  char buffer[BUFFER_LENGH];
+  vsprintf(buffer, fmt, ap);
+  strncpy(out, buffer, n);
+  return n;
 }
 
 #endif

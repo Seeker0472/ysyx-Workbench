@@ -53,21 +53,21 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     if (ph.p_type == PT_LOAD) {
       // read the data
       fs_lseek(fd, ph.p_offset, SEEK_SET);
-      void *page;
+      uintptr_t page;
       int offset = 0;
       for (offset = 0; offset < ph.p_memsz;) {
         //alloc a new page and map
-        page = new_page(1);
-        map(&pcb->as, (void *)ph.p_vaddr + offset, page, 0b111);
-        // Log("page=%x,offset=%x,vaddr=%x,%s", page, offset, (void *)ph.p_vaddr + offset, filename);
+        page = (uintptr_t)new_page(1);
+        void * va=(void *)((size_t)((void *)ph.p_vaddr + offset) & (~(PGSIZE - 1)));
+        map(&pcb->as,va , (void*)page,0b111);
         int len = 0;
         
         // The entry of the segement may not aligened to (PGSIZE)!
         uint32_t seg_offset = (ph.p_vaddr + offset)&(PGSIZE-1); // Important!! 
         // copy data
         if (ph.p_filesz > offset) {
-          len=offset + PGSIZE < ph.p_filesz ? PGSIZE - seg_offset : ph.p_filesz - offset;
-          fs_read(fd, page+seg_offset, len);
+          len = offset + PGSIZE - seg_offset <= ph.p_filesz ? PGSIZE - seg_offset : ph.p_filesz - offset;
+          fs_read(fd, (void*)(page+seg_offset), len);
           offset+=len;
         }
         //empty out 
@@ -148,8 +148,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp =
       ucontext(&pcb->as, (Area){.start = stack, .end = stack + 8 * PGSIZE},
                (void *)entry);
-  pcb->cp->pdir = pcb->as.ptr;
-  pcb->active=true;
+  pcb->active = true;
   // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
   //calc addr and num
