@@ -109,8 +109,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // kstack是内核栈,用于分配上下文结构,
 // entry则是用户进程的入口.
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  void *ustack=pgalloc_usr(PGSIZE*8);
-  // void *ustack=kstack.end;
+  // void *ustack=pgalloc_usr(PGSIZE*8);
+  void *ustack=kstack.end;
   Context *top = (Context *)(((void *)kstack.end) - sizeof(Context));
   top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
   //map stack
