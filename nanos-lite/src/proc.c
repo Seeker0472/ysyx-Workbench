@@ -31,7 +31,7 @@ void init_proc() {
   // context_kload(&pcb[1], hello_fun, "BBB");
   char *argv[] = {"/bin/pal", NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[1], "/bin/pal", argv, envp);
+  context_uload(&pcb[1], "/bin/hello", argv, envp);
   // context_uload(&pcb[1], "/bin/pal", argv, envp);
   switch_boot_pcb();
 
@@ -42,7 +42,7 @@ void init_proc() {
 void execue_menu() {
   char *argv[] = {"/bin/menu", NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[0], "/bin/hello", argv, envp);
+  context_uload(&pcb[0], "/bin/menu", argv, envp);
   switch_boot_pcb();
   yield();
 }
