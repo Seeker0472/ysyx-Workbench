@@ -1,14 +1,10 @@
 #include <am.h>
-// #include <cstring>
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdarg.h>
 // TODO: stdarg是如何实现的?
-// TODO: 先完成上面的TODO,再继续完成snprintf
 // TODO:
 // 也许应该修改逻辑了，写入到一个缓冲区中，当有回车或者结束或者缓冲区满的时候刷新缓冲区，不要开3k个字符了!!!!!!
-// TODO:在native/vme.c中调用了snprintf(-----TODO:---WHY????-----------)
-
 #define BUFFER_LENGH 3000
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)

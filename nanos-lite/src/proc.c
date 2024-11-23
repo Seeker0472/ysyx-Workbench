@@ -31,7 +31,7 @@ void init_proc() {
   // context_kload(&pcb[1], hello_fun, "BBB");
   char *argv[] = {"/bin/pal", NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[2], "/bin/pal", argv, envp);
+  context_uload(&pcb[1], "/bin/pal", argv, envp);
   // context_uload(&pcb[1], "/bin/pal", argv, envp);
   switch_boot_pcb();
 
@@ -87,8 +87,9 @@ Context *schedule(Context *prev) {
       break;
     }
   }
-  if(pcb[robin].cp!=prev)
-    // Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
+  // Log("GOTO:%d",robin);
+  // if(pcb[robin].cp!=prev)
+  //   Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
     switch_boot_pcb(); 

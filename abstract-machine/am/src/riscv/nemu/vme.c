@@ -113,6 +113,6 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   top->mepc = (uintptr_t)entry;
   top->mstatus = 0x0;//set to user mode
   top->mcause = 0xb; // 0xb is external interrupt
-  top->pdir=as->ptr;
+  top->pdir=as->ptr; // set ptr (ISA-dependent) ,for the root page table entry!(in rv-nemu)
   return top;
 }

@@ -53,22 +53,21 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     if (ph.p_type == PT_LOAD) {
       // read the data
       fs_lseek(fd, ph.p_offset, SEEK_SET);
-      void *page;
+      uintptr_t page;
       int offset = 0;
       for (offset = 0; offset < ph.p_memsz;) {
         //alloc a new page and map
-        page = new_page(1);
+        page = (uintptr_t)new_page(1);
         void * va=(void *)((size_t)((void *)ph.p_vaddr + offset) & (~(PGSIZE - 1)));
-        map(&pcb->as,va , page,0b111);
-        // Log("page=%x,offset=%x,vaddr=%x,%s", page, offset, (void *)ph.p_vaddr + offset, filename);
+        map(&pcb->as,va , (void*)page,0b111);
         int len = 0;
         
         // The entry of the segement may not aligened to (PGSIZE)!
         uint32_t seg_offset = (ph.p_vaddr + offset)&(PGSIZE-1); // Important!! 
         // copy data
         if (ph.p_filesz > offset) {
-          len=offset + PGSIZE < ph.p_filesz ? PGSIZE - seg_offset : ph.p_filesz - offset;
-          fs_read(fd, page+seg_offset, len);
+          len = offset + PGSIZE - seg_offset <= ph.p_filesz ? PGSIZE - seg_offset : ph.p_filesz - offset;
+          fs_read(fd, (void*)(page+seg_offset), len);
           offset+=len;
         }
         //empty out 
