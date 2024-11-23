@@ -29,7 +29,7 @@ void init_proc() {
   // naive_uload(NULL, "/bin/float");
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  char *argv[] = { NULL};
+  char *argv[] = {NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[1], "/bin/pal", argv, envp);
   // context_uload(&pcb[1], "/bin/pal", argv, envp);
