@@ -109,7 +109,12 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // entry则是用户进程的入口.
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *top = (Context *)(((void *)kstack.end) - sizeof(Context));
-  top->GPRx=(uintptr_t)kstack.end;//pass the stack addr,seems OKEY for riscv--ARCH-spec
+  void *ustack=pgalloc_usr(PGSIZE);
+  top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
+  //map stack
+  for (int i = 0; i < 8; i++) {
+    map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
+  }
   top->mepc = (uintptr_t)entry;
   top->mstatus = 0x0;//set to user mode
   top->mcause = 0xb; // 0xb is external interrupt
