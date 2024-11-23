@@ -42,7 +42,7 @@ void init_proc() {
 void execue_menu() {
   char *argv[] = {"/bin/menu", NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[0], "/bin/menu", argv, envp);
+  context_uload(&pcb[0], "/bin/hello", argv, envp);
   switch_boot_pcb();
   yield();
 }
