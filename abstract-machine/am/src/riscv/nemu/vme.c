@@ -114,6 +114,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   //map stack
   for (int i = 0; i < 8; i++) {
     map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
+    printf("MAP\n");
   }
   top->mepc = (uintptr_t)entry;
   top->mstatus = 0x0;//set to user mode
