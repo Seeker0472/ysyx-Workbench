@@ -89,10 +89,15 @@ static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
     exec_once(&s, cpu.pc);
-    g_nr_guest_inst ++;
+    g_nr_guest_inst++;
     trace_and_difftest(&s, cpu.pc);
-    if (nemu_state.state != NEMU_RUNNING) break;
-    IFDEF(CONFIG_DEVICE, device_update());//设备更新
+    word_t intr = isa_query_intr();
+    if (intr != INTR_EMPTY) {
+      cpu.pc = isa_raise_intr(intr, cpu.pc);
+    }
+    if (nemu_state.state != NEMU_RUNNING)
+      break;
+    IFDEF(CONFIG_DEVICE, device_update()); // 设备更新
   }
 }
 
@@ -129,10 +134,7 @@ void cpu_exec(uint64_t n) {
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
-  word_t intr = isa_query_intr();
-  if (intr != INTR_EMPTY) {
-    cpu.pc=isa_raise_intr(intr, cpu.pc);
-  } 
+
   switch (nemu_state.state) {
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
