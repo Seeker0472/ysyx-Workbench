@@ -140,7 +140,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   //map stack
   for (int i = 0; i < 8; i++) {
     map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
-    printf("MAP:%x,%x\n",(void*)pcb->as.area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
+    // printf("MAP:%x,%x\n",(void*)pcb->as.area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
   }
 
   uint8_t *stack = pcb->stack;
