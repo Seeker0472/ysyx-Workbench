@@ -7,6 +7,8 @@
 void __am_get_cur_as(Context *c);
 void __am_switch(Context *c);
 
+#define IRQ_TIMER 0x80000007 // for riscv32
+
 static Context *(*user_handler)(Event, Context *) = NULL;
 // AM的Wrapper-Func,根据mcause 选择event
 Context *__am_irq_handle(Context *c) {
@@ -23,6 +25,10 @@ Context *__am_irq_handle(Context *c) {
 #else
       ev.event = c->gpr[17] == -1 ? EVENT_YIELD : EVENT_SYSCALL;
 #endif
+      break;
+    case IRQ_TIMER:
+      c->mepc += 4;
+      ev.event = EVENT_IRQ_TIMER;
       break;
     default:
       ev.event = EVENT_ERROR;
