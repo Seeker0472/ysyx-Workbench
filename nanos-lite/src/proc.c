@@ -31,7 +31,7 @@ void init_proc() {
   // context_kload(&pcb[1], hello_fun, "BBB");
   char *argv[] = {NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[1], "/bin/file-test", argv, envp);
+  context_uload(&pcb[1], "/bin/pal", argv, envp);
   // context_uload(&pcb[1], "/bin/pal", argv, envp);
   switch_boot_pcb();
 
