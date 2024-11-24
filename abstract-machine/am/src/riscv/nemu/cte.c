@@ -41,11 +41,23 @@ extern void __am_asm_trap(void);
 bool cte_init(Context *(*handler)(Event, Context *)) {
   // initialize exception entry
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
-  // 这里是将变量__am_asm_trap的值写入RISC-V处理器的mtvec寄存器。
+  // 这里是将变量__am_asm_trap的值写入RISC-V处理器的mtvec寄存器. "r"表示使用一个通用寄存器
   // mtvec(Machine Trap
   // Vector)寄存器用于存储陷阱向量的基地址，当处理器发生异常或中断时，会跳转到这个地址去执行相应的处理程序。
 
   // 在Trap.S中，会跳转到__am_irq_handle
+
+  // enable interrupt
+uint32_t mie = 0x8;
+asm volatile(
+    "csrr t0, mtvec  \n\t"  // 从 mtvec 读取值到 t0
+    "and t0,t0, %0      \n\t"  // 对 t0 和输入操作数进行按位与操作
+    "csrw mstatus, t0 \n\t" // 将 t0 的值写入 mstatus
+    : 
+    : "r" (mie)             // 输入操作数
+    : "t0"                  // 破坏描述符，表示 t0 寄存器被修改
+);
+
 
   // register event handler
   user_handler = handler;
