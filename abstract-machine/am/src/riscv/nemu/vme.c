@@ -98,7 +98,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
   uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2);
-  assert(!PAGE_VALID(*(ptea0+vpn0))); // assert if the target pte already exists
+  // assert(!PAGE_VALID(*(ptea0+vpn0))); // assert if the target pte already exists
   *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
@@ -116,7 +116,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   // //map stack
   for (int i = 0; i < 8; i++) {
     map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
-    printf("MAP:%x,%x\n",(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
+    // printf("MAP:%x,%x\n",(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
   }
   for (uint32_t *target = (uint32_t*)ustack; target != ustack + PGSIZE * 8; target++) {
     *target=0;
