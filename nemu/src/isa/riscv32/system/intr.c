@@ -41,8 +41,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
 
   uint32_t mpie = (cpu.csr[2] & MIE) << 4;
-  cpu.csr[2] = (cpu.csr[2] & (~MPIE)) | mpie | MIE;
-   printf("MEPC:%x,MSTATUS:%x",cpu.csr[0],cpu.csr[2]); 
+  cpu.csr[2] = ((cpu.csr[2] & (~MPIE)) | mpie)&(~MIE);
+  printf("MEPC:%x,MSTATUS:%x\n",cpu.csr[0],cpu.csr[2]); 
   return cpu.csr[0];//mtvec
 }
 
