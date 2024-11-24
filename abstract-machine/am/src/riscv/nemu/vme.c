@@ -108,7 +108,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // kstack是内核栈,用于分配上下文结构,
 // entry则是用户进程的入口.
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  void *ustack=((void*)pgalloc_usr(PGSIZE*8))+PGSIZE*7;
+  void *ustack=((void*)pgalloc_usr(PGSIZE*8))+PGSIZE*8-1;
   //TODO!!
   // void *ustack=kstack.end;
   Context *top = (Context *)(((void *)ustack) - sizeof(Context));
