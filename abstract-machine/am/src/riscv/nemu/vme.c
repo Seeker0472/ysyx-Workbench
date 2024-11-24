@@ -111,7 +111,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   void *ustack=((void*)pgalloc_usr(PGSIZE*8))+PGSIZE*8;
   //TODO!!
   // void *ustack=kstack.end;
-  Context *top = (Context *)(((void *)kstack.end) - sizeof(Context));
+  Context *top = (Context *)(((void *)ustack) - sizeof(Context));
   top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
   // //map stack
   for (int i = 0; i < 8; i++) {
