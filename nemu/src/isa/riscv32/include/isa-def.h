@@ -18,7 +18,7 @@
 
 #include <common.h>
 
-#define IRQ_TIMER 0x80000007 // for riscv32
+#define IRQ_TIMER 0x5 // for riscv32
 
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
