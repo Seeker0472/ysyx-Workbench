@@ -52,7 +52,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // check address
   // not valid!
   if (!(PAGE_VALID(pte0) && PAGE_VALID(pte1))) {
-    Log("INVALID:%x,%x,%x,VPN!:%x,%x,PTA1:%x", vaddr, PAGE_VALID(pte0), PAGE_VALID(pte1),vpn1,vpn0,pta1);
+    Log("INVALID:%x,%x,%x", vaddr, PAGE_VALID(pte0), PAGE_VALID(pte1));
     return MEM_RET_FAIL;
   }
   // check RWX (TODO)

@@ -83,11 +83,12 @@ void __am_switch(Context *c) {
 // 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
 // TODO:只用as.ptr,va,pa? as中其他部分有用吗?
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  // printf("MAP:%x,%x-%x\n",as->ptr,va,pa);
   //the root_page should be passed in!!
   uint32_t *root_pt = as->ptr;
   uint32_t vpn1 = (uint32_t)va >> 22;
   uint32_t vpn0 = ((uint32_t)va >> 12) & 0x3FF;
-  // printf("MAP:%x,%x-%x;vpn1:%x,%x\n",as->ptr,va,pa,vpn1,vpn0);
+
   // if not valid!,allocate page
   if (!PAGE_VALID(*(root_pt + vpn1))) {
     uint32_t *ptea0 = pgalloc_usr(PGSIZE);
@@ -98,10 +99,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   // set pte0
   uint32_t pte1=*(root_pt + vpn1);
   uint32_t *ptea0 = (uint32_t *)(PTEM(pte1) << 2);
-  // assert(!PAGE_VALID(*(ptea0+vpn0))); // assert if the target pte already exists
-  if (PAGE_VALID(*(ptea0 + vpn0))) {
-    printf("ERR_EXIST\n");
-  }
+  assert(!PAGE_VALID(*(ptea0+vpn0))); // assert if the target pte already exists
   *(ptea0+vpn0)=PTE(pa,prot);
   // uint32_t pte1 = as->ptr+
 }
@@ -110,17 +108,16 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // kstack是内核栈,用于分配上下文结构,
 // entry则是用户进程的入口.
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  void *ustack=((void*)pgalloc_usr(PGSIZE*8))+PGSIZE*8-8;
-//  void * ustack=as->area.end; 
+  // void *ustack=pgalloc_usr(PGSIZE*8);
   //TODO!!
-  // void *ustack=kstack.end;
+  void *ustack=kstack.end;
   Context *top = (Context *)(((void *)ustack) - sizeof(Context));
-  top->GPRx=(uintptr_t)(as->area.end);//pass the stack addr,seems OKEY for riscv--ARCH-spec
+  top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
   // //map stack
-  for (int i = 0; i < 8; i++) {
-    map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
-    // printf("MAP:%x,%x\n",(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
-  }
+  // for (int i = 0; i < 8; i++) {
+  //   map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
+  //   printf("MAP:%x,%x\n",(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
+  // }
   for (uint32_t *target = (uint32_t*)ustack; target != ustack + PGSIZE * 8; target++) {
     *target=0;
   }
