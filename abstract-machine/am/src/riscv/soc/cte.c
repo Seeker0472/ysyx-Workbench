@@ -1,3 +1,4 @@
+#include "isa-def.h"
 #include <am.h>
 #include <riscv/riscv.h>
 #include <klib.h>
@@ -8,7 +9,14 @@ Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
-      case 0xb:  c->mepc+=4;ev.event = EVENT_YIELD; break;
+    case 0xb:
+      c->mepc += 4;
+      ev.event = EVENT_YIELD;
+      break;
+    case IRQ_TIMER:
+      c->mepc += 4;
+      ev.event = EVENT_IRQ_TIMER;
+      break;
       default: ev.event = EVENT_ERROR; break;
     }
 
