@@ -148,7 +148,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp =
       ucontext(&pcb->as, (Area){.start = stack, .end = stack + 8 * PGSIZE},
                (void *)entry);
-  pcb->active = true;
+  // pcb->active = true;
   // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
   //calc addr and num
@@ -192,6 +192,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   *table_base = 0;
   table_base += 1;
 
+  pcb->active = true;
 }
 void context_kload(PCB *pcb, void *func,void *args) {
   pcb->cp = kcontext((Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, func, args);

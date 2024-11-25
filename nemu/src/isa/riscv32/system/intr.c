@@ -40,10 +40,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.csr[3] = epc; // mepc
   // 让处理器进入关中断状态
   // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
-  // uint32_t prev = cpu.csr[2];
   uint32_t mpie = (cpu.csr[2] & MIE) << 4;
   cpu.csr[2] = ((cpu.csr[2] & (~MPIE)) | mpie)&(~MIE);
-  // printf("MEPC:%x,MSTATUS:%x;PREV:%x\n",cpu.csr[0],cpu.csr[2],prev); 
   return cpu.csr[0];//mtvec
 }
 
@@ -51,12 +49,10 @@ paddr_t isa_call_mret() {
 //mstatus.MPIE->mstatus.MIE;mstatus.MPIE=1
   uint32_t mie = (cpu.csr[2] & MPIE) >> 4;
   cpu.csr[2] = (cpu.csr[2] & (~MIE)) | mie | MPIE;
-  // printf("MRET:%x\n",cpu.csr[2]);
   return cpu.csr[3];
 }
 
 word_t isa_query_intr() {
-  // printf("%x\n",(cpu.csr[2] & MIE));
   if (((cpu.csr[2] & MIE)) && cpu.INTR) {
     printf("INTR!!\n");
     cpu.INTR = false;
