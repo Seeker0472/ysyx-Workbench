@@ -50,7 +50,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 paddr_t isa_call_mret() {
   uint32_t mie = (cpu.csr[2] & MPIE) >> 4;
   cpu.csr[2] = (cpu.csr[2] & (~MIE)) | mie | MPIE;
-  printf("MRET:%x",cpu.csr[2]);
+  printf("MRET:%x\n",cpu.csr[2]);
   return cpu.csr[3];
 }
 
