@@ -80,7 +80,7 @@ Context *schedule(Context *prev) {
       // find any thread available
       Log("i=%x",i);
       if (pcb[i].active) {
-        Log("GO:%x,%x",i,pcb[2].active);
+        Log("GO:%x",i);
         robin = i;
         current = &pcb[i];
         prev_schedule = i;
