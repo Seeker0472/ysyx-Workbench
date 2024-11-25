@@ -73,7 +73,7 @@ Context *schedule(Context *prev) {
   // update Context *
   current->cp = prev;
 
-  if (count % 100 == 0 || !pcb[0].active) {
+  if (count % 1000 == 0 || !pcb[0].active) {
     // time reach or pcb[0] inactive
     robin = prev_schedule;
     for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
