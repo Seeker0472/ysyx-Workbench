@@ -66,7 +66,7 @@ uint32_t count = 0;
 int prev_schedule = 0;
 Context *schedule(Context *prev) {
   count++;
-  // Log("SHEDULE");
+  Log("SHEDULE");
   int robin = 0;
   bool find = false;
   // find context,start robin
@@ -97,9 +97,9 @@ Context *schedule(Context *prev) {
     current = &pcb[0];
     find=true;
   }
-  // Log("GOTO:%d",robin);
+  Log("GOTO:%d",robin);
   // if(pcb[robin].cp!=prev)
-    Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
+    // Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
     switch_boot_pcb();
