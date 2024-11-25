@@ -32,7 +32,7 @@ void init_proc() {
   // context_kload(&pcb[1], hello_fun, "BBB");
   char *argv[] = {NULL};
   char *envp[] = {NULL};
-  // context_uload(&pcb[0], "/bin/pal", argv, envp);
+  context_uload(&pcb[0], "/bin/pal", argv, envp);
   context_uload(&pcb[2], "/bin/hello", argv, envp);
 
   // yield();  
@@ -80,7 +80,7 @@ Context *schedule(Context *prev) {
       // find any thread available
       Log("i=%x",i);
       if (pcb[i].active) {
-        Log("GO:%x",i);
+        Log("GO:%x,%x",i,pcb[2].active);
         robin = i;
         current = &pcb[i];
         prev_schedule = i;
