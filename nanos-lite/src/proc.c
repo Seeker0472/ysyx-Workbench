@@ -34,7 +34,6 @@ void init_proc() {
   char *envp[] = {NULL};
   context_uload(&pcb[0], "/bin/pal", argv, envp);
   context_uload(&pcb[1], "/bin/hello", argv, envp);
-  
 
   // yield();  
   // assert(0);
@@ -67,7 +66,7 @@ uint32_t count = 0;
 int prev_schedule = 0;
 Context *schedule(Context *prev) {
   count++;
-  Log("SHEDULE,%x",current);
+  // Log("SHEDULE,%x",current);
   int robin = 0;
   bool find = false;
   // find context,start robin
@@ -80,7 +79,7 @@ Context *schedule(Context *prev) {
     for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
       // find any thread available
       if (pcb[i].active) {
-        Log("aaa");
+        // Log("aaa");
         robin = i;
         current = &pcb[i];
         prev_schedule = i;
@@ -99,7 +98,7 @@ Context *schedule(Context *prev) {
     current = &pcb[0];
     find=true;
   }
-  Log("GOTO:%d",robin);
+  // Log("GOTO:%d",robin);
   // if(pcb[robin].cp!=prev)
     // Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
   if (!find) {
