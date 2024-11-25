@@ -134,7 +134,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   assert(filename);
   assert(pcb);
   protect(&pcb->as); // create an space whitch inherits kernal mapping! WoW!
-
+  void *ustack1 = new_page(PGSIZE * 8);
+  printf("%x\n",ustack1);
   uintptr_t entry = loader(pcb, filename);
   uint8_t *stack = new_page(8);
   //map stack
