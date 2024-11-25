@@ -24,7 +24,7 @@ typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   vaddr_t pc;
   word_t csr[10]; // TODO:暂时只实现10个
-  bool INTR;
+  bool INTR; //cpu interrupt line
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode

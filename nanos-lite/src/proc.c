@@ -32,7 +32,7 @@ void init_proc() {
   char *argv[] = {NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[1], "/bin/pal", argv, envp);
-  // context_uload(&pcb[1], "/bin/pal", argv, envp);
+  context_uload(&pcb[0], "/bin/hello", argv, envp);
   switch_boot_pcb();
 
   // yield();  

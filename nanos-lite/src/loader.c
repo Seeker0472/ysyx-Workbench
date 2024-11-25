@@ -191,7 +191,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // set NULL
   *table_base = 0;
   table_base += 1;
-
+  // set the active tag here,making sure the process is finished
   pcb->active = true;
 }
 void context_kload(PCB *pcb, void *func,void *args) {

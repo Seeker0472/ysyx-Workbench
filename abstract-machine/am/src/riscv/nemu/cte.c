@@ -7,7 +7,7 @@
 void __am_get_cur_as(Context *c);
 void __am_switch(Context *c);
 
-#define IRQ_TIMER 0x80000007 // for riscv32
+#define IRQ_TIMER 0x80000007 // for riscv32 TODO:WHY?
 
 static Context *(*user_handler)(Event, Context *) = NULL;
 // AM的Wrapper-Func,根据mcause 选择event
@@ -53,17 +53,16 @@ bool cte_init(Context *(*handler)(Event, Context *)) {
 
   // 在Trap.S中，会跳转到__am_irq_handle
 
-  // TODO: 
   // enable interrupt
-uint32_t mie = 0x8;
-asm volatile(
-    "csrr t0, mstatus  \n\t"  // 从 mtvec 读取值到 t0
-    "or t0,t0, %0      \n\t"  // 对 t0 和输入操作数进行按位与操作
-    "csrw mstatus, t0 \n\t" // 将 t0 的值写入 mstatus
-    : 
-    : "r" (mie)             // 输入操作数
-    : "t0"                  // 破坏描述符，表示 t0 寄存器被修改
-);
+  uint32_t mie = 0x8;
+  asm volatile(
+      "csrr t0, mstatus  \n\t"  // 从 mtvec 读取值到 t0
+      "or t0,t0, %0      \n\t"  // 对 t0 和输入操作数进行按位与操作
+      "csrw mstatus, t0 \n\t" // 将 t0 的值写入 mstatus
+      : 
+      : "r" (mie)             // 输入操作数
+      : "t0"                  // 破坏描述符，表示 t0 寄存器被修改
+  );
 
 
   // register event handler
