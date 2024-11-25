@@ -79,9 +79,10 @@ Context *schedule(Context *prev) {
     for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
       // find any thread available
       if (pcb[i].active) {
+        Log("aaa");
         robin = i;
         current = &pcb[i];
-        prev_schedule = robin;
+        prev_schedule = i;
         find = true;
         break;
       }
