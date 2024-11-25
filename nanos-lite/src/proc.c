@@ -62,7 +62,8 @@ void handle_execve(const char *filename, char *const argv[], char *const envp[])
   switch_boot_pcb();
   yield();
 }
-uint32_t count=0;
+uint32_t count = 0;
+int prev_schedule = 0;
 Context *schedule(Context *prev) {
   count++;
   // Log("SHEDULE");
@@ -71,15 +72,17 @@ Context *schedule(Context *prev) {
   // find context,start robin
   // update Context *
   current->cp = prev;
-  if (current != &pcb_boot) {
-    robin = current - pcb;
-  }
-  if ((robin == 0 && count % 1000 == 0)||!pcb[0].active) {
+  // if (current != &pcb_boot) {
+  //   robin = current - pcb;
+  // }
+  if ((robin == 0 && count % 1000 == 0) || !pcb[0].active) {
+    robin = prev_schedule;
     for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
       // find any thread available
       if (pcb[i].active) {
         robin = i;
         current = &pcb[i];
+        prev_schedule = robin;
         find = true;
         break;
       }
