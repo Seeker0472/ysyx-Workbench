@@ -74,7 +74,7 @@ Context *schedule(Context *prev) {
   if (current != &pcb_boot) {
     robin = current - pcb;
   }
-  if ((robin == 0 && count % 100 == 0)||!pcb[0].active) {
+  if ((robin == 0 && count % 1000 == 0)||!pcb[0].active) {
     for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
       // find any thread available
       if (pcb[i].active) {
