@@ -13,7 +13,12 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "common.h"
 #include <isa.h>
+#include <stdint.h>
+#include <stdio.h>
+#define MIE 0x8
+#define MPIE 0x80
 
 // ecall 调用
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
@@ -29,14 +34,29 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // assert(0);
   IFDEF(CONFIG_ETRACE,Log("Trigged Exception!, No=%x Epc=%x",NO,epc););
 
-  // cpu.csr[1]=0xb;//mcause
+  cpu.csr[1]=NO;//mcause
   // cpu.csr[2]=0x1800;//mstatus
-  cpu.csr[3]=epc;//mepc
 
+  cpu.csr[3] = epc; // mepc
+  // 让处理器进入关中断状态
+  // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
+  uint32_t mpie = (cpu.csr[2] & MIE) << 4;
+  cpu.csr[2] = ((cpu.csr[2] & (~MPIE)) | mpie)&(~MIE);
+  return cpu.csr[0];//mtvec
+}
 
-  return cpu.csr[0];
+paddr_t isa_call_mret() {
+//mstatus.MPIE->mstatus.MIE;mstatus.MPIE=1
+  uint32_t mie = (cpu.csr[2] & MPIE) >> 4;
+  cpu.csr[2] = (cpu.csr[2] & (~MIE)) | mie | MPIE;
+  return cpu.csr[3];
 }
 
 word_t isa_query_intr() {
+  if (((cpu.csr[2] & MIE)) && cpu.INTR) {
+    printf("INTR!!\n");
+    cpu.INTR = false;
+    return IRQ_TIMER;
+  }
   return INTR_EMPTY;
 }

@@ -13,6 +13,8 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "common.h"
+#include "isa.h"
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
@@ -87,10 +89,15 @@ static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
     exec_once(&s, cpu.pc);
-    g_nr_guest_inst ++;
+    g_nr_guest_inst++;
     trace_and_difftest(&s, cpu.pc);
-    if (nemu_state.state != NEMU_RUNNING) break;
-    IFDEF(CONFIG_DEVICE, device_update());//设备更新
+    word_t intr = isa_query_intr();
+    if (intr != INTR_EMPTY) {
+      cpu.pc = isa_raise_intr(intr, cpu.pc);
+    }
+    if (nemu_state.state != NEMU_RUNNING)
+      break;
+    IFDEF(CONFIG_DEVICE, device_update()); // 设备更新
   }
 }
 
