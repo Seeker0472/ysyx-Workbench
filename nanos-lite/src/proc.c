@@ -66,7 +66,7 @@ uint32_t count = 0;
 int prev_schedule = 0;
 Context *schedule(Context *prev) {
   count++;
-  Log("SHEDULE");
+  Log("SHEDULE,%x",current);
   int robin = 0;
   bool find = false;
   // find context,start robin
