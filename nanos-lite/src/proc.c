@@ -74,7 +74,7 @@ Context *schedule(Context *prev) {
   if (current != &pcb_boot) {
     robin = current - pcb;
   }
-  // if ((robin == 0 && count % 100 == 0)||!pcb[0].active) {
+  if ((robin == 0 && count % 100 == 0)||!pcb[0].active) {
     for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
       // find any thread available
       if (pcb[i].active) {
@@ -89,10 +89,11 @@ Context *schedule(Context *prev) {
         break;
       }
     }
-  // } else {
-  //   robin = 0;
-  //   find=true;
-  // }
+  } else {
+    robin = 0;
+    current = &pcb[0];
+    find=true;
+  }
   // Log("GOTO:%d",robin);
   // if(pcb[robin].cp!=prev)
   //   Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
