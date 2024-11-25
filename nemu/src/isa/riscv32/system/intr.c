@@ -54,7 +54,7 @@ paddr_t isa_call_mret() {
 
 word_t isa_query_intr() {
   if (((cpu.csr[2] & MIE)) && cpu.INTR) {
-    printf("INTR!!\n");
+    // printf("INTR!!\n");
     cpu.INTR = false;
     return IRQ_TIMER;
   }
