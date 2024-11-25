@@ -72,10 +72,9 @@ Context *schedule(Context *prev) {
   // find context,start robin
   // update Context *
   current->cp = prev;
-  // if (current != &pcb_boot) {
-  //   robin = current - pcb;
-  // }
-  if ((robin == 0 && count % 1000 == 0) || !pcb[0].active) {
+
+  if (count % 1000 == 0 || !pcb[0].active) {
+    // time reach or pcb[0] inactive
     robin = prev_schedule;
     for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
       // find any thread available
@@ -89,6 +88,7 @@ Context *schedule(Context *prev) {
       // if not found any thread available
       if (robin++ > MAX_NR_PROC) {
         robin = 0;
+        find=false;
         break;
       }
     }
