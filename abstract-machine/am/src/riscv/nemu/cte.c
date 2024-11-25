@@ -56,7 +56,7 @@ bool cte_init(Context *(*handler)(Event, Context *)) {
   // enable interrupt
 uint32_t mie = 0x8;
 asm volatile(
-    "csrr t0, mtvec  \n\t"  // 从 mtvec 读取值到 t0
+    "csrr t0, mstatus  \n\t"  // 从 mtvec 读取值到 t0
     "and t0,t0, %0      \n\t"  // 对 t0 和输入操作数进行按位与操作
     "csrw mstatus, t0 \n\t" // 将 t0 的值写入 mstatus
     : 
