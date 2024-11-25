@@ -56,7 +56,7 @@ paddr_t isa_call_mret() {
 }
 
 word_t isa_query_intr() {
-  // printf("%x\n",(cpu.csr[2] & MIE));
+  printf("%x\n",(cpu.csr[2] & MIE));
   if (((cpu.csr[2] & MIE)) && cpu.INTR) {
     printf("INTR!!\n");
     cpu.INTR = false;
