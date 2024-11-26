@@ -113,7 +113,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   void *ustack=as->area.end;
   void *stack = kstack.end;
   Context *top = (Context *)(((void *)stack) - sizeof(Context));
-  top->GPRx=(uintptr_t)(ustack-sizeof(Context)-10);//pass the stack addr,seems OKEY for riscv--ARCH-spec
+  top->GPRx=(uintptr_t)(ustack-sizeof(Context)-20);//pass the stack addr,seems OKEY for riscv--ARCH-spec
   // //map stack
   // for (int i = 0; i < 8; i++) {
   //   map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
@@ -123,7 +123,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   //   *target=0;
   // }
   top->mepc = (uintptr_t)entry;
-  top->gpr[2] = (uintptr_t)(ustack-sizeof(Context)-10);
+  top->gpr[2] = (uintptr_t)(ustack-sizeof(Context)-20);
   // printf("USTACK:%x\n", ustack);
   top->mstatus = 0x1808;//need to set to user mode ? TODO！
   top->mcause = 0xb; // 0xb is external interrupt
