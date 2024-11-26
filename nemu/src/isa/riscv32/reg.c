@@ -28,27 +28,39 @@ const char *csr_regs[] = {
     "mvendroid","marchid","statp","mscratch"
 
 };
-void print_csr_reg(){
+void print_csr_reg() {
+#ifdef CONFIG_RV64
   printf("================================================csrs================================================\n");
-  printf("%-4s      \t%-20s\t%-10s\n","Name","Dec","Hex");  
+  printf("%-4s      \t%-20s\t%-10s\n", "Name", "Dec", "Hex");
+#else
+  printf("================================================csrs================================================\n");
+  printf("%-4s      \t%-10s\t%-5s\n", "Name", "Dec", "Hex");
+#endif
   for(int i=0;i<8;i++){
     MUXDEF(CONFIG_RV64, printf("%-4s      \t%-20ld\t%-10lx\n", csr_regs[i],
                                cpu.csr[i], cpu.csr[i]);
-           , printf("%-4s      \t%-20d\t%-10x\n", csr_regs[i], cpu.csr[i],
+           , printf("%-4s      \t%-10d\t%-5x\n", csr_regs[i], cpu.csr[i],
                     cpu.csr[i]););
   }
 }
 void isa_reg_display() {
-  #ifndef CONFIG_RVE
+#ifndef CONFIG_RVE
+#ifdef CONFIG_RV64
   printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
   printf(" | ");
-  printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
+  printf("%-4s \t%-20s\t%-10s\t\n", "Name", "Dec", "Hex");
+#else
+  printf("================================================regs================================================\n");
+  printf("%-4s \t%-10s\t%-5s\t","Name","Dec","Hex");  
+  printf(" | ");
+  printf("%-4s \t%-10s\t%-5s\t\n", "Name", "Dec", "Hex");
+#endif
   for(int i=0;i<16;i++){
-    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);,printf("%-4s \t%-20d\t%-10x\t",regs[i],cpu.gpr[i],cpu.gpr[i]););
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);,printf("%-4s \t%-10d\t%-5x\t",regs[i],cpu.gpr[i],cpu.gpr[i]););
       
       printf(" | ");
-    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]);,printf("%-4s \t%-20d\t%-10x\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]););
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]);,printf("%-4s \t%-10d\t%-5x\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]););
 
       
       printf("\n");
