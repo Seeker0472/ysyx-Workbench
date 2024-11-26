@@ -147,7 +147,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // init an Context struct on top of stack
   //the cp pointer stores at the bottom of stack
   pcb->cp =
-      ucontext(&pcb->as, (Area){.start = pcb->stack, .end = pcb->stack + 8 * PGSIZE},
+      ucontext(&pcb->as, (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
                (void *)entry);
   // pcb->active = true;
   Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
