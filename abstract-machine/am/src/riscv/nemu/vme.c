@@ -110,9 +110,10 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   // void *ustack=pgalloc_usr(PGSIZE*8);
   // TODO!!
-  void *ustack=as->area.end;
-  Context *top = (Context *)(((void *)ustack) - sizeof(Context));
-  // top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
+  // void *ustack=as->area.end;
+  void *stack = kstack.end;
+  Context *top = (Context *)(((void *)stack) - sizeof(Context));
+  top->GPRx=(uintptr_t)stack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
   // //map stack
   // for (int i = 0; i < 8; i++) {
   //   map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
