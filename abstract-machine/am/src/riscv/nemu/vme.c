@@ -113,22 +113,24 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   void *ustack=as->area.end;
   void *stack = kstack.end;
   Context *top = (Context *)(((void *)stack) - sizeof(Context));
-  top->GPRx=(uintptr_t)(ustack-sizeof(Context)-20);//pass the stack addr,seems OKEY for riscv--ARCH-spec
+  top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
   // //map stack
   // for (int i = 0; i < 8; i++) {
   //   map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
   //   printf("MAP:%x,%x\n",(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
   // }
-  // for (uint32_t *target = (uint32_t*)ustack; target != ustack + PGSIZE * 8; target++) {
+  // for (uint32_t *target = (uint32_t*)ustack; target != ustack + PGSIZE * 8;
+  // target++) {
   //   *target=0;
   // }
+  // program will run at after __am_asm_trap
   top->mepc = (uintptr_t)entry;
-  top->gpr[2] = (uintptr_t)(ustack-sizeof(Context)-20);
+  top->gpr[2] = (uintptr_t)stack;
   // top->gpr[2] = (uintptr_t)(0);
   // printf("USTACK:%x\n", ustack);
   top->mstatus = 0x1808;//need to set to user mode ? TODO！
   top->mcause = 0xb; // 0xb is external interrupt
   top->pdir=as->ptr; // set ptr (ISA-dependent) ,for the root page table entry!(in rv-nemu)
-  top->mscratch= (uintptr_t)kstack.end; //TODO:set the ksp
+  top->mscratch= (uintptr_t)ustack; 
   return top;
 }

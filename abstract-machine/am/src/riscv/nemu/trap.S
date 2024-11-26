@@ -136,7 +136,7 @@ b_end:
   j end_ret
 to_user:
 // return to user
-// user -> user;
+// user -> user; kernel->user!(first-time)
   csrrw sp,mscratch,sp // restore sp
   addi sp, sp, CONTEXT_SIZE
   csrrw sp,mscratch,sp // now the user's stack pointer
