@@ -123,7 +123,8 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   //   *target=0;
   // }
   top->mepc = (uintptr_t)entry;
-  top->gpr[2]=(uintptr_t)ustack;
+  top->gpr[2] = (uintptr_t)ustack;
+  printf("USTACK:%x\n", ustack);
   top->mstatus = 0x1808;//need to set to user mode ? TODO！
   top->mcause = 0xb; // 0xb is external interrupt
   top->pdir=as->ptr; // set ptr (ISA-dependent) ,for the root page table entry!(in rv-nemu)
