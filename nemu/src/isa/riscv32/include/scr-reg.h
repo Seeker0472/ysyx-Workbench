@@ -1,5 +1,7 @@
 // the translate logic was defined in
 // nemu/src/isa/riscv32/local-include/reg.h
+// remember to update the display func in
+// nemu/src/isa/riscv32/reg.c
 
 #include <stdint.h>
 #define csr_gen(name, vaddr)  static const uint32_t CSR_V_##name=vaddr;
