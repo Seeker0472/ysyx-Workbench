@@ -19,7 +19,7 @@ __am_asm_trap_draft:
   csrrw sp, mscratch, sp   // (3) if we trapped from kernel, restore the original sp
 
 # Kernel:mscrach=0;sp==kern;
-# User: $sp=kernel mscarch=user_stack
+# User: $sp=kernel mscratch=user_stack
 
 # stage-2 save_context!
 # note that c->gpr[sp] should always be $sp before trap
@@ -35,7 +35,7 @@ save_context:
   csrr t0, mcause
   csrr t1, mstatus
   csrr t2, mepc
-  csrr t3, mscarch #TODO:add the reg in menu and change the context size
+  csrr t3, mscratch #TODO:add the reg in menu and change the context size
   # calc origional sp;t4 stores the np!
   addi t4, sp, CONTEXT_SIZE
   bnez t3,from_kern
@@ -51,7 +51,7 @@ b_end:
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
-  STORE t3, OFFSET_SCARCH(sp)
+  STORE t3, OFFSET_SCRATCH(sp)
   STORE t4, OFFSET_SP(sp) # set sp(sp before trap)
 #  STORE t5, OFFSET_NP(sp)# set np,not used?
 
@@ -78,21 +78,21 @@ b_end:
 # restore $sp($sp = c->sp)  
 
 # now sp is pointing at ksp+Context
-# check if mstarch==0(kernelmod)
+# check if mscratch==0(kernelmod)
   LOAD sp OFFSET_SP(sp)
-  csrrw sp,mscarch,sp # atm switch sp
+  csrrw sp,mscratch,sp # atm switch sp
   bnez sp to_user
 # return to kernel
 # kern -> kern;
-  csrrw sp,mscarch,sp # restore sp
+  csrrw sp,mscratch,sp # restore sp
   addi sp, sp, CONTEXT_SIZE
   j end_ret
 to_user:
 # return to user
 # user -> user;
-  csrrw sp,mscarch,sp # restore sp
+  csrrw sp,mscratch,sp # restore sp
   addi sp, sp, CONTEXT_SIZE
-  csrrw sp,mscarch,sp # now the user's stack pointer
+  csrrw sp,mscratch,sp # now the user's stack pointer
 
 end_ret:
   mret
