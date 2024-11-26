@@ -141,6 +141,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   for (int i = 0; i < 8; i++) {
     map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,stack+PGSIZE*i,0b111);
   }
+  Log("1");
 
   // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
