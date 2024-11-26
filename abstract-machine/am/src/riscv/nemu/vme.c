@@ -110,7 +110,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   // void *ustack=pgalloc_usr(PGSIZE*8);
   // TODO!!
-  // void *ustack=as->area.end;
+  void *ustack=as->area.end;
   void *stack = kstack.end;
   Context *top = (Context *)(((void *)stack) - sizeof(Context));
   top->GPRx=(uintptr_t)stack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
@@ -123,6 +123,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   //   *target=0;
   // }
   top->mepc = (uintptr_t)entry;
+  top->gpr[2]=(uintptr_t)ustack;
   top->mstatus = 0x1808;//need to set to user mode ? TODO！
   top->mcause = 0xb; // 0xb is external interrupt
   top->pdir=as->ptr; // set ptr (ISA-dependent) ,for the root page table entry!(in rv-nemu)
