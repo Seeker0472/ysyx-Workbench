@@ -1,6 +1,7 @@
 #ifndef ARCH_H__
 #define ARCH_H__
 
+#include <stdint.h>
 #ifdef __riscv_e
 #define NR_REGS 16
 #else
@@ -11,6 +12,7 @@ struct Context {
   // DONE: fix the order of these members to match trap.S
   // uintptr_t mepc,mstatus ,mcause, gpr[NR_REGS];
   uintptr_t gpr[NR_REGS], mcause, mstatus, mepc;
+  // uint32_t np; TODO:Useful?!
   void *pdir;
 };
 
