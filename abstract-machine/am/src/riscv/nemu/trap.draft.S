@@ -18,7 +18,7 @@ __am_asm_trap_draft:
   bnez sp, save_context    // (2) take the branch if we trapped from user
   csrrw sp, mscratch, sp   // (3) if we trapped from kernel, restore the original sp
 
-# Kernel:mscrach=0;sp==kern;
+# Kernel:mscratch=0;sp==kern;
 # User: $sp=kernel mscratch=user_stack
 
 # stage-2 save_context!
@@ -68,8 +68,10 @@ b_end:
 # stage-5 restore context
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
+  LOAD t3, OFFSET_SCRATCH(sp)
   csrw mstatus, t1
   csrw mepc, t2
+  csrw mscratch, t3
 
   MAP(REGS, POP)
 

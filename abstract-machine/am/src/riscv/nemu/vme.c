@@ -108,10 +108,9 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // kstack是内核栈,用于分配上下文结构,
 // entry则是用户进程的入口.
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  void *ustack1 = pgalloc_usr(PGSIZE * 8);
-  printf("%x\n",ustack1);
+  // void *ustack=pgalloc_usr(PGSIZE*8);
   //TODO!!
-  void *ustack=kstack.end;
+  void *ustack=as->area.end;
   Context *top = (Context *)(((void *)ustack) - sizeof(Context));
   top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
   // //map stack
@@ -119,12 +118,13 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   //   map(as,(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i,0b111);
   //   printf("MAP:%x,%x\n",(void*)as->area.end-(8-i)*PGSIZE,ustack+PGSIZE*i);
   // }
-  for (uint32_t *target = (uint32_t*)ustack; target != ustack + PGSIZE * 8; target++) {
-    *target=0;
-  }
+  // for (uint32_t *target = (uint32_t*)ustack; target != ustack + PGSIZE * 8; target++) {
+  //   *target=0;
+  // }
   top->mepc = (uintptr_t)entry;
   top->mstatus = 0x1808;//need to set to user mode ? TODO！
   top->mcause = 0xb; // 0xb is external interrupt
   top->pdir=as->ptr; // set ptr (ISA-dependent) ,for the root page table entry!(in rv-nemu)
+  // top->mscratch //TODO:set the ksp
   return top;
 }
