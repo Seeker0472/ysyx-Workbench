@@ -141,7 +141,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   for (int i = 0; i < 8; i++) {
     map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,stack+PGSIZE*i,0b111);
   }
-  Log("1");
+
 
   // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
@@ -150,7 +150,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
       ucontext(&pcb->as, (Area){.start = pcb->stack, .end = pcb->stack + 8 * PGSIZE},
                (void *)entry);
   // pcb->active = true;
-  // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
+  Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
   //calc addr and num
   uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
