@@ -109,7 +109,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 // entry则是用户进程的入口.
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   // void *ustack=pgalloc_usr(PGSIZE*8);
-  //TODO!!
+  // TODO!!
+  printf("1");
   void *ustack=as->area.end;
   Context *top = (Context *)(((void *)ustack) - sizeof(Context));
   top->GPRx=(uintptr_t)ustack;//pass the stack addr,seems OKEY for riscv--ARCH-spec
