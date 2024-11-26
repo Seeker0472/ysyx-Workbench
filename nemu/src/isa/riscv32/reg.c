@@ -52,7 +52,7 @@ void isa_reg_display() {
   printf("%-4s \t%-20s\t%-10s\t\n", "Name", "Dec", "Hex");
 #else
   printf("================================================regs================================================\n");
-  printf("%-4s \t%-16s\t%-8s\t","Name","Dec","Hex");  
+  printf("%-4s \t%-10s\t%-8s\t","Name","Dec","Hex");  
   printf(" | ");
   printf("%-4s \t%-16s\t%-8s\t\n", "Name", "Dec", "Hex");
 #endif
