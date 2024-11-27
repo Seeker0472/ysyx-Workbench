@@ -99,6 +99,7 @@ b_end:
   STORE t3, OFFSET_SCRATCH(sp)
   STORE t4, OFFSET_SP(sp) // set sp(sp before trap)
 //  STORE t5, OFFSET_NP(sp)// set np,not used?
+  csrwi mscratch,0
 
 // stage-3 set mstatus.MPRV?--pass difftest??<-TODO:need to change?
   li a0, (1 << 17)
