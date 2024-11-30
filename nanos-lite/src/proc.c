@@ -32,7 +32,7 @@ void init_proc() {
   // context_kload(&pcb[1], hello_fun, "BBB");
   char *argv[] = {NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[0], "/bin/nterm", argv, envp);
+  context_uload(&pcb[0], "/bin/nemu", argv, envp);
   context_uload(&pcb[2], "/bin/hello", argv, envp);
 
   // yield();  
