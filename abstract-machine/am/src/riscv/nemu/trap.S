@@ -86,7 +86,7 @@ save_context:
   bnez t3,from_kern
   // mstatus==0;user_mod!
   li t5,0 
-  // mv t4,t3
+  // mv t4,t3 //why?
   j b_end
 from_kern:
   // mstatus!=0;kernel_mod!
