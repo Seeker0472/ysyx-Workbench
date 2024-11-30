@@ -81,12 +81,12 @@ save_context:
   csrr t1, mstatus
   csrr t2, mepc
   csrr t3, mscratch
-  // calc origional sp;t4 stores the np!
+  // calc origional sp;t5 stores the np!
   addi t4, sp, CONTEXT_SIZE
   bnez t3,from_kern
   // mstatus==0;user_mod!
   li t5,0 
-  mv t4,t3
+  // mv t4,t3
   j b_end
 from_kern:
   // mstatus!=0;kernel_mod!
