@@ -83,6 +83,7 @@ save_context:
   csrr t3, mscratch
   // calc origional sp;t5 stores the np!
   addi t4, sp, CONTEXT_SIZE
+  
 /*  no need to set np
   bnez t3,from_kern
   // mstatus==0;user_mod!
