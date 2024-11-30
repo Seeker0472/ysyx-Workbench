@@ -81,24 +81,27 @@ save_context:
   csrr t1, mstatus
   csrr t2, mepc
   csrr t3, mscratch
-  // calc origional sp;t4 stores the np!
+  // calc origional sp;t5 stores the np!
   addi t4, sp, CONTEXT_SIZE
+  
+/*  no need to set np
   bnez t3,from_kern
   // mstatus==0;user_mod!
   li t5,0 
-  mv t4,t3
+  // mv t4,t3 //why?
   j b_end
 from_kern:
   // mstatus!=0;kernel_mod!
   li t5,1
 b_end:
-
+*/
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
   STORE t3, OFFSET_SCRATCH(sp)
   STORE t4, OFFSET_SP(sp) // set sp(sp before trap)
 //  STORE t5, OFFSET_NP(sp)// set np,not used?
+  csrwi mscratch,0
 
 // stage-3 set mstatus.MPRV?--pass difftest??<-TODO:need to change?
   li a0, (1 << 17)
