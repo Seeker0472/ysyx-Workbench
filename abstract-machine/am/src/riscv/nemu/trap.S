@@ -83,6 +83,7 @@ save_context:
   csrr t3, mscratch
   // calc origional sp;t5 stores the np!
   addi t4, sp, CONTEXT_SIZE
+/*  no need to set np
   bnez t3,from_kern
   // mstatus==0;user_mod!
   li t5,0 
@@ -92,7 +93,7 @@ from_kern:
   // mstatus!=0;kernel_mod!
   li t5,1
 b_end:
-
+*/
   STORE t0, OFFSET_CAUSE(sp)
   STORE t1, OFFSET_STATUS(sp)
   STORE t2, OFFSET_EPC(sp)
