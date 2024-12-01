@@ -14,7 +14,9 @@
 ***************************************************************************************/
 
 #include <isa.h>
-#include "local-include/reg.h"
+#include <stdint.h>
+#include <string.h>
+#define LENGTH(arr)         (sizeof(arr) / sizeof((arr)[0]))
 
 const char *regs[] = {
   "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
@@ -23,36 +25,47 @@ const char *regs[] = {
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
-const char *csr_regs[] ={
-  "mtvec",
-  "mcause",
-  "mstatus",
-  "mepc",
-
-};
-void print_csr_reg(){
+const char *csr_regs[] = {"mtvec",     "mcause",  "mstatus", "mepc",
+                          "mvendroid", "marchid", "statp",   "mscratch"};
+const uint32_t csr_num = LENGTH(csr_regs);
+void print_csr_reg() {
+#ifdef CONFIG_RV64
   printf("================================================csrs================================================\n");
-  printf("%-4s   \t%-20s\t%-10s\n","Name","Dec","Hex");  
-  for(int i=0;i<4;i++){
-    MUXDEF(CONFIG_RV64,printf("%-4s   \t%-20ld\t%-10lx\n",csr_regs[i],cpu.csr[i],cpu.csr[i]);,printf("%-4s \t%-20d\t%-10x\n",csr_regs[i],cpu.csr[i],cpu.csr[i]););
+  printf("%-4s      \t%-20s\t%-10s\n", "Name", "Dec", "Hex");
+#else
+  printf("========================================csrs========================================\n");
+  printf("%-12s\t%-10s\t%-8s\n", "Name", "Dec", "Hex");
+#endif
+  for(int i=0;i<csr_num;i++){
+    MUXDEF(CONFIG_RV64, printf("%-12s      \t%-20ld\t%-10lx\n", csr_regs[i],
+                               cpu.csr[i], cpu.csr[i]);
+           , printf("%-12s\t%-10d\t%-8x\n", csr_regs[i], cpu.csr[i],
+                    cpu.csr[i]););
   }
 }
 void isa_reg_display() {
-  #ifndef CONFIG_RVE
+#ifndef CONFIG_RVE
+#ifdef CONFIG_RV64
   printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
   printf(" | ");
-  printf("%-4s \t%-20s\t%-10s\t\n","Name","Dec","Hex");
+  printf("%-4s \t%-20s\t%-10s\t\n", "Name", "Dec", "Hex");
+#else
+  printf("========================================regs========================================\n");
+  printf("%-4s \t%-10s\t%-8s\t","Name","Dec","Hex");  
+  printf(" | ");
+  printf("%-4s \t%-10s\t%-8s\t\n", "Name", "Dec", "Hex");
+#endif
   for(int i=0;i<16;i++){
-    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);,printf("%-4s \t%-20d\t%-10x\t",regs[i],cpu.gpr[i],cpu.gpr[i]););
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu.gpr[i],cpu.gpr[i]);,printf("%-4s \t%-10d\t%-8x\t",regs[i],cpu.gpr[i],cpu.gpr[i]););
       
       printf(" | ");
-    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]);,printf("%-4s \t%-20d\t%-10x\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]););
+    MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]);,printf("%-4s \t%-10d\t%-8x\t",regs[i+16],cpu.gpr[i+16],cpu.gpr[i+16]););
 
       
       printf("\n");
   }
-  MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-20d\t%-10x\t\n","pc",cpu.pc,cpu.pc););
+  MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t\n","pc",cpu.pc,cpu.pc);,printf("%-4s \t%-10d\t%-8x\t\n","pc",cpu.pc,cpu.pc););
   #else
    printf("================================================regs================================================\n");
   printf("%-4s \t%-20s\t%-10s\t","Name","Dec","Hex");  
@@ -85,6 +98,12 @@ word_t isa_reg_str2val(const char *s, bool *success) {
     if(strcmp(regs[i],s)==0){
       *success=true;
       return cpu.gpr[i];
+    }
+  }
+  for (int i = 0; i < csr_num; i++) {
+    if (strcmp(csr_regs[i], s) == 0) {
+      *success = true;
+      return cpu.csr[i];
     }
   }
   return 0;

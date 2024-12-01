@@ -5,9 +5,12 @@
 #include <stdint.h>
 #include <sys/time.h>
 // uintptr_t end_symbol;
+int mm_brk(uintptr_t brk);
+
 extern const char *get_filename(int fd);
 void handle_execve(const char *filename, char *const argv[], char *const envp[]);
 void handle_exit();
+
 const char *event_names[] = {
     "SYS_exit",  "SYS_yield",  "SYS_open",   "SYS_read",   "SYS_write",
     "SYS_kill",  "SYS_getpid", "SYS_close",  "SYS_lseek",  "SYS_brk",
@@ -31,6 +34,7 @@ void do_syscall(Context *c) {
     break;
   }
 #endif
+  // Log("%x,%x,%x,%x", c->GPR1, c->GPR2, c->GPR3, c->GPR4);
   uintptr_t a[4];
   a[0] = c->GPR1;
   a[1] = c->GPR2;
@@ -40,6 +44,7 @@ void do_syscall(Context *c) {
   switch (a[0]) {
   case SYS_exit:
     // exit_handler in proc.c
+    // halt(a[1]);
     handle_exit();
     break;
   case SYS_yield:
@@ -62,7 +67,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_lseek(a[1], a[2], a[3]);
     break;
   case SYS_brk:
-    c->GPRx = 0;
+    c->GPRx = mm_brk(a[1]);
     break;
   case SYS_time:
     time = io_read(AM_TIMER_UPTIME).us;
@@ -77,6 +82,6 @@ void do_syscall(Context *c) {
     else
       handle_execve((const char *)a[1], (char *const*)a[2], (char * const *)a[3]);
     break;
-        default : panic("Unhandled syscall ID = %d", a[0]);
+        default : panic("Unhandled syscall ID = 0x%x", a[0]);
     }
 }

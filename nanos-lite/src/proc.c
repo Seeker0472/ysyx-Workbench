@@ -26,15 +26,17 @@ void init_proc() {
   // char *test[] =  {"/bin/exec-test","--skip",NULL };
 
   Log("Initializing processes...");
+  switch_boot_pcb();
   // naive_uload(NULL, "/bin/float");
   // context_kload(&pcb[0], hello_fun, "aaa");
   // context_kload(&pcb[1], hello_fun, "BBB");
-  char *argv[] = {"/bin/pal", "--skip", NULL};
+  char *argv[] = {NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[1], "/bin/menu", argv, envp);
-  switch_boot_pcb();
-  yield();  
-  assert(0);
+  context_uload(&pcb[0], "/bin/menu", argv, envp);
+  context_uload(&pcb[2], "/bin/hello", argv, envp);
+
+  // yield();  
+  // assert(0);
   // load program here
 }
 void execue_menu() {
@@ -60,39 +62,50 @@ void handle_execve(const char *filename, char *const argv[], char *const envp[])
   switch_boot_pcb();
   yield();
 }
-
+uint32_t count = 0;
+int prev_schedule = 0;
 Context *schedule(Context *prev) {
-  // Log("SHEDULE");
+  count++;
+  // Log("SHEDULE,%x",current);
   int robin = 0;
-  bool find=false;
+  bool find = false;
   // find context,start robin
   // update Context *
-  current->cp=prev;
-  if (current != &pcb_boot) {
-    robin=current-pcb;
-  }
-  for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
-    //find any thread available
-    if (pcb[i].active) {
-      robin = i;
-      current=&pcb[i];
-      find=true;
-      break;
+  current->cp = prev;
+
+  if (count % 1000 == 0 || !pcb[0].active) {
+    // time reach or pcb[0] inactive
+    robin = prev_schedule;
+    for (int i = (robin + 1) % MAX_NR_PROC; true; i = (i + 1) % MAX_NR_PROC) {
+      // find any thread available
+      if (pcb[i].active) {
+        robin = i;
+        current = &pcb[i];
+        prev_schedule = i;
+        find = true;
+        break;
+      }
+      // if not found any thread available
+      if (robin++ > MAX_NR_PROC) {
+        robin = 0;
+        find=false;
+        break;
+      }
     }
-    // if not found any thread available
-    if (robin++ > MAX_NR_PROC) {
-      robin=0;
-      break;
-    }
+  } else {
+    robin = 0;
+    current = &pcb[0];
+    find=true;
   }
-  if(pcb[robin].cp!=prev)
+  // Log("GOTO:%d",robin);
+  // if(pcb[robin].cp!=prev)
     // Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
   if (!find) {
     Log("INFO:NoThread Found,return TO Main");
-    switch_boot_pcb(); 
+    switch_boot_pcb();
     // current=&pcb_boot;
     return pcb_boot.cp;
   }
-    // return prev;
+  // return prev;
   return pcb[robin].cp;
 }

@@ -77,7 +77,7 @@ int _write(int fd, void *buf, size_t count) {
 extern char end;
 intptr_t end_pos = (intptr_t)&end; 
 void *_sbrk(intptr_t increment) {
-  int ret = _syscall_(SYS_brk, end_pos, increment, 0);
+  int ret = _syscall_(SYS_brk, end_pos+increment, 0, 0);
   if (ret != 0)
     return (void *)-1;
   intptr_t prev_pos=end_pos;
@@ -138,8 +138,8 @@ pid_t _fork() {
 }
 
 pid_t vfork() {
-  assert(0);
-  return -1;
+  // assert(0);
+  return 0;
 }
 
 int _link(const char *d, const char *n) {
@@ -163,13 +163,13 @@ clock_t _times(void *buf) {
 }
 
 int pipe(int pipefd[2]) {
-  assert(0);
-  return -1;
+  // assert(0);
+  return 0;
 }
 
 int dup(int oldfd) {
-  assert(0);
-  return -1;
+  // assert(0);
+  return 0;
 }
 
 int dup2(int oldfd, int newfd) {

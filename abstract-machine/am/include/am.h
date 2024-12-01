@@ -33,6 +33,7 @@ typedef struct {
 
 // A protected address space with user memory @area
 // and arch-dependent @ptr
+//pgsize用于指示页面的大小, area表示虚拟地址空间中用户态的范围, ptr是一个ISA相关的地址空间描述符指针, 用于指示具体的映射.
 typedef struct {
   int pgsize;
   Area area;

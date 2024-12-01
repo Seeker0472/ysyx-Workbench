@@ -23,7 +23,8 @@
 //my_func
 void write_iringbuf(paddr_t pc, word_t inst);
 void ftrace_func_call(paddr_t pc_now,paddr_t target);
-void ftrace_func_ret(paddr_t pc_now,paddr_t address);
+void ftrace_func_ret(paddr_t pc_now, paddr_t address);
+paddr_t isa_call_mret();
 
 #define R(i) gpr(i)
 #define CSR(i) csr(i)
@@ -32,6 +33,7 @@ void ftrace_func_ret(paddr_t pc_now,paddr_t address);
 #define Ext32(x) ((x)&0x80000000)?((x)|0xFFFFFFFF00000000):((x)&0x00000000FFFFFFFF)
 #define Ext16(x) ((x)&0x8000)?((x)|0xFFFFFFFFFFFF0000):((x)&0x000000000000FFFF)
 #define Ext8(x) ((x)&0x80)?((x)|0xFFFFFFFFFFFFFF00):((x)&0x0000000000000FF)
+#define Ext5(x) ((x)&0x10)?((x)|0xFFFFFFFFFFFFFFe0):((x)&0x000000000000001F)
 #define Ext4(x) ((x)&0x8)?((x)|0xFFFFFFFFFFFFFFF0):((x)&0x000000000000000F)
 
 enum {
@@ -85,6 +87,8 @@ int32_t mulh(int32_t src1, int32_t src2) {
 static int decode_exec(Decode *s) {
   int rd = 0;
   word_t src1 = 0, src2 = 0, imm = 0;
+  int rs1 = BITS(s->isa.inst.val, 19, 15);
+  // int rs2 = BITS(s->isa.inst.val, 24, 20);
   s->dnpc = s->snpc;
 
 #define INSTPAT_INST(s) ((s)->isa.inst.val)
@@ -182,9 +186,12 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=src1);
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=CSR(imm&0xfff) | src1;);//csrw把rd置0;csrr把rs1置0
 
+   
+  INSTPAT("??????? ????? ????? 101 ????? 11100 11", csrrwi  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=Ext5(rs1););//csrw把rd置0;csrr把rs1置0
+
   // INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall , N, NEMUTRAP(s->pc, R(MUXDEF(CONFIG_RVE,15,17))));
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=isa_raise_intr(R(MUXDEF(CONFIG_RVE,15,17)),s->pc));
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=cpu.csr[3]);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=isa_raise_intr(0xb,s->pc));
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=isa_call_mret());
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));//Invalid--非法指令！！

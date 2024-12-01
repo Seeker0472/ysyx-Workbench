@@ -52,38 +52,35 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     Elf_Phdr ph = phdrs[i];
     if (ph.p_type == PT_LOAD) {
       // read the data
-      //  ramdisk_read((void *)ph.p_vaddr, ph.p_offset, ph.p_filesz);
       fs_lseek(fd, ph.p_offset, SEEK_SET);
-      fs_read(fd, (void *)ph.p_vaddr, ph.p_filesz);
-      for (char *empty = (char *)ph.p_vaddr + ph.p_filesz;
-           empty < (char *)ph.p_vaddr + ph.p_memsz; empty++)
-        *empty = 0;
+      uintptr_t page;
+      int offset = 0;
+      for (offset = 0; offset < ph.p_memsz;) {
+        //alloc a new page and map
+        page = (uintptr_t)new_page(1);
+        void * va=(void *)((size_t)((void *)ph.p_vaddr + offset) & (~(PGSIZE - 1)));
+        map(&pcb->as,va , (void*)page,0b111);
+        int len = 0;
+        
+        // The entry of the segement may not aligened to (PGSIZE)!
+        uint32_t seg_offset = (ph.p_vaddr + offset)&(PGSIZE-1); // Important!! 
+        // copy data
+        if (ph.p_filesz > offset) {
+          len = offset + PGSIZE - seg_offset <= ph.p_filesz ? PGSIZE - seg_offset : ph.p_filesz - offset;
+          fs_read(fd, (void*)(page+seg_offset), len);
+          offset+=len;
+        }
+        //empty out 
+        if (ph.p_memsz > offset && ph.p_filesz <= offset && len + seg_offset < PGSIZE) {
+          while (len + seg_offset < PGSIZE && ph.p_memsz > offset) {
+            ((char *)(page+seg_offset))[len] = 0;
+            offset++;
+            len++;
+          }
+        }
+      }
     }
   }
-  // find _end symbol maybe not the os work
-  // Elf_Shdr *shdrs = (Elf_Shdr *)((char *)&ramdisk_start + hader.e_shoff);
-  // Elf_Shdr *strtab = NULL;
-  // Elf_Shdr *symtab = NULL;
-  // for (int i = 0; i < hader.e_shnum; i++) {
-  //   if (shdrs[i].sh_type == SHT_STRTAB &&
-  //       i != hader.e_shstrndx) { // 排除sectionHeader的符号表
-  //     strtab = &shdrs[i];
-  //   }
-  //   if (shdrs[i].sh_type == SHT_SYMTAB) {
-  //     symtab = &shdrs[i];
-  //   }
-  // }
-  // Elf_Sym *symbols = (Elf_Sym *)((char *)&ramdisk_start + symtab->sh_offset);
-  // char *strtab_data = ((char *)&ramdisk_start + strtab->sh_offset);
-  // for (int i = 0; i < symtab->sh_size /sizeof(Elf_Sym) ; i++) {
-  //   // Log("%s", &strtab_data[symbols[i].st_name]);
-  //   if (strcmp("_end", &strtab_data[symbols[i].st_name]) == 0) {
-  //     // assert(0);
-  //     // TODO!!!
-  //     end_symbol =symbols[i].st_value;
-  //     Log("find symbol_end:%x", symbols[i].st_value);
-  //   }
-	// }
   return hader->e_entry; //这里的entry就是在libos/crt0/start.S里面定义的_start 
 }
 
@@ -136,16 +133,24 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   assert(argv);
   assert(filename);
   assert(pcb);
+  protect(&pcb->as); // create an space whitch inherits kernal mapping! WoW!
+  pcb->max_brk=0;
+
   uintptr_t entry = loader(pcb, filename);
   uint8_t *stack = new_page(8);
+  //map stack
+  for (int i = 0; i < 8; i++) {
+    map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,stack+PGSIZE*i,0b111);
+  }
+
+
   // uint8_t *stack = pcb->stack;
   // init an Context struct on top of stack
   //the cp pointer stores at the bottom of stack
   pcb->cp =
-      ucontext(&(AddrSpace){.area = {}, .pgsize = 0, .ptr = 0},
-               (Area){.start = stack, .end = stack + 8*PGSIZE},
+      ucontext(&pcb->as, (Area){.start = pcb->stack, .end = pcb->stack + STACK_SIZE},
                (void *)entry);
-  pcb->active=true;
+  // pcb->active = true;
   // Log("NEW_PAGE:%x-%x-%x\n", stack,pcb->cp,pcb->cp->mepc);
 
   //calc addr and num
@@ -159,7 +164,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // for (int i = 0; envp[i] != NULL; i++)
   //   envp_num++;
 
-  Log("%d-%d",argc,envp_num);
+  // Log("%d-%d",argc,envp_num);
   // get the a,ddr
   // don't assume pointer of size 4Bytes
   *(intptr_t *)(base_offseted) = (intptr_t)argc;
@@ -188,7 +193,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   // set NULL
   *table_base = 0;
   table_base += 1;
-
+  // set the active tag here,making sure the process is finished
+  pcb->active = true;
 }
 void context_kload(PCB *pcb, void *func,void *args) {
   pcb->cp = kcontext((Area){.start=pcb->stack,.end=pcb->stack+STACK_SIZE}, func, args);

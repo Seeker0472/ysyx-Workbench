@@ -46,8 +46,9 @@ void init_isa() {
 
   /* Initialize this virtual computer system. */
   restart();
-  cpu.csr[1]=0xb;//mcause
-  cpu.csr[2] = 0x1800; // mstatus
-  cpu.csr[4] = 0x79737978; // ysyx
-  cpu.csr[5] = 0x15fdf65;  // 学号
+  cpu.csr[CSR_MCAUSE]=0xb;//mcause
+  cpu.csr[CSR_MSTATUS] = 0x1800; // mstatus
+  cpu.csr[CSR_MVENDROID] = 0x79737978; // ysyx
+  cpu.csr[CSR_MARCHID] = 0x15fdf65;  // 学号
+  cpu.csr[CSR_SATP] = 0;//satp
 }
