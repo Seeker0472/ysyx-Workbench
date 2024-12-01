@@ -170,7 +170,7 @@ $(CLEAN_ALL):
 .PHONY: clean-all $(CLEAN_ALL)
 
 ### Build fsimg and ramdisk for Nanos-lite
-APPS = pal nterm menu
+APPS = pal nterm menu bird busybox
 TESTS = dummy time-test hello file-test
 
 fsimg: $(addprefix apps/, $(APPS)) $(addprefix tests/, $(TESTS))

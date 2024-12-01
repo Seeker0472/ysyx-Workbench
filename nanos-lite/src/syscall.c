@@ -44,8 +44,8 @@ void do_syscall(Context *c) {
   switch (a[0]) {
   case SYS_exit:
     // exit_handler in proc.c
-    halt(a[1]);
-    // handle_exit();
+    // halt(a[1]);
+    handle_exit();
     break;
   case SYS_yield:
     yield();
