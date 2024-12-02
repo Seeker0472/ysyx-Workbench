@@ -52,7 +52,7 @@ ARCHIVE  = $(WORK_DIR)/build/$(NAME)-$(ISA).a
 ifneq ($(ISA), native)
 LIBS += libc libos libndl
 CFLAGS += -U_FORTIFY_SOURCE  # fix compile error in Newlib on ubuntu
-CFLAGS += -save-temps #fordebug
+CFLAGS += -g -save-temps #fordebug
 else
 WL = -Wl,
 endif
