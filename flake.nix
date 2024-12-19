@@ -57,6 +57,7 @@
             # 指定verilator版本为5.008
             my-verilator
             # verilator
+            pkgs.ffmpeg
 
             #build-essential
             pkgs.man
@@ -82,7 +83,8 @@
             pkgs.mill
             pkgs.pkgsCross.riscv64.buildPackages.gcc
             pkgs.pkgsCross.riscv64.buildPackages.binutils
-            # TODO:add more!!!
+            pkgs.bear    
+	# TODO:add more!!!
             pkgs.ncurses
             pkgs.clang-tools
             pkgs.zulu17
@@ -92,7 +94,12 @@
             python312 
             python312Packages.matplotlib
             python312Packages.numpy
+            pkgs.stdenv.cc.cc
           ];
+          hardeningDisable = [ "fortify" ];
+          # hardeningDisable = [ "all" ];
+          
+          # LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.glibc}/bin";
 
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
             # 添加需要的库
@@ -111,9 +118,11 @@
             pkgs.gmp
             pkgs.tcl
             pkgs.libunwind
+            pkgs.stdenv.cc.cc
           ];
           NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
         };
       }
     );
 }
+
