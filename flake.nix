@@ -2,7 +2,7 @@
   description = "ysyx_workbench";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -55,8 +55,8 @@
           buildInputs = with pkgs; [
             pkgs.espresso
             # 指定verilator版本为5.008
-            # my-verilator
-            verilator
+            my-verilator
+            # verilator
             pkgs.ffmpeg
 
             #build-essential
