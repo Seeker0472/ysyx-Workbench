@@ -1,6 +1,6 @@
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 BUILD_DIR = ./build
-PRJ = npc
+PRJ = npc_chisel
 SED_CMD = sed -i "s/^.*\.v$$//"
 NXDC_FILE = ${NPC_HOME}/nvboardbind/soc.nxdc
 SRC_AUTO_BIND = ${NPC_HOME}/nvboardbind/bind.cpp
@@ -89,7 +89,7 @@ test:
 
 # 强制重新编译
 verilog:
-	$(call git_commit, "generate verilog")
+	# $(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i $(PRJ).runMain Elaborate --target-dir $(BUILD_DIR)   --throw-on-first-error --full-stacktrace 
 	$(SED_CMD) ./build/ypc.sv
