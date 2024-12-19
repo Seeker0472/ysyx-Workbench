@@ -18,13 +18,10 @@
 
 #include <common.h>
 
-#define IRQ_TIMER 0x80000007 // for riscv32
-
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   vaddr_t pc;
-  word_t csr[10]; // TODO:暂时只实现10个
-  bool INTR; //cpu interrupt line
+  word_t csr[10];//TODO:暂时只实现10个
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode
@@ -34,6 +31,6 @@ typedef struct {
   } inst;
 } MUXDEF(CONFIG_RV64, riscv64_ISADecodeInfo, riscv32_ISADecodeInfo);
 
-// #define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
+#define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
 #endif

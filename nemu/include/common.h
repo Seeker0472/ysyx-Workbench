@@ -23,7 +23,6 @@
 
 #include <generated/autoconf.h>
 #include <macro.h>
-#include <scr-reg.h>
 
 #ifdef CONFIG_TARGET_AM
 #include <klib.h>

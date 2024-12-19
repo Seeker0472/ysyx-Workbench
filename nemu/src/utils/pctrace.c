@@ -5,7 +5,7 @@
 FILE *fp;
 FILE *fp_b;
 // #define WRITE_PC
-// #define WRITE_BRANCH
+#define WRITE_BRANCH
 // #define FORWARD_CALC
 enum {
   TYPE_I,

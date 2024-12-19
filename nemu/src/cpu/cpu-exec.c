@@ -13,8 +13,6 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
-#include "common.h"
-#include "isa.h"
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
@@ -52,7 +50,6 @@ if(check_watch_point()&&nemu_state.state==NEMU_RUNNING){
 }
 #endif
 }
-
 //执行一条指令，其中包含使用snprintf打印Log！
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
@@ -89,15 +86,10 @@ static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
     exec_once(&s, cpu.pc);
-    g_nr_guest_inst++;
+    g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
-    word_t intr = isa_query_intr();
-    if (intr != INTR_EMPTY) {
-      cpu.pc = isa_raise_intr(intr, cpu.pc);
-    }
-    if (nemu_state.state != NEMU_RUNNING)
-      break;
-    IFDEF(CONFIG_DEVICE, device_update()); // 设备更新
+    if (nemu_state.state != NEMU_RUNNING) break;
+    IFDEF(CONFIG_DEVICE, device_update());//设备更新
   }
 }
 

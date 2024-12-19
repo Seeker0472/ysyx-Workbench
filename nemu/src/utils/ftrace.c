@@ -13,25 +13,7 @@ trace_node* nodes;
 
 int layer=0;
 
-const char *error = "???";
-
-// imgs path
-#define ELF_ARRAY 10
-char *elfs[ELF_ARRAY];
-int ins_p_elfs = 0;
-int get_p_elfs=0;
-
-int ins_img(char *filepath) {
-  if (ins_p_elfs >= ELF_ARRAY||!filepath)
-    return -1;
-  elfs[ins_p_elfs++] = filepath;
-  return 0;
-}
-char* get_img() {
-  if (get_p_elfs == ins_p_elfs)
-    return NULL;
-  else return elfs[get_p_elfs++];
-}
+const char* error="???";
 
 void add_symbol(paddr_t start_addr,size_t len,char* name){//向链表中添加一项
 	Log("Symbol Table Added: name=%s len=%lu addr=%x",name,len,start_addr);
@@ -157,19 +139,18 @@ void read_symbol_table(const char *filename) {
 }
 
 //初始化函数名表，(用链表维护)
-void init_ftrace(){
+void init_ftrace(char *filepath){
     //初始化头结点
 	nodes=(trace_node*)malloc(sizeof(trace_node));
 	nodes->length=0;nodes->start_addr=0;nodes->next=NULL;
-	if(ins_p_elfs==0){
+	if(filepath==NULL){
 		Log("Empty File Path,Won't read Symbol Table!");
 		return;
-        }
-    char *filename=NULL;
-    while ((filename = get_img()) != NULL) {
-      Log("Reading Symbol Table from %s", filename);
-      read_symbol_table(filename);
-    }
+	}
+	Log("Reading Symbol Table from %s",filepath);
+
+
+    read_symbol_table(filepath);
 }
 
 void ftrace_func_call(paddr_t pc_now,paddr_t target){
