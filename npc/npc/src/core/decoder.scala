@@ -312,14 +312,14 @@ object InstType extends DecodeField[Insn, Inst_Type_Enum.Type] {
 object Use_IMM_2 extends BoolDecodeField[Insn] {
   def name: String = "Use_IMM"
   def genTable(inst: Insn) = {
-/*     if (
+    if (
       Utils.isI(inst.inst) || Utils
         .isS(inst.inst) || Utils.isB(inst.inst) || Utils.isJ(inst.inst) || inst.inst.name
         .matches("auipc") || inst.inst.name.matches("lui")
     )
       y
-    else n */
-   if(inst.inst.args.contains("rs2")&&(!Utils.isB(inst.inst))) n else y
+    else n
+   // if(inst.inst.args.contains("rs2")&&(!Utils.isB(inst.inst))) n else y
 
   }
 }
