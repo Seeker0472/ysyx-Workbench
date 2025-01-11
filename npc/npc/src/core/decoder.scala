@@ -106,7 +106,7 @@ class Decoder extends Module {
   // println(s"${insn.toString()}")
   // println(s"${insn.inst.args.contains("rd")}")
   val isEmpty = insn.inst.args.isEmpty
-  val containsRd = if (isEmpty) false else insn.inst.args.contains("rd")
+  val containsRd = if (isEmpty) false else args.map(_.name).contains("rd")
   println(s"args: ${insn.inst.args}, Is empty: $isEmpty, Contains 'rd': $containsRd")
   println(s"args element types: ${insn.inst.args.map(_.getClass).mkString(", ")}")
 
