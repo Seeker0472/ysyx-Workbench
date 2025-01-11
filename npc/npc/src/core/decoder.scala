@@ -32,6 +32,41 @@ object Insn {
   }
 }
 
+object Utils {
+  def isR(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("rd", "rs1", "rs2")
+
+  def isI(instruction: rvdecoderdb.Instruction): Boolean = (instruction.args.map(_.name) == Seq("rd", "rs1", "imm12"))||(instruction.args.map(_.name) == Seq("rd", "rs1", "csr"))||(instruction.args.map(_.name) == Seq("rd", "csr", "zimm"))
+
+  def isS(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("imm12lo", "rs1", "rs2", "imm12hi")
+
+  def isB(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("bimm12lo", "rs1", "rs2", "bimm12hi")
+
+  def isU(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("rd", "imm20")
+
+  def isJ(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("rd", "jimm20")
+
+  def isR4(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("rd", "rs1", "rs2", "rs3")
+
+  // some general helper to sort instruction out
+  def isFP(instruction: rvdecoderdb.Instruction): Boolean = Seq(
+    "rv_d",
+    "rv_f",
+    "rv_q",
+    "rv64_zfh",
+    "rv_d_zfh",
+    "rv_q_zfh",
+    "rv_zfh",
+    // unratified
+    "rv_zfh_zfa"
+  ).exists(instruction.instructionSets.map(_.name).contains)
+
+  def readRs1(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name).contains("rs1")
+
+  def readRs2(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name).contains("rs2")
+
+  def writeRd(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name).contains("rd")
+}
+
 class Decoder extends Module {
   val io = IO(new Bundle {
     val in         = Flipped(Decoupled(new IFUO))
@@ -124,7 +159,7 @@ class Decoder extends Module {
       Inst_Type_Enum.B_Type -> immB, // B-type
       Inst_Type_Enum.U_Type -> immU, // U-type
       Inst_Type_Enum.J_Type -> immJ, // J-type
-      Inst_Type_Enum.ERROR -> 0xFF.U
+      // Inst_Type_Enum.ERROR -> 0xFF.U
     )
   )
   //data
