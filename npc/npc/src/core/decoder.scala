@@ -104,7 +104,7 @@ class Decoder extends Module {
   //for debugs
   instList.foreach { insn =>
   // println(s"${insn.toString()}")
-  println(s"${insn.inst.args.toString()}")
+  println(s"${insn.inst.args.contains("rd")}")
 }
 
 
