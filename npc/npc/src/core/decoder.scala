@@ -124,7 +124,7 @@ class Decoder extends Module {
       Inst_Type_Enum.B_Type -> immB, // B-type
       Inst_Type_Enum.U_Type -> immU, // U-type
       Inst_Type_Enum.J_Type -> immJ, // J-type
-      Inst_Type_Enum.ERROR -> -1.U
+      Inst_Type_Enum.ERROR -> 0xFF.U
     )
   )
   //data
