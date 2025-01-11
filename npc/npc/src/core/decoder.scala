@@ -35,7 +35,7 @@ object Insn {
 object Utils {
   def isR(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("rd", "rs1", "rs2")
 
-  def isI(instruction: rvdecoderdb.Instruction): Boolean = (instruction.args.map(_.name) == Seq("rd", "rs1", "imm12"))||(instruction.args.map(_.name) == Seq("rd", "rs1", "csr"))||(instruction.args.map(_.name) == Seq("rd", "csr", "zimm"))
+  def isI(instruction: rvdecoderdb.Instruction): Boolean = (instruction.args.map(_.name) == Seq("rd", "rs1", "imm12"))||(instruction.args.map(_.name) == Seq("rd", "rs1"))||(instruction.args.map(_.name) == Seq("rd", "rs1", "csr"))||(instruction.args.map(_.name) == Seq("rd", "csr", "zimm"))
 
   def isS(instruction: rvdecoderdb.Instruction): Boolean = instruction.args.map(_.name) == Seq("imm12lo", "rs1", "rs2", "imm12hi")
 
