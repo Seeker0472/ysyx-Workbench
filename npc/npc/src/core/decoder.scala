@@ -24,7 +24,7 @@ object Insn {
     //TODO:!!!opcode添加进来了,这下明天只要管一下InstType怎么优雅实现就行了?
     lazy val opcode: BitPat = i.bitPat(6, 0)
     /*     lazy val Inst_Type: Inst_Type_Enum.Type = {
-      if (rvdecoderdb.Utils.isR(i.inst))
+      if (Utils.isR(i.inst))
       Inst_Type_Enum.R_Type
     else
       Inst_Type_Enum.R_Type
@@ -287,17 +287,17 @@ object InstType extends DecodeField[Insn, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
   def genTable(inst: Insn): BitPat = {
-    val immType = if (rvdecoderdb.Utils.isI(inst.inst)) {
+    val immType = if (Utils.isI(inst.inst)) {
       Inst_Type_Enum.I_Type
-    } else if (rvdecoderdb.Utils.isR(inst.inst)) {
+    } else if (Utils.isR(inst.inst)) {
       Inst_Type_Enum.R_Type
-    } else if (rvdecoderdb.Utils.isS(inst.inst)) {
+    } else if (Utils.isS(inst.inst)) {
       Inst_Type_Enum.S_Type
-    } else if (rvdecoderdb.Utils.isB(inst.inst)) {
+    } else if (Utils.isB(inst.inst)) {
       Inst_Type_Enum.B_Type
-    } else if (rvdecoderdb.Utils.isU(inst.inst)) {
+    } else if (Utils.isU(inst.inst)) {
       Inst_Type_Enum.U_Type
-    } else if (rvdecoderdb.Utils.isJ(inst.inst)) {
+    } else if (Utils.isJ(inst.inst)) {
       Inst_Type_Enum.J_Type
     } else {
       Inst_Type_Enum.ERROR
@@ -313,8 +313,8 @@ object Use_IMM_2 extends BoolDecodeField[Insn] {
   def name: String = "Use_IMM"
   def genTable(inst: Insn) = {
     if (
-      rvdecoderdb.Utils.isI(inst.inst) || rvdecoderdb.Utils
-        .isS(inst.inst) || rvdecoderdb.Utils.isB(inst.inst) || rvdecoderdb.Utils.isJ(inst.inst) || inst.inst.name
+      Utils.isI(inst.inst) || Utils
+        .isS(inst.inst) || Utils.isB(inst.inst) || Utils.isJ(inst.inst) || inst.inst.name
         .matches("auipc") || inst.inst.name.matches("lui")
     )
       y
@@ -327,7 +327,7 @@ object Use_IMM_2 extends BoolDecodeField[Insn] {
 object Use_PC_1 extends BoolDecodeField[Insn] {
   def name: String = "Use_PC_1"
   def genTable(inst: Insn) = {
-    if (rvdecoderdb.Utils.isJ(inst.inst) || rvdecoderdb.Utils.isB(inst.inst) || inst.inst.name.matches("auipc")) //auipc
+    if (Utils.isJ(inst.inst) || Utils.isB(inst.inst) || inst.inst.name.matches("auipc")) //auipc
       y
     else n
   }
@@ -338,7 +338,7 @@ object Use_PC_1 extends BoolDecodeField[Insn] {
 object Is_Jump extends BoolDecodeField[Insn] {
   def name: String = "Is_Jump"
   def genTable(inst: Insn) = {
-    if (rvdecoderdb.Utils.isJ(inst.inst) || inst.opcode.rawString.matches("1100111"))
+    if (Utils.isJ(inst.inst) || inst.opcode.rawString.matches("1100111"))
       y
     else n
   }
@@ -351,7 +351,7 @@ object R_Write_Enable extends BoolDecodeField[Insn] {
   def name: String = "Reg_W_En"
   def genTable(inst: Insn) = {
     //ecall,ebreak有效因为rd为0
-    if (rvdecoderdb.Utils.isS(inst.inst) || rvdecoderdb.Utils.isB(inst.inst)) //！！注意这里是if() n else y!!!!!!!!
+    if (Utils.isS(inst.inst) || Utils.isB(inst.inst)) //！！注意这里是if() n else y!!!!!!!!
       n
     else y
   }
@@ -404,7 +404,7 @@ object Is_fenceI extends BoolDecodeField[Insn] {
 object Is_Branch extends BoolDecodeField[Insn] {
   def name: String = "Is_Branch"
   def genTable(inst: Insn) = {
-    if (rvdecoderdb.Utils.isB(inst.inst))
+    if (Utils.isB(inst.inst))
       y
     else n
   }
