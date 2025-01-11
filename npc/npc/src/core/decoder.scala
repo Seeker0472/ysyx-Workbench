@@ -8,9 +8,28 @@ import core.IO._
 import chisel3.util.BitPat
 import chisel3.util.experimental.decode.DecodeField
 import chisel3.util.experimental.decode._
+import org.chipsalliance.rvdecoderdb
+
+case class Insn(val inst: rvdecoderdb.Instruction) extends DecodePattern {
+  override def bitPat: BitPat = BitPat("b" + inst.encoding.toString())
+}
 
 object Inst_Type_Enum extends ChiselEnum {
-  val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type = Value
+  val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type,ERROR = Value
+}
+
+object Insn {
+  implicit class addMethodsToInsn(i: Insn) {
+    def hasArg(arg: String) = i.inst.args.map(_.name).contains(arg)
+    //TODO:!!!opcode添加进来了,这下明天只要管一下InstType怎么优雅实现就行了?
+    lazy val opcode: BitPat = i.bitPat(6,0)
+/*     lazy val Inst_Type: Inst_Type_Enum.Type = {
+      if (rvdecoderdb.Utils.isR(i.inst))
+      Inst_Type_Enum.R_Type
+    else
+      Inst_Type_Enum.R_Type
+    } */
+  }
 }
 
 class Decoder extends Module {
@@ -38,7 +57,15 @@ class Decoder extends Module {
   //pass_through
   io.out.bits.pc := io.in.bits.pc
 
-  val Patterns = decodePatterns.Patterns
+  // val Patterns = decodePatterns.Patterns
+  val instTable  = rvdecoderdb.fromFile.instructions(os.pwd / "riscv-opcodes")
+  val targetSets = Set("rv_i", "rv64_i", "rv_m", "rv64_m")
+  // add implemented instructions here
+  val instList = instTable
+    .filter(instr => targetSets.contains(instr.instructionSet.name))
+    .filter(_.pseudoFrom.isEmpty)
+    .map(Insn(_))
+    .toSeq
 
   //Imms
   val imm_I_Raw = io.in.bits.instr(31, 20)
@@ -67,7 +94,8 @@ class Decoder extends Module {
 
   val decodedResults =
     new DecodeTable(
-      Patterns,
+      // Patterns,
+      instList,
       Seq(
         InstType,
         Use_IMM_2,
@@ -218,33 +246,52 @@ class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
   )
 }
 
-//指令的类型
-object InstType extends DecodeField[InsP, Inst_Type_Enum.Type] {
+//指令的类型--TODO 似乎RVdecoderDB没有一项是指令的类型?
+object InstType extends DecodeField[Insn, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
-  def genTable(op: InsP): BitPat = {
-    val immType = op.Inst_Type
+  def genTable(inst: Insn): BitPat = {
+    val immType = if(rvdecoderdb.Utils.isI(inst.inst)){
+      Inst_Type_Enum.I_Type
+    }else if(rvdecoderdb.Utils.isR(inst.inst)){
+      Inst_Type_Enum.R_Type
+    }else if(rvdecoderdb.Utils.isS(inst.inst)){
+      Inst_Type_Enum.S_Type
+    }else if(rvdecoderdb.Utils.isB(inst.inst)){
+      Inst_Type_Enum.B_Type
+    }else if(rvdecoderdb.Utils.isU(inst.inst)){
+      Inst_Type_Enum.U_Type
+    }else if(rvdecoderdb.Utils.isJ(inst.inst)){
+      Inst_Type_Enum.J_Type
+    }else{
+      Inst_Type_Enum.ERROR
+    };
     BitPat(immType.litValue.U((immType.getWidth).W))
+    // BitPat(Inst_Type_Enum.B_Type)
   }
 }
-//src2是否选择Imm
-object Use_IMM_2 extends BoolDecodeField[InsP] {
+
+//src2是否选择Imm--TODO same!
+//typeISB/auipc/lui
+object Use_IMM_2 extends BoolDecodeField[Insn] {
   def name: String = "Use_IMM"
-  def genTable(op: InsP) = {
+  def genTable(inst: Insn) = {
     if (
-      op.Inst_Type == Inst_Type_Enum.I_Type || op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.Inst_Type == Inst_Type_Enum.J_Type || op.name_in
-        .matches("auipc") || op.name_in.matches("lui")
+     rvdecoderdb.Utils.isI(inst.inst)  || rvdecoderdb.Utils.isS(inst.inst) ||rvdecoderdb.Utils.isB(inst.inst) || rvdecoderdb.Utils.isJ(inst.inst) || inst.inst.name
+        .matches("auipc") || inst.inst.name.matches("lui")
     )
       y
     else n
   }
 }
+
 //src1是否选择PC -- J-Type & B-Type
-object Use_PC_1 extends BoolDecodeField[InsP] {
+//typeJB/auipc
+object Use_PC_1 extends BoolDecodeField[Insn] {
   def name: String = "Use_PC_1"
-  def genTable(op: InsP) = {
+  def genTable(inst: Insn) = {
     if (
-      op.Inst_Type == Inst_Type_Enum.J_Type || op.Inst_Type == Inst_Type_Enum.B_Type || op.name_in.matches("auipc")
+     rvdecoderdb.Utils.isJ(inst.inst) ||  rvdecoderdb.Utils.isB(inst.inst) || inst.inst.name.matches("auipc")
     ) //auipc
       y
     else n
@@ -252,10 +299,11 @@ object Use_PC_1 extends BoolDecodeField[InsP] {
 }
 
 //是否是无条件跳转
-object Is_Jump extends BoolDecodeField[InsP] {
+//typeJ/opcode==1100111
+object Is_Jump extends BoolDecodeField[Insn] {
   def name: String = "Is_Jump"
-  def genTable(op: InsP) = {
-    if (op.Inst_Type == Inst_Type_Enum.J_Type || op.opcode.rawString.matches("1100111"))
+  def genTable(inst: Insn) = {
+    if (rvdecoderdb.Utils.isJ(inst.inst) || inst.opcode.rawString.matches("1100111"))
       y
     else n
   }
@@ -263,108 +311,65 @@ object Is_Jump extends BoolDecodeField[InsP] {
 }
 
 //Reg_write_Enable
-object R_Write_Enable extends BoolDecodeField[InsP] {
+//!(NOT)typeS/B 
+object R_Write_Enable extends BoolDecodeField[Insn] {
   def name: String = "Reg_W_En"
-  def genTable(op: InsP) = {
+  def genTable(inst: Insn) = {
     //ecall,ebreak有效因为rd为0
-    if (op.Inst_Type == Inst_Type_Enum.S_Type || op.Inst_Type == Inst_Type_Enum.B_Type) //！！注意这里是if() n else y!!!!!!!!
+    if (rvdecoderdb.Utils.isS(inst.inst) || rvdecoderdb.Utils.isB(inst.inst)) //！！注意这里是if() n else y!!!!!!!!
       n
     else y
   }
 }
 
 //ebreak
-object Is_Ebreak extends BoolDecodeField[InsP] {
+object Is_Ebreak extends BoolDecodeField[Insn] {
   def name: String = "Is_Ebreak"
-  def genTable(op: InsP) = {
+  def genTable(inst: Insn) = {
     // if(op.opcode===BitPat("b1110011")&&op.func3===BitPat("b000")&&op.func7===BitPat("b0000001"))
-    if (op.name_in == "ebreak")
+    if (inst.inst.name == "ebreak")
       y
     else n
   }
 }
 
 //mem
-object Read_En extends BoolDecodeField[InsP] {
+//
+object Read_En extends BoolDecodeField[Insn] {
   def name: String = "Read_En"
-  def genTable(op: InsP) = {
-    if (op.opcode.rawString.matches("0000011"))
+  def genTable(inst: Insn) = {
+    if (inst.opcode.rawString.matches("0000011"))
+      y
+    else n
+  }
+}
+
+//mem
+object Write_En extends BoolDecodeField[Insn] {
+  def name: String = "Write_En"
+  def genTable(inst: Insn) = {
+    if (inst.opcode.rawString.matches("0100011"))
       y
     else n
   }
 }
 
 //fencei
-object Is_fenceI extends BoolDecodeField[InsP] {
+object Is_fenceI extends BoolDecodeField[Insn] {
   def name: String = "Is_fencei"
-  def genTable(op: InsP) = {
-    if (op.name_in == "fence.i")
-      y
-    else n
-  }
-}
-
-//读取内存的类型
-// object Mem_LoadType extends DecodeField[InsP, Load_Type.Type] {
-//   def name: String = "Mem_LoadType"
-//   override def chiselType = Load_Type()
-//   def genTable(op: InsP): BitPat = {
-//     val load_type = op.func3.rawString match {
-//       case "000" => Load_Type.lb
-//       case "001" => Load_Type.lh
-//       case "010" => Load_Type.lw
-//       case "100" => Load_Type.lbu
-//       case "101" => Load_Type.lhu
-//       case _     => Load_Type.inv
-//     }
-//     BitPat(load_type.litValue.U((load_type.getWidth).W))
-//   }
-// }
-// object Mem_WriteType extends DecodeField[InsP, Store_Type.Type] {
-//   def name: String = "Mem_WriteType"
-//   override def chiselType = Store_Type()
-//   def genTable(op: InsP) = {
-//     val stype = op.func3.rawString match {
-//       case "000" => Store_Type.sb
-//       case "001" => Store_Type.sh
-//       case "010" => Store_Type.sw
-//       case _     => Store_Type.inv
-//     }
-//     BitPat(stype.litValue.U((stype.getWidth).W))
-//   }
-// }
-// object BranchType extends DecodeField[InsP, Branch_Type.Type] {
-//   def name: String = "Branch_Type"
-//   override def chiselType = Branch_Type()
-//   def genTable(op: InsP) = {
-//     val btype = op.func3.rawString match {
-//       case "000" => Branch_Type.beq
-//       case "001" => Branch_Type.bne
-//       case "100" => Branch_Type.blt
-//       case "101" => Branch_Type.bge
-//       case "110" => Branch_Type.bltu
-//       case "111" => Branch_Type.bgeu
-//       case _     => Branch_Type.inv
-//     }
-//     BitPat(btype.litValue.U((btype.getWidth).W))
-//   }
-// }
-
-//mem
-object Write_En extends BoolDecodeField[InsP] {
-  def name: String = "Write_En"
-  def genTable(op: InsP) = {
-    if (op.opcode.rawString.matches("0100011"))
+  def genTable(inst: Insn) = {
+    if (inst.inst.name == "fence.i")
       y
     else n
   }
 }
 
 //Branch
-object Is_Branch extends BoolDecodeField[InsP] {
+//typeB
+object Is_Branch extends BoolDecodeField[Insn] {
   def name: String = "Is_Branch"
-  def genTable(op: InsP) = {
-    if (op.Inst_Type == Inst_Type_Enum.B_Type)
+  def genTable(inst: Insn) = {
+    if (rvdecoderdb.Utils.isB(inst.inst))
       y
     else n
   }
@@ -372,43 +377,43 @@ object Is_Branch extends BoolDecodeField[InsP] {
 
 //csrs
 //由于这部分指令都需要读取/写入csr存储器，所以就rw放一起了，同时这个信号也作用于Mux来选择写入存储器的数据
-object CSRRW extends BoolDecodeField[InsP] {
+object CSRRW extends BoolDecodeField[Insn] {
   def name: String = "CSRRW"
-  def genTable(op: InsP) = {
+  def genTable(inst: Insn) = {
 
     //NO
     if (
-      op.name_in.matches("csrrw") || op.name_in.matches("csrrs") || op.name_in
-        .matches("ecall") || op.name_in.matches("mret")
+      inst.inst.name.matches("csrrw") ||inst.inst.name.matches("csrrs") ||  inst.inst.name.matches("ecall") || inst.inst.name.matches("mret")
     )
       y
     else n
   }
 }
 
-object Is_Ecall extends BoolDecodeField[InsP] {
+object Is_Ecall extends BoolDecodeField[Insn] {
   def name: String = "Is_Ecall"
-  def genTable(op: InsP) = {
-    if (op.name_in.matches("ecall"))
+  def genTable(inst: Insn) = {
+    if (inst.inst.name.matches("ecall"))
       y
     else n
   }
 }
 
-object Is_Mret extends BoolDecodeField[InsP] {
+object Is_Mret extends BoolDecodeField[Insn] {
   def name: String = "Is_Mret"
-  def genTable(op: InsP) = {
-    if (op.name_in.matches("mret"))
+  def genTable(inst: Insn) = {
+    if (inst.inst.name.matches("mret"))
       y
     else n
   }
 }
+
 //目前csr指令的alu是独立于其他的alu
-object CSRR_ALU_Type extends DecodeField[InsP, CSRALU_Type.Type] {
+object CSRR_ALU_Type extends DecodeField[Insn, CSRALU_Type.Type] {
   def name: String = "CSRR_ALU_Type"
   override def chiselType = CSRALU_Type()
-  def genTable(op: InsP) = {
-    val btype = op.name_in match {
+  def genTable(inst: Insn) = {
+    val btype = inst.inst.name match {
       case "csrrs" => CSRALU_Type.or
       case _       => CSRALU_Type.passreg
     }
@@ -417,11 +422,11 @@ object CSRR_ALU_Type extends DecodeField[InsP, CSRALU_Type.Type] {
 }
 
 //alu的运算类型
-object ALUOp_Gen extends DecodeField[InsP, ALU_Op.Type] {
+object ALUOp_Gen extends DecodeField[Insn, ALU_Op.Type] {
   def name: String = "ALUOp_Gen"
   override def chiselType = ALU_Op()
-  def genTable(op: InsP): BitPat = {
-    val op_type = op.name_in match {
+  def genTable(inst: Insn): BitPat = {
+    val op_type = inst.inst.name match {
       case "add" | "addi" | "jal" | "jalr" | "auipc"               => ALU_Op.add
       case "lb" | "lh" | "lw" | "lbu" | "lhu" | "sb" | "sh" | "sw" => ALU_Op.add
       case "beq" | "bne" | "blt" | "bge" | "bltu" | "bgeu"         => ALU_Op.add
