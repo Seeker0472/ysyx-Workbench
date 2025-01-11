@@ -319,7 +319,7 @@ object Use_IMM_2 extends BoolDecodeField[Insn] {
     )
       y
     else n */
-   if(inst.inst.args.contains("rs2")) y else n
+   if(inst.inst.args.contains("rs2")) n else y
 
   }
 }
