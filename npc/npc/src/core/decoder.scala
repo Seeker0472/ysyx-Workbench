@@ -104,7 +104,11 @@ class Decoder extends Module {
   //for debugs
   instList.foreach { insn =>
   // println(s"${insn.toString()}")
-  println(s"${insn.inst.args.contains("rd")}")
+  // println(s"${insn.inst.args.contains("rd")}")
+  val isEmpty = insn.inst.args.isEmpty
+  val containsRd = if (isEmpty) false else insn.inst.args.contains("rd")
+  println(s"args: ${insn.inst.args}, Is empty: $isEmpty, Contains 'rd': $containsRd")
+
 }
 
 
