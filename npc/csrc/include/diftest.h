@@ -16,6 +16,8 @@ extern "C" void difftest_raise_intr(word_t NO);
 // 初始化REF的DiffTest功能
 extern "C" void difftest_init(int port);
 
+int update_reg_state();
+
 enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
 
 static inline bool difftest_check_reg(const char *name, vaddr_t pc, word_t ref, word_t dut) {
