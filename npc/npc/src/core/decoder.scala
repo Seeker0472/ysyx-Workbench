@@ -101,6 +101,12 @@ class Decoder extends Module {
     .filter(_.pseudoFrom.isEmpty)
     .map(Insn(_))
     .toSeq
+  //for debugs
+  instList.foreach { insn =>
+  println(s"${insn.toString()}")
+}
+
+
 
   //Imms
   val imm_I_Raw = io.in.bits.instr(31, 20)
