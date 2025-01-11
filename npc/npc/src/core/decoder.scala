@@ -103,7 +103,8 @@ class Decoder extends Module {
     .toSeq
   //for debugs
   instList.foreach { insn =>
-  println(s"${insn.toString()}")
+  // println(s"${insn.toString()}")
+  println(s"${insn.inst.args.toString()}")
 }
 
 
