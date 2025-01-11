@@ -36,7 +36,7 @@ void difftest_copy_regs() { difftest_regcpy(cpu, DIFFTEST_TO_REF); }
 void difftest_init_all(){
     difftest_init(0);
     ref_cpu=(CPU_state*)malloc(sizeof(CPU_state));
-    update_reg_state();
+    // update_reg_state();
     difftest_copy_regs();
     // difftest_memcpy(0x20000000,mrom,4 * 1024 *
     // sizeof(uint8_t),DIFFTEST_TO_REF);
