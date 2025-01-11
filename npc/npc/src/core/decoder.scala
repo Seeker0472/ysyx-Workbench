@@ -15,15 +15,15 @@ case class Insn(val inst: rvdecoderdb.Instruction) extends DecodePattern {
 }
 
 object Inst_Type_Enum extends ChiselEnum {
-  val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type,ERROR = Value
+  val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type, ERROR = Value
 }
 
 object Insn {
   implicit class addMethodsToInsn(i: Insn) {
     def hasArg(arg: String) = i.inst.args.map(_.name).contains(arg)
     //TODO:!!!opcode添加进来了,这下明天只要管一下InstType怎么优雅实现就行了?
-    lazy val opcode: BitPat = i.bitPat(6,0)
-/*     lazy val Inst_Type: Inst_Type_Enum.Type = {
+    lazy val opcode: BitPat = i.bitPat(6, 0)
+    /*     lazy val Inst_Type: Inst_Type_Enum.Type = {
       if (rvdecoderdb.Utils.isR(i.inst))
       Inst_Type_Enum.R_Type
     else
@@ -59,7 +59,7 @@ class Decoder extends Module {
 
   // val Patterns = decodePatterns.Patterns
   val instTable  = rvdecoderdb.fromFile.instructions(os.pwd / "riscv-opcodes")
-  val targetSets = Set("rv_i", "rv_m","rv_zicsr")
+  val targetSets = Set("rv_i", "rv_m", "rv_zicsr")
   // add implemented instructions here
   val instList = instTable
     .filter(instr => targetSets.contains(instr.instructionSet.name))
@@ -123,7 +123,8 @@ class Decoder extends Module {
       Inst_Type_Enum.S_Type -> immS, // S-type
       Inst_Type_Enum.B_Type -> immB, // B-type
       Inst_Type_Enum.U_Type -> immU, // U-type
-      Inst_Type_Enum.J_Type -> immJ // J-type
+      Inst_Type_Enum.J_Type -> immJ, // J-type
+      Inst_Type_Enum.ERROR -> -1.U
     )
   )
   //data
@@ -251,19 +252,19 @@ object InstType extends DecodeField[Insn, Inst_Type_Enum.Type] {
   def name: String = "InstType"
   override def chiselType = Inst_Type_Enum()
   def genTable(inst: Insn): BitPat = {
-    val immType = if(rvdecoderdb.Utils.isI(inst.inst)){
+    val immType = if (rvdecoderdb.Utils.isI(inst.inst)) {
       Inst_Type_Enum.I_Type
-    }else if(rvdecoderdb.Utils.isR(inst.inst)){
+    } else if (rvdecoderdb.Utils.isR(inst.inst)) {
       Inst_Type_Enum.R_Type
-    }else if(rvdecoderdb.Utils.isS(inst.inst)){
+    } else if (rvdecoderdb.Utils.isS(inst.inst)) {
       Inst_Type_Enum.S_Type
-    }else if(rvdecoderdb.Utils.isB(inst.inst)){
+    } else if (rvdecoderdb.Utils.isB(inst.inst)) {
       Inst_Type_Enum.B_Type
-    }else if(rvdecoderdb.Utils.isU(inst.inst)){
+    } else if (rvdecoderdb.Utils.isU(inst.inst)) {
       Inst_Type_Enum.U_Type
-    }else if(rvdecoderdb.Utils.isJ(inst.inst)){
+    } else if (rvdecoderdb.Utils.isJ(inst.inst)) {
       Inst_Type_Enum.J_Type
-    }else{
+    } else {
       Inst_Type_Enum.ERROR
     };
     BitPat(immType.litValue.U((immType.getWidth).W))
@@ -277,7 +278,8 @@ object Use_IMM_2 extends BoolDecodeField[Insn] {
   def name: String = "Use_IMM"
   def genTable(inst: Insn) = {
     if (
-     rvdecoderdb.Utils.isI(inst.inst)  || rvdecoderdb.Utils.isS(inst.inst) ||rvdecoderdb.Utils.isB(inst.inst) || rvdecoderdb.Utils.isJ(inst.inst) || inst.inst.name
+      rvdecoderdb.Utils.isI(inst.inst) || rvdecoderdb.Utils
+        .isS(inst.inst) || rvdecoderdb.Utils.isB(inst.inst) || rvdecoderdb.Utils.isJ(inst.inst) || inst.inst.name
         .matches("auipc") || inst.inst.name.matches("lui")
     )
       y
@@ -290,9 +292,7 @@ object Use_IMM_2 extends BoolDecodeField[Insn] {
 object Use_PC_1 extends BoolDecodeField[Insn] {
   def name: String = "Use_PC_1"
   def genTable(inst: Insn) = {
-    if (
-     rvdecoderdb.Utils.isJ(inst.inst) ||  rvdecoderdb.Utils.isB(inst.inst) || inst.inst.name.matches("auipc")
-    ) //auipc
+    if (rvdecoderdb.Utils.isJ(inst.inst) || rvdecoderdb.Utils.isB(inst.inst) || inst.inst.name.matches("auipc")) //auipc
       y
     else n
   }
@@ -311,7 +311,7 @@ object Is_Jump extends BoolDecodeField[Insn] {
 }
 
 //Reg_write_Enable
-//!(NOT)typeS/B 
+//!(NOT)typeS/B
 object R_Write_Enable extends BoolDecodeField[Insn] {
   def name: String = "Reg_W_En"
   def genTable(inst: Insn) = {
@@ -383,7 +383,8 @@ object CSRRW extends BoolDecodeField[Insn] {
 
     //NO
     if (
-      inst.inst.name.matches("csrrw") ||inst.inst.name.matches("csrrs") ||  inst.inst.name.matches("ecall") || inst.inst.name.matches("mret")
+      inst.inst.name.matches("csrrw") || inst.inst.name
+        .matches("csrrs") || inst.inst.name.matches("ecall") || inst.inst.name.matches("mret")
     )
       y
     else n
