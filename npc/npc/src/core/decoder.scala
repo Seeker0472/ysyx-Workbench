@@ -102,7 +102,7 @@ class Decoder extends Module {
     .map(Insn(_))
     .toSeq
   //for debugs
-  instList.foreach { insn =>
+/*   instList.foreach { insn =>
   // println(s"${insn.toString()}")
   // println(s"${insn.inst.args.contains("rd")}")
   val isEmpty = insn.inst.args.isEmpty
@@ -110,7 +110,7 @@ class Decoder extends Module {
   println(s"args: ${insn.inst.args}, Is empty: $isEmpty, Contains 'rd': $containsRd")
   println(s"args element types: ${insn.inst.args.map(_.getClass).mkString(", ")}")
 
-}
+} */
 
 
 
@@ -331,7 +331,7 @@ object Use_IMM_2 extends BoolDecodeField[Insn] {
     )
       y
     else n */
-   if((!inst.inst.args.contains("rd"))||(Utils.isB(inst.inst))) y else n 
+   if((!inst.inst.args.map(_.name).contains("rs2"))||(Utils.isB(inst.inst))) y else n 
    // B-Type rs1,rs2,imm -> use imm!
 
   }
