@@ -63,7 +63,7 @@ class Decoder extends Module {
 
   // val Patterns = decodePatterns.Patterns
   val instTable  = rvdecoderdb.fromFile.instructions(os.pwd / "riscv-opcodes")
-  val targetSets = Set("rv_i", "rv_m", "rv64_i", "rv64_m", "rv_zicsr")
+  val targetSets = Set("rv_i", "rv_m", "rv64_i", "rv64_m", "rv_zicsr", "rv_system")
   // add implemented instructions here
   val instList = instTable
     .filter(instr => targetSets.contains(instr.instructionSet.name))
