@@ -56,7 +56,7 @@ class Decoder extends Module {
 
   // val Patterns = decodePatterns.Patterns
   val instTable  = rvdecoderdb.fromFile.instructions(os.pwd / "riscv-opcodes")
-  val targetSets = Set("rv_i", "rv_m", "rv64_i", "rv64_m", "rv_zicsr", "rv_system")
+  val targetSets = Set("rv_i", "rv_m", "rv_zicsr", "rv_system")
   val instList = instTable
     .filter(instr => targetSets.contains(instr.instructionSet.name))
     .filter(_.pseudoFrom.isEmpty)
@@ -65,12 +65,12 @@ class Decoder extends Module {
 
   //for debugs
   instList.foreach { insn =>
-    // println(s"${insn.toString()}")
-    // println(s"${insn.inst.args.contains("rd")}")
-    val isEmpty    = insn.inst.args.isEmpty
-    val containsRd = if (isEmpty) false else insn.inst.args.map(_.name).contains("rs1")
-    println(s"args: ${insn.inst.args}, Is empty: $isEmpty, Contains 'rs1': $containsRd")
-    println(s"args element types: ${insn.inst.args.map(_.getClass).mkString(", ")}")
+    println(s"${insn.toString()}")
+//    // println(s"${insn.inst.args.contains("rd")}")
+//    val isEmpty    = insn.inst.args.isEmpty
+//    val containsRd = if (isEmpty) false else insn.inst.args.map(_.name).contains("rs1")
+//    println(s"args: ${insn.inst.args}, Is empty: $isEmpty, Contains 'rs1': $containsRd")
+//    println(s"args element types: ${insn.inst.args.map(_.getClass).mkString(", ")}")
 
   }
 
@@ -95,7 +95,6 @@ class Decoder extends Module {
   val immJ       = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
   val imm_shamtd = Cat(Fill(26, 0.U), io.in.bits.instr(25, 20))
 
-  // val opcode = io.in.bits.instr(6, 0)
   val rs1   = io.in.bits.instr(19, 15)
   val rs2   = io.in.bits.instr(24, 20)
   val rd    = io.in.bits.instr(11, 7)
@@ -103,7 +102,6 @@ class Decoder extends Module {
 
   val decodedResults =
     new DecodeTable(
-      // Patterns,
       instList,
       Seq(
         Use_rs1,
