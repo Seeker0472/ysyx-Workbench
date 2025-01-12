@@ -303,6 +303,7 @@ object ImmType extends DecodeField[Insn, ImmTypeEnum.Type] {
         case "jimm20"                => ImmTypeEnum.immJ
         case "shamtd"                => ImmTypeEnum.immShamtD
         case "shamtw"                => ImmTypeEnum.immShamtW
+        case "csr"                   => ImmTypeEnum.immI
         case _                       => ImmTypeEnum.immNone
       })
       .filterNot(_ == ImmTypeEnum.immNone)
