@@ -159,10 +159,10 @@ class Decoder extends Module {
   //     Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) )
   //   )
   // )
-  val conflict_rs1 =(((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid))
-  val conflict_rs2 =(((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid))
-  //val conflict_rs1 =(((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid))&&decodedResults(Use_rs1)
-  //val conflict_rs2 =(((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid))&&decodedResults(Use_rs2)
+//  val conflict_rs1 =(((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid))
+//  val conflict_rs2 =(((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid))
+  val conflict_rs1 =(((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid))&&decodedResults(Use_rs1)
+  val conflict_rs2 =(((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid))&&decodedResults(Use_rs2)
   val conflict = conflict_rs1 || conflict_rs2
 
 /*   val conflict = MuxLookup(Type, false.B)(
@@ -278,13 +278,13 @@ class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
 object Use_rs1 extends BoolDecodeField[Insn] {
   def name: String = "Use_rs1"
   def genTable(inst: Insn) = {
-   if(!inst.inst.args.map(_.name).contains("rs1")) y else n 
+   if(inst.inst.args.map(_.name).contains("rs1")) y else n 
   }
 }
 object Use_rs2 extends BoolDecodeField[Insn] {
   def name: String = "Use_rs2"
   def genTable(inst: Insn) = {
-   if(!inst.inst.args.map(_.name).contains("rs2")) y else n 
+   if(inst.inst.args.map(_.name).contains("rs2")) y else n 
   }
 }
 
@@ -354,7 +354,6 @@ object Use_IMM_2 extends BoolDecodeField[Insn] {
     else n */
    if((!inst.inst.args.map(_.name).contains("rs2"))||(rvdecoderdb.Utils.isB(inst.inst))||(rvdecoderdb.Utils.isS(inst.inst))) y else n 
    // B-Type rs1,rs2,imm -> use imm!
-
   }
 }
 
