@@ -14,9 +14,9 @@ case class Insn(val inst: rvdecoderdb.Instruction) extends DecodePattern {
   override def bitPat: BitPat = BitPat("b" + inst.encoding.toString())
 }
 
-object Inst_Type_Enum extends ChiselEnum {
+/* object Inst_Type_Enum extends ChiselEnum {
   val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type, ERROR = Value
-}
+} */
 
 object ImmTypeEnum extends ChiselEnum {
   val immNone, immI, immS, immB, immU, immJ, immShamtD, immShamtW = Value
