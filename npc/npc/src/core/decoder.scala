@@ -72,16 +72,14 @@ class Decoder extends Module {
     .toSeq
   //for debugs
   instList.foreach { insn =>
-  // println(s"${insn.toString()}")
-  // println(s"${insn.inst.args.contains("rd")}")
-  val isEmpty = insn.inst.args.isEmpty
-  val containsRd = if (isEmpty) false else insn.inst.args.map(_.name).contains("rs1")
-  println(s"args: ${insn.inst.args}, Is empty: $isEmpty, Contains 'rs1': $containsRd")
-  println(s"args element types: ${insn.inst.args.map(_.getClass).mkString(", ")}")
+    // println(s"${insn.toString()}")
+    // println(s"${insn.inst.args.contains("rd")}")
+    val isEmpty    = insn.inst.args.isEmpty
+    val containsRd = if (isEmpty) false else insn.inst.args.map(_.name).contains("rs1")
+    println(s"args: ${insn.inst.args}, Is empty: $isEmpty, Contains 'rs1': $containsRd")
+    println(s"args element types: ${insn.inst.args.map(_.getClass).mkString(", ")}")
 
-}
-
-
+  }
 
   //Imms
   val imm_I_Raw = io.in.bits.instr(31, 20)
@@ -100,7 +98,7 @@ class Decoder extends Module {
     io.in.bits.instr(30, 21),
     0.U(1.W)
   )
-  val immJ = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
+  val immJ       = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
   val imm_shamtd = Cat(Fill(26, 0.U), io.in.bits.instr(25, 20))
 
   // val opcode = io.in.bits.instr(6, 0)
@@ -135,17 +133,17 @@ class Decoder extends Module {
       )
     )
       .decode(io.in.bits.instr)
-  val Type = decodedResults(InstType)
-  val Typeimm= decodedResults(ImmType)
+  val Type    = decodedResults(InstType)
+  val Typeimm = decodedResults(ImmType)
 
   val imm = MuxLookup(Typeimm, 0.U)(
     Seq(
-      ImmTypeEnum.immI      -> immI,
-      ImmTypeEnum.immS      -> immS,
-      ImmTypeEnum.immB      -> immB,
-      ImmTypeEnum.immU      -> immU,
-      ImmTypeEnum.immJ      -> immJ,
-      ImmTypeEnum.immShamtD -> imm_shamtd,
+      ImmTypeEnum.immI -> immI,
+      ImmTypeEnum.immS -> immS,
+      ImmTypeEnum.immB -> immB,
+      ImmTypeEnum.immU -> immU,
+      ImmTypeEnum.immJ -> immJ,
+      ImmTypeEnum.immShamtD -> imm_shamtd
       // ImmTypeEnum.immShamtW -> imm_shamtw
     )
   )
@@ -161,11 +159,17 @@ class Decoder extends Module {
   // )
 //  val conflict_rs1 =(((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid))
 //  val conflict_rs2 =(((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid))
-  val conflict_rs1 =(((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid))&&decodedResults(Use_rs1)
-  val conflict_rs2 =(((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid))&&decodedResults(Use_rs2)
+  val conflict_rs1 =
+    (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid)) && decodedResults(
+      Use_rs1
+    )
+  val conflict_rs2 =
+    (((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid)) && decodedResults(
+      Use_rs2
+    )
   val conflict = conflict_rs1 || conflict_rs2
 
-/*   val conflict = MuxLookup(Type, false.B)(
+  /*   val conflict = MuxLookup(Type, false.B)(
     Seq(
       Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || (((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)) && ~io.forwarding.valid)),
       Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid)),
@@ -278,13 +282,13 @@ class TRACE_DECODER extends BlackBox with HasBlackBoxInline {
 object Use_rs1 extends BoolDecodeField[Insn] {
   def name: String = "Use_rs1"
   def genTable(inst: Insn) = {
-   if(inst.inst.args.map(_.name).contains("rs1")) y else n 
+    if (inst.inst.args.map(_.name).contains("rs1")) y else n
   }
 }
 object Use_rs2 extends BoolDecodeField[Insn] {
   def name: String = "Use_rs2"
   def genTable(inst: Insn) = {
-   if(inst.inst.args.map(_.name).contains("rs2")) y else n 
+    if (inst.inst.args.map(_.name).contains("rs2")) y else n
   }
 }
 
@@ -307,7 +311,7 @@ object ImmType extends DecodeField[Insn, ImmTypeEnum.Type] {
         case _                       => ImmTypeEnum.immNone
       })
       .filterNot(_ == ImmTypeEnum.immNone)
-      .headOption // different ImmType will not appear in the Seq
+      .headOption // different ImmType will not appear                   => ImmTypeEnum.immI in the Seq
       .getOrElse(ImmTypeEnum.immNone)
 
     // TODO: BitPat will accept ChiselEnum after #2327 has been merged
@@ -346,15 +350,19 @@ object InstType extends DecodeField[Insn, Inst_Type_Enum.Type] {
 object Use_IMM_2 extends BoolDecodeField[Insn] {
   def name: String = "Use_IMM"
   def genTable(inst: Insn) = {
-/*     if (
+    /*     if (
       rvdecoderdb.Utils.isI(inst.inst) || rvdecoderdb.Utils
         .isS(inst.inst) || rvdecoderdb.Utils.isB(inst.inst) || rvdecoderdb.Utils.isJ(inst.inst) || inst.inst.name
         .matches("auipc") || inst.inst.name.matches("lui")
     )
       y
     else n */
-   if((!inst.inst.args.map(_.name).contains("rs2"))||(rvdecoderdb.Utils.isB(inst.inst))||(rvdecoderdb.Utils.isS(inst.inst))) y else n 
-   // B-Type rs1,rs2,imm -> use imm!
+    if (
+      (!inst.inst.args.map(_.name).contains("rs2")) || (rvdecoderdb.Utils.isB(inst.inst)) || (rvdecoderdb.Utils
+        .isS(inst.inst))
+    ) y
+    else n
+    // B-Type rs1,rs2,imm -> use imm!
   }
 }
 
