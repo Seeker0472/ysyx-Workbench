@@ -25,7 +25,7 @@ object ImmTypeEnum extends ChiselEnum {
 object Insn {
   implicit class addMethodsToInsn(i: Insn) {
     def hasArg(arg: String) = i.inst.args.map(_.name).contains(arg)
-    //TODO:!!!opcode添加进来了,这下明天只要管一下InstType怎么优雅实现就行了?
+
     lazy val opcode: BitPat = i.bitPat(6, 0)
     /*     lazy val Inst_Type: Inst_Type_Enum.Type = {
       if (rvdecoderdb.Utils.isR(i.inst))
@@ -38,12 +38,10 @@ object Insn {
 
 class Decoder extends Module {
   val io = IO(new Bundle {
-    val in         = Flipped(Decoupled(new IFUO))
-    val lsu_w_addr = Input(UInt(CVAL.REG_ADDR_LEN.W))
-    val exu_w_addr = Input(UInt(CVAL.REG_ADDR_LEN.W))
-    val decoder_pc = Decoupled(UInt(CVAL.DLEN.W))
-    // val ebreak         = Output(Bool())
-    // val flush_icache   = Output(Bool())
+    val in             = Flipped(Decoupled(new IFUO))
+    val lsu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
+    val exu_w_addr     = Input(UInt(CVAL.REG_ADDR_LEN.W))
+    val decoder_pc     = Decoupled(UInt(CVAL.DLEN.W))
     val flush_pipeline = Input(Bool())
     val reg1           = (new RegReadIO)
     val reg2           = (new RegReadIO)
@@ -51,7 +49,6 @@ class Decoder extends Module {
     val out            = Decoupled(new DecoderO)
     val forwarding     = Flipped(Decoupled(UInt(CVAL.DLEN.W)))
   })
-  //TODO
   io.forwarding.ready := true.B
 
   //sig pass to hazard_unit
@@ -64,12 +61,12 @@ class Decoder extends Module {
   // val Patterns = decodePatterns.Patterns
   val instTable  = rvdecoderdb.fromFile.instructions(os.pwd / "riscv-opcodes")
   val targetSets = Set("rv_i", "rv_m", "rv64_i", "rv64_m", "rv_zicsr", "rv_system")
-  // add implemented instructions here
   val instList = instTable
     .filter(instr => targetSets.contains(instr.instructionSet.name))
     .filter(_.pseudoFrom.isEmpty)
     .map(Insn(_))
     .toSeq
+
   //for debugs
   instList.foreach { insn =>
     // println(s"${insn.toString()}")
@@ -98,6 +95,7 @@ class Decoder extends Module {
     io.in.bits.instr(30, 21),
     0.U(1.W)
   )
+
   val immJ       = Cat(Fill(11, imm_J_Raw(20)), imm_J_Raw)
   val imm_shamtd = Cat(Fill(26, 0.U), io.in.bits.instr(25, 20))
 
@@ -112,7 +110,6 @@ class Decoder extends Module {
       // Patterns,
       instList,
       Seq(
-        InstType,
         Use_rs1,
         Use_rs2,
         ImmType,
@@ -133,7 +130,6 @@ class Decoder extends Module {
       )
     )
       .decode(io.in.bits.instr)
-  val Type    = decodedResults(InstType)
   val Typeimm = decodedResults(ImmType)
 
   val imm = MuxLookup(Typeimm, 0.U)(
@@ -147,18 +143,9 @@ class Decoder extends Module {
       // ImmTypeEnum.immShamtW -> imm_shamtw
     )
   )
+
   //data
   // reg conflict whith EXU/(LS+WB)
-  // val conflict = MuxLookup(Type, false.B)(
-  //   Seq(
-  //     Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U))),
-  //     Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U)),
-  //     Inst_Type_Enum.S_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) ),
-  //     Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) )
-  //   )
-  // )
-//  val conflict_rs1 =(((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid))
-//  val conflict_rs2 =(((io.lsu_w_addr === rs2) && rs2 =/= 0.U) || ((io.exu_w_addr === rs2) && rs2 =/= 0.U && ~io.forwarding.valid))
   val conflict_rs1 =
     (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid)) && decodedResults(
       Use_rs1
@@ -169,14 +156,6 @@ class Decoder extends Module {
     )
   val conflict = conflict_rs1 || conflict_rs2
 
-  /*   val conflict = MuxLookup(Type, false.B)(
-    Seq(
-      Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || (((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)) && ~io.forwarding.valid)),
-      Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U && ~io.forwarding.valid)),
-      Inst_Type_Enum.S_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || (((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)) && ~io.forwarding.valid)),
-      Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || (((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)) && ~io.forwarding.valid))
-    )
-  ) */
   val use_forwarding_1 = (io.exu_w_addr === rs1 && rs1 =/= 0.U) && io.forwarding.valid
   val use_forwarding_2 = (io.exu_w_addr === rs2 && rs2 =/= 0.U) && io.forwarding.valid
 
@@ -198,9 +177,6 @@ class Decoder extends Module {
   io.out.bits.alu_use_pc    := decodedResults(Use_PC_1)
   io.out.bits.alu_op_type   := decodedResults(ALUOp_Gen)
 
-  //TODO:maybe pass to WBU to take effect?
-  // io.ebreak       := decodedResults(Is_Ebreak) && io.in.valid
-  // io.flush_icache := decodedResults(Is_fenceI) && io.in.valid
   io.out.bits.ebreak       := decodedResults(Is_Ebreak)
   io.out.bits.flush_icache := decodedResults(Is_fenceI)
 
@@ -218,16 +194,6 @@ class Decoder extends Module {
   io.out.bits.reg_write_enable := decodedResults(R_Write_Enable)
   io.out.bits.ecall            := decodedResults(Is_Ecall)
   io.out.bits.mret             := decodedResults(Is_Mret)
-
-  // reg conflict whith EXU/(LS+WB)
-  // val conflict = MuxLookup(Type, false.B)(
-  //   Seq(
-  //     Inst_Type_Enum.R_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U))),
-  //     Inst_Type_Enum.I_Type -> (((io.lsu_w_addr === rs1) && rs1 =/= 0.U) || ((io.exu_w_addr === rs1) && rs1 =/= 0.U)),
-  //     Inst_Type_Enum.S_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U))),
-  //     Inst_Type_Enum.B_Type -> (((io.lsu_w_addr === rs1 && rs1 =/= 0.U) || (io.lsu_w_addr === rs2 && rs2 =/= 0.U)) || ((io.exu_w_addr === rs1 && rs1 =/= 0.U) || (io.exu_w_addr === rs2 && rs2 =/= 0.U)))
-  //   )
-  // )
 
   //ready/valid sig
   io.in.ready  := io.out.ready && ~conflict
@@ -318,31 +284,6 @@ object ImmType extends DecodeField[Insn, ImmTypeEnum.Type] {
     BitPat(immType.litValue.U((immType.getWidth).W))
   }
 
-}
-
-//指令的类型--TODO 似乎RVdecoderDB没有一项是指令的类型?
-object InstType extends DecodeField[Insn, Inst_Type_Enum.Type] {
-  def name: String = "InstType"
-  override def chiselType = Inst_Type_Enum()
-  def genTable(inst: Insn): BitPat = {
-    val immType = if (rvdecoderdb.Utils.isI(inst.inst)) {
-      Inst_Type_Enum.I_Type
-    } else if (rvdecoderdb.Utils.isR(inst.inst)) {
-      Inst_Type_Enum.R_Type
-    } else if (rvdecoderdb.Utils.isS(inst.inst)) {
-      Inst_Type_Enum.S_Type
-    } else if (rvdecoderdb.Utils.isB(inst.inst)) {
-      Inst_Type_Enum.B_Type
-    } else if (rvdecoderdb.Utils.isU(inst.inst)) {
-      Inst_Type_Enum.U_Type
-    } else if (rvdecoderdb.Utils.isJ(inst.inst)) {
-      Inst_Type_Enum.J_Type
-    } else {
-      Inst_Type_Enum.ERROR
-    };
-    BitPat(immType.litValue.U((immType.getWidth).W))
-    // BitPat(Inst_Type_Enum.B_Type)
-  }
 }
 
 //src2是否选择Imm--TODO same!
