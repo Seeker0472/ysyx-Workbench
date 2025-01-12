@@ -24,7 +24,7 @@ object npc extends ScalaModule with ScalafmtModule { m =>
   def sources = T.sources {
     super.sources() ++ Seq(
 //      PathRef(os.pwd / "difftest"),
-//      PathRef(os.pwd / "rvdecoderdb" / "rvdecoderdb")
+     PathRef(os.pwd / "rvdecoderdb" / "rvdecoderdb")
     )
   }
 

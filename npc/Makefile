@@ -22,7 +22,7 @@ SOC_SCALA_ABS:=$(shell find $(YSYXSOC_HOME)/src  -type f -name '*.scala' -exec r
 
 ALL_V_ABS:=$(PERIP_V_ABS) ./build/ypc.sv ${YSYXSOC_V}
 
-ABS_CHISEL_SOURCES := $(shell find src -type f -name '*.scala' -exec realpath {} \;)
+ABS_CHISEL_SOURCES := $(shell find npc -type f -name '*.scala' -exec realpath {} \;)
 TARGET := build/ypc.sv
 TARGETRaw := build/raw_core.sv
 

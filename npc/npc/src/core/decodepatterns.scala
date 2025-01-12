@@ -6,6 +6,10 @@ import chisel3.util.BitPat
 import chisel3.util.experimental.decode.DecodeField
 import chisel3.util.experimental.decode._
 
+object Inst_Type_Enum extends ChiselEnum {
+  val R_Type, I_Type, S_Type, B_Type, U_Type, J_Type, ERROR = Value
+}
+
 case class InsP(
   val Inst_Type: Inst_Type_Enum.Type,
   val name_in:   String = "Not Implemented!",
