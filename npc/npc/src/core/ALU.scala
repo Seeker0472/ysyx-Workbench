@@ -41,7 +41,7 @@ class ALU extends Module {
 /*   val unsigned =
     io.in.alu_op_type === ALU_Op.mulhu || io.in.alu_op_type === ALU_Op.mulhsu || io.in.alu_op_type === ALU_Op.divu || io.in.alu_op_type === ALU_Op.remu
  */
-  val unsigned = true.B
+  val unsigned = false.B
   val mul_unit = Module(new MulUnit)
   val div_unit = Module(new DivUnit)
   val rem_unit = Module(new REMUnit)
