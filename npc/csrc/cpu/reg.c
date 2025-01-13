@@ -25,7 +25,7 @@ void reg_display(CPU_state* cpu) {
       
       printf("\n");
   }
-#elif
+#else
   for(int i=0;i<16;i++){
     MUXDEF(CONFIG_RV64,printf("%-4s \t%-20ld\t%-10lx\t",regs[i],cpu->gpr[i],cpu->gpr[i]);,printf("%-4s \t%-20d\t%-10x\t",regs[i],cpu->gpr[i],cpu->gpr[i]););
       

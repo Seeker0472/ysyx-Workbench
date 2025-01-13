@@ -3,7 +3,8 @@ import chisel3._
 import Constants_Val._
 
 object ALU_Op extends ChiselEnum {
-  val inv, add, sub, xor, or, and, sll, srl, sra, slt, sltu, pass_imm = Value
+  val inv, add, sub, xor, or, and, sll, srl, sra, slt, sltu, pass_imm, mul, mulh, mulhsu, mulhu, div, divu, rem, remu =
+    Value
 }
 
 object Load_Type extends ChiselEnum {

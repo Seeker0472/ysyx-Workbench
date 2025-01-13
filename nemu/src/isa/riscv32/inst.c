@@ -195,6 +195,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=isa_call_mret());
   //INST:wfi
 
+  //INVALID!
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));//Invalid--非法指令！！
   INSTPAT_END();
 
@@ -212,3 +213,4 @@ int isa_exec_once(Decode *s) {
   IFDEF(CONFIG_IRING, write_iringbuf(s->pc, s->isa.inst.val)); // TODO!!
   return decode_exec(s);
 }
+

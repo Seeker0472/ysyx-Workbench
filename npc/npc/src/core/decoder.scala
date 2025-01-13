@@ -56,7 +56,7 @@ class Decoder extends Module {
 
   // val Patterns = decodePatterns.Patterns
   val instTable  = rvdecoderdb.fromFile.instructions(os.pwd / "riscv-opcodes")
-  val targetSets = Set( "rv_i", "rv_m","rv64_i", "rv64_m", "rv_zicsr", "rv_system")
+  val targetSets = Set("rv_i", "rv_m", "rv64_i", "rv64_m", "rv_zicsr", "rv_system")
   val instList = instTable
     .filter(instr => targetSets.contains(instr.instructionSet.name))
     .filter(_.pseudoFrom.isEmpty)
@@ -445,17 +445,26 @@ object ALUOp_Gen extends DecodeField[Insn, ALU_Op.Type] {
       case "add" | "addi" | "jal" | "jalr" | "auipc"               => ALU_Op.add
       case "lb" | "lh" | "lw" | "lbu" | "lhu" | "sb" | "sh" | "sw" => ALU_Op.add
       case "beq" | "bne" | "blt" | "bge" | "bltu" | "bgeu"         => ALU_Op.add
-      case "sub"                                                   => ALU_Op.sub
-      case "xor" | "xori"                                          => ALU_Op.xor
-      case "or" | "ori"                                            => ALU_Op.or
-      case "and" | "andi"                                          => ALU_Op.and
-      case "sll" | "slli"                                          => ALU_Op.sll
-      case "srl" | "srli"                                          => ALU_Op.srl
-      case "sra" | "srai"                                          => ALU_Op.sra
-      case "slt" | "slti"                                          => ALU_Op.slt
-      case "sltu" | "sltiu"                                        => ALU_Op.sltu
-      case "lui"                                                   => ALU_Op.pass_imm
-      case _                                                       => ALU_Op.inv
+
+      case "sub"            => ALU_Op.sub
+      case "xor" | "xori"   => ALU_Op.xor
+      case "or" | "ori"     => ALU_Op.or
+      case "and" | "andi"   => ALU_Op.and
+      case "sll" | "slli"   => ALU_Op.sll
+      case "srl" | "srli"   => ALU_Op.srl
+      case "sra" | "srai"   => ALU_Op.sra
+      case "slt" | "slti"   => ALU_Op.slt
+      case "sltu" | "sltiu" => ALU_Op.sltu
+      case "lui"            => ALU_Op.pass_imm
+      case "mul"            => ALU_Op.mul
+      case "mulh"           => ALU_Op.mulh
+      case "mulhsu"         => ALU_Op.inv
+      case "mulhu"          => ALU_Op.mulhu
+      case "div"            => ALU_Op.div
+      case "divu"           => ALU_Op.divu
+      case "rem"            => ALU_Op.rem
+      case "remu"           => ALU_Op.remu
+      case _                => ALU_Op.inv
     }
     BitPat(op_type.litValue.U((op_type.getWidth).W))
   }
