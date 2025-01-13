@@ -213,3 +213,4 @@ int isa_exec_once(Decode *s) {
   IFDEF(CONFIG_IRING, write_iringbuf(s->pc, s->isa.inst.val)); // TODO!!
   return decode_exec(s);
 }
+
