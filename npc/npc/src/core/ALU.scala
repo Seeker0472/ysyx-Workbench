@@ -99,7 +99,7 @@ class DivUnit extends Module {
   val result_unsigned = io.src1 / io.src2
   val result_signed   = (io.src1.asSInt / io.src2.asSInt).asUInt
   val result          = Mux(io.unsigned, result_unsigned, result_signed)
-  io.res := result_unsigned
+  io.res := result_signed
 }
 
 class REMUnit extends Module {
@@ -107,5 +107,5 @@ class REMUnit extends Module {
   val result_unsigned = io.src1 % io.src2
   val result_signed   = (io.src1.asSInt % io.src2.asSInt).asUInt
   val result          = Mux(io.unsigned, result_unsigned, result_signed)
-  io.res := result_unsigned
+  io.res := result_signed
 }
