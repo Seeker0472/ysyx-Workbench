@@ -91,7 +91,7 @@ class MulUnit extends Module {
   val result_unsigned = Cat(0.U(32.W),io.src1) * Cat(0.U(32.W),io.src2)
   val result_signed   = (io.src1.asSInt * io.src2.asSInt).asUInt
   val result          = Mux(io.unsigned, result_unsigned, result_signed)
-  io.res := result
+  io.res := result_unsigned
 }
 
 class DivUnit extends Module {
@@ -99,7 +99,7 @@ class DivUnit extends Module {
   val result_unsigned = io.src1 / io.src2
   val result_signed   = (io.src1.asSInt / io.src2.asSInt).asUInt
   val result          = Mux(io.unsigned, result_unsigned, result_signed)
-  io.res := result
+  io.res := result_unsigned
 }
 
 class REMUnit extends Module {
@@ -107,5 +107,5 @@ class REMUnit extends Module {
   val result_unsigned = io.src1 % io.src2
   val result_signed   = (io.src1.asSInt % io.src2.asSInt).asUInt
   val result          = Mux(io.unsigned, result_unsigned, result_signed)
-  io.res := result
+  io.res := result_unsigned
 }
