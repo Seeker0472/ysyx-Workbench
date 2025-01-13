@@ -51,7 +51,22 @@ int update_reg_state() {
   cpu->gpr[14] = REG_14_STRUCT;
   cpu->gpr[15] = REG_15_STRUCT;
 #ifndef CONFIG_RVE
- 
+  cpu->gpr[16] = REG_16_STRUCT;
+  cpu->gpr[17] = REG_17_STRUCT;
+  cpu->gpr[18] = REG_18_STRUCT;
+  cpu->gpr[19] = REG_19_STRUCT;
+  cpu->gpr[20] = REG_20_STRUCT;
+  cpu->gpr[21] = REG_21_STRUCT;
+  cpu->gpr[22] = REG_22_STRUCT;
+  cpu->gpr[23] = REG_23_STRUCT;
+  cpu->gpr[24] = REG_24_STRUCT;
+  cpu->gpr[25] = REG_25_STRUCT;
+  cpu->gpr[26] = REG_26_STRUCT;
+  cpu->gpr[27] = REG_27_STRUCT;
+  cpu->gpr[28] = REG_28_STRUCT;
+  cpu->gpr[29] = REG_29_STRUCT;
+  cpu->gpr[30] = REG_30_STRUCT;
+  cpu->gpr[31] = REG_31_STRUCT;
 #endif
   return 0;
 }
@@ -76,6 +91,22 @@ int init_reg_state() {
   cpu->gpr[15] = REG_15_STRUCT;
 #ifndef CONFIG_RVE
 
+  cpu->gpr[16] = REG_16_STRUCT;
+  cpu->gpr[17] = REG_17_STRUCT;
+  cpu->gpr[18] = REG_18_STRUCT;
+  cpu->gpr[19] = REG_19_STRUCT;
+  cpu->gpr[20] = REG_20_STRUCT;
+  cpu->gpr[21] = REG_21_STRUCT;
+  cpu->gpr[22] = REG_22_STRUCT;
+  cpu->gpr[23] = REG_23_STRUCT;
+  cpu->gpr[24] = REG_24_STRUCT;
+  cpu->gpr[25] = REG_25_STRUCT;
+  cpu->gpr[26] = REG_26_STRUCT;
+  cpu->gpr[27] = REG_27_STRUCT;
+  cpu->gpr[28] = REG_28_STRUCT;
+  cpu->gpr[29] = REG_29_STRUCT;
+  cpu->gpr[30] = REG_30_STRUCT;
+  cpu->gpr[31] = REG_31_STRUCT;
 #endif
   return 0;
 }

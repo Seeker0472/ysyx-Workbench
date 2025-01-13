@@ -25,8 +25,8 @@ class REG extends Module {
   csrs(2.U) := 0x1800.U; //mstatus
 
   // regs(0.U)      := 0.U
-  io.Rread1.data := Mux(io.Rread1.addr(3, 0) === 0.U, 0.U, regs(io.Rread1.addr(4, 0) - 1.U))
-  io.Rread2.data := Mux(io.Rread2.addr(3, 0) === 0.U, 0.U, regs(io.Rread2.addr(4, 0) - 1.U))
+  io.Rread1.data := Mux(io.Rread1.addr(4, 0) === 0.U, 0.U, regs(io.Rread1.addr(4, 0) - 1.U))
+  io.Rread2.data := Mux(io.Rread2.addr(4, 0) === 0.U, 0.U, regs(io.Rread2.addr(4, 0) - 1.U))
 //目前只实例化了这几个reg，使用mux来获取寄存器的数值,默认获取mepc
   val csr_r_ADDR = MuxLookup(io.CSRread.addr, 3.U)(
     Seq(

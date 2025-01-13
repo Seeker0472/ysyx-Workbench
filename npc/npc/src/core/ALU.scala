@@ -1,6 +1,7 @@
 package core
 
 import chisel3._
+import chisel3.util._
 import core.IO._
 import chisel3.util.BitPat
 import chisel3.util.MuxLookup
@@ -37,9 +38,9 @@ class ALU extends Module {
   val sltu     = io.in.src1 < io.in.src2
   val pass_imm = io.in.src2
 
-  val unsigned =
-    io.in.alu_op_type == ALU_Op.mulhu || io.in.alu_op_type == ALU_Op.mulhsu || io.in.alu_op_type == ALU_Op.divu || io.in.alu_op_type == ALU_Op.remu
-
+//  val unsigned =
+//    io.in.alu_op_type == ALU_Op.mulhu || io.in.alu_op_type == ALU_Op.mulhsu || io.in.alu_op_type == ALU_Op.divu || io.in.alu_op_type == ALU_Op.remu
+val unsigned = true.B
   val mul_unit = Module(new MulUnit)
   val div_unit = Module(new DivUnit)
   val rem_unit = Module(new REMUnit)
@@ -53,7 +54,7 @@ class ALU extends Module {
   div_unit.io.unsigned := unsigned.B
   rem_unit.io.unsigned := unsigned.B
   val mul  = mul_unit.io.res(31, 0)
-  val mulh = mul_unit.io.res(63, 31)
+  val mulh = mul_unit.io.res(63, 32)
   val div  = div_unit.io.res
   val rem  = rem_unit.io.res
 
@@ -86,7 +87,7 @@ class ALU extends Module {
 
 class MulUnit extends Module {
   val io              = IO(new MULUnitIO)
-  val result_unsigned = io.src1 * io.src2
+  val result_unsigned = Cat(0.U(32.W),io.src1) * Cat(0.U(32.W),io.src2)
   val result_signed   = (io.src1.asSInt * io.src2.asSInt).asUInt
   val result          = Mux(io.unsigned, result_unsigned, result_signed)
   io.res := result
