@@ -50,9 +50,9 @@ class ALU extends Module {
   div_unit.io.src2     := io.in.src2
   rem_unit.io.src1     := io.in.src1
   rem_unit.io.src2     := io.in.src2
-  mul_unit.io.unsigned := unsigned.B
-  div_unit.io.unsigned := unsigned.B
-  rem_unit.io.unsigned := unsigned.B
+  mul_unit.io.unsigned := unsigned
+  div_unit.io.unsigned := unsigned
+  rem_unit.io.unsigned := unsigned
   val mul  = mul_unit.io.res(31, 0)
   val mulh = mul_unit.io.res(63, 32)
   val div  = div_unit.io.res
