@@ -121,6 +121,7 @@
             pkgs.tcl
             pkgs.libunwind
             pkgs.stdenv.cc.cc
+            pkgs.boost
           ];
           NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
         };
