@@ -35,7 +35,7 @@
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // extract addr
   // Log("Vaddr:%x,len:%x",vaddr,len);
-  vaddr_t pta1 = PAGE(cpu.csr[CSR_SATP] & 0x3FFFFF); // get root_page_table_addr
+  vaddr_t pta1 = PAGE(cpu.csr[NEMU_CSR_SATP] & 0x3FFFFF); // get root_page_table_addr
   vaddr_t vpn1 = vaddr >> 22;
   vaddr_t vpn0 = (vaddr >> 12) & 0x3FF;
   vaddr_t offset = vaddr & 0xFFF;
@@ -78,7 +78,7 @@ device:0xa0000000
 */
 // 检查当前系统状态下对内存区间为[vaddr, vaddr + len), 类型为type的访问是否需要经过地址转换.
 int isa_mmu_check(vaddr_t vaddr, int len, int type) {
-  vaddr_t translate= cpu.csr[CSR_SATP]>>31; //enable sv32
+  vaddr_t translate= cpu.csr[NEMU_CSR_SATP]>>31; //enable sv32
   // vaddr_t end = vaddr+len;
   // if (vaddr > 0x80000000 && vaddr < 0xa0000000&&translate) {
   //   if(end > 0x80000000 && end < 0xa0000000)
