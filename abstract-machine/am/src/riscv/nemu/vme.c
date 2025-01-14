@@ -78,7 +78,7 @@ void __am_switch(Context *c) {
     set_satp(c->pdir);
   }
 }
-# define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111)<<1)|0b1)
+# define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111111111)<<1)|0b1)
 # define PTE1(pa) PTE(pa,0)
 // 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
 // TODO:只用as.ptr,va,pa? as中其他部分有用吗?
