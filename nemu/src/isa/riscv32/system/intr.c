@@ -34,26 +34,26 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // assert(0);
   IFDEF(CONFIG_ETRACE,Log("Trigged Exception!, No=%x Epc=%x",NO,epc););
 
-  cpu.csr[CSR_MCAUSE]=NO;//mcause
+  cpu.csr[NEMU_CSR_MCAUSE]=NO;//mcause
   // cpu.csr[2]=0x1800;//mstatus
 
-  cpu.csr[CSR_MEPC] = epc; // mepc
+  cpu.csr[NEMU_CSR_MEPC] = epc; // mepc
   // 让处理器进入关中断状态
   // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
-  uint32_t mpie = (cpu.csr[CSR_MSTATUS] & MIE) << 4;
-  cpu.csr[CSR_MSTATUS] = ((cpu.csr[CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
-  return cpu.csr[CSR_MTVEC];//mtvec
+  uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
+  cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
+  return cpu.csr[NEMU_CSR_MTVEC];//mtvec
 }
 
 paddr_t isa_call_mret() {
 //mstatus.MPIE->mstatus.MIE;mstatus.MPIE=1
-  uint32_t mie = (cpu.csr[CSR_MSTATUS] & MPIE) >> 4;
-  cpu.csr[CSR_MSTATUS] = (cpu.csr[CSR_MSTATUS] & (~MIE)) | mie | MPIE;
-  return cpu.csr[CSR_MEPC];
+  uint32_t mie = (cpu.csr[NEMU_CSR_MSTATUS] & MPIE) >> 4;
+  cpu.csr[NEMU_CSR_MSTATUS] = (cpu.csr[NEMU_CSR_MSTATUS] & (~MIE)) | mie | MPIE;
+  return cpu.csr[NEMU_CSR_MEPC];
 }
 
 word_t isa_query_intr() {
-  if (((cpu.csr[CSR_MSTATUS] & MIE)) && cpu.INTR) {
+  if (((cpu.csr[NEMU_CSR_MSTATUS] & MIE)) && cpu.INTR) {
     // printf("INTR!!\n");
     cpu.INTR = false;
     return IRQ_TIMER;

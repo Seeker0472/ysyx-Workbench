@@ -46,9 +46,9 @@ void init_isa() {
 
   /* Initialize this virtual computer system. */
   restart();
-  cpu.csr[CSR_MCAUSE]=0xb;//mcause
-  cpu.csr[CSR_MSTATUS] = 0x1800; // mstatus
-  cpu.csr[CSR_MVENDROID] = 0x79737978; // ysyx
-  cpu.csr[CSR_MARCHID] = 0x15fdf65;  // 学号
-  cpu.csr[CSR_SATP] = 0;//satp
+  cpu.csr[NEMU_CSR_MCAUSE]=0xb;//mcause
+  cpu.csr[NEMU_CSR_MSTATUS] = 0x1800; // mstatus
+  cpu.csr[NEMU_CSR_MVENDROID] = 0x79737978; // ysyx
+  cpu.csr[NEMU_CSR_MARCHID] = 0x15fdf65;  // 学号
+  cpu.csr[NEMU_CSR_SATP] = 0;//satp
 }

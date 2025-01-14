@@ -26,29 +26,29 @@ static inline int check_reg_idx(int idx) {
 static inline int get_csr_reg(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 4096));
   switch (idx) {
-  case CSR_V_MTVEC: // mtvec
-    idx = CSR_MTVEC;
+  case NEMU_CSR_V_MTVEC: // mtvec
+    idx = NEMU_CSR_MTVEC;
     break;
-  case CSR_V_MCAUSE: // mcause
-    idx = CSR_MCAUSE;
+  case NEMU_CSR_V_MCAUSE: // mcause
+    idx = NEMU_CSR_MCAUSE;
     break;
-  case CSR_V_MSTATUS: // mstatus
-    idx = CSR_MSTATUS;
+  case NEMU_CSR_V_MSTATUS: // mstatus
+    idx = NEMU_CSR_MSTATUS;
     break;
-  case CSR_V_MEPC: // mepc
-    idx = CSR_MEPC;
+  case NEMU_CSR_V_MEPC: // mepc
+    idx = NEMU_CSR_MEPC;
     break;
-  case CSR_V_MVENDROID: // mvendorid
-    idx = CSR_MVENDROID;
+  case NEMU_CSR_V_MVENDROID: // mvendorid
+    idx = NEMU_CSR_MVENDROID;
     break;
-  case CSR_V_MARCHID: // marchid
-    idx = CSR_MARCHID;
+  case NEMU_CSR_V_MARCHID: // marchid
+    idx = NEMU_CSR_MARCHID;
     break;
-  case CSR_V_SATP: // satp
-    idx = CSR_SATP;
+  case NEMU_CSR_V_SATP: // satp
+    idx = NEMU_CSR_SATP;
     break;
-  case CSR_V_MSCRATCH:
-    idx = CSR_MSCRATCH;
+  case NEMU_CSR_V_MSCRATCH:
+    idx = NEMU_CSR_MSCRATCH;
     break;
   default:
     idx = -1;
