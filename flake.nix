@@ -95,6 +95,7 @@
             python312Packages.matplotlib
             python312Packages.numpy
             pkgs.stdenv.cc.cc
+            pkgs.dtc
           ];
           hardeningDisable = [ "fortify" ];
           # hardeningDisable = [ "all" ];
