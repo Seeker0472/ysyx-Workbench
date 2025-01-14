@@ -22,7 +22,7 @@ REPO_BUILD_PATH = $(REPO_PATH)/build
 REPO_MAKEFILE = $(REPO_BUILD_PATH)/Makefile
 $(REPO_MAKEFILE):
 	@mkdir -p $(@D)
-	cd $(@D) && $(abspath $(REPO_PATH))/configure
+	cd $(@D) && $(abspath $(REPO_PATH))/configure  --with-boost-libdir=${BOOST_ROOT}/lib/
 	sed -i -e 's/-g -O2/-O2/' $@
 
 SPIKE = $(REPO_BUILD_PATH)/spike
