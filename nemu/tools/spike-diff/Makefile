@@ -23,11 +23,11 @@ REPO_MAKEFILE = $(REPO_BUILD_PATH)/Makefile
 $(REPO_MAKEFILE):
 	@mkdir -p $(@D)
 	cd $(@D) && $(abspath $(REPO_PATH))/configure  --with-boost-libdir=${BOOST_ROOT}/lib/
-	sed -i -e 's/-g -O2/-O2/' $@
+	sed -i -e 's/-g -O2/-Og -g333/' $@
 
 SPIKE = $(REPO_BUILD_PATH)/spike
 $(SPIKE): $(REPO_MAKEFILE)
-	CFLAGS="-fvisibility=hidden -g3 --verbose" CXXFLAGS="-fvisibility=hidden" $(MAKE) -C $(^D)
+	CFLAGS="-fvisibility=hidden -g3 --verbose" CXXFLAGS="-fvisibility=default" $(MAKE) -C $(^D)
 
 BUILD_DIR = ./build
 $(shell mkdir -p $(BUILD_DIR))
