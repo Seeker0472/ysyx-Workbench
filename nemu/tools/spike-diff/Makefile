@@ -27,7 +27,7 @@ $(REPO_MAKEFILE):
 
 SPIKE = $(REPO_BUILD_PATH)/spike
 $(SPIKE): $(REPO_MAKEFILE)
-	CFLAGS="-fvisibility=hidden -g --verbose" CXXFLAGS="-fvisibility=hidden" $(MAKE) -C $(^D)
+	CFLAGS="-fvisibility=hidden -g3 --verbose" CXXFLAGS="-fvisibility=hidden" $(MAKE) -C $(^D)
 
 BUILD_DIR = ./build
 $(shell mkdir -p $(BUILD_DIR))
