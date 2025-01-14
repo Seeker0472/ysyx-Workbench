@@ -96,6 +96,7 @@
             python312Packages.numpy
             pkgs.stdenv.cc.cc
             pkgs.dtc
+            pkgs.boost
           ];
           hardeningDisable = [ "fortify" ];
           # hardeningDisable = [ "all" ];
