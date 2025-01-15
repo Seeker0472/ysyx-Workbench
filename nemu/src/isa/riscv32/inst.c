@@ -83,6 +83,24 @@ int32_t mulh(int32_t src1, int32_t src2) {
     return (int32_t)(((int64_t)src1 * (int64_t)src2)>> 32);
 }
 
+# define MSTATUS_MPP_MMODE 0x1800
+
+
+void do_ecall(Decode *s){
+  s->dnpc=isa_raise_intr(0xb,s->pc);
+  // 判断异常的类型
+  switch (cpu.csr[NEMU_CSR_MSTATUS]&MSTATUS_MPP_MMODE) {
+    case MSTATUS_MPP_MMODE:
+      cpu.csr[NEMU_CSR_MCAUSE]=0xb;
+      break;
+    case 0:
+      cpu.csr[NEMU_CSR_MCAUSE]=0x8;
+      break;
+    default:
+      assert(0);
+  }
+}
+
 // decode_operand译码工作， 这个函数将会根据传入的指令类型type来进行操作数的译码, 译码结果将记录到函数参数rd, src1, src2和imm中
 static int decode_exec(Decode *s) {
   int rd = 0;
@@ -143,7 +161,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("0000000 ????? ????? 110 ????? 01100 11", or     , R, R(rd)=src1|src2);
   INSTPAT("0000000 ????? ????? 111 ????? 01100 11", and    , R, R(rd)=src1&src2);
   //INST:fence
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=isa_raise_intr(0xb,s->pc));
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, do_ecall(s););
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
 
   //rv64_i
