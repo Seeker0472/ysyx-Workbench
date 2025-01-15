@@ -106,7 +106,7 @@ b_end:
 
 // stage-3 set mstatus.MPRV?--pass difftest??<-TODO:need to change?
   li a0, (1 << 17 | 3<<11 )
-  li a0,0
+  //li a0,0
   or t1, t1, a0
   csrw mstatus, t1
 
