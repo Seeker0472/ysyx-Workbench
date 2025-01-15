@@ -59,7 +59,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
         //alloc a new page and map
         page = (uintptr_t)new_page(1);
         void * va=(void *)((size_t)((void *)ph.p_vaddr + offset) & (~(PGSIZE - 1)));
-        map(&pcb->as,va , (void*)page,0b1001111);//TODO!
+        map(&pcb->as,va , (void*)page,0b101111);//TODO!
         int len = 0;
         
         // The entry of the segement may not aligened to (PGSIZE)!
@@ -140,7 +140,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   uint8_t *stack = new_page(8);
   //map stack
   for (int i = 0; i < 8; i++) {
-    map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,stack+PGSIZE*i,0b1001111);//TODO!
+    map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,stack+PGSIZE*i,0b101111);//TODO!
   }
 
 
