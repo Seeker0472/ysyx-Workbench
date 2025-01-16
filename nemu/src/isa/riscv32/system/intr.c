@@ -49,7 +49,7 @@ paddr_t isa_call_mret() {
 //mstatus.MPIE->mstatus.MIE;mstatus.MPIE=1
   uint32_t mie = (cpu.csr[NEMU_CSR_MSTATUS] & MPIE) >> 4;
   cpu.csr[NEMU_CSR_MSTATUS] = (cpu.csr[NEMU_CSR_MSTATUS] & (~MIE)) | mie | MPIE;
-  //cpu.csr[NEMU_CSR_MSTATUS] &= ~0x1800;
+  cpu.csr[NEMU_CSR_MSTATUS] &= ~0x1800;
   return cpu.csr[NEMU_CSR_MEPC];
 }
 
