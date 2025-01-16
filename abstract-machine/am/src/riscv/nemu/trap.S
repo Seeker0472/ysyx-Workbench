@@ -60,6 +60,24 @@ f(30) f(31)
 __am_asm_trap:
 // stage 1-detect user-mod and make sure sp->kernel stack!
   csrrw sp, mscratch, sp   // (1) atomically exchange sp and mscratch
+  // for diff-test-state!
+  csrrw sp, mstatus, sp
+  csrrw sp, mstatus, sp
+  csrrw sp, mcause , sp
+  csrrw sp, mcause , sp
+  csrrw sp, mstatus, sp
+  csrrw sp, mstatus, sp
+  csrrw sp, mepc,sp
+  csrrw sp, mepc,sp
+  csrrw sp, mvendorid,sp
+  csrrw sp, mvendorid,sp
+  csrrw sp, marchid, sp
+  csrrw sp, marchid, sp
+  csrrw sp, satp,sp
+  csrrw sp, satp,sp
+  csrrw sp, mscratch,sp
+  csrrw sp, mscratch,sp
+  // check_end
   bnez sp, save_context    // (2) take the branch if we trapped from user
   csrrw sp, mscratch, sp   // (3) if we trapped from kernel, restore the original sp
 
@@ -102,10 +120,11 @@ b_end:
   STORE t4, OFFSET_SP(sp) // set sp(sp before trap)
 //  STORE t5, OFFSET_NP(sp)// set np,not used?
   csrwi mscratch,0
-// set to M_MODE to am_irq_handle
+// set to M_MODE to am_irq_handle?
 
 // stage-3 set mstatus.MPRV?--pass difftest??<-TODO:need to change?
-  li a0, (1 << 17 | 3<<11 )
+  li a0, (1 << 17)
+  //li a0, (1 << 17 | 3<<11 )
   //li a0,0
   or t1, t1, a0
   csrw mstatus, t1
