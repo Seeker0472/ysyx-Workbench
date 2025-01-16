@@ -61,8 +61,8 @@ __am_asm_trap:
 // stage 1-detect user-mod and make sure sp->kernel stack!
   csrrw sp, mscratch, sp   // (1) atomically exchange sp and mscratch
   // for diff-test-state!
-  csrw dscratch0 ,sp
-  csrr sp, dscratch0
+  csrw sscratch ,sp
+  csrr sp, sscratch
   csrr sp, mstatus
   csrr sp, mcause
   csrr sp, mstatus
@@ -71,7 +71,7 @@ __am_asm_trap:
   //csrrw sp, marchid, sp
   csrr sp, satp
   csrr sp, mscratch
-  csrr sp, dscratch0
+  csrr sp, sscratch
   // check_end
   bnez sp, save_context    // (2) take the branch if we trapped from user
   csrrw sp, mscratch, sp   // (3) if we trapped from kernel, restore the original sp
