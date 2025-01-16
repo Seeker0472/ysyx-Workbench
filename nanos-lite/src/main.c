@@ -15,9 +15,9 @@ int main() {
   init_mm();
 
   init_device();
-  asm volatile ("csrr a2, mstatus" ::: "a2");
 
   init_ramdisk();
+  asm volatile ("csrr a2, mstatus" ::: "a2");
 
 #ifdef HAS_CTE
   init_irq();
