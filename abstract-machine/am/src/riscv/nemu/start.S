@@ -6,5 +6,7 @@ _start:
   mv s0, zero
   la sp, _stack_pointer
   li a1,0x40000
-  csrw sstatus,a1
+  csrr a2,mstatus
+  or a2,a1,a2
+  csrw mstatus,a1
   jal _trm_init
