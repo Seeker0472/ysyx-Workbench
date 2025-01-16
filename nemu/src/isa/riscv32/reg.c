@@ -26,7 +26,7 @@ const char *regs[] = {
 };
 
 const char *csr_regs[] = {"mtvec",     "mcause",  "mstatus", "mepc",
-                          "mvendorid", "marchid", "satp",   "mscratch" , "dscratch0"};
+                          "mvendorid", "marchid", "satp",   "mscratch" , "sscratch"};
 const uint32_t csr_num = LENGTH(csr_regs);
 void print_csr_reg() {
 #ifdef CONFIG_RV64
