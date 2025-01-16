@@ -41,8 +41,8 @@ f(30) f(31)
 # 定义一个名为 add_numbers 的宏
 .macro check_csr
   // for diff-test-state!
-  csrw sscratch ,sp
   csrr sp, mstatus
+  csrw sscratch ,sp
   csrr sp, sscratch
   csrr sp, mtvec
   csrr sp, mcause
