@@ -63,7 +63,7 @@ __am_asm_trap:
   // for diff-test-state!
   csrw sscratch ,sp
   csrr sp, sscratch
-  csrr sp, mstatus
+  csrr sp, mtvec
   csrr sp, mcause
   csrr sp, mstatus
   csrr sp, mepc
