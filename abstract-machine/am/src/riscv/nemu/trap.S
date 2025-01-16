@@ -72,8 +72,8 @@ __am_asm_trap:
   csrrw sp, mepc,sp
   //csrrw sp, mvendorid,sp
   //csrrw sp, mvendorid,sp
-  csrrw sp, marchid, sp
-  csrrw sp, marchid, sp
+  //csrrw sp, marchid, sp
+  //csrrw sp, marchid, sp
   csrrw sp, satp,sp
   csrrw sp, satp,sp
   csrrw sp, mscratch,sp
