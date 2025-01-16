@@ -123,8 +123,8 @@ b_end:
 // set to M_MODE to am_irq_handle?
 
 // stage-3 set mstatus.MPRV?--pass difftest??<-TODO:need to change?
-  li a0, (1 << 17)
-  //li a0, (1 << 17 | 3<<11 )
+  //li a0, (1 << 17)
+  li a0, (1 << 17 | 3<<11 )
   //li a0,0
   or t1, t1, a0
   csrw mstatus, t1
