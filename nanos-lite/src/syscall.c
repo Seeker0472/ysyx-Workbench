@@ -71,9 +71,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_time:
     time = io_read(AM_TIMER_UPTIME).us;
-    ((struct timeval *)a[1])->tv_sec = time / 1000000;
-    ((struct timeval *)a[1])->tv_usec = time % 1000000;
-    c->GPRx = 0;
+    //((struct timeval *)a[1])->tv_sec = time / 1000000;
+    //((struct timeval *)a[1])->tv_usec = time % 1000000;
+    c->GPRx = (uintptr_t)(time / 1000000);
     break;
   case SYS_execve:
     // naive_uload(NULL,(const char*)a[1]);
