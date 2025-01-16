@@ -25,11 +25,11 @@ int main() {
   init_fs();
 
   init_proc();
-  asm volatile ("csrr a2, mstatus" ::: "a2");
 
   Log("Finish initialization");
 
 #ifdef HAS_CTE
+  asm volatile ("csrr a2, mstatus" ::: "a2");
   yield();
 #endif
 
