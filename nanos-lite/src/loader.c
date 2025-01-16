@@ -155,7 +155,9 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   //calc addr and num
   uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
-  pcb->cp->GPR3 = base_offseted;
+  // 这里的GPR3设置的有问题
+  // pcb->cp->GPR3 = base_offseted; //这是nanos-lite直接访问的物理地址!不是虚拟地址!
+  pcb->cp->GPR3 = (uintptr_t)((void*)pcb->as.area.end-8*PGSIZE + sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2); //这是nanos-lite直接访问的物理地址!不是虚拟地址!
   int argc = 0; // TODO need to contain exec_name?
   int envp_num=0;
   for (int i = 0; argv[i] != NULL; i++)
