@@ -42,10 +42,10 @@ f(30) f(31)
 .macro check_csr
   // for diff-test-state!
   csrw sscratch ,sp
+  csrr sp, mstatus
   csrr sp, sscratch
   csrr sp, mtvec
   csrr sp, mcause
-  csrr sp, mstatus
   csrr sp, sstatus
   csrr sp, mepc
   //csrrw sp, mvendorid,sp

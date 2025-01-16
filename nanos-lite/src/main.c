@@ -28,8 +28,7 @@ int main() {
 
   Log("Finish initialization");
 
-#ifdef HAS_CTE
-  asm volatile ("csrr a2, mstatus" ::: "a2");
+#ifdef HAS_CTE 
   yield();
 #endif
 
