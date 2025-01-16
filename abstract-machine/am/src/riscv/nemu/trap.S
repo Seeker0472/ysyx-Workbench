@@ -62,6 +62,7 @@ __am_asm_trap:
   csrrw sp, mscratch, sp   // (1) atomically exchange sp and mscratch
   // for diff-test-state!
   csrw tdata1 ,sp
+  csrr sp, tdata1
   csrr sp, mstatus
   csrr sp, mcause
   csrr sp, mstatus
