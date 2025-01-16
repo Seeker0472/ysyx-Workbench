@@ -21,11 +21,11 @@ int main() {
 #ifdef HAS_CTE
   init_irq();
 #endif
-  asm volatile ("csrr a2, mstatus" ::: "a2");
 
   init_fs();
 
   init_proc();
+  asm volatile ("csrr a2, mstatus" ::: "a2");
 
   Log("Finish initialization");
 
