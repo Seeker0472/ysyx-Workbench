@@ -17,11 +17,11 @@ int main() {
   init_device();
 
   init_ramdisk();
-  asm volatile ("csrr a2, mstatus" ::: "a2");
 
 #ifdef HAS_CTE
   init_irq();
 #endif
+  asm volatile ("csrr a2, mstatus" ::: "a2");
 
   init_fs();
 
