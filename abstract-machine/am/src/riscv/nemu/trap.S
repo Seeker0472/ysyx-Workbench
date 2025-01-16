@@ -61,25 +61,25 @@ __am_asm_trap:
 // stage 1-detect user-mod and make sure sp->kernel stack!
   csrrw sp, mscratch, sp   // (1) atomically exchange sp and mscratch
   // for diff-test-state!
-  csrrw sp, mstatus, sp
-  csrrw sp, mstatus, sp
-  csrrw sp, mcause , sp
-  csrrw sp, mcause , sp
-  csrrw sp, mstatus, sp
-  csrrw sp, mstatus, sp
-  csrrw sp, mepc,sp
-  csrrw sp, mepc,sp
-  csrrw sp, mvendorid,sp
-  csrrw sp, mvendorid,sp
-  csrrw sp, marchid, sp
-  csrrw sp, marchid, sp
-  csrrw sp, satp,sp
-  csrrw sp, satp,sp
-  csrrw sp, mscratch,sp
-  csrrw sp, mscratch,sp
   // check_end
   bnez sp, save_context    // (2) take the branch if we trapped from user
   csrrw sp, mscratch, sp   // (3) if we trapped from kernel, restore the original sp
+  csrrw sp, mstatus, sp
+  csrrw sp, mstatus, sp
+  csrrw sp, mcause , sp
+  csrrw sp, mcause , sp
+  csrrw sp, mstatus, sp
+  csrrw sp, mstatus, sp
+  csrrw sp, mepc,sp
+  csrrw sp, mepc,sp
+  csrrw sp, mvendorid,sp
+  csrrw sp, mvendorid,sp
+  csrrw sp, marchid, sp
+  csrrw sp, marchid, sp
+  csrrw sp, satp,sp
+  csrrw sp, satp,sp
+  csrrw sp, mscratch,sp
+  csrrw sp, mscratch,sp
 
 // Kernel:mscratch=0;sp==kern;
 // User: $sp=kernel mscratch=user_stack
