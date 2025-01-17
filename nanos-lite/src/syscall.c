@@ -18,6 +18,7 @@ const char *event_names[] = {
     "SYS_link",  "SYS_unlink", "SYS_wait",   "SYS_times",  "SYS_gettimeofday"};
 void naive_uload(PCB *pcb, const char *filename);
 void do_syscall(Context *c) {
+    asm volatile ("csrr a3, mstatus" ::: "a3");//for test
 #ifdef STRACE_ENABLE
   switch (c->GPR1) {
   case SYS_open:
