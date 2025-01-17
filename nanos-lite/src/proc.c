@@ -97,7 +97,7 @@ Context *schedule(Context *prev) {
     current = &pcb[0];
     find=true;
   }
-  Log("GOTO:%d",robin);
+  //Log("GOTO:%d",robin);
   // if(pcb[robin].cp!=prev)
     // Log("goto:%d-%x-%x",robin,pcb[robin].cp,pcb[robin].cp->mepc);
   if (!find) {
