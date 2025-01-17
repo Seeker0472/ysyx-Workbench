@@ -18,15 +18,6 @@ const char *event_names[] = {
     "SYS_link",  "SYS_unlink", "SYS_wait",   "SYS_times",  "SYS_gettimeofday"};
 void naive_uload(PCB *pcb, const char *filename);
 void do_syscall(Context *c) {
-        asm volatile (
-        "li a3, 0x40000\n"    // 将立即数 0x40000 加载到寄存器 a3
-        "csrw mstatus, a3\n"  // 将 a3 的值写入 mstatus 寄存器
-        :
-        :                     // 无输入操作数
-        : "a3"                // 通知编译器 a3 寄存器被修改
-    );
-    asm volatile ("csrr a3, mstatus" ::: "a3");//for test
-    //asm volatile ("csrr a3, sstatus" ::: "a3");//for test
 #ifdef STRACE_ENABLE
   switch (c->GPR1) {
   case SYS_open:
@@ -80,9 +71,9 @@ void do_syscall(Context *c) {
     break;
   case SYS_time:
     time = io_read(AM_TIMER_UPTIME).us;
-    //((struct timeval *)a[1])->tv_sec = time / 1000000;
-    //((struct timeval *)a[1])->tv_usec = time % 1000000;
-    c->GPRx = (uintptr_t)(time / 1000000);
+    ((struct timeval *)a[1])->tv_sec = time / 1000000;
+    ((struct timeval *)a[1])->tv_usec = time % 1000000;
+    c->GPRx = 0;
     break;
   case SYS_execve:
     // naive_uload(NULL,(const char*)a[1]);
