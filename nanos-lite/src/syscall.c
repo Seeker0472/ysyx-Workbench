@@ -71,8 +71,8 @@ void do_syscall(Context *c) {
     break;
   case SYS_time:
     time = io_read(AM_TIMER_UPTIME).us;
-    printf("%x\n",time);
-    printf("%x\n",time);
+    printf("%x\n",a[1]);
+    printf("%x\n",a[1]);
     printf("%x\n",time);
     printf("%x\n",time);
     ((struct timeval *)a[1])->tv_sec = time / 1000000;
