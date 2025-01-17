@@ -21,7 +21,7 @@ void do_syscall(Context *c) {
     //asm volatile ("csrr a3, mstatus" ::: "a3");//for test
         asm volatile (
         "li a3, 0x40000\n"    // 将立即数 0x40000 加载到寄存器 a3
-        "csrw mstatus, a3\n"  // 将 a3 的值写入 mstatus 寄存器
+        "csrw sstatus, a3\n"  // 将 a3 的值写入 mstatus 寄存器
         :
         :                     // 无输入操作数
         : "a3"                // 通知编译器 a3 寄存器被修改
