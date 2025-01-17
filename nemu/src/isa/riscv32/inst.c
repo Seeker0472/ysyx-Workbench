@@ -98,6 +98,7 @@ void do_ecall(Decode *s){
       cpu.csr[NEMU_CSR_MCAUSE]=0x8;
       break;
     default:
+      printf("mcause:%x",cpu.csr[NEMU_CSR_MCAUSE]);
       assert(0);
   }
 }
