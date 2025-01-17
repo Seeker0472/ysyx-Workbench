@@ -12,8 +12,9 @@ int main() {
   printf("%s", logo);
   Log("'Hello World!' from Nanos-lite");
   Log("Build time: %s, %s", __TIME__, __DATE__);
+
   init_mm();
-  asm volatile ("csrr a2, mstatus" ::: "a2");//for test
+
   init_device();
 
   init_ramdisk();
@@ -28,7 +29,7 @@ int main() {
 
   Log("Finish initialization");
 
-#ifdef HAS_CTE 
+#ifdef HAS_CTE
   yield();
 #endif
 
