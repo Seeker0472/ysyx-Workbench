@@ -90,7 +90,7 @@ int32_t mulh(int32_t src1, int32_t src2) {
 void do_ecall(Decode *s){
   s->dnpc=isa_raise_intr(0xb,s->pc);
   cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
-  printf("mcause:%x\n",cpu.csr[NEMU_CSR_MCAUSE]);
+  //printf("mcause:%x\n",cpu.csr[NEMU_CSR_MCAUSE]);
   // 判断异常的类型
   switch (cpu.PRIV) {
     case NEMU_PRIV_M:
