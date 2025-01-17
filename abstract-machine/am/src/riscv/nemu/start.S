@@ -7,5 +7,5 @@ _start:
   la sp, _stack_pointer
   li a1,0x40000
   csrw mstatus,a1
-  csrw sstatus,a1
+  # csrw sstatus,a1
   jal _trm_init

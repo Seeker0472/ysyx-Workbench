@@ -46,7 +46,7 @@ f(30) f(31)
   csrr sp, sscratch
   csrr sp, mtvec
   csrr sp, mcause
-  csrr sp, sstatus
+  #csrr sp, sstatus
   csrr sp, mepc
   //csrrw sp, mvendorid,sp
   //csrrw sp, marchid, sp
