@@ -75,6 +75,7 @@ void do_syscall(Context *c) {
     printf("SYS_TIME!!!!!\n");
     ((struct timeval *)a[1])->tv_sec = time / 1000000;
     ((struct timeval *)a[1])->tv_usec = time % 1000000;
+    printf("SYS_TIME!!!!!\n");
     c->GPRx = 0;
     break;
   case SYS_execve:
