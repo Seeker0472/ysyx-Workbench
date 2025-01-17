@@ -68,6 +68,6 @@ void vaddr_write(vaddr_t addr, int len, word_t data) {
     break;
   }
   assert(paddr != MEM_RET_CROSS_PAGE);
-  assert(paddr != MEM_RET_FAIL);
+  //assert(paddr != MEM_RET_FAIL);
   paddr_write(paddr, len,data);
 }

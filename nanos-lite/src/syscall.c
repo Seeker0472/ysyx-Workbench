@@ -70,9 +70,7 @@ void do_syscall(Context *c) {
     c->GPRx = mm_brk(a[1]);
     break;
   case SYS_time:
-    printf("SYS_TIME!!!!!\n");
     time = io_read(AM_TIMER_UPTIME).us;
-    printf("SYS_TIME!!!!!\n");
     ((struct timeval *)a[1])->tv_sec = time / 1000000;
     ((struct timeval *)a[1])->tv_usec = time % 1000000;
     c->GPRx = 0;
@@ -86,6 +84,4 @@ void do_syscall(Context *c) {
     break;
         default : panic("Unhandled syscall ID = 0x%x", a[0]);
     }
-      printf("SYS_TIME!!!!!\n");
-
 }
