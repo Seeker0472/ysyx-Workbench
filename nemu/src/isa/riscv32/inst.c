@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include "common.h"
+#include "isa-def.h"
 #include "local-include/reg.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
@@ -89,16 +90,16 @@ int32_t mulh(int32_t src1, int32_t src2) {
 void do_ecall(Decode *s){
   s->dnpc=isa_raise_intr(0xb,s->pc);
   cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
+  printf("mcause:%x\n",cpu.csr[NEMU_CSR_MCAUSE]);
   // 判断异常的类型
-  switch (cpu.csr[NEMU_CSR_MSTATUS]&MSTATUS_MPP_MMODE) {
-    case MSTATUS_MPP_MMODE:
+  switch (cpu.PRIV) {
+    case NEMU_PRIV_M:
       cpu.csr[NEMU_CSR_MCAUSE]=0xb;
       break;
-    case 0:
+    case NEMU_PRIV_U:
       cpu.csr[NEMU_CSR_MCAUSE]=0x8;
       break;
     default:
-      printf("mcause:%x",cpu.csr[NEMU_CSR_MCAUSE]);
       assert(0);
   }
 }
