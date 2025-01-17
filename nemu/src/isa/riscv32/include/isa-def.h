@@ -35,7 +35,7 @@ typedef struct {
   } inst;
 } MUXDEF(CONFIG_RV64, riscv64_ISADecodeInfo, riscv32_ISADecodeInfo);
 
-enum {NEMU_PRIV_U,NEMU_PRIV_HS,NEMU_PRIV_M,NEMU_PRIV_ERROR};
+enum {NEMU_PRIV_U,NEMU_PRIV_HS,NEMU_PRIV_RESERVED,NEMU_PRIV_M,NEMU_PRIV_ERROR};
 
 // #define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 
