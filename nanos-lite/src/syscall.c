@@ -26,7 +26,7 @@ void do_syscall(Context *c) {
         : "a3"                // 通知编译器 a3 寄存器被修改
     );
     asm volatile ("csrr a3, mstatus" ::: "a3");//for test
-    asm volatile ("csrr a3, sstatus" ::: "a3");//for test
+    //asm volatile ("csrr a3, sstatus" ::: "a3");//for test
 #ifdef STRACE_ENABLE
   switch (c->GPR1) {
   case SYS_open:
