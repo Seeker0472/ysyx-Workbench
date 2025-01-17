@@ -46,7 +46,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   for (i = 0; i < LENGTH(segments); i ++) {
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
-      map(&kas, va, va, 0b111);//TODO:prot need?
+      map(&kas, va, va, 0b1000111);//TODO
     }
   }
 
@@ -78,7 +78,7 @@ void __am_switch(Context *c) {
     set_satp(c->pdir);
   }
 }
-# define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111)<<1)|0b1)
+# define PTE(pa,prot) ((ADDRM(pa)>>2)|((prot&0b111111111)<<1)|0b1)
 # define PTE1(pa) PTE(pa,0)
 // 将地址空间as中虚拟地址va所在的虚拟页, 以prot的权限映射到pa所在的物理页.
 // TODO:只用as.ptr,va,pa? as中其他部分有用吗?
@@ -128,8 +128,8 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   top->gpr[2] = (uintptr_t)stack;
   // top->gpr[2] = (uintptr_t)(0);
   // printf("USTACK:%x\n", ustack);
-  top->mstatus = 0x1808;//need to set to user mode ? TODO！
-  top->mcause = 0xb; // 0xb is external interrupt
+  top->mstatus = 0x8;//need to set to user mode ? TODO！
+  top->mcause = 0x0; // 0xb is external interrupt
   top->pdir=as->ptr; // set ptr (ISA-dependent) ,for the root page table entry!(in rv-nemu)
   top->mscratch= (uintptr_t)ustack; 
   return top;

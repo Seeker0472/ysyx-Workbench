@@ -59,7 +59,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
         //alloc a new page and map
         page = (uintptr_t)new_page(1);
         void * va=(void *)((size_t)((void *)ph.p_vaddr + offset) & (~(PGSIZE - 1)));
-        map(&pcb->as,va , (void*)page,0b111);
+        map(&pcb->as,va , (void*)page,0b1101111);//TODO!
         int len = 0;
         
         // The entry of the segement may not aligened to (PGSIZE)!
@@ -140,7 +140,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   uint8_t *stack = new_page(8);
   //map stack
   for (int i = 0; i < 8; i++) {
-    map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,stack+PGSIZE*i,0b111);
+    map(&pcb->as,(void*)pcb->as.area.end-(8-i)*PGSIZE,stack+PGSIZE*i,0b1101111);//TODO!
   }
 
 
@@ -155,7 +155,9 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   //calc addr and num
   uintptr_t base_offseted = (uintptr_t)(stack+ sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2);
-  pcb->cp->GPR3 = base_offseted;
+  // 这里的GPR3设置的有问题
+  // pcb->cp->GPR3 = base_offseted; //这是nanos-lite直接访问的物理地址!不是虚拟地址!
+  pcb->cp->GPR3 = (uintptr_t)((void*)pcb->as.area.end-8*PGSIZE + sizeof(AddrSpace)+sizeof(Context*)+sizeof(uintptr_t)*2); //这是nanos-lite直接访问的物理地址!不是虚拟地址!
   int argc = 0; // TODO need to contain exec_name?
   int envp_num=0;
   for (int i = 0; argv[i] != NULL; i++)

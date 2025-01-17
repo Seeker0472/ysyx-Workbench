@@ -83,22 +83,28 @@
             pkgs.mill
             pkgs.pkgsCross.riscv64.buildPackages.gcc
             pkgs.pkgsCross.riscv64.buildPackages.binutils
-            pkgs.bear    
-	# TODO:add more!!!
+            pkgs.bear
+            # TODO:add more!!!
             pkgs.ncurses
             pkgs.clang-tools
             pkgs.zulu17
             pkgs.yosys
             # libyaml_cpp_0_7
             pkgs.pkg-config
-            python312 
+            python312
             python312Packages.matplotlib
             python312Packages.numpy
             pkgs.stdenv.cc.cc
+            pkgs.dtc
+            pkgs.boost
           ];
           hardeningDisable = [ "fortify" ];
           # hardeningDisable = [ "all" ];
-          
+
+          shellHook = ''
+            export BOOST_ROOT=${pkgs.boost}
+          '';
+
           # LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${pkgs.glibc}/bin";
 
           NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
@@ -125,4 +131,3 @@
       }
     );
 }
-

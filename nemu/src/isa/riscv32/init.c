@@ -13,6 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "isa-def.h"
 #include <isa.h>
 #include <memory/paddr.h>
 
@@ -47,7 +48,8 @@ void init_isa() {
   /* Initialize this virtual computer system. */
   restart();
   cpu.csr[NEMU_CSR_MCAUSE]=0xb;//mcause
-  cpu.csr[NEMU_CSR_MSTATUS] = 0x1800; // mstatus
+  cpu.csr[NEMU_CSR_MSTATUS] = 0x0; //TODO:WHY mstatus
+  cpu.PRIV = NEMU_PRIV_M;
   cpu.csr[NEMU_CSR_MVENDROID] = 0x79737978; // ysyx
   cpu.csr[NEMU_CSR_MARCHID] = 0x15fdf65;  // 学号
   cpu.csr[NEMU_CSR_SATP] = 0;//satp

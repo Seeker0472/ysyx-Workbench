@@ -50,6 +50,12 @@ static inline int get_csr_reg(int idx) {
   case NEMU_CSR_V_MSCRATCH:
     idx = NEMU_CSR_MSCRATCH;
     break;
+  case NEMU_CSR_V_DSCRATCH0:
+    idx = NEMU_CSR_DSCRATCH0;
+    break;
+  case NEMU_CSR_V_SSTATUS:
+    idx = NEMU_CSR_SSTATUS;
+    break;
   default:
     idx = -1;
   }

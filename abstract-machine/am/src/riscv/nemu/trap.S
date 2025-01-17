@@ -38,6 +38,24 @@ f(30) f(31)
 #define OFFSET_EPC     ((NR_REGS + 2) * XLEN)
 #define OFFSET_SCRATCH ((NR_REGS + 3) * XLEN)
 
+# 定义一个名为 add_numbers 的宏
+.macro check_csr
+  // for diff-test-state!
+  csrw sscratch ,sp
+  csrr sp, mstatus
+  csrr sp, sscratch
+  csrr sp, mtvec
+  csrr sp, mcause
+  #csrr sp, sstatus
+  csrr sp, mepc
+  //csrrw sp, mvendorid,sp
+  //csrrw sp, marchid, sp
+  csrr sp, satp
+  csrr sp, mscratch
+  csrr sp, sscratch
+  // check_end
+.endm
+
 # TODO:INIT REG!
 
 #### STACK
@@ -60,6 +78,7 @@ f(30) f(31)
 __am_asm_trap:
 // stage 1-detect user-mod and make sure sp->kernel stack!
   csrrw sp, mscratch, sp   // (1) atomically exchange sp and mscratch
+  check_csr
   bnez sp, save_context    // (2) take the branch if we trapped from user
   csrrw sp, mscratch, sp   // (3) if we trapped from kernel, restore the original sp
 
@@ -102,9 +121,12 @@ b_end:
   STORE t4, OFFSET_SP(sp) // set sp(sp before trap)
 //  STORE t5, OFFSET_NP(sp)// set np,not used?
   csrwi mscratch,0
+// set to M_MODE to am_irq_handle?
 
 // stage-3 set mstatus.MPRV?--pass difftest??<-TODO:need to change?
-  li a0, (1 << 17)
+  //li a0, (1 << 17)
+  //li a0, (1 << 17 | 3<<11 )
+  li a0,0
   or t1, t1, a0
   csrw mstatus, t1
 
@@ -112,6 +134,8 @@ b_end:
   mv a0, sp
   jal __am_irq_handle
   mv sp,a0
+
+  check_csr
 
 // stage-5 restore context
   LOAD t1, OFFSET_STATUS(sp)

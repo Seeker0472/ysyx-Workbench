@@ -23,8 +23,9 @@
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   vaddr_t pc;
-  word_t csr[10]; // TODO:暂时只实现10个
+  word_t csr[40]; // TODO:暂时只实现40个
   bool INTR; //cpu interrupt line
+  word_t PRIV;
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode
@@ -33,6 +34,8 @@ typedef struct {
     uint32_t val;
   } inst;
 } MUXDEF(CONFIG_RV64, riscv64_ISADecodeInfo, riscv32_ISADecodeInfo);
+
+enum {NEMU_PRIV_U,NEMU_PRIV_HS,NEMU_PRIV_RESERVED,NEMU_PRIV_M,NEMU_PRIV_ERROR};
 
 // #define isa_mmu_check(vaddr, len, type) (MMU_DIRECT)
 

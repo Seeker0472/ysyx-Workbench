@@ -19,6 +19,7 @@ Context *__am_irq_handle(Context *c) {
       // default: ; ev.event = EVENT_YIELD; break;
       // TODO:: case 0x0: EVENT_SYSCALL
     case 0xb:
+    case 0x8:
       c->mepc += 4;
 #ifdef __riscv_e
       ev.event = c->gpr[15] == -1 ? EVENT_YIELD : EVENT_SYSCALL;

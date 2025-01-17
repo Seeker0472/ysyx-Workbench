@@ -22,7 +22,7 @@
 #include <memory/host.h>
 word_t expr(char *e, bool *success);
 word_t warp_pmem_read(paddr_t addr) ;
-
+void print_iringbuf();
 
 static int is_batch_mode = false;
 
@@ -83,8 +83,11 @@ static int cmd_print_status(char *args){
     case 'w':
       print_watch_points();
     break;
+    case 'i':
+      print_iringbuf();
+    break;
     default:
-    printf("Please enter a operation(w/r)!\n");
+    printf("Please enter a operation(w/r/i)!\n");
     return 0;
   }
   // printf("cmd_print_status :%s",args);
