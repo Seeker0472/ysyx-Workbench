@@ -40,7 +40,7 @@ void do_syscall(Context *c) {
   a[1] = c->GPR2;
   a[2] = c->GPR3;
   a[3] = c->GPR4;
-  uint64_t time;
+  //uint64_t time;
   switch (a[0]) {
   case SYS_exit:
     // exit_handler in proc.c
@@ -70,9 +70,9 @@ void do_syscall(Context *c) {
     c->GPRx = mm_brk(a[1]);
     break;
   case SYS_time:
-    time = io_read(AM_TIMER_UPTIME).us;
-    ((struct timeval *)a[1])->tv_sec = time / 1000000;
-    ((struct timeval *)a[1])->tv_usec = time % 1000000;
+    //time = io_read(AM_TIMER_UPTIME).us;
+    //((struct timeval *)a[1])->tv_sec = time / 1000000;
+    //((struct timeval *)a[1])->tv_usec = time % 1000000;
     c->GPRx = 0;
     break;
   case SYS_execve:
