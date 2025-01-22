@@ -93,7 +93,7 @@ static inline int get_csr_reg(int idx) {
 
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
-#define csr(idx) (cpu.csr[get_csr_reg(idx)])
+#define csr(idx) (cpu.csr[(idx)])
 
 static inline const char* reg_name(int idx) {
   extern const char* regs[];
