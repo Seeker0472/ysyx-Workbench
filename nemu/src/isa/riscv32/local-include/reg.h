@@ -57,6 +57,8 @@ static inline int get_csr_reg(int idx) {
     idx = NEMU_CSR_SSTATUS;
     break;
   default:
+    printf("Targeted CSR NO:(%d) is NOT implemented!\n",idx);
+    assert(0);
     idx = -1;
   }
   return idx;
