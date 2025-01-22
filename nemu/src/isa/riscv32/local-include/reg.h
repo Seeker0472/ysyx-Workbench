@@ -59,6 +59,9 @@ static inline int get_csr_reg(int idx) {
   case NEMU_CSR_V_MSTATUSH:
     idx = NEMU_CSR_MSTATUSH;
     break;
+  case NEMU_CSR_V_MIE:
+    idx = NEMU_CSR_MIE;
+    break;
   default:
     printf("Targeted CSR NO:(0x%x) is NOT implemented!\n",idx);
     assert(0);
