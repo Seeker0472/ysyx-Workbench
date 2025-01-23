@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 #define DualCSR1(name1,name2,number,paddr_base) GenCSR(name1##number##name2,paddr_base)
-#define DualCSR2(name1,name2,number,paddr_base) DualCSR1(name1,name2,number,paddr_base) DualCSR1(name1,name2,(number)+1,(paddr_base)+1)
+#define DualCSR2(name1,name2,number,paddr_base) DualCSR1(name1,name2,number,paddr_base) DualCSR1(name1,name2,(number+1),(paddr_base+1))
 #define DualCSR4(name1,name2,number,paddr_base) DualCSR2(name1,name2,number,paddr_base) DualCSR2(name1,name2,(number)+2,(paddr_base)+2)
 #define DualCSR8(name1,name2,number,paddr_base) DualCSR4(name1,name2,number,paddr_base) DualCSR4(name1,name2,(number)+4,(paddr_base)+4)
 #define DualCSR16(name1,name2,number,paddr_base) DualCSR8(name1,name2,number,paddr_base) DualCSR8(name1,name2,number+8,paddr_base+8)
