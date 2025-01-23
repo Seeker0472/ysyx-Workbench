@@ -29,19 +29,25 @@ const char *csr_regs[] = {"mtvec",     "mcause",  "mstatus", "mepc",
                           "mvendorid", "marchid", "satp",   "mscratch" , "dscratch0", "sstatus"};
 const uint32_t csr_num = LENGTH(csr_regs);
 void print_csr_reg() {
-#ifdef CONFIG_RV64
-  printf("================================================csrs================================================\n");
-  printf("%-4s      \t%-20s\t%-10s\n", "Name", "Dec", "Hex");
-#else
+//#ifdef CONFIG_RV64
+//  printf("================================================csrs================================================\n");
+//  printf("%-4s      \t%-20s\t%-10s\n", "Name", "Dec", "Hex");
+//#else
+//  printf("========================================csrs========================================\n");
+//  printf("%-12s\t%-10s\t%-8s\n", "Name", "Dec", "Hex");
+//#endif
+//  for(int i=0;i<csr_num;i++){
+//    MUXDEF(CONFIG_RV64, printf("%-12s      \t%-20ld\t%-10lx\n", csr_regs[i],
+//                               cpu.csr[i], cpu.csr[i]);
+//           , printf("%-12s\t%-10d\t%-8x\n", csr_regs[i], cpu.csr[i],
+//                    cpu.csr[i]););
+//  }
   printf("========================================csrs========================================\n");
-  printf("%-12s\t%-10s\t%-8s\n", "Name", "Dec", "Hex");
-#endif
-  for(int i=0;i<csr_num;i++){
-    MUXDEF(CONFIG_RV64, printf("%-12s      \t%-20ld\t%-10lx\n", csr_regs[i],
-                               cpu.csr[i], cpu.csr[i]);
-           , printf("%-12s\t%-10d\t%-8x\n", csr_regs[i], cpu.csr[i],
-                    cpu.csr[i]););
-  }
+#define GenCSR(name,paddr) \
+  printf("%-12s\t,%-10d\t%-8x", #name , cpu.csr[paddr] , cpu.csr[paddr]);
+CSR_LIST
+#undef GenCSR
+
 }
 void isa_reg_display() {
 #ifndef CONFIG_RVE
