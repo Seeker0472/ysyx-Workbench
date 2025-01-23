@@ -16,6 +16,7 @@
 #ifndef __RISCV_REG_H__
 #define __RISCV_REG_H__
 
+#include "debug.h"
 #include <common.h>
 
 static inline int check_reg_idx(int idx) {
@@ -32,76 +33,15 @@ static inline int get_csr_reg(int idx) {
     break;
 CSR_LIST
 #undef X
+  default:
+    Log("WARRNING:Unsupported CSR NO:(%d)",idx);
 }
-//  switch (idx) {
-//  case NEMU_CSR_V_MTVEC: // mtvec
-//    idx = NEMU_CSR_MTVEC;
-//    break;
-//  case NEMU_CSR_V_MCAUSE: // mcause
-//    idx = NEMU_CSR_MCAUSE;
-//    break;
-//  case NEMU_CSR_V_MSTATUS: // mstatus
-//    idx = NEMU_CSR_MSTATUS;
-//    break;
-//  case NEMU_CSR_V_MEPC: // mepc
-//    idx = NEMU_CSR_MEPC;
-//    break;
-//  case NEMU_CSR_V_MVENDROID: // mvendorid
-//    idx = NEMU_CSR_MVENDROID;
-//    break;
-//  case NEMU_CSR_V_MARCHID: // marchid
-//    idx = NEMU_CSR_MARCHID;
-//    break;
-//  case NEMU_CSR_V_SATP: // satp
-//    idx = NEMU_CSR_SATP;
-//    break;
-//  case NEMU_CSR_V_MSCRATCH:
-//    idx = NEMU_CSR_MSCRATCH;
-//    break;
-//  case NEMU_CSR_V_DSCRATCH0:
-//    idx = NEMU_CSR_DSCRATCH0;
-//    break;
-//  case NEMU_CSR_V_SSTATUS:
-//    idx = NEMU_CSR_SSTATUS;
-//    break;
-//  case NEMU_CSR_V_MSTATUSH:
-//    idx = NEMU_CSR_MSTATUSH;
-//    break;
-//  case NEMU_CSR_V_MIE:
-//    idx = NEMU_CSR_MIE;
-//    break;
-//  case NEMU_CSR_V_MHARTID:
-//    idx = NEMU_CSR_MHARTID;
-//    break;
-//  case NEMU_CSR_V_MISA:
-//    idx = NEMU_CSR_MISA;
-//    break;
-//  case NEMU_CSR_V_MIP:
-//    idx = NEMU_CSR_MIP;
-//    break;
-//  case NEMU_CSR_V_PMPCFG0:
-//    idx = NEMU_CSR_PMPCFG0;
-//    break;
-//  case NEMU_CSR_V_PMPADDR0:
-//    idx = NEMU_CSR_PMPADDR0;
-//    break;
-//  case NEMU_CSR_V_PMPADDR1:
-//    idx = NEMU_CSR_PMPADDR1;
-//    break;
-//  case NEMU_CSR_V_PMPADDR2:
-//    idx = NEMU_CSR_PMPADDR2;
-//    break;
-//  default:
-//    printf("Targeted CSR NO:(0x%x) is NOT implemented!\n",idx);
-//    assert(0);
-//    idx = -1;
-//  }
   return idx;
 }
 
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
-#define csr(idx) (cpu.csr[(idx)])
+#define csr(idx) (cpu.csr[get_csr_reg(idx)])
 
 static inline const char* reg_name(int idx) {
   extern const char* regs[];
