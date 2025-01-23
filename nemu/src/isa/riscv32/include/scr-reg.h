@@ -6,11 +6,12 @@
 #include <stdint.h>
 
 #define DualCSR1(name1,name2,number,paddr_base) GenCSR(name1##number##name2,paddr_base)
-#define DualCSR2(name1,name2,number,paddr_base) DualCSR1(name1,name2,number,paddr_base) DualCSR1(name1,name2,number+1,paddr_base+1)
-#define DualCSR4(name1,name2,number,paddr_base) DualCSR2(name1,name2,number,paddr_base) DualCSR2(name1,name2,number+2,paddr_base+2)
-#define DualCSR8(name1,name2,number,paddr_base) DualCSR4(name1,name2,number,paddr_base) DualCSR4(name1,name2,number+4,paddr_base+4)
+#define DualCSR2(name1,name2,number,paddr_base) DualCSR1(name1,name2,number,paddr_base) DualCSR1(name1,name2,(number)+1,(paddr_base)+1)
+#define DualCSR4(name1,name2,number,paddr_base) DualCSR2(name1,name2,number,paddr_base) DualCSR2(name1,name2,(number)+2,(paddr_base)+2)
+#define DualCSR8(name1,name2,number,paddr_base) DualCSR4(name1,name2,number,paddr_base) DualCSR4(name1,name2,(number)+4,(paddr_base)+4)
 #define DualCSR16(name1,name2,number,paddr_base) DualCSR8(name1,name2,number,paddr_base) DualCSR8(name1,name2,number+8,paddr_base+8)
 #define DualCSR32(name1,name2,number,paddr_base) DualCSR16(name1,name2,number,paddr_base) DualCSR16(name1,name2,number+16,paddr_base+16)
+#define DualCSR64(name1,name2,number,paddr_base) DualCSR32(name1,name2,number,paddr_base) DualCSR32(name1,name2,number+32,paddr_base+32)
 
 #define CSR_LIST \
   GenCSR(MTVEC, 0x305) \
@@ -27,7 +28,9 @@
   GenCSR(MIE, 0x304) \
   GenCSR(MHARTID, 0xf14) \
   GenCSR(MISA, 0x301) \
-  GenCSR(MIP, 0x344) 
+  GenCSR(MIP, 0x344) \
+  DualCSR1(PMPCFG,,0,0x3A0) \
+
 
 
 // 生成静态常量定义
