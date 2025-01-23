@@ -44,7 +44,7 @@ void print_csr_reg() {
 //  }
   printf("========================================csrs========================================\n");
 #define GenCSR(name,paddr) \
-  printf("%-12s\t,%-10d\t%-8x", #name , cpu.csr[paddr] , cpu.csr[paddr]);
+  printf("%-12s\t,%-10d\t%-8x\n", #name , cpu.csr[paddr] , cpu.csr[paddr]);
 CSR_LIST
 #undef GenCSR
 
