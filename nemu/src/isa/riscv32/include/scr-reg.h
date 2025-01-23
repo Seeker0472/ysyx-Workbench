@@ -89,6 +89,10 @@
   GenCSR(MHARTID, 0xf14) \
   GenCSR(MISA, 0x301) \
   GenCSR(MIP, 0x344) \
+  GenCSR(TSELECT, 0x7a0) \
+  GenCSR(TDATA1, 0x7a1) \
+  GenCSR(TDATA2, 0x7a2) \
+  GenCSR(TDATA3, 0x7a3) \
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR63(PMPADDR,,0x3B0) 
 
