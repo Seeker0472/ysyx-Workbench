@@ -34,7 +34,7 @@ static inline int get_csr_reg(int idx) {
 CSR_LIST
 #undef X
   default:
-    Log("WARRNING:Unsupported CSR NO:(%d)",idx);
+    Log("WARRNING:Unsupported CSR NO:(0x%x)",idx);
 }
   return idx;
 }
