@@ -26,68 +26,76 @@ static inline int check_reg_idx(int idx) {
 static inline int get_csr_reg(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 4096));
   switch (idx) {
-  case NEMU_CSR_V_MTVEC: // mtvec
-    idx = NEMU_CSR_MTVEC;
+#define GenCSR(name, paddr) \
+  case NEMU_CSR_V_##name:     \
+    idx = NEMU_CSR_##name;    \
     break;
-  case NEMU_CSR_V_MCAUSE: // mcause
-    idx = NEMU_CSR_MCAUSE;
-    break;
-  case NEMU_CSR_V_MSTATUS: // mstatus
-    idx = NEMU_CSR_MSTATUS;
-    break;
-  case NEMU_CSR_V_MEPC: // mepc
-    idx = NEMU_CSR_MEPC;
-    break;
-  case NEMU_CSR_V_MVENDROID: // mvendorid
-    idx = NEMU_CSR_MVENDROID;
-    break;
-  case NEMU_CSR_V_MARCHID: // marchid
-    idx = NEMU_CSR_MARCHID;
-    break;
-  case NEMU_CSR_V_SATP: // satp
-    idx = NEMU_CSR_SATP;
-    break;
-  case NEMU_CSR_V_MSCRATCH:
-    idx = NEMU_CSR_MSCRATCH;
-    break;
-  case NEMU_CSR_V_DSCRATCH0:
-    idx = NEMU_CSR_DSCRATCH0;
-    break;
-  case NEMU_CSR_V_SSTATUS:
-    idx = NEMU_CSR_SSTATUS;
-    break;
-  case NEMU_CSR_V_MSTATUSH:
-    idx = NEMU_CSR_MSTATUSH;
-    break;
-  case NEMU_CSR_V_MIE:
-    idx = NEMU_CSR_MIE;
-    break;
-  case NEMU_CSR_V_MHARTID:
-    idx = NEMU_CSR_MHARTID;
-    break;
-  case NEMU_CSR_V_MISA:
-    idx = NEMU_CSR_MISA;
-    break;
-  case NEMU_CSR_V_MIP:
-    idx = NEMU_CSR_MIP;
-    break;
-  case NEMU_CSR_V_PMPCFG0:
-    idx = NEMU_CSR_PMPCFG0;
-    break;
-  case NEMU_CSR_V_PMPADDR0:
-    idx = NEMU_CSR_PMPADDR0;
-    break;
-  case NEMU_CSR_V_PMPADDR1:
-    idx = NEMU_CSR_PMPADDR1;
-    break;
-  case NEMU_CSR_V_PMPADDR2:
-    idx = NEMU_CSR_PMPADDR2;
-    break;
-  default:
-    printf("Targeted CSR NO:(0x%x) is NOT implemented!\n",idx);
-    assert(0);
-    idx = -1;
-  }
+CSR_LIST
+#undef X
+}
+//  switch (idx) {
+//  case NEMU_CSR_V_MTVEC: // mtvec
+//    idx = NEMU_CSR_MTVEC;
+//    break;
+//  case NEMU_CSR_V_MCAUSE: // mcause
+//    idx = NEMU_CSR_MCAUSE;
+//    break;
+//  case NEMU_CSR_V_MSTATUS: // mstatus
+//    idx = NEMU_CSR_MSTATUS;
+//    break;
+//  case NEMU_CSR_V_MEPC: // mepc
+//    idx = NEMU_CSR_MEPC;
+//    break;
+//  case NEMU_CSR_V_MVENDROID: // mvendorid
+//    idx = NEMU_CSR_MVENDROID;
+//    break;
+//  case NEMU_CSR_V_MARCHID: // marchid
+//    idx = NEMU_CSR_MARCHID;
+//    break;
+//  case NEMU_CSR_V_SATP: // satp
+//    idx = NEMU_CSR_SATP;
+//    break;
+//  case NEMU_CSR_V_MSCRATCH:
+//    idx = NEMU_CSR_MSCRATCH;
+//    break;
+//  case NEMU_CSR_V_DSCRATCH0:
+//    idx = NEMU_CSR_DSCRATCH0;
+//    break;
+//  case NEMU_CSR_V_SSTATUS:
+//    idx = NEMU_CSR_SSTATUS;
+//    break;
+//  case NEMU_CSR_V_MSTATUSH:
+//    idx = NEMU_CSR_MSTATUSH;
+//    break;
+//  case NEMU_CSR_V_MIE:
+//    idx = NEMU_CSR_MIE;
+//    break;
+//  case NEMU_CSR_V_MHARTID:
+//    idx = NEMU_CSR_MHARTID;
+//    break;
+//  case NEMU_CSR_V_MISA:
+//    idx = NEMU_CSR_MISA;
+//    break;
+//  case NEMU_CSR_V_MIP:
+//    idx = NEMU_CSR_MIP;
+//    break;
+//  case NEMU_CSR_V_PMPCFG0:
+//    idx = NEMU_CSR_PMPCFG0;
+//    break;
+//  case NEMU_CSR_V_PMPADDR0:
+//    idx = NEMU_CSR_PMPADDR0;
+//    break;
+//  case NEMU_CSR_V_PMPADDR1:
+//    idx = NEMU_CSR_PMPADDR1;
+//    break;
+//  case NEMU_CSR_V_PMPADDR2:
+//    idx = NEMU_CSR_PMPADDR2;
+//    break;
+//  default:
+//    printf("Targeted CSR NO:(0x%x) is NOT implemented!\n",idx);
+//    assert(0);
+//    idx = -1;
+//  }
   return idx;
 }
 
