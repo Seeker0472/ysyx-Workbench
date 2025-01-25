@@ -121,7 +121,6 @@ GenCSR(MHARTID, 0xf14) \
   GenCSR(PMPADDR16_, 0x3c0) \
   DualCSR28(MHPCOUNTER3_,, 0xb03) \
   DualCSR28(MHPCOUNTER3H_,, 0xb83) \
-  GenCSR(TIME, 0xC01) \
   GenCSR(MTOBI, 0xFB0) \
 
 // 生成静态常量定义
