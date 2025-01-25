@@ -59,7 +59,7 @@ GenCSR(MHARTID, 0xf14) \
   DualCSR15(PMPADDR,,0x3B0) \
 
 #define CSR_U_LIST \
-  GenCSR(SCOUNTOVF, 0xDA0) \
+  //GenCSR(SCOUNTOVF, 0xDA0)
   //GenCSR(TIME, 0xC01) 
   //GenCSR(MTOBI, 0xFB0)
 
