@@ -95,7 +95,7 @@ void do_ecall(Decode *s){
       s->dnpc=isa_raise_intr(0xb,s->pc);
       break;
     case NEMU_PRIV_U:
-      s->dnpc=isa_raise_intr(0xb,s->pc);
+      s->dnpc=isa_raise_intr(0x8,s->pc);
       break;
     default:
       assert(0);

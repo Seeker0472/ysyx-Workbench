@@ -44,16 +44,16 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
   // set previous privilege
   cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
-  switch (cpu.PRIV) {
-    case NEMU_PRIV_M:
-      cpu.csr[NEMU_CSR_MCAUSE]=0xb;
-      break;
-    case NEMU_PRIV_U:
-      cpu.csr[NEMU_CSR_MCAUSE]=0x8;
-      break;
-    default:
-      assert(0);
-  }
+//  switch (cpu.PRIV) {
+//    case NEMU_PRIV_M:
+//      cpu.csr[NEMU_CSR_MCAUSE]=0xb;
+//      break;
+//    case NEMU_PRIV_U:
+//      cpu.csr[NEMU_CSR_MCAUSE]=0x8;
+//      break;
+//    default:
+//      assert(0);
+//  }
   return cpu.csr[NEMU_CSR_MTVEC];//mtvec
 }
 
