@@ -54,7 +54,6 @@ static inline bool check_read(uint32_t idx){
 
 
 
-
 #define csr(idx) (cpu.csr[get_csr_reg(idx)])
 
 static inline const char* reg_name(int idx) {
