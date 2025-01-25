@@ -51,10 +51,15 @@ static inline bool check_read(uint32_t idx){
   return true;
 }
 
+// 统一读写宏（返回可赋值的左值）
+#define csr(idx) (*({ \
+    uint32_t *__ptr = check_write(idx) ? &(cpu.gpr[(idx)]) : &dummy; \
+    (check_read(idx) ? (void)0 : (dummy = 0)); /* 读失败时返回0 */ \
+    __ptr; \
+}))
 
 
-
-#define csr(idx) (cpu.csr[get_csr_reg(idx)])
+//#define csr(idx) (cpu.csr[get_csr_reg(idx)])
 
 static inline const char* reg_name(int idx) {
   extern const char* regs[];
