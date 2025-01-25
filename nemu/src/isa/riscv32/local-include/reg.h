@@ -56,6 +56,7 @@ static inline bool check_defined(uint32_t idx, Decode *s) {
     CSR_U_LIST
 #undef GenCSR
     s->dnpc = isa_raise_intr(2, s->pc);
+    cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
     break;
   default:
     Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
