@@ -90,18 +90,6 @@ int32_t mulh(int32_t src1, int32_t src2) {
 void do_ecall(Decode *s){
   s->dnpc=isa_raise_intr(0xb,s->pc);
   cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
-  //printf("mcause:%x\n",cpu.csr[NEMU_CSR_MCAUSE]);
-  // 判断异常的类型
-  switch (cpu.PRIV) {
-    case NEMU_PRIV_M:
-      cpu.csr[NEMU_CSR_MCAUSE]=0xb;
-      break;
-    case NEMU_PRIV_U:
-      cpu.csr[NEMU_CSR_MCAUSE]=0x8;
-      break;
-    default:
-      assert(0);
-  }
 }
 
 // decode_operand译码工作， 这个函数将会根据传入的指令类型type来进行操作数的译码, 译码结果将记录到函数参数rd, src1, src2和imm中

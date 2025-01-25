@@ -16,6 +16,7 @@
 #ifndef __RISCV_REG_H__
 #define __RISCV_REG_H__
 
+#include "isa.h"
 #include <common.h>
 #include <stdint.h>
 #include <cpu/decode.h>
@@ -67,17 +68,18 @@ static inline bool check_defined(uint32_t idx) {
 static inline bool check_write(uint32_t idx,Decode *s) { 
   if((idx&CSR_READONLY_MASK)==CSR_READONLY_MASK){
     // TODO:raise exception!
+    //s->dnpc = isa_raise_intr(0);
     return false;
   }else
     return check_defined(idx); 
 }
-static inline bool check_read(uint32_t idx) { return check_defined(idx); }
+static inline bool check_read(uint32_t idx,Decode *s) { return check_defined(idx); }
 
 // 统一读写宏（返回可赋值的左值）
 #define csr(idx,s)                                                               \
   (*({                                                                         \
     uint32_t *__ptr = check_write(idx,s) ? &(cpu.csr[(idx)]) : &dummy;           \
-    (check_read(idx) ? (void)0 : (dummy = 0)); /* 读失败时返回0 */             \
+    (check_read(idx,s) ? (void)0 : (dummy = 0)); /* 读失败时返回0 */             \
     __ptr;                                                                     \
   }))
 
