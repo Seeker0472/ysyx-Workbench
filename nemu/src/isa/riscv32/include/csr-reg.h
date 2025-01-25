@@ -74,20 +74,27 @@
 #define DualCSR64(name1,name2,paddr_base) DualCSR63(name1,name2,paddr_base) GenCSR(name1##64##name2,(paddr_base+64))
 
 #define CSR_LIST \
-  GenCSR(MTVEC, 0x305) \
-  GenCSR(MCAUSE, 0x342) \
-  GenCSR(MSTATUS, 0x300) \
-  GenCSR(MEPC, 0x341) \
+\
   GenCSR(MVENDROID, 0xF11) \
   GenCSR(MARCHID, 0xF12) \
+\
+GenCSR(MHARTID, 0xf14) \
+\
+  GenCSR(MSTATUS, 0x300) \
+  GenCSR(MISA, 0x301) \
+  GenCSR(MEDELEG, 0x302) \
+  GenCSR(MIDELEG, 0x303) \
+  GenCSR(MTVEC, 0x305) \
+\
+  GenCSR(MCAUSE, 0x342) \
+  GenCSR(MINSTRET, 0xB02) \
+  GenCSR(MEPC, 0x341) \
   GenCSR(SATP, 0x180) \
   GenCSR(MSCRATCH, 0x340) \
   GenCSR(DSCRATCH0, 0x140) \
   GenCSR(SSTATUS, 0x100) \
   GenCSR(MSTATUSH, 0x310) \
   GenCSR(MIE, 0x304) \
-  GenCSR(MHARTID, 0xf14) \
-  GenCSR(MISA, 0x301) \
   GenCSR(MIP, 0x344) \
   GenCSR(TSELECT, 0x7a0) \
   GenCSR(TDATA1, 0x7a1) \
@@ -97,6 +104,13 @@
   GenCSR(MCOUNTINHIBIT, 0x320) \
   GenCSR(MTVAL, 0x343) \
   GenCSR(SCOUNTEREN, 0x106) \
+  GenCSR(MCYCLE, 0xB00) \
+  GenCSR(MNSTATUS, 0x744) \
+  GenCSR(MNEPC, 0x741) \
+  GenCSR(SEPC, 0x141) \
+  GenCSR(STVAL, 0x143) \
+  GenCSR(STVEC, 0x105) \
+  GenCSR(SCAUSE, 0x142) \
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
