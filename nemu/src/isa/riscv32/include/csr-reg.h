@@ -119,6 +119,7 @@ GenCSR(MHARTID, 0xf14) \
 
 #define CSR_U_LIST \
   GenCSR(PMPADDR16_, 0x3c0) \
+  GenCSR(TINFO, 0x7a4) \
   DualCSR28(MHPCOUNTER3_,, 0xb03) \
   DualCSR28(MHPCOUNTER3H_,, 0xb83) \
 
