@@ -101,6 +101,7 @@
 
 #define CSR_U_LIST \
   GenCSR(SCOUNTOVF, 0xDA0) \
+  GenCSR(TIME, 0xC01) \
 
 // 生成静态常量定义
 #define GenCSR(name, paddr) \
