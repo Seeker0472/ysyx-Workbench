@@ -108,7 +108,7 @@ GenCSR(MHARTID, 0xf14) \
   GenCSR(STVEC, 0x105) \
   GenCSR(SCAUSE, 0x142) \
   GenCSR(SIE, 0x104) \
-  DualCSR15(PMPCFG,,0x3A0) \
+  DualCSR4(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
 #define CSR_U_LIST \
