@@ -42,8 +42,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
   uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
   cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
-
-    switch (cpu.PRIV) {
+  // set previous privilege
+  cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
+  switch (cpu.PRIV) {
     case NEMU_PRIV_M:
       cpu.csr[NEMU_CSR_MCAUSE]=0xb;
       break;

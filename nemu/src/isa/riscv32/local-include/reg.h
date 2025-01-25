@@ -68,7 +68,7 @@ static inline bool check_defined(uint32_t idx) {
 static inline bool check_write(uint32_t idx,Decode *s) { 
   if((idx&CSR_READONLY_MASK)==CSR_READONLY_MASK){
     // TODO:raise exception!
-    //s->dnpc = isa_raise_intr(0);
+    s->dnpc = isa_raise_intr(2,s->pc);
     return false;
   }else
     return check_defined(idx); 

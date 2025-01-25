@@ -88,8 +88,17 @@ int32_t mulh(int32_t src1, int32_t src2) {
 
 
 void do_ecall(Decode *s){
-  s->dnpc=isa_raise_intr(0xb,s->pc);
-  cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
+  // user/system ecall
+  switch (cpu.PRIV) {
+    case NEMU_PRIV_M:
+      s->dnpc=isa_raise_intr(0xb,s->pc);
+      break;
+    case NEMU_PRIV_U:
+      s->dnpc=isa_raise_intr(0xb,s->pc);
+      break;
+    default:
+      assert(0);
+  }
 }
 
 // decode_operand译码工作， 这个函数将会根据传入的指令类型type来进行操作数的译码, 译码结果将记录到函数参数rd, src1, src2和imm中
