@@ -18,8 +18,8 @@
 
 #include "isa.h"
 #include <common.h>
-#include <stdint.h>
 #include <cpu/decode.h>
+#include <stdint.h>
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
@@ -65,24 +65,39 @@ static inline bool check_defined(uint32_t idx) {
 #define CSR_READONLY_MASK 0b110000000000
 #define CSR_PRIV_MASK 0b001100000000
 
-static inline bool check_write(uint32_t idx,Decode *s) { 
-  if((idx&CSR_READONLY_MASK)==CSR_READONLY_MASK){
+static inline bool check_write(uint32_t idx, Decode *s) {
+  if ((idx & CSR_READONLY_MASK) == CSR_READONLY_MASK) {
     // TODO:raise exception!
-    s->dnpc = isa_raise_intr(2,s->pc);
+    s->dnpc = isa_raise_intr(2, s->pc);
     return false;
-  }else
-    return check_defined(idx); 
+  } else
+    return check_defined(idx);
 }
-static inline bool check_read(uint32_t idx,Decode *s) { return check_defined(idx); }
+static inline bool check_read(uint32_t idx, Decode *s) {
+  return check_defined(idx);
+}
 
+/*
 // 统一读写宏（返回可赋值的左值）
-#define csr(idx,s)                                                               \
+#define csr(idx,s) \
   (*({                                                                         \
-    uint32_t *__ptr = check_write(idx,s) ? &(cpu.csr[(idx)]) : &dummy;           \
-    (check_read(idx,s) ? (void)0 : (dummy = 0)); /* 读失败时返回0 */             \
+    uint32_t *__ptr = check_write(idx,s) ? &(cpu.csr[(idx)]) : &dummy; \
+    (check_read(idx,s) ? (void)0 : (dummy = 0));              \
+    __ptr;                                                                     \
+  }))
+*/
+#define csrw(idx, s)                                                           \
+  (*({                                                                         \
+    uint32_t *__ptr = check_write(idx, s) ? &(cpu.csr[(idx)]) : &dummy;        \
     __ptr;                                                                     \
   }))
 
+#define csrr(idx, s)                                                           \
+  (*({                                                                         \
+    uint32_t *__ptr = check_read(idx, s) ? &(cpu.csr[(idx)]) : &dummy;         \
+    (dummy = 0);                                                               \
+    __ptr;                                                                     \
+  }))
 // #define csr(idx) (cpu.csr[get_csr_reg(idx)])
 
 static inline const char *reg_name(int idx) {
