@@ -7,6 +7,8 @@
 #define __RISCV_CSR_REG_H__
 
 #include <stdint.h>
+#define CONCAT_IMPL(a, b) a##b
+#define CONCAT(a, b) CONCAT_IMPL(a, b)
 
 #define DualCSR0(name1,name2,paddr_base)  GenCSR(name1##0##name2,paddr_base)
 #define DualCSR1(name1,name2,paddr_base)  DualCSR0(name1,name2,paddr_base)   GenCSR(name1##1##name2,(paddr_base+1))
@@ -28,7 +30,7 @@
 #define CSR_LIST \
   GenCSR(MVENDROID, 0xF11) \
   GenCSR(MARCHID, 0xF12) \
-  GenCSR(MHARTID, 0xf14) \
+GenCSR(MHARTID, 0xf14) \
   GenCSR(MSTATUS, 0x300) \
   GenCSR(MISA, 0x301) \
   GenCSR(MEDELEG, 0x302) \
@@ -48,6 +50,7 @@
   GenCSR(MCOUNTINHIBIT, 0x320) \
   GenCSR(MTVAL, 0x343) \
   GenCSR(SCOUNTEREN, 0x106) \
+  GenCSR(MCYCLE, 0xB00) \
   GenCSR(MNSTATUS, 0x744) \
   GenCSR(MNEPC, 0x741) \
   GenCSR(SEPC, 0x141) \
