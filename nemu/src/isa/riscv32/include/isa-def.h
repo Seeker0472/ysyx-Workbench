@@ -23,7 +23,7 @@
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   vaddr_t pc;
-  word_t csr[40]; // TODO:暂时只实现40个
+  word_t csr[4096]; 
   bool INTR; //cpu interrupt line
   word_t PRIV;
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
