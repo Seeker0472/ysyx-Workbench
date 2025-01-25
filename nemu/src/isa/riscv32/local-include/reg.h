@@ -49,7 +49,7 @@ static inline bool check_defined(uint32_t idx) {
   bool okey = false;
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
-  case paddr:                                                      \
+  case paddr:                                                                  \
     okey = true;                                                               \
     break;
     CSR_LIST
