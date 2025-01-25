@@ -16,11 +16,9 @@
 #ifndef __RISCV_REG_H__
 #define __RISCV_REG_H__
 
-#include "debug.h"
 #include <common.h>
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
-
 
 static inline int check_reg_idx(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MUXDEF(CONFIG_RVE, 16, 32)));
