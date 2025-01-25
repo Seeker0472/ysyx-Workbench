@@ -3,9 +3,10 @@
 // remember to update the display func in
 // nemu/src/isa/riscv32/reg.c
 
+#ifndef __RISCV_CSR_REG_H__
+#define __RISCV_CSR_REG_H__
+
 #include <stdint.h>
-#define CONCAT_IMPL(a, b) a##b
-#define CONCAT(a, b) CONCAT_IMPL(a, b)
 
 #define DualCSR0(name1,name2,paddr_base)  GenCSR(name1##0##name2,paddr_base)
 #define DualCSR1(name1,name2,paddr_base)  DualCSR0(name1,name2,paddr_base)   GenCSR(name1##1##name2,(paddr_base+1))
@@ -27,7 +28,6 @@
 #define CSR_LIST \
   GenCSR(MVENDROID, 0xF11) \
   GenCSR(MARCHID, 0xF12) \
-GenCSR(MHARTID, 0xf14) \
   GenCSR(MSTATUS, 0x300) \
   GenCSR(MISA, 0x301) \
   GenCSR(MEDELEG, 0x302) \
@@ -58,22 +58,12 @@ GenCSR(MHARTID, 0xf14) \
   DualCSR4(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
-#define CSR_U_LIST \
-  //GenCSR(SCOUNTOVF, 0xDA0)
-  //GenCSR(TIME, 0xC01) 
-  //GenCSR(MTOBI, 0xFB0)
-
 // 生成静态常量定义
 #define GenCSR(name, paddr) \
   static const uint32_t NEMU_CSR_V_##name = paddr; \
   static const uint32_t NEMU_CSR_##name = paddr;
 CSR_LIST
-CSR_U_LIST
 #undef GenCSR
-
-
-
-
 
 //Old Def
 
@@ -101,3 +91,4 @@ CSR_U_LIST
 //gen(PMPADDR1,0x3B1,0x17)
 //gen(PMPADDR2,0x3B2,0x18)
 //
+#endif
