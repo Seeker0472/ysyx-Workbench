@@ -17,6 +17,7 @@
 #define __RISCV_REG_H__
 
 #include "isa.h"
+//#include "csr-reg.h"
 #include <common.h>
 #include <cpu/decode.h>
 #include <stdint.h>
@@ -32,7 +33,7 @@ static inline int get_csr_reg(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 4096));
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
-  case NEMU_CSR_V_##name:                                                      \
+  case NEMU_CSR_V_##name :                                                      \
     idx = NEMU_CSR_##name;                                                     \
     break;
     CSR_LIST
@@ -47,11 +48,23 @@ static inline int get_csr_reg(int idx) {
 
 static uint32_t dummy = 0;
 
-static inline bool check_defined(uint32_t idx) {
+static inline bool check_defined(uint32_t idx, Decode *s) {
   bool okey = false;
+#ifdef NOTOPEN
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
-  case paddr:                                                                  \
+  case NEMU_CSR_V_##name :                                                      \
+    CSR_U_LIST
+#undef GenCSR
+    s->dnpc = isa_raise_intr(2, s->pc);
+    break;
+  default:
+    Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
+  }
+#endif
+  switch (idx) {
+#define GenCSR(name, paddr)                                                    \
+  case NEMU_CSR_V_##name:                                                      \
     okey = true;                                                               \
     break;
     CSR_LIST
@@ -71,10 +84,10 @@ static inline bool check_write(uint32_t idx, Decode *s) {
     s->dnpc = isa_raise_intr(2, s->pc);
     return false;
   } else
-    return check_defined(idx);
+    return check_defined(idx, s);
 }
 static inline bool check_read(uint32_t idx, Decode *s) {
-  return check_defined(idx);
+  return check_defined(idx, s);
 }
 
 /*
