@@ -98,7 +98,8 @@
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
-
+#define CSR_U_LIST \
+  GenCSR(SCOUNTOVF, 0xDA0) \
 
 // 生成静态常量定义
 #define GenCSR(name, paddr) \

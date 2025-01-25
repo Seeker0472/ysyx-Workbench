@@ -60,7 +60,16 @@ static inline bool check_defined(uint32_t idx) {
   return okey;
 }
 
-static inline bool check_write(uint32_t idx) { return check_defined(idx); }
+#define CSR_READONLY_MASK 0b110000000000
+#define CSR_PRIV_MASK 0b001100000000
+
+static inline bool check_write(uint32_t idx) { 
+  if((idx&CSR_READONLY_MASK)==CSR_READONLY_MASK){
+    // TODO:raise exception!
+    return false;
+  }else
+    return check_defined(idx); 
+}
 static inline bool check_read(uint32_t idx) { return check_defined(idx); }
 
 // 统一读写宏（返回可赋值的左值）
