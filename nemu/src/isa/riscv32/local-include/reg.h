@@ -50,6 +50,16 @@ static uint32_t dummy = 0;
 
 static inline bool check_defined(uint32_t idx, Decode *s) {
   bool okey = false;
+#ifndef CLOCHEBLOCK
+  switch (idx) {
+#define GenCSR(name, paddr)                                                    \
+  case NEMU_CSR_V_##name :
+    CSR_U_LIST
+#undef GenCSR
+      return false;
+  }
+
+#endif
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
   case NEMU_CSR_V_##name:                                                      \
@@ -60,6 +70,7 @@ static inline bool check_defined(uint32_t idx, Decode *s) {
   default:
     s->dnpc = isa_raise_intr(2, s->pc);
     cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
+
     Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
   }
   return okey;
