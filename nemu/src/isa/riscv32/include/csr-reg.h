@@ -106,6 +106,7 @@
   static const uint32_t NEMU_CSR_V_##name = paddr; \
   static const uint32_t NEMU_CSR_##name = paddr;
 CSR_LIST
+CSR_U_LIST
 #undef GenCSR
 
 

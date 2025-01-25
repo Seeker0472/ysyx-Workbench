@@ -50,10 +50,9 @@ static uint32_t dummy = 0;
 
 static inline bool check_defined(uint32_t idx, Decode *s) {
   bool okey = false;
-#ifdef NOTOPEN
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
-  case NEMU_CSR_V_##name :                                                      \
+  case NEMU_CSR_V_##name :
     CSR_U_LIST
 #undef GenCSR
     s->dnpc = isa_raise_intr(2, s->pc);
@@ -61,7 +60,6 @@ static inline bool check_defined(uint32_t idx, Decode *s) {
   default:
     Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
   }
-#endif
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
   case NEMU_CSR_V_##name:                                                      \
