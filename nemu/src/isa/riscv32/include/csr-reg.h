@@ -74,18 +74,12 @@
 #define DualCSR64(name1,name2,paddr_base) DualCSR63(name1,name2,paddr_base) GenCSR(name1##64##name2,(paddr_base+64))
 
 #define CSR_LIST \
-\
   GenCSR(MVENDROID, 0xF11) \
   GenCSR(MARCHID, 0xF12) \
-\
-GenCSR(MHARTID, 0xf14) \
-\
+  GenCSR(MHARTID, 0xf14) \
   GenCSR(MSTATUS, 0x300) \
   GenCSR(MISA, 0x301) \
-  GenCSR(MEDELEG, 0x302) \
-  GenCSR(MIDELEG, 0x303) \
   GenCSR(MTVEC, 0x305) \
-\
   GenCSR(MCAUSE, 0x342) \
   GenCSR(MINSTRET, 0xB02) \
   GenCSR(MEPC, 0x341) \
