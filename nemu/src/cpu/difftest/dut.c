@@ -13,11 +13,13 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "cpu/difftest.h"
 #include <dlfcn.h>
 
 #include <isa.h>
 #include <cpu/cpu.h>
 #include <memory/paddr.h>
+#include <stdint.h>
 #include <utils.h>
 #include <difftest-def.h>
 
@@ -36,6 +38,15 @@ void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 
 static bool is_skip_ref = false;
 static int skip_dut_nr_inst = 0;
+
+void difftest_step_raise(uint64_t NO) {
+//step
+  ref_difftest_exec(1);
+//rasie intr
+  ref_difftest_raise_intr(NO);
+//set step
+  difftest_skip_ref();
+}
 
 // this is used to let ref skip instructions which
 // can not produce consistent behavior with NEMU

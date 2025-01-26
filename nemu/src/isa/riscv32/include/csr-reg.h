@@ -90,6 +90,7 @@
   GenCSR(MCAUSE, 0x342) \
   GenCSR(MTVAL, 0x343) \
   GenCSR(MIP, 0x344) \
+  \
   GenCSR(SATP, 0x180) \
   GenCSR(SCAUSE, 0x142) \
   GenCSR(SEPC, 0x141) \
@@ -103,6 +104,8 @@
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
+
+//TODO:remove!
 #define CSR_U_LIST \
   GenCSR(PMPADDR16_, 0x3c0) \
   DualCSR28(MHPCOUNTER3_,, 0xb03) \

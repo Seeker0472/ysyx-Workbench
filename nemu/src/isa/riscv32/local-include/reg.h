@@ -17,6 +17,7 @@
 #define __RISCV_REG_H__
 
 #include "isa.h"
+#include "macro.h"
 //#include "csr-reg.h"
 #include <common.h>
 #include <cpu/decode.h>
@@ -44,6 +45,8 @@ static inline int get_csr_reg(int idx) {
   return idx;
 }
 
+void difftest_step_raise(uint64_t NO);
+
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
 static uint32_t dummy = 0;
@@ -70,6 +73,7 @@ static inline bool check_defined(uint32_t idx, Decode *s) {
   default:
     s->dnpc = isa_raise_intr(2, s->pc);
     cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
+    IFDEF(CONFIG_DIFFTEST,difftest_step_raise(2));
 
     Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
   }
