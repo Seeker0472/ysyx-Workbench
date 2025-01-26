@@ -82,6 +82,7 @@
             pkgs.llvm_18
             pkgs.mill
             pkgs.pkgsCross.riscv64.buildPackages.gcc
+            pkgs.pkgsCross.riscv32.buildPackages.gcc
             pkgs.pkgsCross.riscv64.buildPackages.binutils
             pkgs.bear
             # TODO:add more!!!

@@ -28,7 +28,8 @@ void ftrace_func_ret(paddr_t pc_now, paddr_t address);
 paddr_t isa_call_mret();
 
 #define R(i) gpr(i)
-#define CSR(i) csr(i)
+#define CSRW(i,s) csrw(i,s)
+#define CSRR(i,s) csrr(i,s)
 #define Mr vaddr_read
 #define Mw vaddr_write
 #define Ext32(x) ((x)&0x80000000)?((x)|0xFFFFFFFF00000000):((x)&0x00000000FFFFFFFF)
@@ -88,16 +89,13 @@ int32_t mulh(int32_t src1, int32_t src2) {
 
 
 void do_ecall(Decode *s){
-  s->dnpc=isa_raise_intr(0xb,s->pc);
-  cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
-  //printf("mcause:%x\n",cpu.csr[NEMU_CSR_MCAUSE]);
-  // 判断异常的类型
+  // user/system ecall
   switch (cpu.PRIV) {
     case NEMU_PRIV_M:
-      cpu.csr[NEMU_CSR_MCAUSE]=0xb;
+      s->dnpc=isa_raise_intr(0xb,s->pc);
       break;
     case NEMU_PRIV_U:
-      cpu.csr[NEMU_CSR_MCAUSE]=0x8;
+      s->dnpc=isa_raise_intr(0x8,s->pc);
       break;
     default:
       assert(0);
@@ -205,12 +203,14 @@ static int decode_exec(Decode *s) {
   //INST:remuw
 
   //rv_zisr
-  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=src1);
-  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=CSR(imm&0xfff) | src1;);//csrw把rd置0;csrr把rs1置0
-  INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=CSR(imm&0xfff) &~ src1;);
-  INSTPAT("??????? ????? ????? 101 ????? 11100 11", csrrwi , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=rs1;);//csrw把rd置0;csrr把rs1置0
-  INSTPAT("??????? ????? ????? 110 ????? 11100 11", csrrsi , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=CSR(imm&0xfff)|rs1;);//csrw把rd置0;csrr把rs1置0
-  INSTPAT("??????? ????? ????? 111 ????? 11100 11", csrrci , I, R(rd)=CSR(imm&0xfff);CSR(imm&0xfff)=CSR(imm&0xfff)&~rs1;);//csrw把rd置0;csrr把rs1置0
+  //presudo instruction was implimented for check
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=src1);
+  INSTPAT("??????? ????? 00000 010 ????? 11100 11", csrr  , I, R(rd)=CSRR(imm&0xfff,s););
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s) | src1;);//csrw把rd置0;csrr把rs1置0
+  INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s) &~ src1;);
+  INSTPAT("??????? ????? ????? 101 ????? 11100 11", csrrwi , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=rs1;);//csrw把rd置0;csrr把rs1置0
+  INSTPAT("??????? ????? ????? 110 ????? 11100 11", csrrsi , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s)|rs1;);//csrw把rd置0;csrr把rs1置0
+  INSTPAT("??????? ????? ????? 111 ????? 11100 11", csrrci , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s)&~rs1;);//csrw把rd置0;csrr把rs1置0
 
   //rv_system
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=isa_call_mret());

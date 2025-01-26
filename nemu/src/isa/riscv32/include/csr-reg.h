@@ -74,38 +74,49 @@
 #define DualCSR64(name1,name2,paddr_base) DualCSR63(name1,name2,paddr_base) GenCSR(name1##64##name2,(paddr_base+64))
 
 #define CSR_LIST \
-  GenCSR(MTVEC, 0x305) \
-  GenCSR(MCAUSE, 0x342) \
-  GenCSR(MSTATUS, 0x300) \
-  GenCSR(MEPC, 0x341) \
   GenCSR(MVENDROID, 0xF11) \
   GenCSR(MARCHID, 0xF12) \
-  GenCSR(SATP, 0x180) \
-  GenCSR(MSCRATCH, 0x340) \
-  GenCSR(DSCRATCH0, 0x140) \
-  GenCSR(SSTATUS, 0x100) \
-  GenCSR(MSTATUSH, 0x310) \
-  GenCSR(MIE, 0x304) \
   GenCSR(MHARTID, 0xf14) \
+  GenCSR(MSTATUS, 0x300) \
   GenCSR(MISA, 0x301) \
+  GenCSR(MEDELEG, 0x302) \
+  GenCSR(MIDELEG, 0x303) \
+  GenCSR(MIE, 0x304) \
+  GenCSR(MTVEC, 0x305) \
+  GenCSR(MSTATUSH, 0x310) \
+  GenCSR(MEDELEGH, 0x312) \
+  GenCSR(MSCRATCH, 0x340) \
+  GenCSR(MEPC, 0x341) \
+  GenCSR(MCAUSE, 0x342) \
+  GenCSR(MTVAL, 0x343) \
   GenCSR(MIP, 0x344) \
-  GenCSR(TSELECT, 0x7a0) \
-  GenCSR(TDATA1, 0x7a1) \
-  GenCSR(TDATA2, 0x7a2) \
-  GenCSR(TDATA3, 0x7a3) \
-  GenCSR(MCOUNTEREN, 0x306) \
-  GenCSR(MCOUNTINHIBIT, 0x320) \
+  \
+  GenCSR(SATP, 0x180) \
+  GenCSR(SCAUSE, 0x142) \
+  GenCSR(SEPC, 0x141) \
+  GenCSR(SIE, 0x104) \
+  GenCSR(SIP, 0x144) \
+  GenCSR(SSCRATCH, 0x140) \
+  GenCSR(SSTATUS, 0x100) \
+  GenCSR(STVAL, 0x143) \
+  GenCSR(STVEC, 0x105) \
+  \
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
+
+//TODO:remove!
 #define CSR_U_LIST \
-  GenCSR(SCOUNTOVF, 0xDA0) \
+  GenCSR(PMPADDR16_, 0x3c0) \
+  DualCSR28(MHPCOUNTER3_,, 0xb03) \
+  DualCSR28(MHPCOUNTER3H_,, 0xb83) \
 
 // 生成静态常量定义
 #define GenCSR(name, paddr) \
   static const uint32_t NEMU_CSR_V_##name = paddr; \
   static const uint32_t NEMU_CSR_##name = paddr;
 CSR_LIST
+//CSR_U_LIST
 #undef GenCSR
 
 
