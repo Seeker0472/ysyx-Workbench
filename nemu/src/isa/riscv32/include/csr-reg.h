@@ -79,6 +79,8 @@
   GenCSR(MHARTID, 0xf14) \
   GenCSR(MSTATUS, 0x300) \
   GenCSR(MISA, 0x301) \
+  GenCSR(MEDELEG, 0x302) \
+  GenCSR(MEDELEGH, 0x312) \
   GenCSR(MIDELEG, 0x303) \
   GenCSR(MIE, 0x304) \
   GenCSR(MTVEC, 0x305) \
