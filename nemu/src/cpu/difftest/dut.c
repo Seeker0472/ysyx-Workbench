@@ -46,6 +46,7 @@ void difftest_step_raise(uint64_t NO) {
   ref_difftest_raise_intr(NO);
 //set step
   difftest_skip_ref();
+  ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
 }
 
 // this is used to let ref skip instructions which
