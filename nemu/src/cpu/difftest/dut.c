@@ -44,6 +44,7 @@ void difftest_step_raise(uint64_t NO) {
   //ref_difftest_exec(1);
 //rasie intr
   ref_difftest_raise_intr(NO);
+  ref_difftest_exec(1);
 //set step
   difftest_skip_ref();
   ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
