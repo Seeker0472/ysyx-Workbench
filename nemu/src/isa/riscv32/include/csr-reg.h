@@ -92,7 +92,6 @@
   GenCSR(MIE, 0x304) \
   GenCSR(MIP, 0x344) \
   GenCSR(MTVAL, 0x343) \
-  GenCSR(MNSTATUS, 0x744) \
   GenCSR(MNEPC, 0x741) \
   GenCSR(SEPC, 0x141) \
   GenCSR(STVAL, 0x143) \
