@@ -74,7 +74,6 @@ static inline bool check_defined(uint32_t idx, Decode *s) {
     s->dnpc = isa_raise_intr(2, s->pc);
     cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
     IFDEF(CONFIG_DIFFTEST,difftest_step_raise(2));
-
     Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
   }
   return okey;
