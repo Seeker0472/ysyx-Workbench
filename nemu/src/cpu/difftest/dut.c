@@ -41,7 +41,7 @@ static int skip_dut_nr_inst = 0;
 
 void difftest_step_raise(uint64_t NO) {
 //step
-  ref_difftest_exec(1);
+  //ref_difftest_exec(1);
 //rasie intr
   ref_difftest_raise_intr(NO);
 //set step
