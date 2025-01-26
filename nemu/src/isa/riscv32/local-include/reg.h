@@ -50,7 +50,7 @@ static uint32_t dummy = 0;
 
 static inline bool check_defined(uint32_t idx, Decode *s) {
   bool okey = false;
-#ifndef CLOCHEBLOCK
+#ifdef CLOSEBLOCK
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
   case NEMU_CSR_V_##name :
