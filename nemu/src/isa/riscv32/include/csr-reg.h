@@ -90,14 +90,16 @@
   GenCSR(MCAUSE, 0x342) \
   GenCSR(MTVAL, 0x343) \
   GenCSR(MIP, 0x344) \
+  GenCSR(SATP, 0x180) \
+  GenCSR(SCAUSE, 0x142) \
   GenCSR(SEPC, 0x141) \
+  GenCSR(SIE, 0x104) \
+  GenCSR(SIP, 0x144) \
+  GenCSR(SSCRATCH, 0x140) \
+  GenCSR(SSTATUS, 0x100) \
   GenCSR(STVAL, 0x143) \
   GenCSR(STVEC, 0x105) \
-  GenCSR(SCAUSE, 0x142) \
-  GenCSR(SIE, 0x104) \
-  GenCSR(SATP, 0x180) \
-  GenCSR(SSTATUS, 0x100) \
-  GenCSR(DSCRATCH0, 0x140) \
+  \
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
