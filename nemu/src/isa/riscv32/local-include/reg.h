@@ -17,8 +17,6 @@
 #define __RISCV_REG_H__
 
 #include "isa.h"
-#include "macro.h"
-//#include "csr-reg.h"
 #include <common.h>
 #include <cpu/decode.h>
 #include <stdint.h>

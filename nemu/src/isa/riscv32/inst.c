@@ -102,7 +102,7 @@ void do_ecall(Decode *s){
   }
 }
 
-
+//mstatus 的 SD位依赖于FS/VS/XS
 static inline void update_mstatus(){
 #define MSTATUS_FS_MASK  0x00006000  // FS 位于 bit [14:13]
 #define MSTATUS_FS_SHIFT 13
@@ -137,19 +137,21 @@ mstatus |= (sd << 31);
 
 extern bool is_skip_ref;
 
+//csr操作
 void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s){
   csr_idx&=0xfff;
   if(csr_idx==NEMU_CSR_V_MVENDROID){
     is_skip_ref = true;
   }
 
+//当访问的CSR没有实现的时候抛出异常并与Spike做同步
 #define RAISE_ILLEGAL_INSTN \
   s->dnpc = isa_raise_intr(2, s->pc); \
   cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val; \
   IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist()); \
   Log("WARRNING:Unsupported CSR NO:(0x%x)", csr_idx); \
 
-
+//检查RW
   switch(op){
     case NEMU_CSROP_CSRR:
       if(!check_read(csr_idx)){
@@ -171,7 +173,9 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
     default:
       assert(0);
   }
-      R(rd)=CSR(csr_idx);
+  //所有的csr都有读取
+  R(rd)=CSR(csr_idx);
+  //执行指令
   switch(op){
     case NEMU_CSROP_CSRRW:
       CSR(csr_idx)=src;
