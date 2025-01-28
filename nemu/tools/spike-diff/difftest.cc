@@ -131,7 +131,6 @@ __EXPORT void difftest_raise_intr(uint64_t NO) {
 }
 
 __EXPORT void difftest_csr_notexist(void) {
-  assert(difftest_dut_csr_notexist);
   difftest_dut_csr_notexist = true;
 }
 
