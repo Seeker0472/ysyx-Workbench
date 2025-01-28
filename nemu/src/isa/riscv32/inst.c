@@ -102,6 +102,39 @@ void do_ecall(Decode *s){
   }
 }
 
+
+static inline void update_mstatus(){
+#define MSTATUS_FS_MASK  0x00006000  // FS 位于 bit [14:13]
+#define MSTATUS_FS_SHIFT 13
+#define MSTATUS_VS_MASK  0x00000600  // VS 位于 bit [10:9]
+#define MSTATUS_VS_SHIFT 9
+#define MSTATUS_XS_MASK  0x00018000  // XS 位于 bit [16:15]
+#define MSTATUS_XS_SHIFT 15
+#define MSTATUS_SD_MASK  0x80000000  // SD 位于 bit 31 (RV32)
+uint32_t mstatus = cpu.csr[NEMU_CSR_V_MSTATUS]; // 当前 mstatus 的值
+
+// 提取字段值（结果为 0-3）
+uint8_t fs = (mstatus & MSTATUS_FS_MASK) >> MSTATUS_FS_SHIFT;
+uint8_t vs = (mstatus & MSTATUS_VS_MASK) >> MSTATUS_VS_SHIFT;
+uint8_t xs = (mstatus & MSTATUS_XS_MASK) >> MSTATUS_XS_SHIFT;
+
+
+// 判断是否处于 Dirty 状态
+uint8_t is_fs_dirty = (fs == 3);
+uint8_t is_vs_dirty = (vs == 3);
+uint8_t is_xs_dirty = (xs == 3);
+
+// 计算 SD 位（逻辑或操作）
+uint8_t sd = is_fs_dirty || is_vs_dirty || is_xs_dirty;
+
+// 清除旧的 SD 位
+mstatus &= ~MSTATUS_SD_MASK;
+
+// 设置新的 SD 位
+mstatus |= (sd << 31);
+  cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
+}
+
 extern bool is_skip_ref;
 
 void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s){
@@ -162,6 +195,16 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
       break;
     default:
       assert(0);
+  }
+
+  //masks
+  switch(csr_idx){
+    case NEMU_CSR_V_MEDELEG:
+      CSR(NEMU_CSR_V_MEDELEG)&=0xB3ff;
+      break;
+    case NEMU_CSR_V_MSTATUS:
+      update_mstatus();
+      break;
   }
 }
 
