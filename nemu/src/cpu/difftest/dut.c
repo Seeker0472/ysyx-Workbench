@@ -34,20 +34,12 @@ void (*ref_difftest_exec)(uint64_t n) = NULL;
 // 初始化REF的DiffTest功能
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 
+void (*ref_difftest_csr_notexist)(void) = NULL;
+
 #ifdef CONFIG_DIFFTEST
 
 static bool is_skip_ref = false;
 static int skip_dut_nr_inst = 0;
-
-void difftest_step_raise(uint64_t NO) {
-//step
-  ref_difftest_exec(1);
-//rasie intr
-  ref_difftest_raise_intr(NO);
-//set step
-  difftest_skip_ref();
-  ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);
-}
 
 // this is used to let ref skip instructions which
 // can not produce consistent behavior with NEMU
@@ -98,6 +90,9 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
 
   void (*ref_difftest_init)(int) = dlsym(handle, "difftest_init");
   assert(ref_difftest_init);
+  
+  ref_difftest_csr_notexist = dlsym(handle, "difftest_csr_notexist");
+  assert(ref_difftest_csr_notexist);
 
   Log("Differential testing: %s", ANSI_FMT("ON", ANSI_FG_GREEN));
   Log("The result of every instruction will be compared with %s. "

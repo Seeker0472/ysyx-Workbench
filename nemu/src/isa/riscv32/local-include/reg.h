@@ -45,7 +45,7 @@ static inline int get_csr_reg(int idx) {
   return idx;
 }
 
-void difftest_step_raise(uint64_t NO);
+void ref_difftest_csr_notexist();
 
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
@@ -73,7 +73,7 @@ static inline bool check_defined(uint32_t idx, Decode *s) {
   default:
     s->dnpc = isa_raise_intr(2, s->pc);
     cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
-    IFDEF(CONFIG_DIFFTEST,difftest_step_raise(2));
+    IFDEF(CONFIG_DIFFTEST,ref_difftest_csr_notexist());
     Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
   }
   return okey;
