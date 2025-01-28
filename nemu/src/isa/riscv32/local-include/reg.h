@@ -48,11 +48,7 @@ static inline bool check_defined(uint32_t idx) {
 #undef GenCSR
   default:
       return false;
-   //TODO:这里只做权限检查,更新的逻辑放在inst.c里面!
-//    s->dnpc = isa_raise_intr(2, s->pc);
-//    cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
-//    IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist());
-//    Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
+   //这里只做权限检查,更新的逻辑放在inst.c里面!
   }
 }
 
@@ -75,7 +71,7 @@ static inline bool check_read(uint32_t idx) {
 
 /*
 // 统一读写宏（返回可赋值的左值）
-// 尝试使用一个宏来判断
+// 尝试使用一个宏来判断,但是很失败,似乎单靠宏无法简单优雅的实现CSR的读写权限/掩码控制
 #define csr(idx,s) \
   (*({                                                                         \
     uint32_t *__ptr = check_write(idx,s) ? &(cpu.csr[(idx)]) : &dummy; \
