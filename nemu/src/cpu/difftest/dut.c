@@ -38,7 +38,7 @@ void (*ref_difftest_csr_notexist)(void) = NULL;
 
 #ifdef CONFIG_DIFFTEST
 
-static bool is_skip_ref = false;
+bool is_skip_ref = false;
 static int skip_dut_nr_inst = 0;
 
 // this is used to let ref skip instructions which

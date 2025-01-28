@@ -102,8 +102,14 @@ void do_ecall(Decode *s){
   }
 }
 
+extern bool is_skip_ref;
+
 void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s){
   csr_idx&=0xfff;
+  if(csr_idx==NEMU_CSR_V_MVENDROID){
+    is_skip_ref = true;
+  }
+
 #define RAISE_ILLEGAL_INSTN \
   s->dnpc = isa_raise_intr(2, s->pc); \
   cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val; \
