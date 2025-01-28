@@ -77,6 +77,8 @@ void sim_t::diff_memcpy(reg_t dest, void* src, size_t n) {
   }
 }
 
+extern bool difftest_dut_csr_notexist;
+
 extern "C" {
 
 __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) {
@@ -126,6 +128,10 @@ __EXPORT void difftest_init(int port) {
 __EXPORT void difftest_raise_intr(uint64_t NO) {
   trap_t t(NO);
   p->take_trap_public(t, state->pc);
+}
+
+__EXPORT void difftest_csr_notexist(void) {
+  difftest_dut_csr_notexist = true;
 }
 
 }
