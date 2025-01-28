@@ -19,6 +19,7 @@
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
+#include <stdint.h>
 #pragma GCC diagnostic ignored "-Wnarrowing"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 //my_func
@@ -28,8 +29,7 @@ void ftrace_func_ret(paddr_t pc_now, paddr_t address);
 paddr_t isa_call_mret();
 
 #define R(i) gpr(i)
-#define CSRW(i,s) csrw(i,s)
-#define CSRR(i,s) csrr(i,s)
+#define CSR(i) csr(i)
 #define Mr vaddr_read
 #define Mw vaddr_write
 #define Ext32(x) ((x)&0x80000000)?((x)|0xFFFFFFFF00000000):((x)&0x00000000FFFFFFFF)
@@ -96,6 +96,63 @@ void do_ecall(Decode *s){
       break;
     case NEMU_PRIV_U:
       s->dnpc=isa_raise_intr(0x8,s->pc);
+      break;
+    default:
+      assert(0);
+  }
+}
+
+void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s){
+  csr_idx&=0xfff;
+#define RAISE_ILLEGAL_INSTN \
+  s->dnpc = isa_raise_intr(2, s->pc); \
+  cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val; \
+  IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist()); \
+  Log("WARRNING:Unsupported CSR NO:(0x%x)", csr_idx); \
+
+
+  switch(op){
+    case NEMU_CSROP_CSRR:
+      if(!check_read(csr_idx)){
+        RAISE_ILLEGAL_INSTN
+        return;
+      }
+    break;
+    case NEMU_CSROP_CSRRW:
+    case NEMU_CSROP_CSRRS:
+    case NEMU_CSROP_CSRRC:
+    case NEMU_CSROP_CSRRWI:
+    case NEMU_CSROP_CSRRSI:
+    case NEMU_CSROP_CSRRCI:
+      if(!check_write(csr_idx)){
+        RAISE_ILLEGAL_INSTN
+        return;
+      }
+      break;
+    default:
+      assert(0);
+  }
+      R(rd)=CSR(csr_idx);
+  switch(op){
+    case NEMU_CSROP_CSRRW:
+      CSR(csr_idx)=src;
+      break;
+    case NEMU_CSROP_CSRR:
+      break;
+    case NEMU_CSROP_CSRRS:
+      CSR(csr_idx)=CSR(csr_idx)|src;
+      break;
+    case NEMU_CSROP_CSRRC:
+      CSR(csr_idx)=CSR(csr_idx)&~src;
+      break;
+    case NEMU_CSROP_CSRRWI:
+      CSR(csr_idx)=rs;
+      break;
+    case NEMU_CSROP_CSRRSI:
+      CSR(csr_idx)=CSR(csr_idx)|rs;
+      break;
+    case NEMU_CSROP_CSRRCI:
+      CSR(csr_idx)=CSR(csr_idx)&~rs;
       break;
     default:
       assert(0);
@@ -204,13 +261,22 @@ static int decode_exec(Decode *s) {
 
   //rv_zisr
   //presudo instruction was implimented for check
-  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=src1);
-  INSTPAT("??????? ????? 00000 010 ????? 11100 11", csrr  , I, R(rd)=CSRR(imm&0xfff,s););
-  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s) | src1;);//csrw把rd置0;csrr把rs1置0
-  INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s) &~ src1;);
-  INSTPAT("??????? ????? ????? 101 ????? 11100 11", csrrwi , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=rs1;);//csrw把rd置0;csrr把rs1置0
-  INSTPAT("??????? ????? ????? 110 ????? 11100 11", csrrsi , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s)|rs1;);//csrw把rd置0;csrr把rs1置0
-  INSTPAT("??????? ????? ????? 111 ????? 11100 11", csrrci , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s)&~rs1;);//csrw把rd置0;csrr把rs1置0
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, do_csr_op(NEMU_CSROP_CSRRW,imm&0xfff,src1 ,rs1,rd,s));
+  INSTPAT("??????? ????? 00000 010 ????? 11100 11", csrr  ,  I, do_csr_op(NEMU_CSROP_CSRR,imm&0xfff,src1  ,rs1,rd,s));
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, do_csr_op(NEMU_CSROP_CSRRS,imm&0xfff,src1 ,rs1,rd,s));
+  INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, do_csr_op(NEMU_CSROP_CSRRC,imm&0xfff,src1 ,rs1,rd,s));
+  INSTPAT("??????? ????? ????? 101 ????? 11100 11", csrrwi , I, do_csr_op(NEMU_CSROP_CSRRWI,imm&0xfff,src1,rs1,rd,s));
+  INSTPAT("??????? ????? ????? 110 ????? 11100 11", csrrsi , I, do_csr_op(NEMU_CSROP_CSRRSI,imm&0xfff,src1,rs1,rd,s));
+  INSTPAT("??????? ????? ????? 111 ????? 11100 11", csrrci , I, do_csr_op(NEMU_CSROP_CSRRCI,imm&0xfff,src1,rs1,rd,s));
+
+
+//  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=src1);
+//  INSTPAT("??????? ????? 00000 010 ????? 11100 11", csrr  , I, R(rd)=CSRR(imm&0xfff,s););
+//  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s) | src1;);//csrw把rd置0;csrr把rs1置0
+//  INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s) &~ src1;);
+//  INSTPAT("??????? ????? ????? 101 ????? 11100 11", csrrwi , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=rs1;);//csrw把rd置0;csrr把rs1置0
+//  INSTPAT("??????? ????? ????? 110 ????? 11100 11", csrrsi , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s)|rs1;);//csrw把rd置0;csrr把rs1置0
+//  INSTPAT("??????? ????? ????? 111 ????? 11100 11", csrrci , I, R(rd)=CSRR(imm&0xfff,s);CSRW(imm&0xfff,s)=CSRR(imm&0xfff,s)&~rs1;);//csrw把rd置0;csrr把rs1置0
 
   //rv_system
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=isa_call_mret());

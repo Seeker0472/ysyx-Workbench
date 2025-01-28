@@ -22,8 +22,11 @@
 #include <common.h>
 #include <cpu/decode.h>
 #include <stdint.h>
+void difftest_csr_notexist();
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
+
+enum {NEMU_CSROP_CSRRW, NEMU_CSROP_CSRR, NEMU_CSROP_CSRRS, NEMU_CSROP_CSRRC, NEMU_CSROP_CSRRWI, NEMU_CSROP_CSRRSI,NEMU_CSROP_CSRRCI};
 
 static inline int check_reg_idx(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MUXDEF(CONFIG_RVE, 16, 32)));
@@ -32,63 +35,37 @@ static inline int check_reg_idx(int idx) {
 
 static inline int get_csr_reg(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < 4096));
-  switch (idx) {
-#define GenCSR(name, paddr)                                                    \
-  case NEMU_CSR_V_##name :                                                      \
-    idx = NEMU_CSR_##name;                                                     \
-    break;
-    CSR_LIST
-#undef GenCSR
-  default:
-    Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
-  }
   return idx;
 }
 
-void difftest_csr_notexist();
-
 #define gpr(idx) (cpu.gpr[check_reg_idx(idx)])
 
-static uint32_t dummy = 0;
-
-static inline bool check_defined(uint32_t idx, Decode *s) {
-  bool okey = false;
-#ifdef CLOSEBLOCK
-  switch (idx) {
-#define GenCSR(name, paddr)                                                    \
-  case NEMU_CSR_V_##name :
-    CSR_U_LIST
-#undef GenCSR
-      return false;
-  }
-
-#endif
+static inline bool check_defined(uint32_t idx) {
   switch (idx) {
 #define GenCSR(name, paddr)                                                    \
   case NEMU_CSR_V_##name:                                                      \
-    okey = true;                                                               \
+    return true;
     break;
     CSR_LIST
 #undef GenCSR
   default:
-    s->dnpc = isa_raise_intr(2, s->pc);
-    cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
-    IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist());
-    Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
+      return false;
+   //TODO:这里只做权限检查,更新的逻辑放在inst.c里面!
+//    s->dnpc = isa_raise_intr(2, s->pc);
+//    cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val;
+//    IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist());
+//    Log("WARRNING:Unsupported CSR NO:(0x%x)", idx);
   }
-  return okey;
 }
 
 #define CSR_READONLY_MASK 0b110000000000
 #define CSR_PRIV_MASK 0b001100000000
 
-static inline bool check_write(uint32_t idx, Decode *s) {
+static inline bool check_write(uint32_t idx) {
   if ((idx & CSR_READONLY_MASK) == CSR_READONLY_MASK) {
-    // TODO:raise exception!
-    s->dnpc = isa_raise_intr(2, s->pc);
     return false;
   } else
-    return check_defined(idx, s);
+    return check_defined(idx);
 }
 
 static inline void update_mstatus(){
@@ -123,17 +100,18 @@ mstatus |= (sd << 31);
   cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
 }
 
-static inline bool check_read(uint32_t idx, Decode *s) {
+static inline bool check_read(uint32_t idx) {
   switch(idx){
     case NEMU_CSR_V_MSTATUS:
      update_mstatus();
     break;
   }
-  return check_defined(idx, s);
+  return check_defined(idx);
 }
 
 /*
 // 统一读写宏（返回可赋值的左值）
+// 尝试使用一个宏来判断
 #define csr(idx,s) \
   (*({                                                                         \
     uint32_t *__ptr = check_write(idx,s) ? &(cpu.csr[(idx)]) : &dummy; \
@@ -141,19 +119,8 @@ static inline bool check_read(uint32_t idx, Decode *s) {
     __ptr;                                                                     \
   }))
 */
-#define csrw(idx, s)                                                           \
-  (*({                                                                         \
-    uint32_t *__ptr = check_write(idx, s) ? &(cpu.csr[(idx)]) : &dummy;        \
-    __ptr;                                                                     \
-  }))
 
-#define csrr(idx, s)                                                           \
-  (*({                                                                         \
-    uint32_t *__ptr = check_read(idx, s) ? &(cpu.csr[(idx)]) : &dummy;         \
-    (dummy = 0);                                                               \
-    __ptr;                                                                     \
-  }))
-// #define csr(idx) (cpu.csr[get_csr_reg(idx)])
+#define csr(idx) (cpu.csr[get_csr_reg(idx)])
 
 static inline const char *reg_name(int idx) {
   extern const char *regs[];
