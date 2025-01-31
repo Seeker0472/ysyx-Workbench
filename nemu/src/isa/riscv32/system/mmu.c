@@ -33,36 +33,68 @@
 // 对内存区间为[vaddr, vaddr + len), 类型为type的内存访问进行地址转换
 // TODO:使用assertion检查页目录项和页表项的present/valid位, 如果发现了一个无效的表项, 及时终止NEMU的运行999
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
-  // extract addr
   // Log("Vaddr:%x,len:%x",vaddr,len);
   vaddr_t pta1 = PAGE(cpu.csr[NEMU_CSR_SATP] & 0x3FFFFF); // get root_page_table_addr
   vaddr_t vpn1 = vaddr >> 22;
   vaddr_t vpn0 = (vaddr >> 12) & 0x3FF;
-  vaddr_t offset = vaddr & 0xFFF;
 
   // do page_walk
-  uint32_t *ptea1 = (uint32_t*)guest_to_host(pta1 + vpn1*sizeof(uint32_t));//TODO:NOT DEFRENCE ONLY!
+  uint32_t *ptea1 = (uint32_t*)guest_to_host(pta1 + vpn1*sizeof(uint32_t));
   uint32_t pte1 = *ptea1;
-  vaddr_t pta0 = (PTEM(pte1)<<2);
-  uint32_t *ptea0 = (uint32_t *)guest_to_host(pta0 + vpn0*sizeof(uint32_t));
-  uint32_t pte0 = *ptea0;
-  //final page address
-  vaddr_t pa = (PTEM(pte0)<<2) | offset;
+  uint32_t pa = 0;
+  uint32_t pte = 0;
 
-  // check address
-  // not valid!
-  if (!(PAGE_VALID(pte0) && PAGE_VALID(pte1))) {
-    Log("INVALID:%x,%x,%x", vaddr, PAGE_VALID(pte0), PAGE_VALID(pte1));
-    return MEM_RET_FAIL;
+  if(!(PAGE_VALID(pte1))){
+    Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
   }
-  // check RWX (TODO)
+  if(XWR(pte1)!=0){
+    //point to a 4MB's page
+    vaddr_t offset = vaddr & 0x3FFFFF;
+    if(offset+len>0x400000){
+      return MEM_RET_CROSS_PAGE;
+    }
+    pte = pte1;
+    pa=(PTEM(pte1)<<2) + offset;
+  }else{
+    vaddr_t offset = vaddr & 0xFFF;
+    //point to the next level
+    vaddr_t pta0 = (PTEM(pte1)<<2);
+    uint32_t *ptea0 = (uint32_t *)guest_to_host(pta0 + vpn0*sizeof(uint32_t));
+    uint32_t pte0 = *ptea0;
+    if (!(PAGE_VALID(pte0))) {
+      Log("INVALID:%x,%x,%x", vaddr, PAGE_VALID(pte0), PAGE_VALID(pte1));
+      return MEM_RET_FAIL;
+    }
+    // check bounds
+    if (offset + len > 0x1000) {
+      return MEM_RET_CROSS_PAGE;
+    }
+    //final page address
+    pte = pte0;
+    pa = (PTEM(pte0)<<2) + offset;
+
+  }
+
+  // check RWX
+  // 正常应该抛异常的,这里就简单实现了
+  switch(type){
+    case NEMU_MEM_READ:
+      assert(XWR(pte)&0b1);
+      break;
+    case NEMU_MEM_WRITE:
+      assert(XWR(pte)&0b10);
+      break;
+    case NEMU_MEM_EXEC:
+      assert(XWR(pte)&0b100);
+      break;
+    default:
+      assert(0);
+  }
+
+  // pte HERE!
   // check U (TODO)
   // G&A&D don't care!
 
-  // check bounds
-  if (offset + len > 0x1000) {
-    return MEM_RET_CROSS_PAGE;
-  }
   // Log("Translate_result:%x-%x",vaddr,pa);
   return pa;
 

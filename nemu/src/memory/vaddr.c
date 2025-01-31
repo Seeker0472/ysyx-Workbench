@@ -17,7 +17,7 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
-// TODO-TYPE
+// TODO-MEM_RET_FAIL/CROSSPAGE不应该直接assert,应该设置状态!
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
   paddr_t paddr=addr;
@@ -25,7 +25,7 @@ word_t vaddr_ifetch(vaddr_t addr, int len) {
   case MMU_DIRECT:
     break;
   case MMU_TRANSLATE:
-    paddr = isa_mmu_translate(addr,len,0);
+    paddr = isa_mmu_translate(addr,len,NEMU_MEM_EXEC);
     break;
   case MMU_FAIL:
     assert(0);
@@ -43,7 +43,7 @@ word_t vaddr_read(vaddr_t addr, int len) {
   case MMU_DIRECT:
     break;
   case MMU_TRANSLATE:
-    paddr = isa_mmu_translate(addr,len,0);
+    paddr = isa_mmu_translate(addr,len,NEMU_MEM_READ);
     break;
   case MMU_FAIL:
     assert(0);
@@ -61,7 +61,7 @@ void vaddr_write(vaddr_t addr, int len, word_t data) {
   case MMU_DIRECT:
     break;
   case MMU_TRANSLATE:
-    paddr = isa_mmu_translate(addr,len,0);
+    paddr = isa_mmu_translate(addr,len,NEMU_MEM_WRITE);
     break;
   case MMU_FAIL:
     assert(0);
