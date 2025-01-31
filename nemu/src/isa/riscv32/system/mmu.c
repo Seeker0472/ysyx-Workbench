@@ -76,9 +76,23 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
   }
 
-  // check RWX (TODO)
+  // check RWX
+  // 正常应该抛异常的,这里就简单实现了
+  switch(type){
+    case NEMU_MEM_READ:
+      assert(XWR(pte)&0b1);
+      break;
+    case NEMU_MEM_WRITE:
+      assert(XWR(pte)&0b10);
+      break;
+    case NEMU_MEM_EXEC:
+      assert(XWR(pte)&0b100);
+      break;
+    default:
+      assert(0);
+  }
+
   // pte HERE!
-  assert(pte);//just pass the gcc
   // check U (TODO)
   // G&A&D don't care!
 
