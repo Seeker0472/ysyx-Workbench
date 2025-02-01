@@ -17,7 +17,7 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
-// TODO-TYPE
+// TODO-MEM_RET_FAIL/CROSSPAGE不应该直接assert,应该设置状态!
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
   paddr_t paddr=addr;

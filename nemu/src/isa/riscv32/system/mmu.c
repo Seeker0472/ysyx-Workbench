@@ -33,14 +33,13 @@
 // 对内存区间为[vaddr, vaddr + len), 类型为type的内存访问进行地址转换
 // TODO:使用assertion检查页目录项和页表项的present/valid位, 如果发现了一个无效的表项, 及时终止NEMU的运行999
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
-  // extract addr
   // Log("Vaddr:%x,len:%x",vaddr,len);
   vaddr_t pta1 = PAGE(cpu.csr[NEMU_CSR_SATP] & 0x3FFFFF); // get root_page_table_addr
   vaddr_t vpn1 = vaddr >> 22;
   vaddr_t vpn0 = (vaddr >> 12) & 0x3FF;
 
   // do page_walk
-  uint32_t *ptea1 = (uint32_t*)guest_to_host(pta1 + vpn1*sizeof(uint32_t));//TODO:NOT DEFRENCE ONLY!
+  uint32_t *ptea1 = (uint32_t*)guest_to_host(pta1 + vpn1*sizeof(uint32_t));
   uint32_t pte1 = *ptea1;
   uint32_t pa = 0;
   uint32_t pte = 0;
