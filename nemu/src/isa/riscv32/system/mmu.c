@@ -25,6 +25,14 @@
 #define XWR(x) (((x) >> 1) & 0b111)
 
 
+void print_all_entry(vaddr_t vaddr){
+  for(int i=0;i<4096;i++){
+  uint32_t *ptea1 = (uint32_t*)guest_to_host(vaddr + i*sizeof(uint32_t));
+  uint32_t pte1 = *ptea1;
+  printf("%d,%x\n",i,pte1);
+  }
+}
+
 // page table walk
 // pta page table address
 // pte page table entry
@@ -46,6 +54,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
   if(!(PAGE_VALID(pte1))){
     Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
+    print_all_entry(pta1);
     return MEM_RET_FAIL;
   }
   if(XWR(pte1)!=0){
