@@ -46,6 +46,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
   if(!(PAGE_VALID(pte1))){
     Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
+    return MEM_RET_FAIL;
   }
   if(XWR(pte1)!=0){
     //point to a 4MB's page
@@ -62,7 +63,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     uint32_t *ptea0 = (uint32_t *)guest_to_host(pta0 + vpn0*sizeof(uint32_t));
     uint32_t pte0 = *ptea0;
     if (!(PAGE_VALID(pte0))) {
-      Log("INVALID:%x,%x,%x", vaddr, PAGE_VALID(pte0), PAGE_VALID(pte1));
+      Log("INVALID PTE0 for vaddr 0x%x pte 0x%x", vaddr, pte0);
       return MEM_RET_FAIL;
     }
     // check bounds
