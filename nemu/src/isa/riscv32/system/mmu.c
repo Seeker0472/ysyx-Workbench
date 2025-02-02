@@ -53,7 +53,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uint32_t pa = 0;
   uint32_t pte = 0;
 
-  print_all_entry(pta1);
+  //print_all_entry(pta1);
   if(!(PAGE_VALID(pte1))){
     Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
     print_all_entry(pta1);
