@@ -150,9 +150,11 @@ extern bool is_skip_ref;
 //csr操作
 void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s){
   csr_idx&=0xfff;
+#ifdef CONFIG_DIFFTEST
   if(csr_idx==NEMU_CSR_V_MVENDROID){
     is_skip_ref = true;
   }
+#endif
 
 //当访问的CSR没有实现的时候抛出异常并与Spike做同步
 #define RAISE_ILLEGAL_INSTN \
