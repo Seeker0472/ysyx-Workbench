@@ -17,6 +17,7 @@
 #define __COMMON_H__
 
 #include <stdint.h>
+#include <stdio.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <string.h>
