@@ -26,7 +26,7 @@
 
 
 void print_all_entry(vaddr_t vaddr){
-  printf("All available PTEs:");
+  printf("All available PTEs:\n");
   for(int i=0;i<4096;i++){
   uint32_t *ptea1 = (uint32_t*)guest_to_host(vaddr + i*sizeof(uint32_t));
   uint32_t pte1 = *ptea1;
@@ -54,7 +54,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uint32_t pa = 0;
   uint32_t pte = 0;
 
-  //print_all_entry(pta1);
+  print_all_entry(pta1);
   if(!(PAGE_VALID(pte1))){
     Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
     print_all_entry(pta1);
