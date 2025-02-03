@@ -25,7 +25,7 @@ typedef struct {
   vaddr_t pc;
   word_t csr[4096]; 
   bool INTR; //cpu interrupt line
-  word_t PRIV;
+  word_t PRIV; // cpu privilege (see below)
 } MUXDEF(CONFIG_RV64, riscv64_CPU_state, riscv32_CPU_state);
 
 // decode

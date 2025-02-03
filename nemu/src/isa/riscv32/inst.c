@@ -361,6 +361,8 @@ static int decode_exec(Decode *s) {
 
 jmp_buf memerr_jump_buffer;
 
+//this func mainly handles exception of memory access 
+//csr's illegal instruction fault was inside do_csr_op
 int exception_exec(int id,Decode *s){
   uint32_t exception_code=0;
   switch(id){

@@ -22,30 +22,34 @@
 
 // ecall 调用
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
-  /* TODO: Trigger an interrupt/exception with ``NO''.
-   * Then return the address of the interrupt/exception vector.
-   */
-  //设置状态寄存器=> trap.S
   //mepc寄存器 - 存放触发异常的PC
   //mstatus寄存器 - 存放处理器的状态
   //mcause寄存器 - 存放触发异常的原因
-// void set_nemu_state(int state, vaddr_t pc, int halt_ret);
-//   set_nemu_state(NEMU_END, epc, NO);
-  // assert(0);
   IFDEF(CONFIG_ETRACE,Log("Trigged Exception!, No=%x Epc=%x",NO,epc););
 
-  cpu.csr[NEMU_CSR_MCAUSE]=NO;//mcause
-  // cpu.csr[2]=0x1800;//mstatus
+  //medeleg bit of this interrupt was set!
+  if(cpu.PRIV!=NEMU_PRIV_M&&(cpu.csr[NEMU_CSR_MEDELEG]>>(NO-1)&0x1)){
+    cpu.csr[NEMU_CSR_SCAUSE]=NO;
+    cpu.csr[NEMU_CSR_SEPC] = epc;
+    // 关中断状态
+    // sstatus.MIE->sstatus.MPIE;sstatus.MIE=0;
+    uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & MIE) << 4;
+    cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~MPIE)) | spie)&(~MIE);
+    // set previous privilege
+    cpu.csr[NEMU_CSR_SSTATUS]|=cpu.PRIV<<11;
+    return cpu.csr[NEMU_CSR_STVEC];
+  }else{
+    cpu.csr[NEMU_CSR_MCAUSE]=NO;
+    cpu.csr[NEMU_CSR_MEPC] = epc; 
+    // 关中断状态
+    // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
+    uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
+    cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
+    // set previous privilege
+    cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
+    return cpu.csr[NEMU_CSR_MTVEC];
+  }
 
-  cpu.csr[NEMU_CSR_MEPC] = epc; // mepc
-  // 让处理器进入关中断状态
-  // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
-  uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
-  cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
-  // set previous privilege
-  cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
-
-  return cpu.csr[NEMU_CSR_MTVEC];//mtvec
 }
 
 paddr_t isa_call_mret() {
