@@ -108,6 +108,7 @@ void do_ecall(Decode *s){
     default:
       assert(0);
   }
+  cpu.PRIV=NEMU_PRIV_M;
 }
 
 //mstatus 的 SD位依赖于FS/VS/XS
