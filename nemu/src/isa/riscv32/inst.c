@@ -158,6 +158,7 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
 #define RAISE_ILLEGAL_INSTN \
   s->dnpc = isa_raise_intr(2, s->pc); \
   cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val; \
+  cpu.PRIV=NEMU_PRIV_M; \
   IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist()); \
   Log("WARRNING:Unsupported CSR NO:(0x%x)", csr_idx); \
 
