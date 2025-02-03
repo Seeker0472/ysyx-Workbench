@@ -91,13 +91,17 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // 正常应该抛异常的,这里就简单实现了
   switch(type){
     case NEMU_MEM_READ:
-      assert(XWR(pte)&0b1);
+      if(!(XWR(pte)&0b1))
+        return MEM_RET_FAIL;
       break;
     case NEMU_MEM_WRITE:
-      assert(XWR(pte)&0b10);
+      if(!(XWR(pte)&0b10))
+        return MEM_RET_FAIL;
       break;
     case NEMU_MEM_EXEC:
-      assert(XWR(pte)&0b100);
+      if(!(XWR(pte)&0b100)){
+        return MEM_RET_FAIL;
+      }
       break;
     default:
       assert(0);

@@ -23,6 +23,7 @@
 #define RESET_VECTOR (PMEM_LEFT + CONFIG_PC_RESET_OFFSET)
 
 enum {NEMU_MEM_ERROR,NEMU_MEM_READ,NEMU_MEM_WRITE,NEMU_MEM_EXEC};
+enum {NEMU_MEMA_NORMAL,NEMU_MEMA_FETCHERR,NEMU_MEMA_READERR,NEMU_MEMA_STOREERR};
 
 /* convert the guest physical address in the guest program to host virtual address in NEMU */
 uint8_t* guest_to_host(paddr_t paddr);

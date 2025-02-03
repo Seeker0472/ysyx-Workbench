@@ -17,6 +17,8 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
+uint32_t mem_access_status=NEMU_MEMA_NORMAL;
+
 // TODO-MEM_RET_FAIL/CROSSPAGE不应该直接assert,应该设置状态!
 
 word_t vaddr_ifetch(vaddr_t addr, int len) {
@@ -31,8 +33,12 @@ word_t vaddr_ifetch(vaddr_t addr, int len) {
     assert(0);
     break;
   }
+  if(paddr==MEM_RET_FAIL){
+    mem_access_status=NEMU_MEMA_FETCHERR;
+    return 0;
+  }
   assert(paddr != MEM_RET_CROSS_PAGE);
-  assert(paddr != MEM_RET_FAIL);
+  //assert(paddr != MEM_RET_FAIL);
   return paddr_read(paddr, len);
 }
 
@@ -49,8 +55,12 @@ word_t vaddr_read(vaddr_t addr, int len) {
     assert(0);
     break;
   }
+  if(paddr==MEM_RET_FAIL){
+    mem_access_status=NEMU_MEMA_READERR;
+    return 0;
+  }
   assert(paddr != MEM_RET_CROSS_PAGE );
-  assert(paddr != MEM_RET_FAIL);
+  //assert(paddr != MEM_RET_FAIL);
   return paddr_read(paddr, len);
 }
 
@@ -68,6 +78,10 @@ void vaddr_write(vaddr_t addr, int len, word_t data) {
     break;
   }
   assert(paddr != MEM_RET_CROSS_PAGE);
-  assert(paddr != MEM_RET_FAIL);
+  //assert(paddr != MEM_RET_FAIL);
+  if(paddr==MEM_RET_FAIL){
+    mem_access_status=NEMU_MEMA_STOREERR;
+    return;
+  }
   paddr_write(paddr, len,data);
 }
