@@ -18,6 +18,7 @@
 #include "isa.h"
 #include "local-include/reg.h"
 #include "memory/paddr.h"
+#include "utils.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
@@ -379,6 +380,7 @@ int exception_exec(int id,Decode *s){
       assert(0);
   }
   s->dnpc=isa_raise_intr(exception_code,s->pc);
+  nemu_state.state = NEMU_STOP;
   return 0;
 }
 
