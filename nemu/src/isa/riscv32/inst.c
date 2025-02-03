@@ -15,7 +15,9 @@
 
 #include "common.h"
 #include "isa-def.h"
+#include "isa.h"
 #include "local-include/reg.h"
+#include "memory/paddr.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
@@ -359,14 +361,29 @@ static int decode_exec(Decode *s) {
 
 jmp_buf memerr_jump_buffer;
 
-int exception_exec(int id){
+int exception_exec(int id,Decode *s){
+  uint32_t exception_code=0;
+  switch(id){
+    case NEMU_MEMA_FETCHERR:
+      exception_code=12;
+      break;
+    case NEMU_MEMA_READERR:
+      exception_code=5;
+      break;
+    case NEMU_MEMA_STOREERR:
+      exception_code=7;
+      break;
+    default:
+      assert(0);
+  }
+  s->dnpc=isa_raise_intr(exception_code,s->pc);
   return 0;
 }
 
 int isa_exec_once(Decode *s) {
   int jump_value = setjmp(memerr_jump_buffer);
   if(jump_value!=0){
-    return exception_exec(jump_value);
+    return exception_exec(jump_value,s);
   }
   // for(volatile int i=0;i<1000;i++);//故意拖慢速度
   //取指 物理机大端小端问题？
