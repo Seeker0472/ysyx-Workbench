@@ -26,6 +26,7 @@
 
 
 void print_all_entry(vaddr_t vaddr){
+  printf("All available PTEs:");
   for(int i=0;i<4096;i++){
   uint32_t *ptea1 = (uint32_t*)guest_to_host(vaddr + i*sizeof(uint32_t));
   uint32_t pte1 = *ptea1;
