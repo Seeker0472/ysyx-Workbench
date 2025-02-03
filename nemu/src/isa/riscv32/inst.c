@@ -15,11 +15,15 @@
 
 #include "common.h"
 #include "isa-def.h"
+#include "isa.h"
 #include "local-include/reg.h"
+#include "memory/paddr.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 #include <stdint.h>
+#include <setjmp.h>
+
 #pragma GCC diagnostic ignored "-Wnarrowing"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 //my_func
@@ -327,8 +331,8 @@ static int decode_exec(Decode *s) {
   //INST:wfi
 
   //rv_a
-  INSTPAT("00010?? 00000 ????? 010 ????? 01011 11", lr.w       , R, R(rd)=Ext8(Mr(src1,1)));
-  INSTPAT("00011?? ????? ????? 010 ????? 01011 11", sc.w       , R, R(rd)=0;Mw(src1,1,src2));
+  INSTPAT("00010?? 00000 ????? 010 ????? 01011 11", lr.w       , R, R(rd)=(Mr(src1,4)));
+  INSTPAT("00011?? ????? ????? 010 ????? 01011 11", sc.w       , R, R(rd)=0;Mw(src1,4,src2));
   INSTPAT("00001?? ????? ????? 010 ????? 01011 11", amoswap.w  , R, uint32_t tmp=Ext8(Mr(src1,1));Mw(src1,4,src2);R(rd)=tmp);
   INSTPAT("00000?? ????? ????? 010 ????? 01011 11", amoadd.w   , R, uint32_t tmp=(Mr(src1,4));Mw(src1,4,tmp+src2);R(rd)=tmp);
   INSTPAT("00100?? ????? ????? 010 ????? 01011 11", amoxor.w   , R, uint32_t tmp=(Mr(src1,4));Mw(src1,4,tmp^src2);R(rd)=tmp);
@@ -355,7 +359,34 @@ static int decode_exec(Decode *s) {
   return 0;
 }
 
+jmp_buf memerr_jump_buffer;
+
+//this func mainly handles exception of memory access 
+//csr's illegal instruction fault was inside do_csr_op
+int exception_exec(int id,Decode *s){
+  uint32_t exception_code=0;
+  switch(id){
+    case NEMU_MEMA_FETCHERR:
+      exception_code=12;
+      break;
+    case NEMU_MEMA_READERR:
+      exception_code=5;
+      break;
+    case NEMU_MEMA_STOREERR:
+      exception_code=7;
+      break;
+    default:
+      assert(0);
+  }
+  s->dnpc=isa_raise_intr(exception_code,s->pc);
+  return 0;
+}
+
 int isa_exec_once(Decode *s) {
+  int jump_value = setjmp(memerr_jump_buffer);
+  if(jump_value!=0){
+    return exception_exec(jump_value,s);
+  }
   // for(volatile int i=0;i<1000;i++);//故意拖慢速度
   //取指 物理机大端小端问题？
   s->isa.inst.val = inst_fetch(&s->snpc, 4);

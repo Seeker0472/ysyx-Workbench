@@ -98,6 +98,7 @@
             pkgs.stdenv.cc.cc
             pkgs.dtc
             pkgs.boost
+            pkgs.bc #linux
           ];
           hardeningDisable = [ "fortify" ];
           # hardeningDisable = [ "all" ];

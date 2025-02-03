@@ -25,6 +25,16 @@
 #define XWR(x) (((x) >> 1) & 0b111)
 
 
+void print_all_entry(vaddr_t vaddr){
+  printf("All available PTEs:");
+  for(int i=0;i<4096;i++){
+  uint32_t *ptea1 = (uint32_t*)guest_to_host(vaddr + i*sizeof(uint32_t));
+  uint32_t pte1 = *ptea1;
+  if(pte1!=0)
+    printf("%d,%x\n",i,pte1);
+  }
+}
+
 // page table walk
 // pta page table address
 // pte page table entry
@@ -44,8 +54,11 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uint32_t pa = 0;
   uint32_t pte = 0;
 
+  //print_all_entry(pta1);
   if(!(PAGE_VALID(pte1))){
     Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
+    print_all_entry(pta1);
+    return MEM_RET_FAIL;
   }
   if(XWR(pte1)!=0){
     //point to a 4MB's page
@@ -62,7 +75,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     uint32_t *ptea0 = (uint32_t *)guest_to_host(pta0 + vpn0*sizeof(uint32_t));
     uint32_t pte0 = *ptea0;
     if (!(PAGE_VALID(pte0))) {
-      Log("INVALID:%x,%x,%x", vaddr, PAGE_VALID(pte0), PAGE_VALID(pte1));
+      Log("INVALID PTE0 for vaddr 0x%x pte 0x%x", vaddr, pte0);
       return MEM_RET_FAIL;
     }
     // check bounds
@@ -79,13 +92,17 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // 正常应该抛异常的,这里就简单实现了
   switch(type){
     case NEMU_MEM_READ:
-      assert(XWR(pte)&0b1);
+      if(!(XWR(pte)&0b1))
+        return MEM_RET_FAIL;
       break;
     case NEMU_MEM_WRITE:
-      assert(XWR(pte)&0b10);
+      if(!(XWR(pte)&0b10))
+        return MEM_RET_FAIL;
       break;
     case NEMU_MEM_EXEC:
-      assert(XWR(pte)&0b100);
+      if(!(XWR(pte)&0b100)){
+        return MEM_RET_FAIL;
+      }
       break;
     default:
       assert(0);
