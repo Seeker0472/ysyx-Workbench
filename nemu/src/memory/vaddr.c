@@ -16,6 +16,7 @@
 #include "common.h"
 #include <isa.h>
 #include <memory/paddr.h>
+#include <setjmp.h>
 
 uint32_t mem_access_status=NEMU_MEMA_NORMAL;
 
