@@ -154,6 +154,12 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
   }
 
 //当访问的CSR没有实现的时候抛出异常并与Spike做同步
+/*
+#define RAISE_ILLEGAL_INSTN \
+  s->dnpc = isa_raise_intr(2, s->pc); \
+  IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist()); \
+  Log("WARRNING:Unsupported CSR NO:(0x%x)", csr_idx); \
+*/
 #define RAISE_ILLEGAL_INSTN \
   s->dnpc = isa_raise_intr(2, s->pc); \
   cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val; \
