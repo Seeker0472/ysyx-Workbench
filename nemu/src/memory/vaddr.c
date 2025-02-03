@@ -19,6 +19,7 @@
 #include <setjmp.h>
 
 uint32_t mem_access_status=NEMU_MEMA_NORMAL;
+extern jmp_buf memerr_jump_buffer;
 
 // TODO-MEM_RET_FAIL/CROSSPAGE不应该直接assert,应该设置状态!
 
@@ -35,8 +36,7 @@ word_t vaddr_ifetch(vaddr_t addr, int len) {
     break;
   }
   if(paddr==MEM_RET_FAIL){
-    mem_access_status=NEMU_MEMA_FETCHERR;
-    return 0;
+    longjmp(memerr_jump_buffer, NEMU_MEMA_FETCHERR);
   }
   assert(paddr != MEM_RET_CROSS_PAGE);
   //assert(paddr != MEM_RET_FAIL);
@@ -57,8 +57,7 @@ word_t vaddr_read(vaddr_t addr, int len) {
     break;
   }
   if(paddr==MEM_RET_FAIL){
-    mem_access_status=NEMU_MEMA_READERR;
-    return 0;
+    longjmp(memerr_jump_buffer, NEMU_MEMA_READERR);
   }
   assert(paddr != MEM_RET_CROSS_PAGE );
   //assert(paddr != MEM_RET_FAIL);
@@ -81,8 +80,7 @@ void vaddr_write(vaddr_t addr, int len, word_t data) {
   assert(paddr != MEM_RET_CROSS_PAGE);
   //assert(paddr != MEM_RET_FAIL);
   if(paddr==MEM_RET_FAIL){
-    mem_access_status=NEMU_MEMA_STOREERR;
-    return;
+    longjmp(memerr_jump_buffer, NEMU_MEMA_STOREERR);
   }
   paddr_write(paddr, len,data);
 }

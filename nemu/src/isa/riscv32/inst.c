@@ -357,10 +357,11 @@ static int decode_exec(Decode *s) {
   return 0;
 }
 
-jmp_buf jump_buffer;
+jmp_buf memerr_jump_buffer;
 
 int isa_exec_once(Decode *s) {
-  int jump_value = setjmp(jump_buffer);
+  int jump_value = setjmp(memerr_jump_buffer);
+  assert(jump_value==0);
   // for(volatile int i=0;i<1000;i++);//故意拖慢速度
   //取指 物理机大端小端问题？
   s->isa.inst.val = inst_fetch(&s->snpc, 4);
