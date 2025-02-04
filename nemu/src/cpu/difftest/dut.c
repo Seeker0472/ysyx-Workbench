@@ -18,8 +18,15 @@
 #include <isa.h>
 #include <cpu/cpu.h>
 #include <memory/paddr.h>
+#include <stdint.h>
 #include <utils.h>
 #include <difftest-def.h>
+
+uint32_t difftest_csr_idx[4096] = {
+#define GenCSR(NAME,IDX)
+  CSR_LIST
+#undef GenCSR
+};
 
 // 在DUT host memory的`buf`和REF guest memory的`addr`之间拷贝`n`字节,
 // `direction`指定拷贝的方向, `DIFFTEST_TO_DUT`表示往DUT拷贝, `DIFFTEST_TO_REF`表示往REF拷贝
@@ -73,6 +80,8 @@ void difftest_csr_notexist(){
 
 void init_difftest(char *ref_so_file, long img_size, int port) {
   assert(ref_so_file != NULL);
+  for(int i=0;i<4096;i++)
+    printf("%x\n",difftest_csr_idx[i]);
 
   void *handle;
   handle = dlopen(ref_so_file, RTLD_LAZY);//打开传入的动态库文件

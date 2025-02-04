@@ -41,6 +41,11 @@ struct diff_context_t {
   word_t pc;
 };
 
+struct {
+  word_t num;
+  word_t csr_idx[4096];
+}csr_list;
+
 static sim_t* s = NULL;
 static processor_t *p = NULL;
 static state_t *state = NULL;
@@ -52,6 +57,20 @@ void sim_t::diff_init(int port) {
 
 void sim_t::diff_step(uint64_t n) {
   step(n);
+}
+
+void sim_t::diff_get_csrs(void* diff_context) {
+  word_t * csrs = (word_t*)diff_context;
+  for(int i=0;i<csr_list.num;i++){
+    csrs[i]=p->difftest_get_csr(csr_list.csr_idx[i]);
+  }
+}
+void sim_t::diff_init_csr_idx(uint32_t *idx_list) {
+  int idx=0;
+  for(;idx_list[idx]!=0;idx++){
+    csr_list.csr_idx[idx]=idx_list[idx];
+  }
+  csr_list.num=idx;
 }
 
 void sim_t::diff_get_regs(void* diff_context) {
