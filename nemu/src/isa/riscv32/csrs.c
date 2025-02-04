@@ -38,7 +38,7 @@ mstatus &= ~MSTATUS_SD_MASK;
 mstatus |= (sd << 31);  
 cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
 uint32_t sstatus = cpu.csr[NEMU_CSR_V_SSTATUS]; // 当前 mstatus 的值
- //cpu.csr[NEMU_CSR_V_SSTATUS] = (sstatus & ~ SSTATUS_SYNC)| (mstatus & SSTATUS_SYNC);
+ cpu.csr[NEMU_CSR_V_SSTATUS] = (sstatus & ~ SSTATUS_SYNC)| (mstatus & SSTATUS_SYNC);
 }
 void update_sstatus(){
 uint32_t sstatus = cpu.csr[NEMU_CSR_V_SSTATUS]; // 当前 mstatus 的值
