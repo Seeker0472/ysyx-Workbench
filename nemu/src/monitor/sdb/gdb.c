@@ -41,14 +41,13 @@ assert(0);
 // the buffer *val. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
-assert(0);
+  printf("READMEM:%lx",addr);
   return 0;
 }
 // Write data in the buffer val with size len to the memory which address is
 // specified by addr. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
 static int nemu_write_mem(void *args, size_t addr, size_t len, void *val) {
-assert(0);
   return 0;
 }
 // Set type type breakpoint on the address specified by addr. Return true if we
