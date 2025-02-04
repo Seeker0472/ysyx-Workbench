@@ -27,6 +27,12 @@ uint32_t difftest_csr_idx[4096] = {
 #undef GenCSR
 };
 
+const char *difftest_csr_name[] = {
+#define GenCSR(NAME,IDX) #NAME,
+  CSR_LIST
+#undef GenCSR
+};
+
 // 在DUT host memory的`buf`和REF guest memory的`addr`之间拷贝`n`字节,
 // `direction`指定拷贝的方向, `DIFFTEST_TO_DUT`表示往DUT拷贝, `DIFFTEST_TO_REF`表示往REF拷贝
 void (*ref_difftest_memcpy)(paddr_t addr, void *buf, size_t n, bool direction) = NULL;
@@ -128,7 +134,7 @@ word_t csr_r[4096];
 static void checkcsrs(){
   for(int i=0;difftest_csr_idx[i]!=0;i++)
     if(csr_r[i]!=0)
-      printf("%d,%x\n",i,csr_r[i]);
+      printf("%s,%x\n",difftest_csr_name[i],csr_r[i]);
 }
 
 
