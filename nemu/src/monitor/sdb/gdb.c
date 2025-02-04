@@ -27,10 +27,10 @@ static int nemu_write_mem(void *args, size_t addr, size_t len, void *val) {
 }
 // Set type type breakpoint on the address specified by addr. Return true if we
 // set the breakpoint successfully, otherwise return false.
-static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) { return 0; }
+static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) { return true; }
 // Delete type type breakpoint on the address specified by addr. Return true if
 // we delete the breakpoint successfully, otherwise return false.
-static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) { return 0; }
+static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) { return true; }
 // Do something when receiving interrupt from GDB client. This method will run
 // concurrently with cont, so you should be careful if there're shared data
 // between them. You will need a lock or something similar to avoid data race.
