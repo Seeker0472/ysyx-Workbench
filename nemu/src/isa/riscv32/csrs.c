@@ -5,8 +5,8 @@
 #define CSR(i) csr(i)
 #define R(i) gpr(i)
 
-//mstatus 的 SD位依赖于FS/VS/XS
 static inline void update_mstatus(){
+//update SD(mstatus 的 SD位依赖于FS/VS/XS)
 #define MSTATUS_FS_MASK  0x00006000  // FS 位于 bit [14:13]
 #define MSTATUS_FS_SHIFT 13
 #define MSTATUS_VS_MASK  0x00000600  // VS 位于 bit [10:9]
@@ -36,6 +36,12 @@ mstatus &= ~MSTATUS_SD_MASK;
 mstatus |= (sd << 31);  
 cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
 
+}
+void update_sstatus(){
+#define SSTATUS_SYNC 0x2
+uint32_t sstatus = cpu.csr[NEMU_CSR_V_SSTATUS]; // 当前 mstatus 的值
+uint32_t mstatus = cpu.csr[NEMU_CSR_V_MSTATUS]; // 当前 mstatus 的值
+ cpu.csr[NEMU_CSR_V_MSTATUS] = (mstatus & ~ SSTATUS_SYNC)| (sstatus & SSTATUS_SYNC);
 }
 
 
@@ -117,6 +123,9 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
       break;
     case NEMU_CSR_V_MSTATUS:
       update_mstatus();
+      break;
+    case NEMU_CSR_V_SSTATUS:
+      update_sstatus();
       break;
   }
 }
