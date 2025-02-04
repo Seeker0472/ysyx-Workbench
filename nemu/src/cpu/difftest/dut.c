@@ -80,8 +80,8 @@ void difftest_csr_notexist(){
 
 void init_difftest(char *ref_so_file, long img_size, int port) {
   assert(ref_so_file != NULL);
-  for(int i=0;i<4096;i++)
-    printf("%x\n",difftest_csr_idx[i]);
+  for(int i=0;i<1000;i++)
+    printf("i:%d,%x\n",i,difftest_csr_idx[i]);
 
   void *handle;
   handle = dlopen(ref_so_file, RTLD_LAZY);//打开传入的动态库文件
