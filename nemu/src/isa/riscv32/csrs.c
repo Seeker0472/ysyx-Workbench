@@ -4,6 +4,7 @@
 
 #define CSR(i) csr(i)
 #define R(i) gpr(i)
+
 //mstatus 的 SD位依赖于FS/VS/XS
 static inline void update_mstatus(){
 #define MSTATUS_FS_MASK  0x00006000  // FS 位于 bit [14:13]
@@ -20,7 +21,6 @@ uint8_t fs = (mstatus & MSTATUS_FS_MASK) >> MSTATUS_FS_SHIFT;
 uint8_t vs = (mstatus & MSTATUS_VS_MASK) >> MSTATUS_VS_SHIFT;
 uint8_t xs = (mstatus & MSTATUS_XS_MASK) >> MSTATUS_XS_SHIFT;
 
-
 // 判断是否处于 Dirty 状态
 uint8_t is_fs_dirty = (fs == 3);
 uint8_t is_vs_dirty = (vs == 3);
@@ -33,8 +33,9 @@ uint8_t sd = is_fs_dirty || is_vs_dirty || is_xs_dirty;
 mstatus &= ~MSTATUS_SD_MASK;
 
 // 设置新的 SD 位
-mstatus |= (sd << 31);
-  cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
+mstatus |= (sd << 31);  
+cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
+
 }
 
 
