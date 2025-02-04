@@ -66,7 +66,7 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
   cpu.csr[NEMU_CSR_V_MTVAL]=s->isa.inst.val; \
   cpu.PRIV=NEMU_PRIV_M; \
   IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist()); \
-  Log("WARRNING:Unsupported CSR NO:(0x%x)", csr_idx); \
+  Log("WARRNING:Unsupported CSR NO:(0x%x) on pc: 0x%x", csr_idx,cpu.pc); \
 
 //检查RW
   switch(op){
