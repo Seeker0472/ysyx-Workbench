@@ -121,7 +121,7 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
 }
 word_t csr_r[4096];
 static void checkcsrs(vaddr_t pc){
-  if(isa_difftest_checkcsrs(csr_r,pc)){
+  if(!isa_difftest_checkcsrs(csr_r,pc)){
     nemu_state.state = NEMU_ABORT;
     nemu_state.halt_pc = pc;
     isa_reg_display();
