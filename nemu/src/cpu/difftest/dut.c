@@ -23,7 +23,7 @@
 #include <difftest-def.h>
 
 uint32_t difftest_csr_idx[4096] = {
-#define GenCSR(NAME,IDX)
+#define GenCSR(NAME,IDX) IDX,
   CSR_LIST
 #undef GenCSR
 };
