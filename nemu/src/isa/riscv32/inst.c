@@ -18,7 +18,6 @@
 #include "isa.h"
 #include "local-include/reg.h"
 #include "memory/paddr.h"
-#include "utils.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>

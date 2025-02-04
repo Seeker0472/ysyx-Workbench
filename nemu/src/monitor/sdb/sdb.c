@@ -203,11 +203,6 @@ static int cmd_del_watch(char *args){
   }
   return 0;
 }
-static int cmd_kill(char *args){
-  set_nemu_state(NEMU_ABORT,cpu.pc,0);
-  return 0;
-}
-
 //my_func end!
 
 static int cmd_help(char *args);
@@ -226,8 +221,8 @@ static struct {
   { "p", "Eval expression", cmd_eval },
   { "w", "Set WatchPoint", cmd_watch },
   { "d", "Delete WatchPoint", cmd_del_watch },
-  { "k", "Kill Process", cmd_kill },
-  { "t", "t", (int (*)(char*))test_pr },
+  { "t", "t", (int (*)(char*))test_pr },//TODO:???????????????????????????????????????????????????
+  /* TODO: Add more commands */
 
 };
 
