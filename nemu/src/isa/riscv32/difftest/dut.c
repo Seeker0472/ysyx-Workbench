@@ -26,6 +26,13 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   }
   return true;
 }
+bool isa_difftest_checkcsrs(word_t *ref_csr,vaddr_t pc) {
+  for(int i=0;difftest_csr_idx[i]!=0;i++){
+    if(!difftest_check_reg(difftest_csr_name[i],pc,ref_csr[i],cpu.csr[difftest_csr_idx[i]]))
+      return false;
+  }
+  return true;
+}
 
 void isa_difftest_attach() {
 }

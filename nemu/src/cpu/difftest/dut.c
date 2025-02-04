@@ -13,6 +13,7 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "common.h"
 #include <dlfcn.h>
 
 #include <isa.h>
@@ -20,18 +21,6 @@
 #include <memory/paddr.h>
 #include <utils.h>
 #include <difftest-def.h>
-
-uint32_t difftest_csr_idx[4096] = {
-#define GenCSR(NAME,IDX) IDX,
-  CSR_LIST
-#undef GenCSR
-};
-
-const char *difftest_csr_name[] = {
-#define GenCSR(NAME,IDX) #NAME,
-  CSR_LIST
-#undef GenCSR
-};
 
 // 在DUT host memory的`buf`和REF guest memory的`addr`之间拷贝`n`字节,
 // `direction`指定拷贝的方向, `DIFFTEST_TO_DUT`表示往DUT拷贝, `DIFFTEST_TO_REF`表示往REF拷贝
@@ -131,10 +120,12 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
   }
 }
 word_t csr_r[4096];
-static void checkcsrs(){
-  for(int i=0;difftest_csr_idx[i]!=0;i++)
-    if(csr_r[i]!=0)
-      printf("%s,%x\n",difftest_csr_name[i],csr_r[i]);
+static void checkcsrs(vaddr_t pc){
+  if(isa_difftest_checkcsrs(csr_r,pc)){
+    nemu_state.state = NEMU_ABORT;
+    nemu_state.halt_pc = pc;
+    isa_reg_display();
+  }
 }
 
 
@@ -165,7 +156,7 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
   ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
   ref_difftest_csrcpy(csr_r);
-  checkcsrs();
+  checkcsrs(pc);
   checkregs(&ref_r, pc);
 }
 #else

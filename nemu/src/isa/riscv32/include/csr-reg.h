@@ -119,10 +119,20 @@ CSR_LIST
 //CSR_U_LIST
 #undef GenCSR
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+static uint32_t difftest_csr_idx[4096] = {
+#define GenCSR(NAME,IDX) IDX,
+  CSR_LIST
+#undef GenCSR
+};
 
-
-
-
+static const char *difftest_csr_name[] = {
+#define GenCSR(NAME,IDX) #NAME,
+  CSR_LIST
+#undef GenCSR
+};
+#pragma GCC diagnostic pop
 //Old Def
 
 //#define csr_gen(name, vaddr)  static const uint32_t NEMU_CSR_V_##name=vaddr;
