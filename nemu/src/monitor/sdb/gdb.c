@@ -22,7 +22,7 @@ static gdb_action_t nemu_stepi(void *args) {
 // Read the value of the register specified by regno to *value. Return zero if
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
-  printf("READ:%x",regno);
+  printf("READ:%x\n",regno);
   return 0; 
 }
 // Write value value to the register specified by regno. Return zero if the
@@ -43,7 +43,7 @@ static int nemu_write_mem(void *args, size_t addr, size_t len, void *val) {
 // Set type type breakpoint on the address specified by addr. Return true if we
 // set the breakpoint successfully, otherwise return false.
 static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) { 
-  printf("WATCH:%lx",addr);
+  printf("WATCH:%lx\n",addr);
   return true; 
 }
 // Delete type type breakpoint on the address specified by addr. Return true if
