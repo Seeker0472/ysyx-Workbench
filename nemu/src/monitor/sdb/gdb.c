@@ -43,10 +43,11 @@ assert(0);
 // errno for the corresponding error.
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
   printf("READMEM:%lx,len:%lx\n",addr,len);
-  if(!in_pmem(addr)){
-    return 0;
+  if(!in_pmem(addr)||!in_pmem((paddr_t)addr+len)){
+    return -1;
   }
-  *(uint64_t*)val=paddr_read(addr,len);
+  uint8_t* host = guest_to_host(addr);
+  memcpy(val, host + addr, len);
   return 0;
 }
 // Write data in the buffer val with size len to the memory which address is
