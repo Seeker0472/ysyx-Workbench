@@ -127,13 +127,13 @@ CSR_LIST
 #pragma GCC diagnostic ignored "-Wunused-variable"
 static uint32_t difftest_csr_idx[4096] = {
 #define GenCSR(NAME,IDX) IDX,
-  CSR_LIST
+  CSR_DIFF_LIST
 #undef GenCSR
 };
 
 static const char *difftest_csr_name[] = {
 #define GenCSR(NAME,IDX) #NAME,
-  CSR_LIST
+  CSR_DIFF_LIST
 #undef GenCSR
 };
 #pragma GCC diagnostic pop
