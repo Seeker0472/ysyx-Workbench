@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <cpu/cpu.h>
 #include <isa.h>
+#include <memory/paddr.h>
 
 void step(uint64_t n){
   cpu_exec(n);
@@ -42,6 +43,9 @@ assert(0);
 // errno for the corresponding error.
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
   printf("READMEM:%lx\n",addr);
+  if(!in_pmem(addr)){
+    return -1;
+  }
   return 0;
 }
 // Write data in the buffer val with size len to the memory which address is
