@@ -20,6 +20,12 @@
 #include <stdio.h>
 #include <utils.h>
 
+void init_breakpoint();
+void add_breakpoint(size_t value);
+int delete_breakpoint(size_t value);
+void check_breakpoint(size_t pc);
+void freebreakpoint();
+
 #ifdef CONFIG_LOG 
 #define Log(format, ...) \
     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \

@@ -34,29 +34,36 @@ static int nemu_read_reg(void *args, int regno, size_t *reg_value) {
 // Write value value to the register specified by regno. Return zero if the
 // operation success, otherwise return an errno for the corresponding error.
 static int nemu_write_reg(void *args, int regno, size_t data) { 
+assert(0);
  return -1;
 }
 // Read the memory according to the address specified by addr with size len to
 // the buffer *val. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
+assert(0);
   return 0;
 }
 // Write data in the buffer val with size len to the memory which address is
 // specified by addr. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
 static int nemu_write_mem(void *args, size_t addr, size_t len, void *val) {
+assert(0);
   return 0;
 }
 // Set type type breakpoint on the address specified by addr. Return true if we
 // set the breakpoint successfully, otherwise return false.
-static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) { 
+static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) {
+  addr = addr&2?addr+2:addr;
   printf("WATCH:%lx\n",addr);
   return true; 
 }
 // Delete type type breakpoint on the address specified by addr. Return true if
 // we delete the breakpoint successfully, otherwise return false.
-static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) { return true; }
+static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) {
+    printf("DEL_WATCH:%lx\n",addr);
+  return true; 
+}
 // Do something when receiving interrupt from GDB client. This method will run
 // concurrently with cont, so you should be careful if there're shared data
 // between them. You will need a lock or something similar to avoid data race.

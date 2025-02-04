@@ -159,6 +159,8 @@ void init_monitor(int argc, char *argv[]) {
 #else
 #endif
 
+  IFDEF(CONFIG_BREAKPOINT,init_breakpoint(););
+
   void init_pc_trace();
   IFDEF(CONFIG_PC_TRACE,init_pc_trace(););
 #ifndef CONFIG_ISA_loongarch32r

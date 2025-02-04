@@ -132,6 +132,7 @@ choice
 config DEBUG_SDB
   bool "using SDB (Dimple Debugger)"
 config DEBUG_GDB
+  select BREAKPOINT
   bool "using GDB"
 endchoice
 
@@ -165,8 +166,15 @@ config ITRACE_COND
   default "true"
 
 config WATCHPOINT
-  depends on TARGET_NATIVE_ELF
+  depends on TARGET_NATIVE_ELF 
+  depends on DEBUG_SDB
   bool "Enable WatchPoint"
+  default y
+
+config BREAKPOINT
+  depends on TARGET_NATIVE_ELF
+  depends on DEBUG_GDB
+  bool "Enable BreakPoint"
   default y
 
 config MTRACE
