@@ -65,6 +65,7 @@ void sim_t::diff_get_csrs(void* diff_context) {
     csrs[i]=p->difftest_get_csr(csr_list.csr_idx[i]);
   }
 }
+
 void sim_t::diff_init_csr_idx(uint32_t *idx_list) {
   int idx=0;
   for(;idx_list[idx]!=0;idx++){
@@ -116,11 +117,15 @@ __EXPORT void difftest_regcpy(void* dut, bool direction) {
   }
 }
 
+__EXPORT void difftest_csrcpy(word_t* csr_array) {
+  s->diff_get_csrs(csr_array);
+}
+
 __EXPORT void difftest_exec(uint64_t n) {
   s->diff_step(n);
 }
 
-__EXPORT void difftest_init(int port) {
+__EXPORT void difftest_init(int port,uint32_t* csr_idx) {
   difftest_htif_args.push_back("");
   const char *isa = "RV" MUXDEF(CONFIG_RV64, "64", "32") MUXDEF(CONFIG_RVE, "E", "I") "MA";
   cfg_t cfg(/*default_initrd_bounds=*/std::make_pair((reg_t)0, (reg_t)0),
@@ -142,6 +147,7 @@ __EXPORT void difftest_init(int port) {
       NULL,
       true);
   s->diff_init(port);
+  s->diff_init_csr_idx(csr_idx);
 }
 
 __EXPORT void difftest_raise_intr(uint64_t NO) {

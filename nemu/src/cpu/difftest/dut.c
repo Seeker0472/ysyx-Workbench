@@ -18,7 +18,6 @@
 #include <isa.h>
 #include <cpu/cpu.h>
 #include <memory/paddr.h>
-#include <stdint.h>
 #include <utils.h>
 #include <difftest-def.h>
 
@@ -40,6 +39,7 @@ void (*ref_difftest_exec)(uint64_t n) = NULL;
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 // 自己实现的
 void (*ref_difftest_csr_notexist)(void) = NULL;
+void (*ref_difftest_csrcpy)(word_t* csr_array) = NULL;
 
 #ifdef CONFIG_DIFFTEST
 
@@ -80,8 +80,6 @@ void difftest_csr_notexist(){
 
 void init_difftest(char *ref_so_file, long img_size, int port) {
   assert(ref_so_file != NULL);
-  for(int i=0;i<1000;i++)
-    printf("i:%d,%x\n",i,difftest_csr_idx[i]);
 
   void *handle;
   handle = dlopen(ref_so_file, RTLD_LAZY);//打开传入的动态库文件
@@ -99,9 +97,12 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   ref_difftest_raise_intr = dlsym(handle, "difftest_raise_intr");
   assert(ref_difftest_raise_intr);
 
-  void (*ref_difftest_init)(int) = dlsym(handle, "difftest_init");
+  void (*ref_difftest_init)(int,uint32_t*) = dlsym(handle, "difftest_init");
   assert(ref_difftest_init);
   
+  ref_difftest_csrcpy = dlsym(handle, "difftest_csrcpy");
+  assert(ref_difftest_csrcpy);
+
   ref_difftest_csr_notexist = dlsym(handle, "difftest_csr_notexist");
   assert(ref_difftest_csr_notexist);
 
@@ -110,7 +111,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
       "This will help you a lot for debugging, but also significantly reduce the performance. "
       "If it is not necessary, you can turn it off in menuconfig.", ref_so_file);
 
-  ref_difftest_init(port);//对REF的DIffTest功能进行初始化
+  ref_difftest_init(port,difftest_csr_idx);//对REF的DIffTest功能进行初始化
   ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);//将DUT的guest memory拷贝到REF中
   ref_difftest_regcpy(&cpu, DIFFTEST_TO_REF);//将DUT的寄存器状态拷贝到REF中.
   //DUT(Design Under Test, 测试对象)
@@ -123,6 +124,14 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
     isa_reg_display();
   }
 }
+word_t csr_r[4096];
+static void checkcsrs(){
+  for(int i=0;difftest_csr_idx[i]!=0;i++)
+    if(csr_r[i]!=0)
+      printf("%d,%x",i,csr_r[i]);
+}
+
+
 //在cpu_exec()的主循环中被调用, 在NEMU中执行完一条指令后, 就在difftest_step()中让REF执行相同的指令, 然后读出REF中的寄存器, 并进行对比.
 void difftest_step(vaddr_t pc, vaddr_t npc) {
   CPU_state ref_r;
@@ -149,7 +158,8 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
 
   ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
-
+  ref_difftest_csrcpy(csr_r);
+  checkcsrs();
   checkregs(&ref_r, pc);
 }
 #else
