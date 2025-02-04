@@ -128,7 +128,7 @@ word_t csr_r[4096];
 static void checkcsrs(){
   for(int i=0;difftest_csr_idx[i]!=0;i++)
     if(csr_r[i]!=0)
-      printf("%d,%x",i,csr_r[i]);
+      printf("%d,%x\n",i,csr_r[i]);
 }
 
 
