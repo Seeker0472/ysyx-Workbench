@@ -24,15 +24,15 @@ static gdb_action_t nemu_stepi(void *args) {
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
   printf("READ:%x\n",regno);
-  return 0; 
-}
-// Write value value to the register specified by regno. Return zero if the
-// operation success, otherwise return an errno for the corresponding error.
-static int nemu_write_reg(void *args, int regno, size_t data) { 
   if(regno>32){
     return -1;
   }
   return cpu.gpr[regno];
+}
+// Write value value to the register specified by regno. Return zero if the
+// operation success, otherwise return an errno for the corresponding error.
+static int nemu_write_reg(void *args, int regno, size_t data) { 
+ return -1;
 }
 // Read the memory according to the address specified by addr with size len to
 // the buffer *val. Return zero if the operation success, otherwise return an
