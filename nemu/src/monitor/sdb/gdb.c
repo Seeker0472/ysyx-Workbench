@@ -47,7 +47,7 @@ static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
     return -1;
   }
   uint8_t* host = guest_to_host(addr);
-  memcpy(val, host + addr, len);
+  memcpy(val, host, len);
   return 0;
 }
 // Write data in the buffer val with size len to the memory which address is
