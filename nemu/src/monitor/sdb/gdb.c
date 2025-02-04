@@ -1,15 +1,30 @@
 #include "gdbstub.h"
 #include <assert.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <cpu/cpu.h>
+
+void step(uint64_t n){
+  cpu_exec(n);
+}
 
 // 	Run the emulator until hitting breakpoint or exit.
-static gdb_action_t nemu_cont(void *args) { return ACT_RESUME; }
+static gdb_action_t nemu_cont(void *args) { 
+  step(-1);
+  return ACT_RESUME; 
+}
 // Do one step on the emulator. You may define your own step for the emulator.
 // For example, the common design is executing one instruction.
-static gdb_action_t nemu_stepi(void *args) { return ACT_RESUME; }
+static gdb_action_t nemu_stepi(void *args) { 
+  step(1);
+  return ACT_RESUME; 
+}
 // Read the value of the register specified by regno to *value. Return zero if
 // the operation success, otherwise return an errno for the corresponding error.
-static int nemu_read_reg(void *args, int regno, size_t *reg_value) { return 0; }
+static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
+  printf("READ:%x",regno);
+  return 0; 
+}
 // Write value value to the register specified by regno. Return zero if the
 // operation success, otherwise return an errno for the corresponding error.
 static int nemu_write_reg(void *args, int regno, size_t data) { return 0; }
@@ -27,7 +42,10 @@ static int nemu_write_mem(void *args, size_t addr, size_t len, void *val) {
 }
 // Set type type breakpoint on the address specified by addr. Return true if we
 // set the breakpoint successfully, otherwise return false.
-static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) { return true; }
+static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) { 
+  printf("WATCH:%lx",addr);
+  return true; 
+}
 // Delete type type breakpoint on the address specified by addr. Return true if
 // we delete the breakpoint successfully, otherwise return false.
 static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) { return true; }
@@ -49,6 +67,7 @@ struct target_ops nemu_ops = {
 };
 gdbstub_t gdbstub;
 void init_gdb() {
+  //init watchpoint!
   if (!gdbstub_init(&gdbstub, &nemu_ops,
                     (arch_info_t){
                         .smp = 1,

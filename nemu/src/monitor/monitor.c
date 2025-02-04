@@ -151,7 +151,13 @@ void init_monitor(int argc, char *argv[]) {
   init_difftest(diff_so_file, img_size, difftest_port);
 
   /* Initialize the simple debugger. */
+#if defined(CONFIG_DEBUG_SDB)
   init_sdb();
+#elif defined(CONFIG_DEBUG_GDB)
+  void init_gdb();
+  init_gdb();
+#else
+#endif
 
   void init_pc_trace();
   IFDEF(CONFIG_PC_TRACE,init_pc_trace(););
