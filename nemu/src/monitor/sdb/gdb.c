@@ -18,16 +18,16 @@ static gdb_action_t nemu_cont(void *args) {
 // Do one step on the emulator. You may define your own step for the emulator.
 // For example, the common design is executing one instruction.
 static gdb_action_t nemu_stepi(void *args) {
-  printf("STEP!\n");
+  //printf("STEP!\n");
   step(1);
   return ACT_RESUME; 
 }
 // Read the value of the register specified by regno to *value. Return zero if
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
-  printf("READ:%d\n",regno);
+  //printf("READ:%d\n",regno);
   if(regno>32){
-    return 0;
+    return 1;
   }
   *reg_value =  cpu.gpr[regno];
   return 0;
@@ -35,15 +35,18 @@ static int nemu_read_reg(void *args, int regno, size_t *reg_value) {
 // Write value value to the register specified by regno. Return zero if the
 // operation success, otherwise return an errno for the corresponding error.
 static int nemu_write_reg(void *args, int regno, size_t data) { 
-assert(0);
- return -1;
+  if(regno>32){
+    return 1;
+  }
+  cpu.gpr[regno]=data;
+  return 0;
 }
 // Read the memory according to the address specified by addr with size len to
 // the buffer *val. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
-  printf("READMEM:%lx,len:%lx\n",addr,len);
-  if(!in_pmem(addr)||!in_pmem((paddr_t)addr+len)){
+  //printf("READMEM:%lx,len:%lx\n",addr,len);
+  if(!in_pmem(addr)||!in_pmem((paddr_t)addr+len*4)){
     return 1;
   }
   uint8_t* host = guest_to_host(addr);
@@ -54,13 +57,18 @@ static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
 // specified by addr. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
 static int nemu_write_mem(void *args, size_t addr, size_t len, void *val) {
+  if(!in_pmem(addr)||!in_pmem((paddr_t)addr+len*4)){
+    return 1;
+  }
+  uint8_t* host = guest_to_host(addr);
+  memcpy(host, val, len);
   return 0;
 }
 // Set type type breakpoint on the address specified by addr. Return true if we
 // set the breakpoint successfully, otherwise return false.
 static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) {
   addr = addr&2?addr+2:addr;
-  printf("WATCH:%lx\n",addr);
+  //printf("WATCH:%lx\n",addr);
   add_breakpoint(addr);
   return true; 
 }
@@ -68,7 +76,7 @@ static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) {
 // we delete the breakpoint successfully, otherwise return false.
 static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) {
   addr = addr&2?addr+2:addr;
-  printf("DEL_WATCH:%lx\n",addr);
+  //printf("DEL_WATCH:%lx\n",addr);
   delete_breakpoint(addr);
   return true; 
 }
