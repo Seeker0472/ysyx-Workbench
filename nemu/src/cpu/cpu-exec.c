@@ -15,6 +15,7 @@
 
 #include "common.h"
 #include "isa.h"
+#include "utils.h"
 #include <cpu/cpu.h>
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
@@ -50,6 +51,10 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 if(check_watch_point()&&nemu_state.state==NEMU_RUNNING){
   nemu_state.state=NEMU_STOP;
 }
+#endif
+#ifdef CONFIG_BREAKPOINT
+if(check_breakpoint(cpu.pc))
+  nemu_state.state=NEMU_STOP;
 #endif
 }
 

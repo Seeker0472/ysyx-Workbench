@@ -23,7 +23,7 @@
 void init_breakpoint();
 void add_breakpoint(size_t value);
 int delete_breakpoint(size_t value);
-void check_breakpoint(size_t pc);
+bool check_breakpoint(size_t pc);
 void freebreakpoint();
 
 #ifdef CONFIG_LOG 

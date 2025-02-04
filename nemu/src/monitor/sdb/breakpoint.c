@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 #define SIZE 20
@@ -45,11 +46,14 @@ int delete_breakpoint(size_t value) {
 }
 
 // 遍历数组
-void check_breakpoint() {
+bool check_breakpoint(size_t pc) {
     for (size_t i = 0; i < arr.size; i++) {
         printf("%zu ", arr.data[i]);
+        if(arr.data[i]==pc)
+          return true;
     }
     printf("\n");
+    return false;
 }
 
 // 释放内存
