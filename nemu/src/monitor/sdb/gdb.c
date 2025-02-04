@@ -61,6 +61,7 @@ static int nemu_write_mem(void *args, size_t addr, size_t len, void *val) {
 static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) {
   addr = addr&2?addr+2:addr;
   printf("WATCH:%lx\n",addr);
+  add_breakpoint(addr);
   return true; 
 }
 // Delete type type breakpoint on the address specified by addr. Return true if
