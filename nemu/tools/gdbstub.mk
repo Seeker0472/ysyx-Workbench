@@ -1,6 +1,6 @@
 LIB_GDBSTUB := $(NEMU_HOME)/tools/mini-gdbstub/build/libgdbstub.a
 
-LDFLAGS += -L$(NEMU_HOME)/tools/mini-gdbstub/build/ -llibgdbstub.a
+LDFLAGS += -L$(NEMU_HOME)/tools/mini-gdbstub/build/ -lgdbstub
 
 ifndef CONFIG_DIFFTEST_REF_NEMU
 $(LIB_GDBSTUB):
