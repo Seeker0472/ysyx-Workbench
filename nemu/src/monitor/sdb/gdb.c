@@ -46,6 +46,7 @@ static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
   if(!in_pmem(addr)){
     return 0;
   }
+  *(uint64_t*)val=paddr_read(addr,len);
   return 0;
 }
 // Write data in the buffer val with size len to the memory which address is
