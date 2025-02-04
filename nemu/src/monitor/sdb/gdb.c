@@ -27,7 +27,8 @@ static int nemu_read_reg(void *args, int regno, size_t *reg_value) {
   if(regno>32){
     return 0;
   }
-  return cpu.gpr[regno];
+  *reg_value =  cpu.gpr[regno];
+  return 0;
 }
 // Write value value to the register specified by regno. Return zero if the
 // operation success, otherwise return an errno for the corresponding error.
