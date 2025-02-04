@@ -48,11 +48,9 @@ int delete_breakpoint(size_t value) {
 // 遍历数组
 bool check_breakpoint(size_t pc) {
     for (size_t i = 0; i < arr.size; i++) {
-        printf("%zu ", arr.data[i]);
         if(arr.data[i]==pc)
           return true;
     }
-    printf("\n");
     return false;
 }
 
