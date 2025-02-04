@@ -166,6 +166,7 @@ static int cmd_eval(char *args){
   }
   return 0;
 }
+void statistic();
 static int cmd_kill(char *args){
   set_nemu_state(NEMU_STOP, cpu.pc, cpu.gpr[10]);
         Log("nemu: %s at pc = " FMT_WORD,
@@ -173,6 +174,7 @@ static int cmd_kill(char *args){
            (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
             ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           nemu_state.halt_pc);
+  statistic();
   return 0;
 }
 static int cmd_watch(char *args){
