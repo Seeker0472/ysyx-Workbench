@@ -16,7 +16,8 @@ static gdb_action_t nemu_cont(void *args) {
 }
 // Do one step on the emulator. You may define your own step for the emulator.
 // For example, the common design is executing one instruction.
-static gdb_action_t nemu_stepi(void *args) { 
+static gdb_action_t nemu_stepi(void *args) {
+  printf("STEP!\n");
   step(1);
   return ACT_RESUME; 
 }
