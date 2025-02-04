@@ -156,14 +156,16 @@ void init_monitor(int argc, char *argv[]) {
   void init_pc_trace();
   IFDEF(CONFIG_PC_TRACE,init_pc_trace(););
 #ifndef CONFIG_ISA_loongarch32r
-  IFDEF(CONFIG_ITRACE, init_disasm(
+#if defined(CONFIG_ITRACE) || defined(CONFIG_IRING)
+  init_disasm(
     MUXDEF(CONFIG_ISA_x86,     "i686",
     MUXDEF(CONFIG_ISA_mips32,  "mipsel",
     MUXDEF(CONFIG_ISA_riscv,
       MUXDEF(CONFIG_RV64,      "riscv64",
                                "riscv32"),
                                "bad"))) "-pc-linux-gnu"
-  ));
+  );
+#endif
 #endif
 
   /* Display welcome message. */
