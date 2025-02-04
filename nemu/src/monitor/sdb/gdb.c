@@ -42,7 +42,7 @@ assert(0);
 // the buffer *val. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
-  printf("READMEM:%lx\n",addr);
+  printf("READMEM:%lx,len:%lx\n",addr,len);
   if(!in_pmem(addr)){
     return 0;
   }
