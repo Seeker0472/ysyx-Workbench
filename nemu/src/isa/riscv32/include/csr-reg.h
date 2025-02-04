@@ -73,9 +73,8 @@
 #define DualCSR63(name1,name2,paddr_base) DualCSR62(name1,name2,paddr_base) GenCSR(name1##63##name2,(paddr_base+63))
 #define DualCSR64(name1,name2,paddr_base) DualCSR63(name1,name2,paddr_base) GenCSR(name1##64##name2,(paddr_base+64))
 
-#define CSR_LIST \
-  GenCSR(MVENDROID, 0xF11) \
-  GenCSR(MARCHID, 0xF12) \
+// 需要和spike做diff的寄存器
+#define CSR_DIFF_LIST \
   GenCSR(MHARTID, 0xf14) \
   GenCSR(MSTATUS, 0x300) \
   GenCSR(MISA, 0x301) \
@@ -104,25 +103,33 @@
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
-
-//TODO:remove!
-#define CSR_U_LIST \
-  GenCSR(PMPADDR16_, 0x3c0) \
-  DualCSR28(MHPCOUNTER3_,, 0xb03) \
-  DualCSR28(MHPCOUNTER3H_,, 0xb83) \
+// 全部csr寄存器
+#define CSR_LIST \
+  GenCSR(MVENDROID, 0xF11) \
+  GenCSR(MARCHID, 0xF12) \
+  CSR_DIFF_LIST 
 
 // 生成静态常量定义
 #define GenCSR(name, paddr) \
   static const uint32_t NEMU_CSR_V_##name = paddr; \
   static const uint32_t NEMU_CSR_##name = paddr;
 CSR_LIST
-//CSR_U_LIST
 #undef GenCSR
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+static uint32_t difftest_csr_idx[4096] = {
+#define GenCSR(NAME,IDX) IDX,
+  CSR_DIFF_LIST
+#undef GenCSR
+};
 
-
-
-
+static const char *difftest_csr_name[] = {
+#define GenCSR(NAME,IDX) #NAME,
+  CSR_DIFF_LIST
+#undef GenCSR
+};
+#pragma GCC diagnostic pop
 //Old Def
 
 //#define csr_gen(name, vaddr)  static const uint32_t NEMU_CSR_V_##name=vaddr;
