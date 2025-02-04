@@ -44,7 +44,7 @@ assert(0);
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
   printf("READMEM:%lx\n",addr);
   if(!in_pmem(addr)){
-    return -1;
+    return 0;
   }
   return 0;
 }
