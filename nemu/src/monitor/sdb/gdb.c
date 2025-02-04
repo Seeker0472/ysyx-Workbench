@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <cpu/cpu.h>
+#include <isa.h>
 
 void step(uint64_t n){
   cpu_exec(n);
@@ -27,7 +28,12 @@ static int nemu_read_reg(void *args, int regno, size_t *reg_value) {
 }
 // Write value value to the register specified by regno. Return zero if the
 // operation success, otherwise return an errno for the corresponding error.
-static int nemu_write_reg(void *args, int regno, size_t data) { return 0; }
+static int nemu_write_reg(void *args, int regno, size_t data) { 
+  if(regno>32){
+    return -1;
+  }
+  return cpu.gpr[regno];
+}
 // Read the memory according to the address specified by addr with size len to
 // the buffer *val. Return zero if the operation success, otherwise return an
 // errno for the corresponding error.
@@ -71,7 +77,7 @@ void init_gdb() {
   if (!gdbstub_init(&gdbstub, &nemu_ops,
                     (arch_info_t){
                         .smp = 1,
-                        .reg_num = 32,
+                        .reg_num = 33,
                         .reg_byte = 4,
                         .target_desc = TARGET_RV32,
                     },
