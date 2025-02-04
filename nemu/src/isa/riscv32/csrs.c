@@ -6,7 +6,7 @@
 #define R(i) gpr(i)
 
 
-#define SSTATUS_SYNC 0x2
+#define SSTATUS_SYNC 0xff8fff63
 static inline void update_mstatus(){
 //update SD(mstatus 的 SD位依赖于FS/VS/XS)
 #define MSTATUS_FS_MASK  0x00006000  // FS 位于 bit [14:13]
