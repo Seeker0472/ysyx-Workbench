@@ -44,7 +44,7 @@ assert(0);
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
   printf("READMEM:%lx,len:%lx\n",addr,len);
   if(!in_pmem(addr)||!in_pmem((paddr_t)addr+len)){
-    return -1;
+    return 0;
   }
   uint8_t* host = guest_to_host(addr);
   memcpy(val, host, len);
