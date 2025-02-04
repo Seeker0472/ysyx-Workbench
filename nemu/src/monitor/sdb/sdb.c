@@ -166,6 +166,15 @@ static int cmd_eval(char *args){
   }
   return 0;
 }
+static int cmd_kill(char *args){
+  set_nemu_state(NEMU_STOP, cpu.pc, cpu.gpr[10]);
+        Log("nemu: %s at pc = " FMT_WORD,
+          (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
+           (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
+            ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
+          nemu_state.halt_pc);
+  return 0;
+}
 static int cmd_watch(char *args){
   if(!args){
     printf("Error: Empty Expression!\n");
@@ -221,7 +230,8 @@ static struct {
   { "p", "Eval expression", cmd_eval },
   { "w", "Set WatchPoint", cmd_watch },
   { "d", "Delete WatchPoint", cmd_del_watch },
-  { "t", "t", (int (*)(char*))test_pr },//TODO:???????????????????????????????????????????????????
+  { "k", "Kill Process", cmd_kill },
+  { "t", "t", (int (*)(char*))test_pr },
   /* TODO: Add more commands */
 
 };
