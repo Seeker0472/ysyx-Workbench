@@ -98,7 +98,6 @@
   GenCSR(SSTATUS, 0x100) \
   GenCSR(STVAL, 0x143) \
   GenCSR(STVEC, 0x105) \
-  GenCSR(TIME, 0xc01) \
   \
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
