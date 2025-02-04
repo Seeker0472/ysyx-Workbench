@@ -62,7 +62,7 @@ paddr_t isa_call_mret() {
 
 word_t isa_query_intr() {
   if (((cpu.csr[NEMU_CSR_MSTATUS] & MIE)) && cpu.INTR) {
-    // printf("INTR!!\n");
+    Log("INTR_TAKE");
     cpu.INTR = false;
     return IRQ_TIMER;
   }
