@@ -102,25 +102,16 @@
   DualCSR15(PMPCFG,,0x3A0) \
   DualCSR15(PMPADDR,,0x3B0) \
 
-
 #define CSR_LIST \
   GenCSR(MVENDROID, 0xF11) \
   GenCSR(MARCHID, 0xF12) \
   CSR_DIFF_LIST 
-
-
-//TODO:remove!
-#define CSR_U_LIST \
-  GenCSR(PMPADDR16_, 0x3c0) \
-  DualCSR28(MHPCOUNTER3_,, 0xb03) \
-  DualCSR28(MHPCOUNTER3H_,, 0xb83) \
 
 // 生成静态常量定义
 #define GenCSR(name, paddr) \
   static const uint32_t NEMU_CSR_V_##name = paddr; \
   static const uint32_t NEMU_CSR_##name = paddr;
 CSR_LIST
-//CSR_U_LIST
 #undef GenCSR
 
 #pragma GCC diagnostic push

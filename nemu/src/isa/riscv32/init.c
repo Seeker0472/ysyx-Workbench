@@ -65,5 +65,4 @@ void init_isa() {
   //work-arounds
   cpu.csr[NEMU_CSR_V_PMPCFG0] = 0x0000001f;
   cpu.csr[NEMU_CSR_V_PMPADDR0] = 0xffffffff;
-  
 }
