@@ -55,7 +55,7 @@ void init_isa() {
   // cpu.csr[NEMU_CSR_SATP] = 0;//satp
   // cpu.csr[NEMU_CSR_MISA] = 0x4014112d;//satp
 
-  cpu.csr[NEMU_CSR_V_MCAUSE] = 0xb;  // mcause
+  cpu.csr[NEMU_CSR_V_MCAUSE] = 0x0;  // mcause
   cpu.csr[NEMU_CSR_V_MSTATUS] = 0x0; // TODO:WHY mstatus
   cpu.PRIV = NEMU_PRIV_M;
   cpu.csr[NEMU_CSR_V_MVENDROID] = 0x79737978; // ysyx
