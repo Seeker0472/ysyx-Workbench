@@ -14,9 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
-void difftest_raise(uint64_t NO);
 void dev_raise_intr() {
   Log("INTR_RAISE");
-  difftest_raise(IRQ_TIMER);
    cpu.INTR=true;
 }

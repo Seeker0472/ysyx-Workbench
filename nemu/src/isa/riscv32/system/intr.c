@@ -60,9 +60,11 @@ paddr_t isa_call_mret() {
   return cpu.csr[NEMU_CSR_MEPC];
 }
 
+void difftest_raise(uint64_t NO);
 word_t isa_query_intr() {
   if (((cpu.csr[NEMU_CSR_MSTATUS] & MIE)) && cpu.INTR) {
     Log("INTR_TAKE");
+  difftest_raise(IRQ_TIMER);
     cpu.INTR = false;
     return IRQ_TIMER;
   }
