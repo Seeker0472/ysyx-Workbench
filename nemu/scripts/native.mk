@@ -36,6 +36,7 @@ run-env: $(BINARY) $(DIFF_REF_SO) $(LIB_GDBSTUB)
 
 run: run-env
 	$(call git_commit, "run NEMU")
+	tmux split-window -v "riscv64-unknown-linux-gnu-gdb -ex "target remote localhost:1234""
 	$(NEMU_EXEC)
 
 gdb: run-env
