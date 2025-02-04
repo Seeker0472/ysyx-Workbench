@@ -126,6 +126,15 @@ endmenu
 
 menu "Testing and Debugging"
 
+choice
+  prompt "Debug support"
+  default DEBUG_SDB
+config DEBUG_SDB
+  bool "using SDB (Dimple Debugger)"
+config DEBUG_GDB
+  bool "using GDB"
+endchoice
+
 config LOG
   depends on TARGET_NATIVE_ELF
   bool "Enable log"
