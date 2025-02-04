@@ -44,7 +44,7 @@ assert(0);
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
   printf("READMEM:%lx,len:%lx\n",addr,len);
   if(!in_pmem(addr)||!in_pmem((paddr_t)addr+len)){
-    return 0;
+    return -1;
   }
   uint8_t* host = guest_to_host(addr);
   memcpy(val, host, len);
@@ -67,13 +67,17 @@ static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) {
 // Delete type type breakpoint on the address specified by addr. Return true if
 // we delete the breakpoint successfully, otherwise return false.
 static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) {
-    printf("DEL_WATCH:%lx\n",addr);
+  addr = addr&2?addr+2:addr;
+  printf("DEL_WATCH:%lx\n",addr);
+  delete_breakpoint(addr);
   return true; 
 }
 // Do something when receiving interrupt from GDB client. This method will run
 // concurrently with cont, so you should be careful if there're shared data
 // between them. You will need a lock or something similar to avoid data race.
-static void nemu_on_interrupt(void *args) {}
+static void nemu_on_interrupt(void *args) {
+  printf("GDB_INTERRUPT\n");
+}
 
 struct target_ops nemu_ops = {
     .read_reg = nemu_read_reg,
