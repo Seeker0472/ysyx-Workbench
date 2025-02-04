@@ -22,6 +22,10 @@ void engine_start() {
   cpu_exec(-1);
 #else
   /* Receive commands from user. */
+  void init_gdb();
+  void run_gdb();
+  init_gdb();
+  run_gdb();
   sdb_mainloop();
 #endif
 }

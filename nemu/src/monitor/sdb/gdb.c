@@ -2,50 +2,50 @@
 #include <stdio.h>
 #include <assert.h>
 
-static int emu_read_reg(void *args, int regno, size_t *reg_value){
+static int nemu_read_reg(void *args, int regno, size_t *reg_value){
   return 0;
 }
-static int emu_write_reg(void *args, int regno, size_t data){
+static int nemu_write_reg(void *args, int regno, size_t data){
   return 0;
 }
-static int emu_read_mem(void *args, size_t addr, size_t len, void *val){
+static int nemu_read_mem(void *args, size_t addr, size_t len, void *val){
   return 0;
 }
-static int emu_write_mem(void *args, size_t addr, size_t len, void *val){
+static int nemu_write_mem(void *args, size_t addr, size_t len, void *val){
   return 0;
 }
-static gdb_action_t emu_cont(void *args){
+static gdb_action_t nemu_cont(void *args){
   return 0;
 }
-static gdb_action_t emu_stepi(void *args){
+static gdb_action_t nemu_stepi(void *args){
   return 0;
 }
-static bool emu_set_bp(void *args, size_t addr, bp_type_t type){
+static bool nemu_set_bp(void *args, size_t addr, bp_type_t type){
   return 0;
 }
-static bool emu_del_bp(void *args, size_t addr, bp_type_t type){
+static bool nemu_del_bp(void *args, size_t addr, bp_type_t type){
   return 0;
 }
-static void emu_on_interrupt(void *args){
+static void nemu_on_interrupt(void *args){
 }
 
 struct target_ops nemu_ops = {
-    .read_reg = emu_read_reg,
-    .write_reg = emu_write_reg,
-    .read_mem = emu_read_mem,
-    .write_mem = emu_write_mem,
-    .cont = emu_cont,
-    .stepi = emu_stepi,
-    .set_bp = emu_set_bp,
-    .del_bp = emu_del_bp,
-    .on_interrupt = emu_on_interrupt,
+    .read_reg = nemu_read_reg,
+    .write_reg = nemu_write_reg,
+    .read_mem = nemu_read_mem,
+    .write_mem = nemu_write_mem,
+    .cont = nemu_cont,
+    .stepi = nemu_stepi,
+    .set_bp = nemu_set_bp,
+    .del_bp = nemu_del_bp,
+    .on_interrupt = nemu_on_interrupt,
 };
 gdbstub_t gdbstub;
 void init_gdb() {
     if (!gdbstub_init(&gdbstub, &nemu_ops,
                       (arch_info_t){
                           .smp = 1,
-                          .reg_num = 33,
+                          .reg_num = 32,
                           .reg_byte = 4,
                           .target_desc = TARGET_RV32,
                       },
@@ -54,3 +54,10 @@ void init_gdb() {
         assert(0);
     }
 }
+void run_gdb(){
+    if (!gdbstub_run(&gdbstub, (void *) NULL)) {
+        fprintf(stderr, "Fail to run in debug mode.\n");
+        assert(0);
+    }
+    gdbstub_close(&gdbstub);
+  }
