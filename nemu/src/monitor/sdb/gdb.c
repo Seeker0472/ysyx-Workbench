@@ -6,6 +6,70 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
+// 函数用于将整数转换为字符串
+char* int_to_string(int value) {
+    static char buffer[20];  // 足够容纳32位整数
+    snprintf(buffer, sizeof(buffer), "0x%x", value);
+    return buffer;
+}
+
+#define GenCSR(name, paddr) \
+  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" #paddr "\" />\n"
+
+#define NEMU_CSR_TAGS \
+  "<feature name=\"org.gnu.gdb.riscv.csr\">\n" \
+  CSR_LIST \
+  "</feature>\n"
+
+#define NEMU_REG_TAGS \
+    "<feature name=\"org.gnu.gdb.riscv.cpu\">" \
+    "<reg name=\"zero\" bitsize=\"32\" type=\"int\" regnum=\"0\"/>" \
+    "<reg name=\"RA\" bitsize=\"32\" type=\"code_ptr\" regnum=\"1\"/>" \
+    "<reg name=\"sp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"2\"/>" \
+    "<reg name=\"gp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"3\"/>" \
+    "<reg name=\"tp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"4\"/>" \
+    "<reg name=\"t0\" bitsize=\"32\" type=\"int\" regnum=\"5\"/>" \
+    "<reg name=\"t1\" bitsize=\"32\" type=\"int\" regnum=\"6\"/>" \
+    "<reg name=\"t2\" bitsize=\"32\" type=\"int\" regnum=\"7\"/>" \
+    "<reg name=\"fp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"8\"/>" \
+    "<reg name=\"s1\" bitsize=\"32\" type=\"int\" regnum=\"9\"/>" \
+    "<reg name=\"a0\" bitsize=\"32\" type=\"int\" regnum=\"10\"/>" \
+    "<reg name=\"a1\" bitsize=\"32\" type=\"int\" regnum=\"11\"/>" \
+    "<reg name=\"a2\" bitsize=\"32\" type=\"int\" regnum=\"12\"/>" \
+    "<reg name=\"a3\" bitsize=\"32\" type=\"int\" regnum=\"13\"/>" \
+    "<reg name=\"a4\" bitsize=\"32\" type=\"int\" regnum=\"14\"/>" \
+    "<reg name=\"a5\" bitsize=\"32\" type=\"int\" regnum=\"15\"/>" \
+    "<reg name=\"a6\" bitsize=\"32\" type=\"int\" regnum=\"16\"/>" \
+    "<reg name=\"a7\" bitsize=\"32\" type=\"int\" regnum=\"17\"/>" \
+    "<reg name=\"s2\" bitsize=\"32\" type=\"int\" regnum=\"18\"/>" \
+    "<reg name=\"s3\" bitsize=\"32\" type=\"int\" regnum=\"19\"/>" \
+    "<reg name=\"s4\" bitsize=\"32\" type=\"int\" regnum=\"20\"/>" \
+    "<reg name=\"s5\" bitsize=\"32\" type=\"int\" regnum=\"21\"/>" \
+    "<reg name=\"s6\" bitsize=\"32\" type=\"int\" regnum=\"22\"/>" \
+    "<reg name=\"s7\" bitsize=\"32\" type=\"int\" regnum=\"23\"/>" \
+    "<reg name=\"s8\" bitsize=\"32\" type=\"int\" regnum=\"24\"/>" \
+    "<reg name=\"s9\" bitsize=\"32\" type=\"int\" regnum=\"25\"/>" \
+    "<reg name=\"s10\" bitsize=\"32\" type=\"int\" regnum=\"26\"/>" \
+    "<reg name=\"s11\" bitsize=\"32\" type=\"int\" regnum=\"27\"/>" \
+    "<reg name=\"t3\" bitsize=\"32\" type=\"int\" regnum=\"28\"/>" \
+    "<reg name=\"t4\" bitsize=\"32\" type=\"int\" regnum=\"29\"/>" \
+    "<reg name=\"t5\" bitsize=\"32\" type=\"int\" regnum=\"30\"/>" \
+    "<reg name=\"t6\" bitsize=\"32\" type=\"int\" regnum=\"31\"/>" \
+    "<reg name=\"pc\" bitsize=\"32\" type=\"code_ptr\" regnum=\"32\"/>" \
+  "</feature>"
+
+#define NEMU_OTHER_TAGS \
+    "<feature name=\"org.gnu.gdb.riscv.virtual\">" \
+    "<reg name=\"PRIV\" bitsize=\"32\" type=\"int\" regnum=\"65\"/>" \
+  "</feature>"
+
+#define NEMU_FEATURES \
+  "<target version=\"1.0\"><architecture>riscv:rv32</architecture>"  \
+  NEMU_REG_TAGS \
+  NEMU_OTHER_TAGS \
+  NEMU_CSR_TAGS \
+  "</target>"
+
 void step(uint64_t n){
   cpu_exec(n);
 }
@@ -25,8 +89,16 @@ static gdb_action_t nemu_stepi(void *args) {
 // Read the value of the register specified by regno to *value. Return zero if
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
-  //printf("READ:%d\n",regno);
+  printf("READ:%d\n",regno);
+  if(regno==65){
+    *reg_value=cpu.PRIV;
+    return 0;
+  }
   if(regno>32){
+    if(regno<4096){
+      *reg_value=cpu.csr[regno];
+      return 0;
+    }
     return 1;
   }
   *reg_value =  cpu.gpr[regno];
@@ -35,7 +107,15 @@ static int nemu_read_reg(void *args, int regno, size_t *reg_value) {
 // Write value value to the register specified by regno. Return zero if the
 // operation success, otherwise return an errno for the corresponding error.
 static int nemu_write_reg(void *args, int regno, size_t data) { 
+  if(regno==65){
+    cpu.PRIV=data;
+    return 0;
+  }
   if(regno>32){
+    if(regno<4096){
+      cpu.csr[regno]=data;
+      return 0;
+    }
     return 1;
   }
   cpu.gpr[regno]=data;
@@ -100,13 +180,13 @@ struct target_ops nemu_ops = {
 };
 gdbstub_t gdbstub;
 void init_gdb() {
-  //init watchpoint!
+  printf(NEMU_FEATURES);
   if (!gdbstub_init(&gdbstub, &nemu_ops,
                     (arch_info_t){
                         .smp = 1,
                         .reg_num = 33,
                         .reg_byte = 4,
-                        .target_desc = TARGET_RV32,
+                        .target_desc = NEMU_FEATURES,
                     },
                     "127.0.0.1:1234")) {
     fprintf(stderr, "Fail to create socket.\n");
