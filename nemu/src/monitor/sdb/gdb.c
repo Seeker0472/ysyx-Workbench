@@ -28,7 +28,7 @@ char* int_to_string(int value) {
 #define NEMU_REG_TAGS \
     "<feature name=\"org.gnu.gdb.riscv.cpu\">" \
     "<reg name=\"zero\" bitsize=\"32\" type=\"int\" regnum=\"0\"/>" \
-    "<reg name=\"ra\" bitsize=\"32\" type=\"code_ptr\" regnum=\"1\"/>" \
+    "<reg name=\"RA\" bitsize=\"32\" type=\"code_ptr\" regnum=\"1\"/>" \
     "<reg name=\"sp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"2\"/>" \
     "<reg name=\"gp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"3\"/>" \
     "<reg name=\"tp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"4\"/>" \
