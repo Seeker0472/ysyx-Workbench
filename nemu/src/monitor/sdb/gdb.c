@@ -64,11 +64,13 @@ char* int_to_string(int value) {
 
 #define NEMU_OTHER_TAGS \
     "<feature name=\"org.gnu.gdb.riscv.virtual\">" \
-    "<reg name=\"priv\" bitsize=\"33\" type=\"int\" regnum=\"65\"/>" \
+    "<reg name=\"PRIV\" bitsize=\"2\" type=\"int\" regnum=\"65\"/>" \
   "</feature>"
 
 #define NEMU_FEATURES \
   "<target version=\"1.0\"><architecture>riscv:rv32</architecture>"  \
+  NEMU_REG_TAGS \
+  NEMU_OTHER_TAGS \
   NEMU_CSR_TAGS \
   "</target>"
 
