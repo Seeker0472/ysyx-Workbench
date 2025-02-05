@@ -64,7 +64,7 @@ char* int_to_string(int value) {
 
 #define NEMU_OTHER_TAGS \
     "<feature name=\"org.gnu.gdb.riscv.virtual\">" \
-    "<reg name=\"PRIV\" bitsize=\"2\" type=\"int\" regnum=\"65\"/>" \
+    "<reg name=\"PRIV\" bitsize=\"32\" type=\"int\" regnum=\"65\"/>" \
   "</feature>"
 
 #define NEMU_FEATURES \
@@ -94,6 +94,10 @@ static gdb_action_t nemu_stepi(void *args) {
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
   printf("READ:%d\n",regno);
+  if(regno==65){
+    *reg_value=cpu.PRIV;
+    return 0;
+  }
   if(regno>32){
     if(regno<4096){
       *reg_value=cpu.csr[regno];
@@ -107,6 +111,10 @@ static int nemu_read_reg(void *args, int regno, size_t *reg_value) {
 // Write value value to the register specified by regno. Return zero if the
 // operation success, otherwise return an errno for the corresponding error.
 static int nemu_write_reg(void *args, int regno, size_t data) { 
+  if(regno==65){
+    cpu.PRIV=data;
+    return 0;
+  }
   if(regno>32){
     if(regno<4096){
       cpu.csr[regno]=data;
