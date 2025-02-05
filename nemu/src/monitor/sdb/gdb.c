@@ -12,7 +12,7 @@ char *calc(){
 }
 
 #define GenCSR(name, paddr) \
-  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"  \" />\n"
+  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\" calc() \" />\n"
 
 
 
