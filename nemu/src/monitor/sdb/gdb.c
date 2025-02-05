@@ -82,7 +82,7 @@ static gdb_action_t nemu_stepi(void *args) {
 // Read the value of the register specified by regno to *value. Return zero if
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
-  printf("READ:%d\n",regno);
+  //printf("READ:%d\n",regno);
   if(regno==65){
     *reg_value=cpu.PRIV;
     return 0;
