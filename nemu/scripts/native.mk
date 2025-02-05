@@ -29,6 +29,7 @@ override ARGS ?= --log=$(BUILD_DIR)/nemu-log.txt
 override ARGS += $(ARGS_DIFF)
 
 # Command to execute NEMU
+ELF ?=
 IMG ?=
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
@@ -36,7 +37,7 @@ run-env: $(BINARY) $(DIFF_REF_SO) $(LIB_GDBSTUB)
 
 run: run-env
 	$(call git_commit, "run NEMU")
-	tmux split-window -v "riscv64-unknown-linux-gnu-gdb -ex \"target remote localhost:1234\""
+	tmux split-window -v "riscv64-unknown-linux-gnu-gdb -ex \"target remote localhost:1234\" $(ELF)"
 	$(NEMU_EXEC)
 
 gdb: run-env
