@@ -77,8 +77,7 @@ static bool nemu_set_bp(void *args, size_t addr, bp_type_t type) {
 static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) {
   addr = addr&2?addr+2:addr;
   //printf("DEL_WATCH:%lx\n",addr);
-  delete_breakpoint(addr);
-  return true; 
+  return delete_breakpoint(addr);
 }
 // Do something when receiving interrupt from GDB client. This method will run
 // concurrently with cont, so you should be careful if there're shared data
