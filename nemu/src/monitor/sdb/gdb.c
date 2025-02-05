@@ -6,17 +6,6 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
-
-
-// 函数用于将整数转换为字符串
-char* int_to_string(int value) {
-    static char buffer[20];  // 足够容纳32位整数
-    snprintf(buffer, sizeof(buffer), "0x%x", value);
-    return buffer;
-}
-
-// 宏定义
-
 #define GenCSR(name, paddr) \
   "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" #paddr "\" />\n"
 
@@ -72,9 +61,6 @@ char* int_to_string(int value) {
   NEMU_REG_TAGS \
   NEMU_OTHER_TAGS \
   NEMU_CSR_TAGS \
-  "</target>"
-#define DEFAULT_FET \
-  "<target version=\"1.0\"><architecture>riscv:rv32</architecture>"  \
   "</target>"
 
 void step(uint64_t n){
@@ -187,7 +173,6 @@ struct target_ops nemu_ops = {
 };
 gdbstub_t gdbstub;
 void init_gdb() {
-  printf(NEMU_FEATURES);
   if (!gdbstub_init(&gdbstub, &nemu_ops,
                     (arch_info_t){
                         .smp = 1,
