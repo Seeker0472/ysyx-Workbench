@@ -73,6 +73,9 @@ char* int_to_string(int value) {
   NEMU_OTHER_TAGS \
   NEMU_CSR_TAGS \
   "</target>"
+#define DEFAULT_FET \
+  "<target version=\"1.0\"><architecture>riscv:rv32</architecture>"  \
+  "</target>"
 
 void step(uint64_t n){
   cpu_exec(n);
@@ -190,7 +193,7 @@ void init_gdb() {
                         .smp = 1,
                         .reg_num = 33,
                         .reg_byte = 4,
-                        .target_desc = NEMU_FEATURES,
+                        .target_desc = DEFAULT_FET,
                     },
                     "127.0.0.1:1234")) {
     fprintf(stderr, "Fail to create socket.\n");
