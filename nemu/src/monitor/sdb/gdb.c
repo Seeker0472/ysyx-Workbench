@@ -94,6 +94,10 @@ static gdb_action_t nemu_stepi(void *args) {
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
   printf("READ:%d\n",regno);
   if(regno>32){
+    if(regno<4096){
+      *reg_value=cpu.csr[regno];
+      return 0;
+    }
     return 1;
   }
   *reg_value =  cpu.gpr[regno];
@@ -103,6 +107,10 @@ static int nemu_read_reg(void *args, int regno, size_t *reg_value) {
 // operation success, otherwise return an errno for the corresponding error.
 static int nemu_write_reg(void *args, int regno, size_t data) { 
   if(regno>32){
+    if(regno<4096){
+      cpu.csr[regno]=data;
+      return 0;
+    }
     return 1;
   }
   cpu.gpr[regno]=data;
