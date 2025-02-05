@@ -68,9 +68,11 @@ char* int_to_string(int value) {
   "</feature>"
 
 #define NEMU_FEATURES \
+  "<target version=\"1.0\"><architecture>riscv:rv32</architecture>"  \
   NEMU_REG_TAGS \
   NEMU_OTHER_TAGS \
-  NEMU_CSR_TAGS 
+  NEMU_CSR_TAGS \
+  "</target>"
 
 void step(uint64_t n){
   cpu_exec(n);
