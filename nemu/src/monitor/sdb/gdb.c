@@ -6,6 +6,15 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
+#define GenCSR(name, paddr) \
+  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" #paddr "\" />\n"
+
+#define NEMU_CSR_TAGS \
+  "<feature name=\"org.gnu.gdb.riscv.csr\">\n" \
+  CSR_LIST \
+  "</feature>\n"
+
+
 void step(uint64_t n){
   cpu_exec(n);
 }
@@ -100,7 +109,7 @@ struct target_ops nemu_ops = {
 };
 gdbstub_t gdbstub;
 void init_gdb() {
-  //init watchpoint!
+  printf(NEMU_CSR_TAGS);
   if (!gdbstub_init(&gdbstub, &nemu_ops,
                     (arch_info_t){
                         .smp = 1,
