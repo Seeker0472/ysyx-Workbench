@@ -33,15 +33,22 @@ ELF ?=
 IMG ?=
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
+ifdef CONFIG_DEBUG_GDB
+	RUN_REMOTE := tmux split-window -v "riscv64-unknown-linux-gnu-gdb -ex \"target remote localhost:1234\" $(ELF)"
+else
+	RUN_REMOTE := 
+endif
+
 run-env: $(BINARY) $(DIFF_REF_SO) $(LIB_GDBSTUB)
 
 run: run-env
 	$(call git_commit, "run NEMU")
-	tmux split-window -v "riscv64-unknown-linux-gnu-gdb -ex \"target remote localhost:1234\" $(ELF)"
+	$(RUN_REMOTE)
 	$(NEMU_EXEC)
 
 gdb: run-env
 	$(call git_commit, "gdb NEMU")
+	$(RUN_REMOTE)
 	gdb -s $(BINARY) --args $(NEMU_EXEC)
 
 clean-tools = $(dir $(shell find ./tools -maxdepth 2 -mindepth 2 -name "Makefile"))
