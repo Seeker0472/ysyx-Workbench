@@ -7,14 +7,18 @@
 #include <memory/paddr.h>
 
 
-char *calc(){
-  return "1234";
+
+// 函数用于将整数转换为字符串
+char* int_to_string(int value) {
+    static char buffer[20];  // 足够容纳32位整数
+    snprintf(buffer, sizeof(buffer), "0x%x", value);
+    return buffer;
 }
 
+// 宏定义
+
 #define GenCSR(name, paddr) \
-  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\" calc() \" />\n"
-
-
+  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" #paddr "\" />\n"
 
 #define NEMU_CSR_TAGS \
   "<feature name=\"org.gnu.gdb.riscv.csr\">\n" \
