@@ -68,7 +68,9 @@ char* int_to_string(int value) {
   "</feature>"
 
 #define NEMU_FEATURES \
-  NEMU_REG_TAGS 
+  NEMU_REG_TAGS \
+  NEMU_OTHER_TAGS \
+  NEMU_CSR_TAGS 
 
 void step(uint64_t n){
   cpu_exec(n);
