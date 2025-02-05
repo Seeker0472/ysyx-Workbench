@@ -7,13 +7,12 @@
 #include <memory/paddr.h>
 
 
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
+char *calc(){
+  return "1234";
+}
 
 #define GenCSR(name, paddr) \
-  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" \
-  TOSTRING(({ int x = (paddr); x; })) \
-  "\" />\n"
+  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"  \" />\n"
 
 
 
