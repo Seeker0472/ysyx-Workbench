@@ -27,7 +27,7 @@ char* int_to_string(int value) {
 
 #define NEMU_REG_TAGS \
     "<feature name=\"org.gnu.gdb.riscv.cpu\">" \
-    "<reg name=\"zero\" bitsize=\"32\" type=\"int\" regnum=\"0"/>" \
+    "<reg name=\"zero\" bitsize=\"32\" type=\"int\" regnum=\"0\"/>" \
     "<reg name=\"ra\" bitsize=\"32\" type=\"code_ptr\" regnum=\"1\"/>" \
     "<reg name=\"sp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"2\"/>" \
     "<reg name=\"gp\" bitsize=\"32\" type=\"data_ptr\" regnum=\"3\"/>" \
@@ -166,7 +166,7 @@ struct target_ops nemu_ops = {
 };
 gdbstub_t gdbstub;
 void init_gdb() {
-  printf(NEMU_CSR_TAGS);
+  printf(NEMU_FEATURES);
   if (!gdbstub_init(&gdbstub, &nemu_ops,
                     (arch_info_t){
                         .smp = 1,
