@@ -85,6 +85,7 @@ static bool nemu_del_bp(void *args, size_t addr, bp_type_t type) {
 // between them. You will need a lock or something similar to avoid data race.
 static void nemu_on_interrupt(void *args) {
   printf("GDB_INTERRUPT\n");
+  nemu_state.state=NEMU_STOP;
 }
 
 struct target_ops nemu_ops = {
