@@ -83,7 +83,6 @@
   GenCSR(MIE, 0x304) \
   GenCSR(MTVEC, 0x305) \
   GenCSR(MSTATUSH, 0x310) \
-  GenCSR(MEDELEGH, 0x312) \
   GenCSR(MSCRATCH, 0x340) \
   GenCSR(MEPC, 0x341) \
   GenCSR(MCAUSE, 0x342) \
@@ -108,6 +107,7 @@
   GenCSR(MVENDROID, 0xF11) \
   GenCSR(MARCHID, 0xF12) \
   CSR_DIFF_LIST 
+//GenCSR(MEDELEGH, 0x312)
 
 // 生成静态常量定义
 #define GenCSR(name, paddr) \

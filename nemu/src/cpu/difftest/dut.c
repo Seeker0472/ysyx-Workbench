@@ -127,6 +127,9 @@ static void checkcsrs(vaddr_t pc){
     isa_reg_display();
   }
 }
+void difftest_raise(uint64_t NO){
+  ref_difftest_raise_intr(NO);
+}
 
 
 //在cpu_exec()的主循环中被调用, 在NEMU中执行完一条指令后, 就在difftest_step()中让REF执行相同的指令, 然后读出REF中的寄存器, 并进行对比.

@@ -151,19 +151,29 @@ void init_monitor(int argc, char *argv[]) {
   init_difftest(diff_so_file, img_size, difftest_port);
 
   /* Initialize the simple debugger. */
+#if defined(CONFIG_DEBUG_SDB)
   init_sdb();
+#elif defined(CONFIG_DEBUG_GDB)
+  void init_gdb();
+  init_gdb();
+#else
+#endif
+
+  IFDEF(CONFIG_BREAKPOINT,init_breakpoint(););
 
   void init_pc_trace();
   IFDEF(CONFIG_PC_TRACE,init_pc_trace(););
 #ifndef CONFIG_ISA_loongarch32r
-  IFDEF(CONFIG_ITRACE, init_disasm(
+#if defined(CONFIG_ITRACE) || defined(CONFIG_IRING)
+  init_disasm(
     MUXDEF(CONFIG_ISA_x86,     "i686",
     MUXDEF(CONFIG_ISA_mips32,  "mipsel",
     MUXDEF(CONFIG_ISA_riscv,
       MUXDEF(CONFIG_RV64,      "riscv64",
                                "riscv32"),
                                "bad"))) "-pc-linux-gnu"
-  ));
+  );
+#endif
 #endif
 
   /* Display welcome message. */

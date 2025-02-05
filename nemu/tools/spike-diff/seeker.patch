@@ -1,8 +1,8 @@
 diff --git a/riscv/processor.cc b/riscv/processor.cc
-index c757d42..ef102bb 100644
+index c757d42..a760ea1 100644
 --- a/riscv/processor.cc
 +++ b/riscv/processor.cc
-@@ -963,21 +963,36 @@ void processor_t::put_csr(int which, reg_t val)
+@@ -963,21 +963,37 @@ void processor_t::put_csr(int which, reg_t val)
    }
  }
  
@@ -32,8 +32,9 @@ index c757d42..ef102bb 100644
 +reg_t processor_t::difftest_get_csr(int which)
 +{
 +  auto search = state.csrmap.find(which);
-+  if(search==state.csrmap.end())
-+    return 0;
++  
++  assert(search!=state.csrmap.end());
++
 +  return search->second->read();
 +}
  

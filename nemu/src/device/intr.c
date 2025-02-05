@@ -14,7 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
-
 void dev_raise_intr() {
-  cpu.INTR=true;
+  //Log("INTR_RAISE");
+   cpu.INTR=true;
 }
