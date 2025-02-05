@@ -6,12 +6,12 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
+
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
 #define GenCSR(name, paddr) \
-  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" TOSTRING(paddr) "\" />\n"
-
+  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" TOSTRING((paddr)) "\" />\n"
 #define NEMU_CSR_TAGS \
   "<feature name=\"org.gnu.gdb.riscv.csr\">\n" \
   CSR_LIST \
