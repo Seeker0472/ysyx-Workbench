@@ -11,7 +11,11 @@
 #define TOSTRING(x) STRINGIFY(x)
 
 #define GenCSR(name, paddr) \
-  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" TOSTRING((paddr)) "\" />\n"
+  "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" \
+  TOSTRING(({ int x = (paddr); x; })) \
+  "\" />\n"
+
+
 
 #define NEMU_CSR_TAGS \
   "<feature name=\"org.gnu.gdb.riscv.csr\">\n" \
