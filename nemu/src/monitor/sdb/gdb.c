@@ -91,7 +91,7 @@ static gdb_action_t nemu_stepi(void *args) {
 // Read the value of the register specified by regno to *value. Return zero if
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
-  //printf("READ:%d\n",regno);
+  printf("READ:%d\n",regno);
   if(regno>32){
     return 1;
   }
@@ -172,7 +172,7 @@ void init_gdb() {
                         .smp = 1,
                         .reg_num = 33,
                         .reg_byte = 4,
-                        .target_desc = TARGET_RV32,
+                        .target_desc = NEMU_FEATURES,
                     },
                     "127.0.0.1:1234")) {
     fprintf(stderr, "Fail to create socket.\n");
