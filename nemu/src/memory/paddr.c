@@ -45,6 +45,8 @@ static uint8_t plic[CONFIG_PLIC_MEM_SIZE] PG_ALIGN = {};
 static uint8_t rubbish[0x8] PG_ALIGN = {};
 #endif
 
+extern bool is_skip_ref;
+
 uint8_t *guest_to_host(paddr_t paddr)
 {
 #if defined(CONFIG_TARGET_SHARE) || defined(CONFIG_SOC_DEVICE)
@@ -61,6 +63,8 @@ uint8_t *guest_to_host(paddr_t paddr)
 #endif
 #ifdef CONFIG_HAS_PLIC
   if(MEM_IN(paddr, CONFIG_PLIC_MEM_BASE, CONFIG_PLIC_MEM_BASE+ CONFIG_PLIC_MEM_SIZE)){
+    is_skip_ref = true; 
+    Log("accessing PLIC:(0x%x)",paddr);
     return plic + paddr - CONFIG_PLIC_MEM_BASE;
   }
 #endif
