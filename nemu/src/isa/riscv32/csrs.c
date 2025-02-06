@@ -6,7 +6,7 @@
 #define R(i) gpr(i)
 
 
-#define SSTATUS_SYNC 0xff8fe763
+#define MSTATUS_SSTATUS_SYNC 0xff8fe763
 static inline void update_mstatus(){
 //update SD(mstatus 的 SD位依赖于FS/VS/XS)
 #define MSTATUS_FS_MASK  0x00006000  // FS 位于 bit [14:13]
@@ -38,16 +38,27 @@ mstatus &= ~MSTATUS_SD_MASK;
 mstatus |= (sd << 31);  
 cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
 uint32_t sstatus = cpu.csr[NEMU_CSR_V_SSTATUS]; // 当前 mstatus 的值
- cpu.csr[NEMU_CSR_V_SSTATUS] = (sstatus & ~ SSTATUS_SYNC)| (mstatus & SSTATUS_SYNC);
+ cpu.csr[NEMU_CSR_V_SSTATUS] = (sstatus & ~ MSTATUS_SSTATUS_SYNC)| (mstatus & MSTATUS_SSTATUS_SYNC);
 }
+
 void update_sstatus(){
 uint32_t sstatus = cpu.csr[NEMU_CSR_V_SSTATUS]; // 当前 mstatus 的值
 uint32_t mstatus = cpu.csr[NEMU_CSR_V_MSTATUS]; // 当前 mstatus 的值
- cpu.csr[NEMU_CSR_V_MSTATUS] = (mstatus & ~ SSTATUS_SYNC)| (sstatus & SSTATUS_SYNC);
+ cpu.csr[NEMU_CSR_V_MSTATUS] = (mstatus & ~ MSTATUS_SSTATUS_SYNC)| (sstatus & MSTATUS_SSTATUS_SYNC);
 }
 
+#define SIE_MIE_SYNC 0x202
+void update_mie(){
+  uint32_t mie = cpu.csr[NEMU_CSR_V_MIE];
+  uint32_t sie = cpu.csr[NEMU_CSR_V_SIE];
+  cpu.csr[NEMU_CSR_V_SIE] = (sie & ~ SIE_MIE_SYNC) | (mie & SIE_MIE_SYNC);
+}
 
-
+void update_sie(){
+  uint32_t mie = cpu.csr[NEMU_CSR_V_MIE];
+  uint32_t sie = cpu.csr[NEMU_CSR_V_SIE];
+  cpu.csr[NEMU_CSR_V_MIE] = (mie & ~ SIE_MIE_SYNC) | (sie & SIE_MIE_SYNC);
+}
 
 extern bool is_skip_ref;
 
@@ -128,6 +139,12 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
       break;
     case NEMU_CSR_V_SSTATUS:
       update_sstatus();
+      break;
+    case NEMU_CSR_V_MIE:
+      update_mie();
+      break;
+    case NEMU_CSR_V_SIE:
+      update_sie();
       break;
   }
 }
