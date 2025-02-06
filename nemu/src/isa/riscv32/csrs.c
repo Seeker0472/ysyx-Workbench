@@ -60,6 +60,14 @@ void update_sie(){
   cpu.csr[NEMU_CSR_V_MIE] = (mie & ~ SIE_MIE_SYNC) | (sie & SIE_MIE_SYNC);
 }
 
+
+void update_time() {
+  uint64_t time = get_time();
+  cpu.csr[NEMU_CSR_V_TIME] = (uint32_t)time;
+  cpu.csr[NEMU_CSR_V_TIMEH] = (uint32_t)(time>>32);
+
+}
+
 extern bool is_skip_ref;
 
 //csr操作
@@ -78,6 +86,14 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
   cpu.PRIV=NEMU_PRIV_M; \
   IFDEF(CONFIG_DIFFTEST,difftest_csr_notexist()); \
   Log("WARRNING:Unsupported CSR NO:(0x%x) on pc: 0x%x", csr_idx,cpu.pc); \
+
+  //读取前
+  switch(csr_idx){
+    case NEMU_CSR_V_TIME:
+    case NEMU_CSR_V_TIMEH:
+      update_time();
+      break;
+  }
 
 //检查RW
   switch(op){
