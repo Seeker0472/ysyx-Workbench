@@ -61,6 +61,10 @@ static inline bool in_pmem(paddr_t addr) {
   if (MEM_IN(addr, PSRAM_BASE, PSRAM_TOP)) // psram
     return true;
 #endif
+#ifdef CONFIG_HAS_PLIC
+  if(MEM_IN(addr, CONFIG_PLIC_MEM_BASE,CONFIG_PLIC_MEM_BASE+CONFIG_PLIC_MEM_SIZE))
+    return true;
+#endif 
   return addr - CONFIG_MBASE < CONFIG_MSIZE;
 }
 
