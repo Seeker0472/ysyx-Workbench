@@ -47,7 +47,7 @@ uint32_t mstatus = cpu.csr[NEMU_CSR_V_MSTATUS]; // 当前 mstatus 的值
  cpu.csr[NEMU_CSR_V_MSTATUS] = (mstatus & ~ MSTATUS_SSTATUS_SYNC)| (sstatus & MSTATUS_SSTATUS_SYNC);
 }
 
-#define SIE_MIE_SYNC 0x202
+#define SIE_MIE_SYNC 0x222
 void update_mie(){
   uint32_t mie = cpu.csr[NEMU_CSR_V_MIE];
   uint32_t sie = cpu.csr[NEMU_CSR_V_SIE];
