@@ -180,7 +180,8 @@ void init_gdb() {
                         .reg_byte = 4,
                         .target_desc = NEMU_FEATURES,
                     },
-                    "/tmp/gdbstub.sock")) {
+                    "127.0.0.1:1234")) {
+                    //"/tmp/gdbstub.sock")) {
     fprintf(stderr, "Fail to create socket.\n");
     assert(0);
   }
