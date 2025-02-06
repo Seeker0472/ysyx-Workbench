@@ -6,13 +6,6 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
-// 函数用于将整数转换为字符串
-char* int_to_string(int value) {
-    static char buffer[20];  // 足够容纳32位整数
-    snprintf(buffer, sizeof(buffer), "0x%x", value);
-    return buffer;
-}
-
 #define GenCSR(name, paddr) \
   "<reg name=\"" #name "\" bitsize=\"32\" type=\"int\" regnum=\"" #paddr "\" />\n"
 
@@ -89,7 +82,7 @@ static gdb_action_t nemu_stepi(void *args) {
 // Read the value of the register specified by regno to *value. Return zero if
 // the operation success, otherwise return an errno for the corresponding error.
 static int nemu_read_reg(void *args, int regno, size_t *reg_value) { 
-  printf("READ:%d\n",regno);
+  //printf("READ:%d\n",regno);
   if(regno==65){
     *reg_value=cpu.PRIV;
     return 0;
@@ -180,7 +173,6 @@ struct target_ops nemu_ops = {
 };
 gdbstub_t gdbstub;
 void init_gdb() {
-  printf(NEMU_FEATURES);
   if (!gdbstub_init(&gdbstub, &nemu_ops,
                     (arch_info_t){
                         .smp = 1,
@@ -188,7 +180,7 @@ void init_gdb() {
                         .reg_byte = 4,
                         .target_desc = NEMU_FEATURES,
                     },
-                    "127.0.0.1:1234")) {
+                    "/tmp/gdbstub.sock")) {
     fprintf(stderr, "Fail to create socket.\n");
     assert(0);
   }
