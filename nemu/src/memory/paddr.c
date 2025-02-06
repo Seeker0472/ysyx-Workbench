@@ -30,6 +30,7 @@ static uint8_t *sram = NULL;
 static uint8_t *mrom = NULL;
 static uint8_t *sdram = NULL;
 static uint8_t *psram = NULL;
+static uint8_t *plic = NULL;
 static uint8_t *rubbish = NULL;
 
 #else // CONFIG_PMEM_GARRAY
@@ -40,6 +41,7 @@ static uint8_t sram[SRAM_SIZE] PG_ALIGN = {};
 static uint8_t mrom[MROM_SIZE] PG_ALIGN = {};
 static uint8_t sdram[SDRAM_SIZE] PG_ALIGN = {};
 static uint8_t psram[PSRAM_SIZE] PG_ALIGN = {};
+static uint8_t plic[CONFIG_PLIC_MEM_SIZE] PG_ALIGN = {};
 static uint8_t rubbish[0x8] PG_ALIGN = {};
 #endif
 
@@ -56,6 +58,11 @@ uint8_t *guest_to_host(paddr_t paddr)
     return sdram + paddr - SDRAM_BASE;
   if (MEM_IN(paddr, PSRAM_BASE, PSRAM_TOP)) // psram
     return psram + paddr - PSRAM_BASE;
+#endif
+#ifdef CONFIG_HAS_PLIC
+  if(MEM_IN(paddr, CONFIG_PLIC_MEM_BASE, CONFIG_PLIC_MEM_BASE+ CONFIG_PLIC_MEM_SIZE)){
+    return plic + paddr - CONFIG_PLIC_MEM_BASE;
+  }
 #endif
   if (MEM_IN(paddr, CONFIG_MBASE, CONFIG_MBASE + CONFIG_MSIZE)) {
     return pmem + paddr - CONFIG_MBASE;
@@ -76,6 +83,11 @@ paddr_t host_to_guest(uint8_t *haddr)
     return haddr - sdram + SDRAM_BASE;
   if (PHY_IN(haddr, psram, PSRAM_BASE, PSRAM_TOP)) // psram
     return haddr - psram + PSRAM_BASE;
+#endif
+#ifdef CONFIG_HAS_PLIC
+  if(PHY_IN(haddr,plic, CONFIG_PLIC_MEM_BASE, CONFIG_PLIC_MEM_BASE+ CONFIG_PLIC_MEM_SIZE)){
+    return haddr - plic + CONFIG_PLIC_MEM_BASE;
+  }
 #endif
   if (PHY_IN(haddr, pmem, CONFIG_MBASE, CONFIG_MBASE + CONFIG_MSIZE))
     return haddr - pmem + CONFIG_MBASE;
@@ -120,6 +132,7 @@ void init_mem()
   mrom = malloc(MROM_SIZE);
   sdram = malloc(SDRAM_SIZE);
   psram = malloc(PSRAM_SIZE);
+  plic = malloc(CONFIG_PLIC_MEM_SIZE);
   rubbish = malloc(0x8);
   assert(pmem);
   assert(flash);
