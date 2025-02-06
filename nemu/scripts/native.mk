@@ -34,8 +34,7 @@ IMG ?=
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
 ifdef CONFIG_DEBUG_GDB
-#	RUN_REMOTE := tmux split-window -h -p 65 "sleep 1 && riscv64-unknown-linux-gnu-gdb -ex \"target remote /tmp/gdbstub.sock\" $(ELF)"
-RUN_REMOTE := tmux split-window -h -p 65 "sleep 1 && riscv64-unknown-linux-gnu-gdb -ex \"target remote 127.0.0.1:1234\" $(ELF)"
+	RUN_REMOTE := tmux split-window -h -p 65 "sleep 1 && riscv64-unknown-linux-gnu-gdb -ex \"target remote /tmp/gdbstub.sock\" $(ELF)"
 else
 	RUN_REMOTE := 
 endif
