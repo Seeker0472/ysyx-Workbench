@@ -35,8 +35,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
     // 关中断状态
     // sstatus.MIE->sstatus.MPIE;sstatus.MIE=0;
     uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & MIE) << 4;
+    uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
     cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~MPIE)) | spie)&(~MIE);
-    cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | spie)&(~MIE);
+    cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
     // set previous privilege
     uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?SPP:0;
     cpu.csr[NEMU_CSR_SSTATUS]|=spp;
