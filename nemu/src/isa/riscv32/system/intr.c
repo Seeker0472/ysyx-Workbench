@@ -38,8 +38,8 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
     cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~MPIE)) | spie)&(~MIE);
     // set previous privilege
     uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?SPP:0;
-    cpu.csr[NEMU_CSR_SSTATUS]|=cpu.PRIV<<11|spp;
-    cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11|spp;
+    cpu.csr[NEMU_CSR_SSTATUS]|=(cpu.PRIV<<11)|spp;
+    cpu.csr[NEMU_CSR_MSTATUS]|=(cpu.PRIV<<11)|spp;
     cpu.csr[NEMU_CSR_STVAL] = cpu.pc;
     return cpu.csr[NEMU_CSR_STVEC];
   }else{
