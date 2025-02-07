@@ -28,6 +28,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   IFDEF(CONFIG_ETRACE,Log("Trigged Exception!, No=%x Epc=%x",NO,epc););
   //medeleg bit of this interrupt was set!
   if(cpu.PRIV!=NEMU_PRIV_M&&(cpu.csr[NEMU_CSR_MEDELEG]>>(NO)&0x1)){
+    Log("Handle this exception on S_Mod");
     cpu.csr[NEMU_CSR_SCAUSE]=NO;
     cpu.csr[NEMU_CSR_SEPC] = epc;
     // 关中断状态
