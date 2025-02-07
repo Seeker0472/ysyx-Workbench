@@ -19,6 +19,7 @@
 #include <stdio.h>
 #define MIE 0x8
 #define MPIE 0x80
+#define SPP 0x100
 
 // ecall 调用
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
@@ -36,7 +37,10 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
     uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & MIE) << 4;
     cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~MPIE)) | spie)&(~MIE);
     // set previous privilege
-    cpu.csr[NEMU_CSR_SSTATUS]|=cpu.PRIV<<11;
+    uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?SPP:0;
+    cpu.csr[NEMU_CSR_SSTATUS]|=cpu.PRIV<<11|spp;
+    cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11|spp;
+    cpu.csr[NEMU_CSR_STVAL] = cpu.pc;
     return cpu.csr[NEMU_CSR_STVEC];
   }else{
     cpu.csr[NEMU_CSR_MCAUSE]=NO;
