@@ -89,6 +89,7 @@ void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t r
       update_time();
       break;
     case NEMU_CSR_V_MVENDROID:
+    case NEMU_CSR_V_MARCHID:
       IFDEF(CONFIG_DIFFTEST,is_skip_ref = true;);
       break;
   }
