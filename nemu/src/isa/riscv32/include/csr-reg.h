@@ -131,6 +131,7 @@
   GenCSR(PMPADDR13, 0x3BD) \
   GenCSR(PMPADDR14, 0x3BE) \
   GenCSR(PMPADDR15, 0x3BF) \
+  GenCSR(MIPID, 0xF13) \
 
 // 全部csr寄存器
 #define CSR_LIST \
