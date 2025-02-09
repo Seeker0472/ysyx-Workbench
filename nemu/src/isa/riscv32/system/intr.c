@@ -74,8 +74,10 @@ paddr_t isa_call_sret() {
 //sstatus.SPIE->mstatus.MIE;sstatus.SPIE=1
   uint32_t sie = (cpu.csr[NEMU_CSR_SSTATUS] & SPIE) >> 4;
   cpu.csr[NEMU_CSR_SSTATUS] = (cpu.csr[NEMU_CSR_SSTATUS] & (~SIE)) | sie | SPIE;
+  cpu.csr[NEMU_CSR_MSTATUS] = (cpu.csr[NEMU_CSR_MSTATUS] & (~SIE)) | sie | SPIE;
   cpu.PRIV = (cpu.csr[NEMU_CSR_SSTATUS] & 0x100)>>8;
   cpu.csr[NEMU_CSR_SSTATUS] &= ~0x100;
+  cpu.csr[NEMU_CSR_MSTATUS] &= ~0x100;
   return cpu.csr[NEMU_CSR_SEPC];
 }
 
