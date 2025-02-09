@@ -109,7 +109,7 @@ void do_ecall(Decode *s){
     default:
       assert(0);
   }
-  cpu.PRIV=NEMU_PRIV_M;
+  cpu.PRIV=cpu.PRIV==NEMU_PRIV_M||cpu.PRIV==NEMU_PRIV_HS?NEMU_PRIV_M:NEMU_PRIV_HS;
   cpu.csr[NEMU_CSR_MTVAL]=0;
 }
 
