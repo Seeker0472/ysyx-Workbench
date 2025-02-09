@@ -112,19 +112,28 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   //DUT(Design Under Test, 测试对象)
 }
 
-static void checkregs(CPU_state *ref, vaddr_t pc) {
+static bool checkgpr(CPU_state *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
-    nemu_state.state = NEMU_ABORT;
-    nemu_state.halt_pc = pc;
-    isa_reg_display();
+    return false;
   }
+  return true;
 }
 word_t csr_r[4096];
-static void checkcsrs(vaddr_t pc){
+static bool checkcsrs(vaddr_t pc){
   if(!isa_difftest_checkcsrs(csr_r,pc)){
+    return false;
+  }
+  return true;
+}
+static void checkregs(CPU_state *ref, vaddr_t pc) {
+  bool okey = checkgpr(ref,pc) && checkcsrs(pc);
+  if(!okey) {
     nemu_state.state = NEMU_ABORT;
     nemu_state.halt_pc = pc;
     isa_reg_display();
+    void print_iringbuf();
+    print_iringbuf();
+
   }
 }
 void difftest_raise(uint64_t NO){
@@ -159,7 +168,6 @@ void difftest_step(vaddr_t pc, vaddr_t npc) {
   ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
   ref_difftest_csrcpy(csr_r);
-  checkcsrs(pc);
   checkregs(&ref_r, pc);
 }
 #else
