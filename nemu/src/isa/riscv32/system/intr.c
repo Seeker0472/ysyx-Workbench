@@ -23,6 +23,8 @@
 #define MPIE 0x80
 #define SPP 0x100
 
+uint32_t stval_nextvalue = 0;
+
 // ecall 调用
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   //mepc寄存器 - 存放触发异常的PC
@@ -43,7 +45,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
     uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?SPP:0;
     cpu.csr[NEMU_CSR_SSTATUS]|=spp;
     cpu.csr[NEMU_CSR_MSTATUS]|=spp;
-    cpu.csr[NEMU_CSR_STVAL] = cpu.pc;
+    cpu.csr[NEMU_CSR_STVAL] = stval_nextvalue;
     return cpu.csr[NEMU_CSR_STVEC];
   }else{
     cpu.csr[NEMU_CSR_MCAUSE]=NO;
