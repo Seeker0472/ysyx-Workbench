@@ -32,6 +32,7 @@ void ftrace_func_call(paddr_t pc_now,paddr_t target);
 void ftrace_func_ret(paddr_t pc_now, paddr_t address);
 paddr_t isa_call_mret();
 paddr_t isa_call_sret();
+word_t riscv_do_ecall(word_t NO, vaddr_t epc);
 
 void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s);
 
@@ -98,18 +99,18 @@ void do_ecall(Decode *s){
   // user/system ecall
   switch (cpu.PRIV) {
     case NEMU_PRIV_M:
-      s->dnpc=isa_raise_intr(0xb,s->pc);
+      s->dnpc=riscv_do_ecall(0xb,s->pc);
       break;
     case NEMU_PRIV_U:
-      s->dnpc=isa_raise_intr(0x8,s->pc);
+      s->dnpc=riscv_do_ecall(0x8,s->pc);
       break;
     case NEMU_PRIV_HS:
-      s->dnpc=isa_raise_intr(0x9,s->pc);
+      s->dnpc=riscv_do_ecall(0x9,s->pc);
       break;
     default:
       assert(0);
   }
-  cpu.PRIV=cpu.PRIV==NEMU_PRIV_M||cpu.PRIV==NEMU_PRIV_HS?NEMU_PRIV_M:NEMU_PRIV_HS;
+  
   cpu.csr[NEMU_CSR_MTVAL]=0;
 }
 
