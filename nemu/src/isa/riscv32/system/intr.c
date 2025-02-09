@@ -70,6 +70,15 @@ paddr_t isa_call_mret() {
   return cpu.csr[NEMU_CSR_MEPC];
 }
 
+paddr_t isa_call_sret() {
+//sstatus.SPIE->mstatus.MIE;sstatus.SPIE=1
+  uint32_t sie = (cpu.csr[NEMU_CSR_SSTATUS] & SPIE) >> 4;
+  cpu.csr[NEMU_CSR_SSTATUS] = (cpu.csr[NEMU_CSR_SSTATUS] & (~SIE)) | sie | SPIE;
+  cpu.PRIV = (cpu.csr[NEMU_CSR_SSTATUS] & 0x1800)>>11;
+  cpu.csr[NEMU_CSR_SSTATUS] &= ~0x1800;
+  return cpu.csr[NEMU_CSR_SEPC];
+}
+
 void difftest_raise(uint64_t NO);
 word_t isa_query_intr() {
   if (((cpu.csr[NEMU_CSR_MSTATUS] & MIE)) && cpu.INTR) {

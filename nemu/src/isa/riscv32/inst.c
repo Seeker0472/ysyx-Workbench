@@ -31,6 +31,7 @@ void write_iringbuf(paddr_t pc, word_t inst);
 void ftrace_func_call(paddr_t pc_now,paddr_t target);
 void ftrace_func_ret(paddr_t pc_now, paddr_t address);
 paddr_t isa_call_mret();
+paddr_t isa_call_sret();
 
 void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s);
 
@@ -227,6 +228,7 @@ static int decode_exec(Decode *s) {
 
   //rv_system
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=isa_call_mret());
+  INSTPAT("0001000 00010 00000 000 00000 11100 11", sret   , N, s->dnpc=isa_call_sret());
   //INST:wfi
 
   //rv_a
