@@ -269,10 +269,10 @@ int exception_exec(int id,Decode *s){
       exception_code=12;
       break;
     case NEMU_MEMA_READERR:
-      exception_code=5;
+      exception_code=13;
       break;
     case NEMU_MEMA_STOREERR:
-      exception_code=7;
+      exception_code=15;
       break;
     default:
       assert(0);
