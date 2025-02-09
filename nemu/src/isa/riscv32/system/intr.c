@@ -18,7 +18,43 @@
 #include <stdint.h>
 #include <stdio.h>
 #define MIE 0x8
+#define SIE 0x2
+#define SPIE 0x20
 #define MPIE 0x80
+#define SPP 0x100
+
+uint32_t stval_nextvalue = 0;
+
+paddr_t riscv_intr_gotos (word_t NO,vaddr_t epc){
+  Log("Handle this exception on S_Mod");
+  cpu.csr[NEMU_CSR_SCAUSE]=NO;
+  cpu.csr[NEMU_CSR_SEPC] = epc;
+  // 关中断状态
+  // sstatus.MIE->sstatus.MPIE;sstatus.MIE=0;
+  uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & SIE) << 4;
+  cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~SPIE)) | spie)&(~SIE);
+  cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~SPIE)) | spie)&(~SIE);
+  // set previous privilege
+  uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?SPP:0;
+  cpu.csr[NEMU_CSR_SSTATUS]|=spp;
+  cpu.csr[NEMU_CSR_MSTATUS]|=spp;
+  cpu.csr[NEMU_CSR_STVAL] = stval_nextvalue;
+  cpu.PRIV=NEMU_PRIV_HS;
+  return cpu.csr[NEMU_CSR_STVEC];
+}
+
+paddr_t riscv_intr_gotom (word_t NO,vaddr_t epc){
+  cpu.csr[NEMU_CSR_MCAUSE]=NO;
+  cpu.csr[NEMU_CSR_MEPC] = epc; 
+  // 关中断状态
+  // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
+  uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
+  cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
+  // set previous privilege
+  cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
+  cpu.PRIV=NEMU_PRIV_M;
+  return cpu.csr[NEMU_CSR_MTVEC];
+}
 
 // ecall 调用
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
@@ -28,28 +64,20 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   IFDEF(CONFIG_ETRACE,Log("Trigged Exception!, No=%x Epc=%x",NO,epc););
   //medeleg bit of this interrupt was set!
   if(cpu.PRIV!=NEMU_PRIV_M&&(cpu.csr[NEMU_CSR_MEDELEG]>>(NO)&0x1)){
-    cpu.csr[NEMU_CSR_SCAUSE]=NO;
-    cpu.csr[NEMU_CSR_SEPC] = epc;
-    // 关中断状态
-    // sstatus.MIE->sstatus.MPIE;sstatus.MIE=0;
-    uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & MIE) << 4;
-    cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~MPIE)) | spie)&(~MIE);
-    // set previous privilege
-    cpu.csr[NEMU_CSR_SSTATUS]|=cpu.PRIV<<11;
-    return cpu.csr[NEMU_CSR_STVEC];
+    return riscv_intr_gotos(NO,epc);
   }else{
-    cpu.csr[NEMU_CSR_MCAUSE]=NO;
-    cpu.csr[NEMU_CSR_MEPC] = epc; 
-    // 关中断状态
-    // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
-    uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
-    cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
-    // set previous privilege
-    cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
-    return cpu.csr[NEMU_CSR_MTVEC];
+    return riscv_intr_gotom(NO,epc);
   }
-
 }
+
+word_t riscv_do_ecall(word_t NO, vaddr_t epc) {
+  if(cpu.PRIV==NEMU_PRIV_M||cpu.PRIV==NEMU_PRIV_HS) {
+    return riscv_intr_gotom(NO, epc);
+  }else{
+    return riscv_intr_gotos(NO,epc);
+  }
+}
+
 
 paddr_t isa_call_mret() {
 //mstatus.MPIE->mstatus.MIE;mstatus.MPIE=1
@@ -60,11 +88,22 @@ paddr_t isa_call_mret() {
   return cpu.csr[NEMU_CSR_MEPC];
 }
 
+paddr_t isa_call_sret() {
+//sstatus.SPIE->mstatus.MIE;sstatus.SPIE=1
+  uint32_t sie = (cpu.csr[NEMU_CSR_SSTATUS] & SPIE) >> 4;
+  cpu.csr[NEMU_CSR_SSTATUS] = (cpu.csr[NEMU_CSR_SSTATUS] & (~SIE)) | sie | SPIE;
+  cpu.csr[NEMU_CSR_MSTATUS] = (cpu.csr[NEMU_CSR_MSTATUS] & (~SIE)) | sie | SPIE;
+  cpu.PRIV = (cpu.csr[NEMU_CSR_SSTATUS] & 0x100)>>8;
+  cpu.csr[NEMU_CSR_SSTATUS] &= ~0x100;
+  cpu.csr[NEMU_CSR_MSTATUS] &= ~0x100;
+  return cpu.csr[NEMU_CSR_SEPC];
+}
+
 void difftest_raise(uint64_t NO);
 word_t isa_query_intr() {
   if (((cpu.csr[NEMU_CSR_MSTATUS] & MIE)) && cpu.INTR) {
     //Log("INTR_TAKE");
-  difftest_raise(IRQ_TIMER);
+  IFDEF(CONFIG_DIFFTEST,difftest_raise(IRQ_TIMER););
     cpu.INTR = false;
     return IRQ_TIMER;
   }

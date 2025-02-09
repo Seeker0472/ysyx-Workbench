@@ -31,6 +31,8 @@ void write_iringbuf(paddr_t pc, word_t inst);
 void ftrace_func_call(paddr_t pc_now,paddr_t target);
 void ftrace_func_ret(paddr_t pc_now, paddr_t address);
 paddr_t isa_call_mret();
+paddr_t isa_call_sret();
+word_t riscv_do_ecall(word_t NO, vaddr_t epc);
 
 void do_csr_op(uint32_t op, uint32_t csr_idx,uint32_t src,uint32_t rs,uint32_t rd,Decode *s);
 
@@ -97,18 +99,18 @@ void do_ecall(Decode *s){
   // user/system ecall
   switch (cpu.PRIV) {
     case NEMU_PRIV_M:
-      s->dnpc=isa_raise_intr(0xb,s->pc);
+      s->dnpc=riscv_do_ecall(0xb,s->pc);
       break;
     case NEMU_PRIV_U:
-      s->dnpc=isa_raise_intr(0x8,s->pc);
+      s->dnpc=riscv_do_ecall(0x8,s->pc);
       break;
     case NEMU_PRIV_HS:
-      s->dnpc=isa_raise_intr(0x9,s->pc);
+      s->dnpc=riscv_do_ecall(0x9,s->pc);
       break;
     default:
       assert(0);
   }
-  cpu.PRIV=NEMU_PRIV_M;
+  
   cpu.csr[NEMU_CSR_MTVAL]=0;
 }
 
@@ -200,6 +202,7 @@ static int decode_exec(Decode *s) {
   //rv_m
   INSTPAT("0000001 ????? ????? 000 ????? 01100 11", mul    , R, R(rd)=src1*src2);
   INSTPAT("0000001 ????? ????? 001 ????? 01100 11", mulh   , R, R(rd)=mulh(src1, src2););
+  INSTPAT("0000001 ????? ????? 010 ????? 01100 11", mulh   , R, R(rd)=((((uint64_t)src1)*((uint64_t)src2))>>32););
   //INST:mulhsu
   INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , R, R(rd)=(uint32_t)((((uint64_t)src1)*((uint64_t)src2))>>32););
   INSTPAT("0000001 ????? ????? 100 ????? 01100 11", div    , R, MUXDEF(RV64,R(rd)=src2==0?-1:src1==INT64_MIN&&src2==-1?INT64_MIN: ((int64_t)src1)/((int64_t)(src2)),R(rd)=src2==0?-1:src1==INT32_MIN&&src2==-1?INT32_MIN:((int32_t)src1)/((int32_t)(src2))));
@@ -226,6 +229,7 @@ static int decode_exec(Decode *s) {
 
   //rv_system
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=isa_call_mret());
+  INSTPAT("0001000 00010 00000 000 00000 11100 11", sret   , N, s->dnpc=isa_call_sret());
   //INST:wfi
 
   //rv_a
@@ -268,10 +272,10 @@ int exception_exec(int id,Decode *s){
       exception_code=12;
       break;
     case NEMU_MEMA_READERR:
-      exception_code=5;
+      exception_code=13;
       break;
     case NEMU_MEMA_STOREERR:
-      exception_code=7;
+      exception_code=15;
       break;
     default:
       assert(0);

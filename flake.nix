@@ -84,6 +84,7 @@
             pkgs.pkgsCross.riscv64.buildPackages.gcc
             pkgs.pkgsCross.riscv64.buildPackages.gdb
             pkgs.pkgsCross.riscv32.buildPackages.gcc
+            pkgs.pkgsCross.riscv32.buildPackages.binutils
             pkgs.pkgsCross.riscv64.buildPackages.binutils
             pkgs.bear
             # TODO:add more!!!

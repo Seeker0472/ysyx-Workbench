@@ -35,6 +35,8 @@ void print_all_entry(vaddr_t vaddr){
   }
 }
 
+extern uint32_t stval_nextvalue;
+
 // page table walk
 // pta page table address
 // pte page table entry
@@ -58,6 +60,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   if(!(PAGE_VALID(pte1))){
     Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
     print_all_entry(pta1);
+    stval_nextvalue = vaddr;
     return MEM_RET_FAIL;
   }
   if(XWR(pte1)!=0){
@@ -77,6 +80,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     uint32_t pte0 = *ptea0;
     if (!(PAGE_VALID(pte0))) {
       Log("INVALID PTE0 for vaddr 0x%x pte 0x%x", vaddr, pte0);
+      stval_nextvalue = vaddr;
       return MEM_RET_FAIL;
     }
     // check bounds
