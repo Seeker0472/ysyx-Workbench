@@ -126,7 +126,9 @@ static bool checkcsrs(vaddr_t pc){
   return true;
 }
 static void checkregs(CPU_state *ref, vaddr_t pc) {
-  bool okey = checkgpr(ref,pc) && checkcsrs(pc);
+  
+  bool okey = checkgpr(ref,pc) ;
+  okey &= checkcsrs(pc) ;
   if(!okey) {
     nemu_state.state = NEMU_ABORT;
     nemu_state.halt_pc = pc;
