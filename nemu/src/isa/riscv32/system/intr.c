@@ -18,6 +18,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #define MIE 0x8
+#define SIE 0x2
+#define SPIE 0x20
 #define MPIE 0x80
 #define SPP 0x100
 
@@ -34,9 +36,9 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
     cpu.csr[NEMU_CSR_SEPC] = epc;
     // 关中断状态
     // sstatus.MIE->sstatus.MPIE;sstatus.MIE=0;
-    uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & MIE) << 4;
-    cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~MPIE)) | spie)&(~MIE);
-    //cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | spie)&(~MIE);
+    uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & SIE) << 4;
+    cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~SPIE)) | spie)&(~SIE);
+    cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~SPIE)) | spie)&(~SIE);
     // set previous privilege
     uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?SPP:0;
     cpu.csr[NEMU_CSR_SSTATUS]|=spp;
