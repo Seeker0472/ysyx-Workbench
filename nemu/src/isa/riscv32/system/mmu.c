@@ -87,6 +87,8 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     // check bounds
     if (offset + len > 0x1000) {
       Log("CROSS_PAGE0");
+      stval_nextvalue = vaddr;
+
       return MEM_RET_CROSS_PAGE;
     }
     //final page address
@@ -100,18 +102,21 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   switch(type){
     case NEMU_MEM_READ:
       if(!(XWR(pte)&0b1)){
+        stval_nextvalue = vaddr;
         Log("MEM_RET_READ_FAIL");
         return MEM_RET_FAIL;
       }
       break;
     case NEMU_MEM_WRITE:
       if(!(XWR(pte)&0b10)){
+        stval_nextvalue = vaddr;
         Log("MEM_RET_WRITE_FAIL");
         return MEM_RET_FAIL;
       }
       break;
     case NEMU_MEM_EXEC:
       if(!(XWR(pte)&0b100)){
+        stval_nextvalue = vaddr;
         Log("MEM_RET_EXEC_FAIL");
         return MEM_RET_FAIL;
       }
