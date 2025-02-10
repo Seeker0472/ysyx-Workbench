@@ -125,8 +125,8 @@ paddr_t isa_call_sret() {
 */
   cpu.PRIV = NEMU_sstatus->bits.SPP;
   NEMU_sstatus->bits.SIE = NEMU_sstatus->bits.SPIE;
+  NEMU_mstatus->bits.MIE = NEMU_mstatus->bits.SPIE;
   NEMU_sstatus->bits.SPIE = 1;
-  NEMU_mstatus->bits.MIE = NEMU_mstatus->bits.MPIE;
   NEMU_mstatus->bits.MPIE = 1;
   NEMU_sstatus->bits.SPP = 0;
   NEMU_mstatus->bits.SPP = 0;
