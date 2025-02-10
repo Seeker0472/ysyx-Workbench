@@ -281,7 +281,7 @@ int exception_exec(int id,Decode *s){
       assert(0);
   }
   s->dnpc=isa_raise_intr(exception_code,s->pc);
-  nemu_state.state = NEMU_STOP;
+  IFDEF(CONFIG_EXCEPTION_NEMU_STOP,nemu_state.state = NEMU_STOP;);
   return 0;
 }
 

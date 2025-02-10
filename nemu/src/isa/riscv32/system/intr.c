@@ -21,7 +21,7 @@
 uint32_t stval_nextvalue = 0;
 
 paddr_t riscv_intr_gotos (word_t NO,vaddr_t epc){
-  Log("Handle this exception on S_Mod");
+  IFDEF(CONFIG_ETRACE,Log("Handle this exception on S_Mod"););
   cpu.csr[NEMU_CSR_SCAUSE]=NO;
   cpu.csr[NEMU_CSR_SEPC] = epc;
   // 关中断状态
@@ -34,7 +34,6 @@ paddr_t riscv_intr_gotos (word_t NO,vaddr_t epc){
   // set previous privilege
   NEMU_mstatus->bits.SPP=cpu.PRIV==NEMU_PRIV_HS?1:0;
   NEMU_sstatus->bits.SPP=cpu.PRIV==NEMU_PRIV_HS?1:0;
-  printf("STVALN>%x\n",stval_nextvalue);
   cpu.csr[NEMU_CSR_STVAL] = stval_nextvalue;
   stval_nextvalue = 0;//???ecall!
   cpu.PRIV=NEMU_PRIV_HS;
