@@ -70,12 +70,12 @@ paddr_t riscv_intr_gotom (word_t NO,vaddr_t epc){
   */
   NEMU_mstatus->bits.MPIE = NEMU_mstatus->bits.MIE;
   NEMU_mstatus->bits.MIE = 0;
+  printf("CPU>PRV=%x\n",cpu.PRIV);
   NEMU_mstatus->bits.MPRV = cpu.PRIV;
   cpu.PRIV=NEMU_PRIV_M;
   return cpu.csr[NEMU_CSR_MTVEC];
 }
 
-// ecall 调用
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   //mepc寄存器 - 存放触发异常的PC
   //mstatus寄存器 - 存放处理器的状态
