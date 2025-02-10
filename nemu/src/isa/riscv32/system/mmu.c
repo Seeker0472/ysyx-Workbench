@@ -67,6 +67,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     //point to a 4MB's page
     vaddr_t offset = vaddr & 0x3FFFFF;
     if(offset+len>0x400000){
+      Log("CROSS_PAGE1");
       return MEM_RET_CROSS_PAGE;
     }
     pte = pte1;
@@ -85,6 +86,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     }
     // check bounds
     if (offset + len > 0x1000) {
+      Log("CROSS_PAGE0");
       return MEM_RET_CROSS_PAGE;
     }
     //final page address
@@ -97,15 +99,20 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   // 正常应该抛异常的,这里就简单实现了
   switch(type){
     case NEMU_MEM_READ:
-      if(!(XWR(pte)&0b1))
+      if(!(XWR(pte)&0b1)){
+        Log("MEM_RET_READ_FAIL");
         return MEM_RET_FAIL;
+      }
       break;
     case NEMU_MEM_WRITE:
-      if(!(XWR(pte)&0b10))
+      if(!(XWR(pte)&0b10)){
+        Log("MEM_RET_WRITE_FAIL");
         return MEM_RET_FAIL;
+      }
       break;
     case NEMU_MEM_EXEC:
       if(!(XWR(pte)&0b100)){
+        Log("MEM_RET_EXEC_FAIL");
         return MEM_RET_FAIL;
       }
       break;
