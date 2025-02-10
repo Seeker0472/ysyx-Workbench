@@ -8,6 +8,10 @@
 
 #define MSTATUS_SSTATUS_SYNC 0xff8fe763
 static inline void update_mstatus(){
+  //NEMU_mstatus.bits.FS ==3 ||NEMU_mstatus.bits.VS == 3 || NEMU_mstatus.bits.XS ==3 ;
+  //((mstatus_t)(cpu.csr[NEMU_CSR_MSTATUS])).bits.SD=1;
+  NEMU_mstatus->bits.SD=NEMU_mstatus->bits.FS ==3 ||NEMU_mstatus->bits.VS == 3 || NEMU_mstatus->bits.XS ==3 ;
+  /*
 //update SD(mstatus 的 SD位依赖于FS/VS/XS)
 #define MSTATUS_FS_MASK  0x00006000  // FS 位于 bit [14:13]
 #define MSTATUS_FS_SHIFT 13
@@ -37,8 +41,9 @@ mstatus &= ~MSTATUS_SD_MASK;
 // 设置新的 SD 位
 mstatus |= (sd << 31);  
 cpu.csr[NEMU_CSR_V_MSTATUS]=mstatus;
+*/
 uint32_t sstatus = cpu.csr[NEMU_CSR_V_SSTATUS]; // 当前 mstatus 的值
- cpu.csr[NEMU_CSR_V_SSTATUS] = (sstatus & ~ MSTATUS_SSTATUS_SYNC)| (mstatus & MSTATUS_SSTATUS_SYNC);
+ cpu.csr[NEMU_CSR_V_SSTATUS] = (sstatus & ~ MSTATUS_SSTATUS_SYNC)| (NEMU_mstatus->value & MSTATUS_SSTATUS_SYNC);
 }
 
 void update_sstatus(){
