@@ -89,7 +89,6 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     if (offset + len > 0x1000) {
       IFDEF(CONFIG_MMU_TRACE,Log("CROSS_PAGE0"););
       stval_nextvalue = vaddr;
-
       return MEM_RET_CROSS_PAGE;
     }
     //final page address
@@ -97,26 +96,28 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     pa = (PTEM(pte0)<<2) + offset;
 
   }
+#define PTE_A 0x040
+#define PTE_D 0x080
 
   // check RWX
   // 正常应该抛异常的,这里就简单实现了
   switch(type){
     case NEMU_MEM_READ:
-      if(!(XWR(pte)&0b1)){
+      if(!(XWR(pte)&0b1)||!(pte&PTE_A)){
         stval_nextvalue = vaddr;
         IFDEF(CONFIG_MMU_TRACE,Log("MEM_RET_READ_FAIL"););
         return MEM_RET_FAIL;
       }
       break;
     case NEMU_MEM_WRITE:
-      if(!(XWR(pte)&0b10)){
+      if(!(XWR(pte)&0b10)||!(pte&PTE_A)||!(pte&PTE_D)){
         stval_nextvalue = vaddr;
         IFDEF(CONFIG_MMU_TRACE,Log("MEM_RET_WRITE_FAIL"););
         return MEM_RET_FAIL;
       }
       break;
     case NEMU_MEM_EXEC:
-      if(!(XWR(pte)&0b100)){
+      if(!(XWR(pte)&0b100)||!(pte&PTE_A)){
         stval_nextvalue = vaddr;
         IFDEF(CONFIG_MMU_TRACE,Log("MEM_RET_EXEC_FAIL"););
         return MEM_RET_FAIL;
