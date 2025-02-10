@@ -70,7 +70,6 @@ paddr_t riscv_intr_gotom (word_t NO,vaddr_t epc){
   */
   NEMU_mstatus->bits.MPIE = NEMU_mstatus->bits.MIE;
   NEMU_mstatus->bits.MIE = 0;
-  printf("CPU>PRV=%x\n",cpu.PRIV);
   NEMU_mstatus->bits.MPP = cpu.PRIV;
   cpu.PRIV=NEMU_PRIV_M;
   return cpu.csr[NEMU_CSR_MTVEC];
@@ -110,6 +109,7 @@ paddr_t isa_call_mret() {
   NEMU_mstatus->bits.MIE = NEMU_mstatus->bits.MPIE;
   NEMU_mstatus->bits.MPP = 0;
   NEMU_mstatus->bits.MPIE=1;
+  cpu.PRIV = NEMU_mstatus->bits.MPP;
   return cpu.csr[NEMU_CSR_MEPC];
 }
 
