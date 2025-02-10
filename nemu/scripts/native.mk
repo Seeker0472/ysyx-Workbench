@@ -49,7 +49,7 @@ run: run-env
 gdb: run-env
 	$(call git_commit, "gdb NEMU")
 	$(RUN_REMOTE)
-	gdb -s $(BINARY) --args $(NEMU_EXEC)
+	gdb -s $(BINARY) -ex "run" --args $(NEMU_EXEC)
 
 clean-tools = $(dir $(shell find ./tools -maxdepth 2 -mindepth 2 -name "Makefile"))
 $(clean-tools):
