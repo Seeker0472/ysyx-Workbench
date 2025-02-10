@@ -79,6 +79,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     vaddr_t pta0 = (PTEM(pte1)<<2);
     uint32_t *ptea0 = (uint32_t *)guest_to_host(pta0 + vpn0*sizeof(uint32_t));
     uint32_t pte0 = *ptea0;
+    Log("PTE0:0x%x-0x%x",vaddr,pte0);
     if (!(PAGE_VALID(pte0))) {
       IFDEF(CONFIG_MMU_TRACE,Log("INVALID PTE0 for vaddr 0x%x pte 0x%x", vaddr, pte0););
       stval_nextvalue = vaddr;
