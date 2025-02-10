@@ -108,6 +108,7 @@ paddr_t isa_call_mret() {
   cpu.csr[NEMU_CSR_MSTATUS] &= ~0x1800; 
 */
   NEMU_mstatus->bits.MIE = NEMU_mstatus->bits.MPIE;
+  NEMU_mstatus->bits.MPP = 0;
   NEMU_mstatus->bits.MPIE=1;
   return cpu.csr[NEMU_CSR_MEPC];
 }
