@@ -17,11 +17,13 @@
 #include <isa.h>
 #include <stdint.h>
 #include <stdio.h>
+/*
 #define MIE 0x8
 #define SIE 0x2
 #define SPIE 0x20
 #define MPIE 0x80
 #define SPP 0x100
+*/
 
 uint32_t stval_nextvalue = 0;
 
@@ -31,13 +33,24 @@ paddr_t riscv_intr_gotos (word_t NO,vaddr_t epc){
   cpu.csr[NEMU_CSR_SEPC] = epc;
   // 关中断状态
   // sstatus.MIE->sstatus.MPIE;sstatus.MIE=0;
+  /*
   uint32_t spie = (cpu.csr[NEMU_CSR_SSTATUS] & SIE) << 4;
   cpu.csr[NEMU_CSR_SSTATUS] = ((cpu.csr[NEMU_CSR_SSTATUS] & (~SPIE)) | spie)&(~SIE);
   cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~SPIE)) | spie)&(~SIE);
+  */
+  bool sie = NEMU_sstatus->bits.SIE;
+  NEMU_sstatus->bits.SPIE = sie;
+  NEMU_mstatus->bits.SPIE = sie;
+  NEMU_sstatus->bits.SIE = 0;
+  NEMU_mstatus->bits.SIE = 0;
   // set previous privilege
-  uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?SPP:0;
+  /*
+  uint32_t spp = cpu.PRIV==NEMU_PRIV_HS?S:0;
   cpu.csr[NEMU_CSR_SSTATUS]|=spp;
   cpu.csr[NEMU_CSR_MSTATUS]|=spp;
+  */
+  NEMU_mstatus->bits.SPP=cpu.PRIV==NEMU_PRIV_HS?1:0;
+  NEMU_sstatus->bits.SPP=cpu.PRIV==NEMU_PRIV_HS?1:0;
   cpu.csr[NEMU_CSR_STVAL] = stval_nextvalue;
   cpu.PRIV=NEMU_PRIV_HS;
   return cpu.csr[NEMU_CSR_STVEC];
@@ -48,10 +61,16 @@ paddr_t riscv_intr_gotom (word_t NO,vaddr_t epc){
   cpu.csr[NEMU_CSR_MEPC] = epc; 
   // 关中断状态
   // mstatus.MIE->mstatus.MPIE;mstatus.MIE=0;
+
+  /*
   uint32_t mpie = (cpu.csr[NEMU_CSR_MSTATUS] & MIE) << 4;
   cpu.csr[NEMU_CSR_MSTATUS] = ((cpu.csr[NEMU_CSR_MSTATUS] & (~MPIE)) | mpie)&(~MIE);
   // set previous privilege
   cpu.csr[NEMU_CSR_MSTATUS]|=cpu.PRIV<<11;
+  */
+  NEMU_mstatus->bits.MPIE = NEMU_mstatus->bits.MIE;
+  NEMU_mstatus->bits.MIE = 0;
+  NEMU_mstatus->bits.MPRV = cpu.PRIV;
   cpu.PRIV=NEMU_PRIV_M;
   return cpu.csr[NEMU_CSR_MTVEC];
 }
@@ -81,27 +100,41 @@ word_t riscv_do_ecall(word_t NO, vaddr_t epc) {
 
 paddr_t isa_call_mret() {
 //mstatus.MPIE->mstatus.MIE;mstatus.MPIE=1
+
+/*
   uint32_t mie = (cpu.csr[NEMU_CSR_MSTATUS] & MPIE) >> 4;
   cpu.csr[NEMU_CSR_MSTATUS] = (cpu.csr[NEMU_CSR_MSTATUS] & (~MIE)) | mie | MPIE;
   cpu.PRIV = (cpu.csr[NEMU_CSR_MSTATUS] & 0x1800)>>11;
-  cpu.csr[NEMU_CSR_MSTATUS] &= ~0x1800;
+  cpu.csr[NEMU_CSR_MSTATUS] &= ~0x1800; 
+*/
+  NEMU_mstatus->bits.MIE = NEMU_mstatus->bits.MPIE;
+  NEMU_mstatus->bits.MPIE=1;
   return cpu.csr[NEMU_CSR_MEPC];
 }
 
 paddr_t isa_call_sret() {
 //sstatus.SPIE->mstatus.MIE;sstatus.SPIE=1
+/*
   uint32_t sie = (cpu.csr[NEMU_CSR_SSTATUS] & SPIE) >> 4;
   cpu.csr[NEMU_CSR_SSTATUS] = (cpu.csr[NEMU_CSR_SSTATUS] & (~SIE)) | sie | SPIE;
   cpu.csr[NEMU_CSR_MSTATUS] = (cpu.csr[NEMU_CSR_MSTATUS] & (~SIE)) | sie | SPIE;
   cpu.PRIV = (cpu.csr[NEMU_CSR_SSTATUS] & 0x100)>>8;
   cpu.csr[NEMU_CSR_SSTATUS] &= ~0x100;
   cpu.csr[NEMU_CSR_MSTATUS] &= ~0x100;
+*/
+  NEMU_sstatus->bits.SIE = NEMU_sstatus->bits.SPIE;
+  NEMU_sstatus->bits.SPIE = 1;
+  NEMU_mstatus->bits.MIE = NEMU_mstatus->bits.MPIE;
+  NEMU_mstatus->bits.MPIE = 1;
+  NEMU_sstatus->bits.SPP = 0;
+  NEMU_mstatus->bits.SPP = 0;
+  cpu.PRIV = NEMU_sstatus->bits.SPP;
   return cpu.csr[NEMU_CSR_SEPC];
 }
 
 void difftest_raise(uint64_t NO);
 word_t isa_query_intr() {
-  if (((cpu.csr[NEMU_CSR_MSTATUS] & MIE)) && cpu.INTR) {
+  if (NEMU_mstatus->bits.MIE && cpu.INTR) {
     //Log("INTR_TAKE");
   IFDEF(CONFIG_DIFFTEST,difftest_raise(IRQ_TIMER););
     cpu.INTR = false;

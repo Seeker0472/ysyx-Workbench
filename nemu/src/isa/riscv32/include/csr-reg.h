@@ -61,6 +61,7 @@ typedef union {
 } sstatus_t;
 
 #define NEMU_mstatus ((mstatus_t *)(&cpu.csr[NEMU_CSR_MSTATUS]))
+#define NEMU_sstatus ((sstatus_t *)(&cpu.csr[NEMU_CSR_SSTATUS]))
 
 // 需要和spike做diff的寄存器
 #define CSR_DIFF_LIST \
