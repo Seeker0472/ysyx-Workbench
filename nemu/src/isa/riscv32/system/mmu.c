@@ -58,8 +58,8 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
   //print_all_entry(pta1);
   if(!(PAGE_VALID(pte1))){
-    Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1);
-    print_all_entry(pta1);
+    IFDEF(CONFIG_MMU_TRACE,Log("Invalid PET1 for addr 0x%x,pte=0x%x",vaddr,pte1););
+    IFDEF(CONFIG_MMU_TRACE,print_all_entry(pta1););
     stval_nextvalue = vaddr;
     return MEM_RET_FAIL;
   }
@@ -67,26 +67,26 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     //point to a 4MB's page
     vaddr_t offset = vaddr & 0x3FFFFF;
     if(offset+len>0x400000){
-      Log("CROSS_PAGE1");
+      IFDEF(CONFIG_MMU_TRACE,Log("MMU_ADDR_CROSS_PAGE1"););
       return MEM_RET_CROSS_PAGE;
     }
     pte = pte1;
     pa=(PTEM(pte1)<<2) + offset;
   }else{
-    Log("GOING TO PTE0 AT:0x%x",vaddr);
+    IFDEF(CONFIG_MMU_TRACE,Log("GOING TO PTE0 AT:0x%x",vaddr););
     vaddr_t offset = vaddr & 0xFFF;
     //point to the next level
     vaddr_t pta0 = (PTEM(pte1)<<2);
     uint32_t *ptea0 = (uint32_t *)guest_to_host(pta0 + vpn0*sizeof(uint32_t));
     uint32_t pte0 = *ptea0;
     if (!(PAGE_VALID(pte0))) {
-      Log("INVALID PTE0 for vaddr 0x%x pte 0x%x", vaddr, pte0);
+      IFDEF(CONFIG_MMU_TRACE,Log("INVALID PTE0 for vaddr 0x%x pte 0x%x", vaddr, pte0););
       stval_nextvalue = vaddr;
       return MEM_RET_FAIL;
     }
     // check bounds
     if (offset + len > 0x1000) {
-      Log("CROSS_PAGE0");
+      IFDEF(CONFIG_MMU_TRACE,Log("CROSS_PAGE0"););
       stval_nextvalue = vaddr;
 
       return MEM_RET_CROSS_PAGE;
@@ -103,21 +103,21 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
     case NEMU_MEM_READ:
       if(!(XWR(pte)&0b1)){
         stval_nextvalue = vaddr;
-        Log("MEM_RET_READ_FAIL");
+        IFDEF(CONFIG_MMU_TRACE,Log("MEM_RET_READ_FAIL"););
         return MEM_RET_FAIL;
       }
       break;
     case NEMU_MEM_WRITE:
       if(!(XWR(pte)&0b10)){
         stval_nextvalue = vaddr;
-        Log("MEM_RET_WRITE_FAIL");
+        IFDEF(CONFIG_MMU_TRACE,Log("MEM_RET_WRITE_FAIL"););
         return MEM_RET_FAIL;
       }
       break;
     case NEMU_MEM_EXEC:
       if(!(XWR(pte)&0b100)){
         stval_nextvalue = vaddr;
-        Log("MEM_RET_EXEC_FAIL");
+        IFDEF(CONFIG_MMU_TRACE,Log("MEM_RET_EXEC_FAIL"););
         return MEM_RET_FAIL;
       }
       break;

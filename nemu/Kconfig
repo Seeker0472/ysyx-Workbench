@@ -207,6 +207,17 @@ config PC_TRACE
   bool "Emable PC Trace"
   default n
 
+config MMU_TRACE
+  depends on TARGET_NATIVE_ELF
+  bool "Emable MMU Trace"
+  default n
+
+config EXCEPTION_NEMU_STOP
+  depends on TARGET_NATIVE_ELF
+  bool "Stop NEMU when receved an exception"
+  default n
+
+
 config DIFFTEST
   depends on TARGET_NATIVE_ELF
   bool "Enable differential testing"
