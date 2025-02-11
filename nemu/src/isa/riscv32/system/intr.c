@@ -95,7 +95,7 @@ paddr_t isa_call_sret() {
 
 void difftest_raise(uint64_t NO);
 word_t isa_query_intr() {
-  if (NEMU_mstatus->bits.MIE && cpu.INTR) {
+  if ((cpu.PRIV==NEMU_PRIV_M?NEMU_mstatus->bits.MIE:NEMU_mstatus->bits.SIE) && cpu.INTR) {
     //Log("INTR_TAKE");
   IFDEF(CONFIG_DIFFTEST,difftest_raise(IRQ_TIMER););
     cpu.INTR = false;
