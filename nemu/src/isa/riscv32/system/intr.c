@@ -66,6 +66,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 }
 
 word_t riscv_do_ecall(word_t NO, vaddr_t epc) {
+  IFDEF(CONFIG_ETRACE,Log("Trigged ECALL!, No=%x Epc=%x",NO,epc););
   if(cpu.PRIV==NEMU_PRIV_M||cpu.PRIV==NEMU_PRIV_HS) {
     return riscv_intr_gotom(NO, epc);
   }else{
