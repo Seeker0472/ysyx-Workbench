@@ -121,7 +121,11 @@ int isa_mmu_check(vaddr_t vaddr, int len, int type);
 // errno for the corresponding error.
 static int nemu_read_mem(void *args, size_t addr, size_t len, void *val) {
   if(isa_mmu_check(addr,len,NEMU_MEM_SCAN)){
-
+    size_t paddr = isa_mmu_translate(addr,len,NEMU_MEM_SCAN);
+    if(paddr==MEM_RET_FAIL||paddr==MEM_RET_CROSS_PAGE){
+      return 1;
+    }
+    addr = paddr;
   }
   //printf("READMEM:%lx,len:%lx\n",addr,len);
   if(!in_pmem(addr)||!in_pmem((paddr_t)addr+len*4)){
