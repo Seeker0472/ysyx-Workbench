@@ -230,7 +230,7 @@ static int decode_exec(Decode *s) {
   //rv_system
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc=isa_call_mret());
   INSTPAT("0001000 00010 00000 000 00000 11100 11", sret   , N, s->dnpc=isa_call_sret());
-  //INST:wfi
+  INSTPAT("0001000 00101 00000 000 00000 11100 11", wfi    , N, );
 
   //rv_a
   INSTPAT("00010?? 00000 ????? 010 ????? 01011 11", lr.w       , R, R(rd)=(Mr(src1,4)));
